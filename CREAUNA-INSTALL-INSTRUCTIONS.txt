@@ -1,0 +1,31 @@
+=================================================================
+CREAUNA - INSTRUCCIONES PARA WINDOWS (PowerShell)
+=================================================================
+
+1. Abre PowerShell y ve a la carpeta:
+
+cd C:\Users\X\Desktop\CREAUNA
+
+2. (Opcional) Haz un backup:
+
+New-Item -ItemType Directory -Force -Path backup
+Copy-Item package.json -Destination backup\
+
+3. Instala las dependencias (IMPORTANTE):
+
+npm install
+
+4. Ejecuta el proyecto:
+
+npm run dev
+
+5. Abre en el navegador:
+
+http://localhost:3000
+
+=================================================================
+NOTA: 
+- El proyecto se llama ahora "CREAUNA"
+- El Studio está en: http://localhost:3000/studio
+- Usa "npm run dev" (nunca lo combines con copy)
+=================================================================

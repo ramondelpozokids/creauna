@@ -4,11 +4,10 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
 import ChatAssistant from "./components/ChatAssistant";
-import { LanguageProvider } from "./components/LanguageProvider";
 
 export const metadata: Metadata = {
   title: "CREAUNA — Crea webs con IA en minutos | Diseño premium",
-  description: "Crea webs modernas, rápidas y profesionales en minutos. Diseño premium y tecnología avanzada. Español. Fundado por Ramón del Pozo Rott.",
+  description: "El constructor de páginas web con IA más avanzado del mundo. Equipo de 4 IAs (Gemini, Claude, Composer, GPT) trabajando en equipo. Diseños coloridos, modernos y premium. Creado por Ramón del Pozo Rott.",
   keywords: [
     "crear web con IA", "constructor web IA", "páginas web con inteligencia artificial",
     "diseño web premium", "web builder español", "IA para crear webs",
@@ -18,16 +17,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Ramón del Pozo Rott", url: "https://creauna.com" }],
   openGraph: {
     title: "CREAUNA — Crea webs impresionantes con IA",
-    description: "Crea webs modernas y profesionales en minutos. Diseño premium, rápido y seguro. Español. Creado por Ramón del Pozo Rott.",
-    images: [{ url: "/images/modern-architecture-minimalist-building--1.jpg" }],
+    description: "Diseños premium creados por un equipo de IAs especializadas. Español • Rápido • Seguro • Colorido",
+    images: [{ url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&q=80" }],
     siteName: "CREAUNA",
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/images/luxury-jewelry-atelier-elegant-interior--3.jpg",
-    shortcut: "/images/luxury-jewelry-atelier-elegant-interior--2.jpg",
-  },
-  manifest: "/manifest.json",
+  icons: { icon: "/favicon.ico" },
   robots: {
     index: true,
     follow: true,
@@ -49,13 +43,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased">
-        <LanguageProvider>
-          {children}
-          
-          <Footer />
-          <ChatAssistant />
-          <Toaster position="top-center" richColors closeButton />
-        </LanguageProvider>
+        {children}
+        
+        <Footer />
+        <ChatAssistant />
+        <Toaster position="top-center" richColors closeButton />
 
         {/* Security Layer 1: Client-side protection */}
         <script dangerouslySetInnerHTML={{

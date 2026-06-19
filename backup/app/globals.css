@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  font-family: var(--font-geist-sans);
+}
+
+/* CREAUNA - VIBRANT & COLORFUL DESIGN */
+:root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --accent: #f43f5e;
+  --accent2: #22c55e;
+  --accent3: #eab308;
+  --gradient: linear-gradient(135deg, #6366f1 0%, #f43f5e 50%, #22c55e 100%);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+}
+
+.premium-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.premium-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+/* Colorful Studio */
+.chat-bubble-user {
+  background: #f1f5f9;
+  padding: 14px 20px;
+  border-radius: 20px;
+}
+
+.chat-bubble-ai {
+  background: #0f172a;
+  color: white;
+  padding: 16px 22px;
+  border-radius: 22px 22px 22px 6px;
+}
+
+/* Vibrant buttons */
+.btn-gradient {
+  background: linear-gradient(135deg, #6366f1, #f43f5e);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 15px -3px rgb(99 102 241 / 0.3);
+}
+
+/* Template cards - colorful */
+.template-card {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.template-card:hover {
+  transform: translateY(-8px) scale(1.01);
+}
+
+/* Footer */
+.footer-link {
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #6366f1;
+}
+
+/* Chat Assistant */
+.chat-assistant {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+/* Security notice */
+.security-notice {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+/* Colorful hero */
+.colorful-hero {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 35%, #f43f5e 70%, #22c55e 100%);
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

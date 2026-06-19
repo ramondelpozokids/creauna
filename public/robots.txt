@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /superadmin
+Disallow: /api/
+
+Sitemap: https://creauna.com/sitemap.xml
+
+# CREAUNA - Protected by multiple security layers
+# Unauthorized access attempts will be logged.

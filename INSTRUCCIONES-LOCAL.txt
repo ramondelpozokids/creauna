@@ -1,0 +1,53 @@
+================================================================================
+                    CREAUNA — INSTRUCCIONES PARA VER EN LOCAL
+================================================================================
+
+1. DESCOMPRIME EL ZIP
+   - Extrae "CREAUNA-ultra-premium-2026-06-19.zip" en tu escritorio
+   - La carpeta resultante debe llamarse: CREAUNA
+
+2. VERIFICA LAS IMÁGENES
+   Debes tener esta carpeta con las 7 imágenes:
+
+   C:\Users\X\Desktop\CREAUNA\public\images\
+
+   Si no tienes las imágenes, cópialas desde la carpeta que ya tenías.
+
+3. EJECUTAR EL PROYECTO (la forma más fácil)
+
+   MÉTODO RECOMENDADO (doble clic):
+   - Entra en la carpeta CREAUNA
+   - Haz doble clic en el archivo:   start-local.bat
+
+   Esto instalará lo necesario y abrirá el servidor.
+
+4. ABRIR EN EL NAVEGADOR
+   Cuando termine de cargar, abre:
+
+   http://localhost:3000
+
+5. PÁGINAS IMPORTANTES PARA PROBAR
+
+   - http://localhost:3000                  → Landing
+   - http://localhost:3000/dashboard        → DASHBOARD ULTRA PREMIUM
+   - http://localhost:3000/templates        → Plantillas con imágenes reales
+   - http://localhost:3000/studio           → Studio con IA
+   - http://localhost:3000/precios          → Precios
+   - http://localhost:3000/modernizacion    → Modernización + Before & After
+
+6. DETENER EL SERVIDOR
+   En la ventana negra que se abre, presiona:   Ctrl + C
+
+================================================================================
+                              NOTAS IMPORTANTES
+================================================================================
+
+- La primera vez puede tardar un poco (instala dependencias).
+- Necesitas tener Node.js instalado (https://nodejs.org).
+- Todas las imágenes son locales (están en public/images).
+- El proyecto está 100% en español y con diseño premium.
+
+Si tienes algún error, copia el mensaje y envíamelo.
+
+¡Listo! Ya puedes ver el dashboard de alto nivel que pediste.
+================================================================================

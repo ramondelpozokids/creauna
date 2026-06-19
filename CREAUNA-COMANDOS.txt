@@ -1,0 +1,23 @@
+=================================================================
+CREAUNA - COMANDOS CORRECTOS PARA POWERSHELL
+=================================================================
+
+PASO 1: Ve a tu carpeta
+cd C:\Users\X\Desktop\CREAUNA
+
+PASO 2: (Opcional) Crea una carpeta de backup
+New-Item -ItemType Directory -Force -Path backup
+
+PASO 3: Instala las dependencias (haz esto primero)
+npm install
+
+PASO 4: Ejecuta el proyecto
+npm run dev
+
+=================================================================
+IMPORTANTE:
+- Copia y pega CADA comando en una línea separada.
+- No combines comandos con \n
+- Después de "npm run dev", abre el navegador en:
+  http://localhost:3000
+=================================================================

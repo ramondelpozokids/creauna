@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CREAUNA — Ultra Premium 2026
 
-## Getting Started
+**El constructor de webs con IA más refinado del mundo.**  
+Diseño de estudio de alto standing. Todo en español (con toggle ES/EN).
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Cómo verlo en LOCAL (Windows)
+
+### 1. Requisitos
+- Node.js 20+ instalado (https://nodejs.org)
+- Tu carpeta del proyecto en:  
+  `C:\Users\X\Desktop\CREAUNA`
+
+### 2. Archivos importantes que ya debes tener
+
+Asegúrate de tener esta carpeta con **las 7 imágenes**:
+
+```
+C:\Users\X\Desktop\CREAUNA\public\images\
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Contenido esperado:
+- `luxury-jewelry-atelier-elegant-interior--1.jpg`
+- `luxury-jewelry-atelier-elegant-interior--2.jpg`
+- `luxury-jewelry-atelier-elegant-interior--3.jpg`
+- `modern-architecture-minimalist-building--1.jpg`
+- `modern-architecture-minimalist-building--2.jpg`
+- `fine-dining-restaurant-interior-elegant--1.jpg`
+- `fine-dining-restaurant-interior-elegant--2.jpg`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Ejecutar el proyecto (método fácil)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Opción A — Con doble clic (recomendado)
 
-## Learn More
+1. Abre la carpeta del proyecto en el Explorador.
+2. Haz doble clic en **`start-local.bat`**
 
-To learn more about Next.js, take a look at the following resources:
+#### Opción B — Con PowerShell / Terminal
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Abre PowerShell en la carpeta del proyecto y ejecuta:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```powershell
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Abre en el navegador:
+**http://localhost:3000**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Páginas principales para probar
+
+- `/` → Landing espectacular
+- `/dashboard` → **Dashboard ultra-premium** (lo más importante)
+- `/studio` → Studio con IA
+- `/templates` → Plantillas con imágenes reales
+- `/precios` → Precios con visual premium
+- `/modernizacion` → Modernización + Before & After
+- `/web-a-medida` → Servicio premium
+- `/login` y `/signup`
+
+---
+
+## Características actuales (nivel más alto)
+
+- Dashboard completamente premium (el que pediste)
+- Todas las imágenes son locales (sin Unsplash)
+- Logo real en Navbar, Footer, Chat, Login, Studio, Dashboard, Superadmin
+- Diseño de alto standing en todo el sitio
+- Todo en español
+- Build limpio y optimizado
+
+---
+
+## Comandos útiles
+
+```bash
+npm run dev          # Desarrollo
+npm run build        # Build de producción
+npm run start        # Ejecutar build
+```
+
+---
+
+## Notas
+
+- Las imágenes están en `public/images/` (deben estar en tu máquina)
+- El proyecto usa Next.js 16 + Tailwind
+- El dashboard está centrado con `max-w-7xl` y nivel de lujo muy alto
+
+---
+
+**Fundado por Ramón del Pozo Rott**  
+CREAUNA 2026
+
+---
+
+¿Quieres que añada más imágenes o eleve alguna sección concreta? Dímelo.

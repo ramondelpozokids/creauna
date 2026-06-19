@@ -1,26 +1,184 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans);
+}
+
+/* === ULTRA PREMIUM GLOBAL CENTERING === */
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.max-w-7xl {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* === HIGH-END DASHBOARD (MAXIMUM LUXURY) === */
+.stat-card {
+  background: white;
+  border: 1px solid #f1f1f1;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+}
+
+.stat-card:hover {
+  border-color: #e2e8f0;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.08), 0 10px 10px -6px rgb(0 0 0 / 0.04);
+  transform: translateY(-3px);
+}
+
+/* Ultra Premium Dashboard Additions */
+.luxury-heading {
+  font-feature-settings: "tnum";
+  letter-spacing: -0.04em;
+}
+
+.premium-table {
+  font-feature-settings: "tnum";
+}
+
+.premium-table tr {
+  transition: all 0.15s ease;
+}
+
+.premium-table tr:hover {
+  background-color: #f9f8f5 !important;
+}
+
+.premium-table th {
+  font-weight: 500;
+  color: #64748b;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.status-badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.action-btn {
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.sidebar-card {
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sidebar-card:hover {
+  border-color: #e5e5e5;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+}
+
+.insight-row {
+  transition: all 0.2s ease;
+}
+
+.insight-row:hover {
+  background-color: #f9f8f5;
+  padding-left: 4px;
+}
+
+/* Additional ultra-luxury touches */
+.dashboard-bg {
+  background: #f8f7f4;
+}
+
+.stat-value {
+  font-feature-settings: "tnum";
+}
+
+.premium-shadow {
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.04), 0 10px 15px -3px rgb(0 0 0 / 0.06);
+}
+
+.premium-btn {
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.premium-btn-primary {
+  background: #111111;
+  color: white;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.premium-btn-primary:hover {
+  background: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.premium-btn-secondary {
+  background: white;
+  border: 1px solid #e5e5e5;
+}
+
+.premium-btn-secondary:hover {
+  background: #fafafa;
+  border-color: #d4d4d4;
+}
+
+/* Premium Table Styling */
+.dashboard-table th {
+  font-weight: 500;
+  color: #64748b;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dashboard-table td {
+  font-feature-settings: "tnum";
+}
+
+/* Existing elegant styles */
+.btn-gradient {
+  background: linear-gradient(135deg, #6366f1, #f43f5e);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  transform: scale(1.01);
+  box-shadow: 0 10px 15px -3px rgb(99 102 241 / 0.3);
+}
+
+.colorful-hero {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 35%, #f43f5e 70%, #22c55e 100%);
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
