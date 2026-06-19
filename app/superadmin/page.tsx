@@ -21,7 +21,7 @@ export default function SuperAdmin() {
         <div className="max-w-md text-center">
           <div className="mx-auto w-16 h-16 rounded-2xl overflow-hidden ring-2 ring-white/30 mb-6">
             <img 
-              src="/images/ramon-del-pozo-rott.jpg" 
+              src="/creador.webp" 
               alt="Ramón del Pozo Rott" 
               className="w-full h-full object-cover" 
             />

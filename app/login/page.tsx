@@ -26,8 +26,8 @@ export default function Login() {
           <Link href="/" className="inline-flex items-center gap-3">
             <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200">
               <img 
-                src="/images/luxury-jewelry-atelier-elegant-interior--3.jpg" 
-                alt="CREAUNA" 
+                src="/logo.webp" 
+                alt="CREAUNA Logo" 
                 className="w-full h-full object-cover" 
               />
             </div>

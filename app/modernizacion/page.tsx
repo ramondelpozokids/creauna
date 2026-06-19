@@ -184,7 +184,7 @@ export default function Modernizacion() {
           <div className="mt-12 flex justify-center">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-white shadow">
-                <img src="/images/ramon-del-pozo-rott.jpg" alt="Ramón del Pozo Rott" className="w-full h-full object-cover" />
+                <img src="/creador.webp" alt="Ramón del Pozo Rott" className="w-full h-full object-cover" />
               </div>
               <div className="text-left">
                 <div className="text-xs text-slate-500 tracking-wider">DIRIGIDO POR</div>

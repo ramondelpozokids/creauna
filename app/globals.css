@@ -163,18 +163,18 @@ body {
   background: linear-gradient(135deg, #6366f1, #f43f5e);
   color: white;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-gradient:hover {
-  transform: scale(1.01);
-  box-shadow: 0 10px 15px -3px rgb(99 102 241 / 0.3);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 12px 25px -4px rgb(99 102 241 / 0.4), 0 8px 16px -4px rgb(244 63 94 / 0.3);
 }
 
 .colorful-hero {
   background: linear-gradient(135deg, #6366f1 0%, #a855f7 35%, #f43f5e 70%, #22c55e 100%);
   background-size: 300% 300%;
-  animation: gradientShift 8s ease infinite;
+  animation: gradientShift 10s ease infinite;
 }
 
 @keyframes gradientShift {
@@ -182,3 +182,102 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* === LUXURY GLASSMORPHISM & SHADOWS === */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-luxe {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.02), 0 10px 30px -4px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-luxe:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 10px 20px -10px rgba(0, 0, 0, 0.04);
+  border-color: rgba(99, 102, 241, 0.15);
+}
+
+.glow-card-indigo {
+  position: relative;
+}
+
+.glow-card-indigo::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, #6366f1, #a855f7, #f43f5e);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+}
+
+.glow-card-indigo:hover::after {
+  opacity: 1;
+}
+
+/* === CUSTOM PREMIUM INTERACTION ANIMATIONS === */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #111827 30%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-rose {
+  background: linear-gradient(135deg, #6366f1 10%, #a855f7 50%, #f43f5e 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Scrollbar premium styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f7f4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Base resets & styles for smooth experience */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+

@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     siteName: "CREAUNA",
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/images/luxury-jewelry-atelier-elegant-interior--3.jpg",
-    shortcut: "/images/luxury-jewelry-atelier-elegant-interior--2.jpg",
+    icon: "/favicon.webp",
+    apple: "/favicon.webp",
+    shortcut: "/favicon.webp",
   },
   manifest: "/manifest.json",
   robots: {

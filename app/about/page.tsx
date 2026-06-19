@@ -33,7 +33,7 @@ export default function About() {
             <div className="md:col-span-5">
               <div className="relative rounded-[3rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                 <img 
-                  src="/images/ramon-del-pozo-rott.jpg" 
+                  src="/creador.webp" 
                   alt="Ramón del Pozo Rott - Fundador y Director Creativo de CREAUNA" 
                   className="w-full aspect-[4/3] object-cover" 
                 />

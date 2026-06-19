@@ -10,14 +10,14 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-2xl overflow-hidden ring-1 ring-white/30">
+              <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-white/20 bg-slate-800">
                 <img 
-                  src="/images/luxury-jewelry-atelier-elegant-interior--3.jpg" 
-                  alt="CREAUNA" 
+                  src="/footer.webp" 
+                  alt="CREAUNA Logo" 
                   className="w-full h-full object-cover" 
                 />
               </div>
-              <span className="font-semibold text-2xl tracking-tight">CREAUNA</span>
+              <span className="font-semibold text-2xl tracking-tight text-white">CREAUNA</span>
             </div>
             <p className="text-sm text-slate-400">
               El constructor de webs con IA más refinado del mundo.

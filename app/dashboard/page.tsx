@@ -129,7 +129,7 @@ export default function Dashboard() {
             <Link href="/dashboard" className="flex items-center gap-3.5 group">
               <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-black/10 shadow-sm">
                 <img 
-                  src="/images/luxury-jewelry-atelier-elegant-interior--2.jpg" 
+                  src="/logo.webp" 
                   alt="CREAUNA" 
                   className="w-full h-full object-cover" 
                 />
@@ -163,7 +163,7 @@ export default function Dashboard() {
                 </div>
                 <div className="w-10 h-10 rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-inner">
                   <img 
-                    src="/images/ramon-del-pozo-rott.jpg" 
+                    src="/creador.webp" 
                     alt="Ramón del Pozo Rott" 
                     className="w-full h-full object-cover" 
                   />

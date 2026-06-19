@@ -227,7 +227,7 @@ export default function CreaunaStudio() {
             <ArrowLeft className="w-4 h-4" /> {lang === 'es' ? 'Volver' : 'Back'}
           </Link>
           <div className="w-6 h-6 rounded-lg overflow-hidden ml-1 ring-1 ring-slate-200">
-            <img src="/images/luxury-jewelry-atelier-elegant-interior--3.jpg" alt="CREAUNA" className="w-full h-full object-cover" />
+            <img src="/logo.webp" alt="CREAUNA Logo" className="w-full h-full object-cover" />
           </div>
           <div className="h-px w-4 bg-slate-200" />
           <input 
@@ -278,10 +278,10 @@ export default function CreaunaStudio() {
         <div className="w-[400px] flex flex-col border-r border-slate-200 bg-white">
           <div className="p-7 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200">
+              <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200 bg-slate-100">
                 <img 
-                  src="/images/luxury-jewelry-atelier-elegant-interior--1.jpg" 
-                  alt="CREAUNA" 
+                  src="/chat.webp" 
+                  alt="Asistente CREAUNA" 
                   className="w-full h-full object-cover" 
                 />
               </div>
