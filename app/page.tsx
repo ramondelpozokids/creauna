@@ -189,14 +189,6 @@ export default function CreaunaLanding() {
                 className="w-full h-[320px] md:h-[500px] object-cover object-top hover:scale-[1.005] transition-transform duration-700" 
               />
             </div>
-            {/* Absolute badge */}
-            <div className="absolute -bottom-4 -right-2 md:right-10 bg-slate-900 text-white rounded-2xl px-5 py-3 shadow-2xl border border-slate-800 text-left flex items-center gap-3">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
-              <div className="text-xs">
-                <span className="font-semibold block">Versión 2.0 en vivo</span>
-                <span className="text-slate-400">Edición 2026</span>
-              </div>
-            </div>
           </motion.div>
 
           <motion.div 

@@ -4,14 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../components/LanguageProvider';
-import { Check, X, ChevronDown, HelpCircle, Sparkles, ShieldCheck } from 'lucide-react';
+import { Check, X, ChevronDown, HelpCircle, Sparkles, ShieldCheck, Coins, Euro } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const translations = {
   es: {
     transparentPricing: "PRECIOS TRANSPARENTES",
     title: "Elige el plan que mejor se adapta a ti",
-    subtitle: "Sin sorpresas. Sin letras pequeñas. Calidad de estudio de diseño al alcance de cualquiera.",
+    subtitle: "Sin sorpresas. Sin letras pequeñas. Sabes en todo momento qué cuesta cada cambio y qué incluye tu plan.",
     monthly: "Mensual",
     yearly: "Anual (Ahorra 20%)",
     saveBadge: "20% DESCUENTO",
@@ -22,28 +22,52 @@ const translations = {
     resultsLabel: "RESULTADOS REALES",
     resultsTitle: "Todas nuestras webs tienen este nivel.",
     resultsSubtitle: "Diseño de estudio, tecnología avanzada y atención personalizada.",
-    featuresTitle: "Comparativa detallada",
+    featuresTitle: "Comparativa de planes CREAUNA",
     featuresCol: "Característica",
-    competitorTitle: "¿Cómo nos comparamos?",
-    competitorSubtitle: "Precios ajustados frente a Emergent, Lovable y otras plataformas de IA. Más créditos, sin costes ocultos de despliegue.",
-    competitorCol: "Plataforma",
-    creditsCol: "Créditos/mes",
-    entryPriceCol: "Plan de entrada",
-    businessPriceCol: "Plan avanzado",
-    creaunaAdvantage: "Ventaja CREAUNA",
-    advantage1: "Sin penalización por mantener tu web publicada",
-    advantage2: "36 plantillas premium por sector",
-    advantage3: "Interfaz y soporte en español",
-    advantage4: "Diseño de estudio, no plantillas genéricas",
+    creditsTitle: "¿Cuánto cuesta cada cambio?",
+    creditsSubtitle: "En el Studio, cada mejora que pides (texto, colores, secciones, estilos) consume exactamente 1 crédito. Aquí ves el coste real según tu plan.",
+    creditsPerChange: "1 crédito = 1 cambio en el Studio",
+    creditsTableCol1: "Plan",
+    creditsTableCol2: "Precio mensual",
+    creditsTableCol3: "Créditos/mes",
+    creditsTableCol4: "Coste por cambio",
+    creditsTableCol5: "Ejemplo práctico",
+    creditsNote: "Los créditos se renuevan cada mes. No caducan dentro del mes. No cobramos nada extra por mantener tu web publicada ni por exportar (en planes de pago).",
+    creditsExamples: [
+      { plan: "Gratis", price: "0€", credits: "15", perChange: "0€", example: "15 mejoras gratis para probar el Studio" },
+      { plan: "Pro", price: "19€", credits: "120", perChange: "~0,16€", example: "120 cambios ≈ diseño completo refinado" },
+      { plan: "Business", price: "49€", credits: "300", perChange: "~0,16€", example: "300 cambios ≈ varias webs o proyectos de cliente" },
+    ],
+    whatCostsTitle: "Qué consume créditos y qué no",
+    costsCredits: [
+      "Pedir un cambio en el chat del Studio",
+      "Pulsar «Mejorar» en una sección",
+      "Cambiar estilo (Elegante / Minimal / Moderno)",
+      "Regenerar el diseño",
+      "Usar una sugerencia rápida",
+    ],
+    noCredits: [
+      "Navegar plantillas y ver previsualizaciones",
+      "Cargar una plantilla en el Studio (sin editar)",
+      "Exportar código (tras pagar el proyecto)",
+      "Mantener la web publicada en tu dominio",
+      "Contactar soporte o solicitar presupuesto",
+    ],
+    customWebTitle: "Web a Medida — 2.900€",
+    customWebSubtitle: "Para proyectos únicos donde no basta una plantilla. Precio cerrado, sin cuotas ocultas.",
+    customWebPrice: "2.900€",
+    customWebPriceNote: "Pago único · Llave en mano · IVA no incluido",
+    customWebIncludes: "Diseño exclusivo, copywriting, desarrollo, SEO, publicación y 3 meses de soporte.",
+    customWebLink: "Ver proceso completo",
     faqTitle: "Preguntas frecuentes",
-    customNote: "¿Necesitas algo más grande o una web completamente a medida?",
-    customLink: "Ver Web a Medida",
+    customNote: "¿Necesitas una web 100% exclusiva, sin plantilla?",
+    customLink: "Web a Medida desde 2.900€",
     designedBy: "SUPERVISADO POR",
     founderTitle: "Supervisor Creativo de CREAUNA",
     features: [
       "Hasta 3 webs activas",
       "Webs ilimitadas",
-      "36 plantillas premium por sector",
+      "60 plantillas premium (12 por sector)",
       "Créditos de edición mensuales",
       "Tecnología IA avanzada",
       "Dominio personalizado",
@@ -55,7 +79,8 @@ const translations = {
     featureTableRows: [
       ["Webs activas", "Hasta 3", "Ilimitadas", "Ilimitadas"],
       ["Créditos de edición/mes", "15", "120", "300"],
-      ["Plantillas premium", "36 (catálogo)", "36 (todas)", "36 (todas)"],
+      ["Coste aprox. por cambio", "0€", "~0,16€", "~0,16€"],
+      ["Plantillas premium", "60 (12×5)", "60 (todas)", "60 (todas)"],
       ["Dominio personalizado", "—", "✓", "✓"],
       ["Exportación código", "HTML básico", "Completo (HTML/CSS/JS)", "Completo (HTML/CSS/JS)"],
       ["Coste de despliegue", "Sin coste", "Sin coste", "Sin coste"],
@@ -68,7 +93,7 @@ const translations = {
   en: {
     transparentPricing: "TRANSPARENT PRICING",
     title: "Choose the plan that fits you best",
-    subtitle: "No surprises. No fine print. Studio-grade design within everyone's reach.",
+    subtitle: "No surprises. No fine print. You always know what each change costs and what your plan includes.",
     monthly: "Monthly",
     yearly: "Yearly (Save 20%)",
     saveBadge: "SAVE 20%",
@@ -79,28 +104,52 @@ const translations = {
     resultsLabel: "REAL RESULTS",
     resultsTitle: "All our websites share this level of detail.",
     resultsSubtitle: "Studio design, advanced tech, and personalized creative direction.",
-    featuresTitle: "Detailed Comparison",
+    featuresTitle: "CREAUNA plan comparison",
     featuresCol: "Feature",
-    competitorTitle: "How do we compare?",
-    competitorSubtitle: "Pricing benchmarked against Emergent, Lovable, and other AI builders. More credits, no hidden deployment costs.",
-    competitorCol: "Platform",
-    creditsCol: "Credits/month",
-    entryPriceCol: "Entry plan",
-    businessPriceCol: "Advanced plan",
-    creaunaAdvantage: "CREAUNA advantage",
-    advantage1: "No penalty for keeping your site live",
-    advantage2: "36 premium templates by industry",
-    advantage3: "Spanish interface and support",
-    advantage4: "Studio-grade design, not generic templates",
+    creditsTitle: "How much does each change cost?",
+    creditsSubtitle: "In Studio, every improvement you request (copy, colors, sections, styles) uses exactly 1 credit. Here is the real cost per plan.",
+    creditsPerChange: "1 credit = 1 change in Studio",
+    creditsTableCol1: "Plan",
+    creditsTableCol2: "Monthly price",
+    creditsTableCol3: "Credits/month",
+    creditsTableCol4: "Cost per change",
+    creditsTableCol5: "Practical example",
+    creditsNote: "Credits renew every month. They do not roll over. We never charge extra to keep your site live or to export (on paid plans).",
+    creditsExamples: [
+      { plan: "Free", price: "€0", credits: "15", perChange: "€0", example: "15 free improvements to try Studio" },
+      { plan: "Pro", price: "€19", credits: "120", perChange: "~€0.16", example: "120 changes ≈ fully refined design" },
+      { plan: "Business", price: "€49", credits: "300", perChange: "~€0.16", example: "300 changes ≈ multiple sites or client projects" },
+    ],
+    whatCostsTitle: "What uses credits and what does not",
+    costsCredits: [
+      "Requesting a change in Studio chat",
+      "Clicking «Improve» on a section",
+      "Changing style (Elegant / Minimal / Modern)",
+      "Regenerating the design",
+      "Using a quick suggestion",
+    ],
+    noCredits: [
+      "Browsing templates and previews",
+      "Loading a template in Studio (without editing)",
+      "Exporting code (after project payment)",
+      "Keeping your site live on your domain",
+      "Contacting support or requesting a quote",
+    ],
+    customWebTitle: "Custom Web — €2,900",
+    customWebSubtitle: "For unique projects where templates are not enough. Fixed price, no hidden fees.",
+    customWebPrice: "€2,900",
+    customWebPriceNote: "One-time payment · Turnkey · VAT not included",
+    customWebIncludes: "Exclusive design, copywriting, development, SEO, launch and 3 months of support.",
+    customWebLink: "See full process",
     faqTitle: "Frequently Asked Questions",
-    customNote: "Need something larger or a fully custom website?",
-    customLink: "View Custom Web",
+    customNote: "Need a 100% exclusive site, no template?",
+    customLink: "Custom Web from €2,900",
     designedBy: "SUPERVISED BY",
     founderTitle: "Creative Supervisor of CREAUNA",
     features: [
       "Up to 3 active websites",
       "Unlimited websites",
-      "36 premium templates by industry",
+      "60 premium templates (12 per sector)",
       "Monthly editing credits",
       "Advanced AI technology",
       "Custom domain",
@@ -112,7 +161,8 @@ const translations = {
     featureTableRows: [
       ["Active websites", "Up to 3", "Unlimited", "Unlimited"],
       ["Editing credits/month", "15", "120", "300"],
-      ["Premium templates", "36 (catalog)", "36 (all)", "36 (all)"],
+      ["Approx. cost per change", "€0", "~€0.16", "~€0.16"],
+      ["Premium templates", "60 (12×5)", "60 (all)", "60 (all)"],
       ["Custom domain", "—", "✓", "✓"],
       ["Code export", "Basic HTML", "Full (HTML/CSS/JS)", "Full (HTML/CSS/JS)"],
       ["Deployment cost", "No cost", "No cost", "No cost"],
@@ -132,9 +182,10 @@ const plans = [
     priceMonthly: 0,
     priceYearly: 0,
     credits: 15,
-    creditsEn: "15 credits",
-    description: "15 créditos/mes para probar. Ideal para explorar la plataforma sin compromiso.",
-    descriptionEn: "15 credits/month to explore. Perfect for testing the platform with no commitment.",
+    perChangeEs: "0€ por cambio",
+    perChangeEn: "€0 per change",
+    description: "15 créditos/mes gratis. Cada cambio en el Studio = 1 crédito. Ideal para probar sin tarjeta.",
+    descriptionEn: "15 free credits/month. Each Studio change = 1 credit. Perfect to try without a card.",
     featuresIdx: [0, 2, 3, 4],
     cta: "Empezar gratis",
     ctaEn: "Start for free",
@@ -149,9 +200,10 @@ const plans = [
     priceMonthly: 19,
     priceYearly: 15,
     credits: 120,
-    creditsEn: "120 credits",
-    description: "120 créditos/mes. Más económico que Lovable ($25) y Emergent ($20), con más valor de diseño.",
-    descriptionEn: "120 credits/month. Cheaper than Lovable ($25) and Emergent ($20), with superior design quality.",
+    perChangeEs: "~0,16€ por cambio",
+    perChangeEn: "~€0.16 per change",
+    description: "120 créditos/mes por 19€. Cada mejora en el Studio cuesta ~0,16€. Sin coste extra por publicar.",
+    descriptionEn: "120 credits/month for €19. Each Studio improvement costs ~€0.16. No extra fee to publish.",
     featuresIdx: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     cta: "Empezar prueba de 14 días",
     ctaEn: "Start 14-day trial",
@@ -166,9 +218,10 @@ const plans = [
     priceMonthly: 49,
     priceYearly: 39,
     credits: 300,
-    creditsEn: "300 credits",
-    description: "300 créditos/mes. Competitivo con Lovable Business ($50) e ideal para agencias y equipos.",
-    descriptionEn: "300 credits/month. Competitive with Lovable Business ($50), ideal for agencies and teams.",
+    perChangeEs: "~0,16€ por cambio",
+    perChangeEn: "~€0.16 per change",
+    description: "300 créditos/mes por 49€. Pensado para agencias y equipos con varios proyectos simultáneos.",
+    descriptionEn: "300 credits/month for €49. Built for agencies and teams with multiple projects.",
     featuresIdx: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     extraFeatures: [
       "Hosting + dominio incluido (1 año)",
@@ -192,90 +245,36 @@ const plans = [
   }
 ];
 
-const competitors = [
-  {
-    name: "CREAUNA",
-    highlight: true,
-    freeCredits: "15",
-    entryPriceEs: "19€/mes",
-    entryPriceEn: "€19/mo",
-    entryCredits: "120",
-    businessPriceEs: "49€/mes",
-    businessPriceEn: "€49/mo",
-    businessCredits: "300",
-    deployCostEs: "Sin coste extra",
-    deployCostEn: "No extra cost",
-    templatesEs: "36 premium",
-    templatesEn: "36 premium",
-    languageEs: "Español nativo",
-    languageEn: "Native Spanish",
-  },
-  {
-    name: "Emergent",
-    highlight: false,
-    freeCredits: "10",
-    entryPriceEs: "$20/mes",
-    entryPriceEn: "$20/mo",
-    entryCredits: "100",
-    businessPriceEs: "$200/mes",
-    businessPriceEn: "$200/mo",
-    businessCredits: "750",
-    deployCostEs: "~50 créditos/web/mes",
-    deployCostEn: "~50 credits/site/mo",
-    templatesEs: "Limitadas",
-    templatesEn: "Limited",
-    languageEs: "Inglés",
-    languageEn: "English",
-  },
-  {
-    name: "Lovable",
-    highlight: false,
-    freeCredits: "30 máx.",
-    entryPriceEs: "$25/mes",
-    entryPriceEn: "$25/mo",
-    entryCredits: "100+",
-    businessPriceEs: "$50/mes",
-    businessPriceEn: "$50/mo",
-    businessCredits: "100+",
-    deployCostEs: "Incluido",
-    deployCostEn: "Included",
-    templatesEs: "Básicas",
-    templatesEn: "Basic",
-    languageEs: "Inglés",
-    languageEn: "English",
-  },
-];
-
 const faqs = [
+  {
+    q: "¿Cuánto cuesta cada crédito en euros?",
+    qEn: "How much does each credit cost in euros?",
+    a: "En el plan Gratis cada crédito cuesta 0€ (15 gratis al mes). En Pro (19€/120 créditos) y Business (49€/300 créditos), cada cambio equivale a aproximadamente 0,16€. Siempre ves tus créditos restantes en el Studio antes de confirmar.",
+    aEn: "On the Free plan each credit costs €0 (15 free per month). On Pro (€19/120 credits) and Business (€49/300 credits), each change is roughly €0.16. You always see remaining credits in Studio before confirming."
+  },
   {
     q: "¿Cómo funcionan los créditos?",
     qEn: "How do credits work?",
-    a: "Cada cambio que haces en el Studio consume 1 crédito. Los créditos se renuevan cada mes. A diferencia de Emergent, no gastamos créditos extra solo por mantener tu web publicada.",
-    aEn: "Each change you make in the Studio uses 1 credit. Credits renew monthly. Unlike Emergent, we don't charge extra credits just to keep your site live."
+    a: "1 crédito = 1 cambio visible en el Studio (chat, botón Mejorar, cambio de estilo o regenerar). Los créditos se renuevan cada mes según tu plan. No cobramos créditos extra por mantener tu web publicada.",
+    aEn: "1 credit = 1 visible change in Studio (chat, Improve button, style change or regenerate). Credits renew monthly per your plan. We never charge extra credits just to keep your site live."
   },
   {
-    q: "¿Puedo cambiar de plan en cualquier momento?",
-    qEn: "Can I change my plan at any time?",
-    a: "Sí. Puedes subir o bajar de plan en cualquier momento. Los cambios se aplican de forma proporcional en tu factura.",
-    aEn: "Yes. You can upgrade or downgrade at any time. Changes are applied proportionally to your billing cycle."
-  },
-  {
-    q: "¿Qué incluye el soporte prioritario?",
-    qEn: "What does priority support include?",
-    a: "Respuesta en menos de 4 horas en días laborables + un gestor de cuenta dedicado en el plan Business.",
-    aEn: "Response in less than 4 hours on business days + a dedicated account manager in the Business plan."
+    q: "¿Qué es la Web a Medida y cuánto cuesta?",
+    qEn: "What is Custom Web and how much does it cost?",
+    a: "Es un servicio aparte del Studio: diseño 100% exclusivo dirigido por Ramón del Pozo Rott. Precio cerrado desde 2.900€ (IVA no incluido), incluye briefing, 2 propuestas, desarrollo, SEO, publicación y 3 meses de soporte. Detalle en /web-a-medida",
+    aEn: "A separate service from Studio: 100% exclusive design led by Ramón del Pozo Rott. Fixed price from €2,900 (VAT not included), including briefing, 2 proposals, development, SEO, launch and 3 months support. Details at /web-a-medida"
   },
   {
     q: "¿Puedo exportar mi web y llevarla a otro proveedor?",
     qEn: "Can I export my website and host it elsewhere?",
-    a: "Sí. En los planes Pro y Business puedes exportar el código completo (HTML/CSS/JS limpio y optimizado) y usarlo donde quieras.",
-    aEn: "Yes. With the Pro and Business plans, you can export the full code (clean, optimized HTML/CSS/JS) and host it wherever you prefer."
+    a: "Sí. En los planes Pro y Business puedes exportar el código completo (HTML/CSS/JS limpio y optimizado) y usarlo donde quieras, sin penalización.",
+    aEn: "Yes. With Pro and Business you can export full code (clean HTML/CSS/JS) and host it anywhere, with no penalty."
   },
   {
     q: "¿Hay compromiso de permanencia?",
     qEn: "Is there a long-term commitment?",
-    a: "No. Puedes cancelar en cualquier momento de forma inmediata y sin ningún tipo de penalización.",
-    aEn: "No. You can cancel at any time immediately with no penalty fees or hidden conditions."
+    a: "No. Puedes cancelar en cualquier momento sin penalización. Los créditos no usados del mes no se acumulan al siguiente.",
+    aEn: "No. Cancel anytime with no penalty. Unused monthly credits do not roll over."
   }
 ];
 
@@ -320,7 +319,6 @@ export default function Precios() {
     <div className="min-h-screen bg-slate-50/50 text-slate-900 font-sans antialiased">
       <Navbar />
 
-      {/* Main Header */}
       <div className="container pt-20 pb-12 text-center">
         <div className="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs px-4 py-1.5 rounded-full font-semibold tracking-wider uppercase mb-4 animate-fade-in">
           <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
@@ -333,7 +331,6 @@ export default function Precios() {
           {t.subtitle}
         </p>
 
-        {/* Toggle Billing */}
         <div className="flex items-center justify-center mt-12 gap-4">
           <span className={`text-sm font-semibold transition-colors ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-400'}`}>
             {t.monthly}
@@ -354,7 +351,6 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* Pricing Cards */}
       <div className="container pb-20 mt-10">
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
           {plans.map((plan) => {
@@ -377,11 +373,9 @@ export default function Precios() {
                 )}
 
                 <div>
-                  <div className="flex justify-between items-start">
-                    <span className="text-xl font-bold tracking-tight text-slate-900">
-                      {lang === 'es' ? plan.name : plan.nameEn}
-                    </span>
-                  </div>
+                  <span className="text-xl font-bold tracking-tight text-slate-900">
+                    {lang === 'es' ? plan.name : plan.nameEn}
+                  </span>
 
                   <div className="mt-6 flex items-baseline">
                     <span className="text-6xl font-bold tracking-tighter text-slate-950">
@@ -391,18 +385,24 @@ export default function Precios() {
                       {period}
                     </span>
                   </div>
-                  <p className="mt-4 text-sm text-slate-600 leading-relaxed min-h-[40px]">
+                  <p className="mt-4 text-sm text-slate-600 leading-relaxed min-h-[48px]">
                     {lang === 'es' ? plan.description : plan.descriptionEn}
                   </p>
 
-                  <div className="mt-3 inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">
-                    {plan.credits} {lang === 'es' ? 'créditos/mes' : 'credits/mo'}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <div className="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">
+                      <Coins className="w-3 h-3" />
+                      {plan.credits} {lang === 'es' ? 'créditos/mes' : 'credits/mo'}
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">
+                      <Euro className="w-3 h-3" />
+                      {lang === 'es' ? plan.perChangeEs : plan.perChangeEn}
+                    </div>
                   </div>
                   
                   <div className="h-px bg-slate-100 my-6" />
 
                   <ul className="space-y-4 text-sm">
-                    {/* General features */}
                     {t.features.map((feature, i) => {
                       const included = plan.featuresIdx.includes(i) || plan.id === 'business';
                       return (
@@ -419,7 +419,6 @@ export default function Precios() {
                       );
                     })}
 
-                    {/* Extra business features */}
                     {plan.id === 'business' && (
                       (lang === 'es' ? plan.extraFeatures : plan.extraFeaturesEn)?.map((extra, idx) => (
                         <li key={`extra-${idx}`} className="flex items-start gap-3">
@@ -449,8 +448,83 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* Visual Banner section */}
-      <div className="container mb-24">
+      {/* Credits transparency */}
+      <div className="bg-white border-y border-slate-200 py-20">
+        <div className="container max-w-5xl">
+          <div className="text-center mb-12">
+            <Coins className="w-10 h-10 text-indigo-600 mx-auto mb-3" />
+            <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-950">
+              {t.creditsTitle}
+            </h3>
+            <p className="mt-4 text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              {t.creditsSubtitle}
+            </p>
+            <p className="mt-2 text-sm font-semibold text-indigo-700">{t.creditsPerChange}</p>
+          </div>
+
+          <div className="overflow-x-auto rounded-3xl border border-slate-200 shadow-sm bg-white mb-8">
+            <table className="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr className="border-b bg-slate-50/70 text-slate-500">
+                  <th className="px-6 py-4 font-semibold text-xs tracking-wider uppercase">{t.creditsTableCol1}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.creditsTableCol2}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.creditsTableCol3}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.creditsTableCol4}</th>
+                  <th className="px-6 py-4 font-semibold text-xs tracking-wider uppercase">{t.creditsTableCol5}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {t.creditsExamples.map((row) => (
+                  <tr key={row.plan} className="hover:bg-slate-50/50">
+                    <td className="px-6 py-4 font-bold text-slate-900">{row.plan}</td>
+                    <td className="px-4 py-4 text-center text-slate-700">{row.price}</td>
+                    <td className="px-4 py-4 text-center text-indigo-700 font-semibold">{row.credits}</td>
+                    <td className="px-4 py-4 text-center text-emerald-700 font-semibold">{row.perChange}</td>
+                    <td className="px-6 py-4 text-slate-600 text-xs">{row.example}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="text-center text-sm text-slate-500 mb-10">{t.creditsNote}</p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+              <h4 className="font-bold text-slate-900 mb-4">{t.whatCostsTitle} — {lang === 'es' ? 'Sí consume' : 'Uses credits'}</h4>
+              <ul className="space-y-2 text-sm text-slate-700">
+                {t.costsCredits.map((item) => (
+                  <li key={item} className="flex gap-2"><Check className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="border border-slate-200 rounded-2xl p-6 bg-white">
+              <h4 className="font-bold text-slate-900 mb-4">{lang === 'es' ? 'No consume créditos' : 'No credits used'}</h4>
+              <ul className="space-y-2 text-sm text-slate-700">
+                {t.noCredits.map((item) => (
+                  <li key={item} className="flex gap-2"><X className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Custom web CTA */}
+      <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white py-16">
+        <div className="container max-w-4xl text-center">
+          <h3 className="text-3xl md:text-4xl font-bold tracking-tight">{t.customWebTitle}</h3>
+          <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">{t.customWebSubtitle}</p>
+          <div className="mt-8 text-5xl font-bold tracking-tight text-white">{t.customWebPrice}</div>
+          <p className="text-sm text-slate-400 mt-2">{t.customWebPriceNote}</p>
+          <p className="text-sm text-indigo-200 mt-4 max-w-xl mx-auto">{t.customWebIncludes}</p>
+          <Link href="/web-a-medida" className="inline-block mt-8 px-10 py-4 bg-white text-slate-900 rounded-2xl font-semibold hover:bg-slate-100 transition">
+            {t.customWebLink}
+          </Link>
+        </div>
+      </div>
+
+      <div className="container mb-24 mt-20">
         <div className="relative rounded-[3rem] overflow-hidden h-[400px] flex items-end shadow-xl border border-slate-200/50">
           <img 
             src="/precio.webp" 
@@ -472,74 +546,6 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* Competitor Comparison */}
-      <div className="bg-slate-900 text-white py-20">
-        <div className="container max-w-5xl">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl md:text-4xl font-bold tracking-tight">
-              {t.competitorTitle}
-            </h3>
-            <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              {t.competitorSubtitle}
-            </p>
-          </div>
-
-          <div className="overflow-x-auto rounded-3xl border border-white/10 shadow-sm">
-            <table className="w-full text-sm text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10 bg-white/5 text-slate-400">
-                  <th className="px-6 py-4 font-semibold text-xs tracking-wider uppercase">{t.competitorCol}</th>
-                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{lang === 'es' ? 'Gratis' : 'Free'}</th>
-                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.entryPriceCol}</th>
-                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.businessPriceCol}</th>
-                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{lang === 'es' ? 'Coste despliegue' : 'Deploy cost'}</th>
-                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{lang === 'es' ? 'Plantillas' : 'Templates'}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10">
-                {competitors.map((c) => (
-                  <tr key={c.name} className={c.highlight ? 'bg-indigo-600/20' : 'hover:bg-white/5'}>
-                    <td className={`px-6 py-4 font-bold ${c.highlight ? 'text-indigo-300' : 'text-white'}`}>
-                      {c.name}
-                      {c.highlight && <span className="ml-2 text-[10px] bg-indigo-500 text-white px-2 py-0.5 rounded-full font-bold">TÚ</span>}
-                    </td>
-                    <td className="px-4 py-4 text-center text-slate-300">{c.freeCredits}</td>
-                    <td className="px-4 py-4 text-center">
-                      <div className={c.highlight ? 'text-indigo-300 font-semibold' : 'text-slate-300'}>
-                        {lang === 'es' ? c.entryPriceEs : c.entryPriceEn}
-                      </div>
-                      <div className="text-xs text-slate-500">{c.entryCredits} {t.creditsCol.toLowerCase()}</div>
-                    </td>
-                    <td className="px-4 py-4 text-center">
-                      <div className={c.highlight ? 'text-indigo-300 font-semibold' : 'text-slate-300'}>
-                        {lang === 'es' ? c.businessPriceEs : c.businessPriceEn}
-                      </div>
-                      <div className="text-xs text-slate-500">{c.businessCredits} {t.creditsCol.toLowerCase()}</div>
-                    </td>
-                    <td className={`px-4 py-4 text-center text-xs ${c.highlight ? 'text-emerald-400 font-semibold' : 'text-slate-400'}`}>
-                      {lang === 'es' ? c.deployCostEs : c.deployCostEn}
-                    </td>
-                    <td className={`px-4 py-4 text-center text-xs ${c.highlight ? 'text-indigo-300 font-semibold' : 'text-slate-400'}`}>
-                      {lang === 'es' ? c.templatesEs : c.templatesEn}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[t.advantage1, t.advantage2, t.advantage3, t.advantage4].map((adv, i) => (
-              <div key={i} className="flex items-start gap-2 bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-slate-300">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                {adv}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Detail Comparison Table */}
       <div className="bg-white border-y border-slate-200 py-20">
         <div className="container max-w-5xl">
           <h3 className="text-center text-3xl md:text-4xl font-bold tracking-tight text-slate-950 mb-12">
@@ -571,7 +577,6 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* FAQ Accordion Section */}
       <div className="container py-24 max-w-3xl">
         <div className="text-center mb-12">
           <HelpCircle className="w-10 h-10 text-indigo-600 mx-auto mb-3" />
@@ -590,7 +595,6 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* Secondary CTA */}
       <div className="border-t border-slate-200 bg-white py-12 text-center text-sm text-slate-600">
         <div className="container flex flex-col md:flex-row items-center justify-center gap-4">
           <span>{t.customNote}</span>
@@ -603,7 +607,6 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* Creative Direction Signature - Ramon del Pozo Rott */}
       <div className="bg-[#f8f7f4] border-t border-slate-200 py-16">
         <div className="container">
           <div className="flex flex-col items-center text-center">

@@ -118,16 +118,6 @@ export default function TemplatePreviewFrame({
               ))}
             </div>
             <div className="shadow-2xl rounded-2xl overflow-hidden border border-slate-200/80 bg-white">
-              <div className="h-11 bg-slate-50 border-b border-slate-200/60 flex items-center px-4 justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 bg-red-400 rounded-full" />
-                  <span className="w-3 h-3 bg-amber-400 rounded-full" />
-                  <span className="w-3 h-3 bg-green-400 rounded-full" />
-                </div>
-                <div className="text-[10px] font-mono text-slate-500 truncate max-w-[50%]">
-                  {template.slug}.creauna.com
-                </div>
-              </div>
               <div className="p-6 md:p-8">
                 <div dangerouslySetInnerHTML={{ __html: active.html }} />
               </div>

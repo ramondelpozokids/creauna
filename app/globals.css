@@ -8,6 +8,16 @@ body {
   font-family: var(--font-geist-sans);
 }
 
+/* Ocultar barra flotante de Vercel (toolbar / feedback) */
+vercel-live-feedback,
+#__vercel-toolbar,
+[data-vercel-toolbar],
+iframe[src*="vercel.live"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* === ULTRA PREMIUM GLOBAL CENTERING === */
 .container {
   max-width: 1280px;

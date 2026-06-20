@@ -1,5 +1,10 @@
 export const FREE_CREDITS = 15;
 
+export function refundCredit() {
+  if (typeof window === 'undefined') return;
+  setCredits(getCredits() + 1);
+}
+
 export function getCredits(): number {
   if (typeof window === 'undefined') return FREE_CREDITS;
   const stored = sessionStorage.getItem('creauna_credits');

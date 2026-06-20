@@ -63,7 +63,8 @@ const translations = {
     thinking: 'Los motores IA refinan tu diseño…',
     successUpdate: 'Diseño actualizado',
     noCredits: 'Sin créditos. Mejora tu plan en /precios',
-    creditUsed: '1 crédito usado',
+    creditUsed: '1 crédito (~0,16€ en Pro)',
+    creditHint: '1 cambio = 1 crédito · Gratis: 0€ · Pro: ~0,16€/cambio',
     paymentRequired: 'Completa el pago para exportar o publicar',
     creditsLeft: 'créditos',
     changes: 'Historial de cambios',
@@ -72,6 +73,9 @@ const translations = {
     viewDemo: 'Ver demo',
     templateLoaded: 'Plantilla activa',
     instant: 'CADA CAMBIO ES INSTANTÁNEO',
+    selectSection: 'Selecciona una sección para editarla',
+    sections: { hero: 'Inicio', services: 'Servicios', gallery: 'Galería', contact: 'Contacto', testimonial: 'Testimonios' },
+    changeApplied: 'Cambio visible aplicado',
   },
   en: {
     title: 'CREAUNA Studio',
@@ -99,7 +103,8 @@ const translations = {
     thinking: 'AI engines refining your design…',
     successUpdate: 'Design updated',
     noCredits: 'No credits left. Upgrade at /precios',
-    creditUsed: '1 credit used',
+    creditUsed: '1 credit (~€0.16 on Pro)',
+    creditHint: '1 change = 1 credit · Free: €0 · Pro: ~€0.16/change',
     paymentRequired: 'Complete payment to export or publish',
     creditsLeft: 'credits',
     changes: 'Change history',
@@ -108,6 +113,9 @@ const translations = {
     viewDemo: 'View demo',
     templateLoaded: 'Active template',
     instant: 'EVERY CHANGE IS INSTANT',
+    selectSection: 'Select a section to edit it',
+    sections: { hero: 'Home', services: 'Services', gallery: 'Gallery', contact: 'Contact', testimonial: 'Testimonials' },
+    changeApplied: 'Visible change applied',
   },
 };
 
@@ -164,6 +172,9 @@ function StudioContent() {
   const [activeTemplateSlug, setActiveTemplateSlug] = useState<string | undefined>();
   const [changeLog, setChangeLog] = useState<ChangeEntry[]>([]);
   const [previewPulse, setPreviewPulse] = useState(false);
+  const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
+  const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
+  const sectionRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const templateLoadedRef = useRef(false);
 
   useEffect(() => {
@@ -216,14 +227,18 @@ function StudioContent() {
     setTimeout(() => setPreviewPulse(false), 1200);
   };
 
-  const useCreditOrBlock = useCallback((): boolean => {
-    if (!consumeCredit()) {
+  const checkCredits = useCallback((): boolean => {
+    if (getCredits() <= 0) {
       toast.error(t.noCredits);
       return false;
     }
-    setCredits(getCredits());
     return true;
   }, [t.noCredits]);
+
+  const applyCreditOnSuccess = useCallback(() => {
+    consumeCredit();
+    setCredits(getCredits());
+  }, []);
 
   const requirePayment = useCallback(() => {
     if (!paid) {
@@ -247,16 +262,30 @@ function StudioContent() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Error en el Studio');
-    return data as { message: string; previewSections: PreviewSection[] };
+    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[] };
+  };
+
+  const flashSections = (ids: number[]) => {
+    if (ids.length === 0) return;
+    setHighlightedIds(ids);
+    setTimeout(() => setHighlightedIds([]), 2500);
+    const first = sectionRefs.current[ids[0]];
+    first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const processAIChange = async (currentInput: string, action: 'change' | 'regenerate' | 'improve' = 'change', sectionId?: number) => {
     try {
-      const data = await callStudioApi({ prompt: currentInput, action, sectionId });
+      const data = await callStudioApi({
+        prompt: currentInput,
+        action,
+        sectionId: sectionId ?? selectedSectionId ?? undefined,
+      });
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
       setPreviewSections(data.previewSections);
+      applyCreditOnSuccess();
       addChange(currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : ''));
-      toast.success(t.successUpdate, { description: t.creditUsed });
+      flashSections(data.changedSectionIds ?? []);
+      toast.success(t.changeApplied, { description: t.creditUsed });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error al generar');
     } finally {
@@ -266,7 +295,7 @@ function StudioContent() {
 
   const sendMessage = async () => {
     if (!input.trim() || isThinking) return;
-    if (!useCreditOrBlock()) return;
+    if (!checkCredits()) return;
 
     const userMsg: Message = { id: Date.now(), role: 'user', content: input.trim() };
     setMessages((prev) => [...prev, userMsg]);
@@ -277,25 +306,24 @@ function StudioContent() {
   };
 
   const applyQuickPrompt = (prompt: string) => {
-    setInput(prompt);
-    setTimeout(() => {
-      if (!useCreditOrBlock()) return;
-      setMessages((prev) => [...prev, { id: Date.now(), role: 'user', content: prompt }]);
-      setInput('');
-      setIsThinking(true);
-      processAIChange(prompt);
-    }, 30);
+    if (!checkCredits()) return;
+    setMessages((prev) => [...prev, { id: Date.now(), role: 'user', content: prompt }]);
+    setInput('');
+    setIsThinking(true);
+    processAIChange(prompt);
   };
 
   const changeStyle = async (newStyle: 'elegante' | 'minimal' | 'moderno') => {
-    if (!useCreditOrBlock()) return;
+    if (!checkCredits()) return;
     setStyle(newStyle);
     setIsThinking(true);
     try {
       const data = await callStudioApi({ prompt: `estilo ${newStyle}`, action: 'style', style: newStyle });
       setPreviewSections(data.previewSections);
+      applyCreditOnSuccess();
       addChange(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`);
-      toast.success(lang === 'es' ? `Estilo: ${newStyle} (1 crédito)` : `Style: ${newStyle} (1 credit)`);
+      flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
+      toast.success(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`, { description: t.creditUsed });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
     } finally {
@@ -304,13 +332,15 @@ function StudioContent() {
   };
 
   const regenerate = async () => {
-    if (!useCreditOrBlock()) return;
+    if (!checkCredits()) return;
     setIsThinking(true);
     try {
       const data = await callStudioApi({ prompt: 'regenerar', action: 'regenerate' });
       setPreviewSections(data.previewSections);
+      applyCreditOnSuccess();
       addChange(lang === 'es' ? 'Regeneración completa' : 'Full regeneration');
-      toast.success(lang === 'es' ? 'Nuevas variaciones (1 crédito)' : 'New variations (1 credit)');
+      flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
+      toast.success(lang === 'es' ? 'Nuevas variaciones' : 'New variations', { description: t.creditUsed });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
     } finally {
@@ -319,18 +349,26 @@ function StudioContent() {
   };
 
   const improveSection = async (id: number) => {
-    if (!useCreditOrBlock()) return;
+    if (!checkCredits()) return;
+    setSelectedSectionId(id);
     setIsThinking(true);
     try {
       const data = await callStudioApi({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
       setPreviewSections(data.previewSections);
+      applyCreditOnSuccess();
       addChange(lang === 'es' ? `Sección #${id} mejorada` : `Section #${id} improved`);
-      toast.success(lang === 'es' ? 'Sección mejorada (1 crédito)' : 'Section improved (1 credit)');
+      flashSections(data.changedSectionIds ?? [id]);
+      toast.success(lang === 'es' ? 'Sección mejorada' : 'Section improved', { description: t.creditUsed });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
     } finally {
       setIsThinking(false);
     }
+  };
+
+  const sectionLabel = (type: string) => {
+    const key = type as keyof typeof t.sections;
+    return t.sections[key] ?? type;
   };
 
   const handleExport = async () => {
@@ -417,7 +455,7 @@ function StudioContent() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-[400px] flex flex-col border-r border-slate-200 bg-white shrink-0">
+        <div className="w-[min(340px,32vw)] flex flex-col border-r border-slate-200 bg-white shrink-0">
           <div className="p-7 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200">
@@ -472,8 +510,8 @@ function StudioContent() {
           <div className="px-7 pt-4 pb-3 border-t border-slate-100 shrink-0">
             <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
             <div className="flex flex-wrap gap-2">
-              {t.quickPrompts.slice(0, 4).map((p, i) => (
-                <button key={i} onClick={() => applyQuickPrompt(p)} className="text-xs px-3 py-1.5 rounded-2xl border border-slate-200 hover:bg-slate-100 cursor-pointer">
+              {t.quickPrompts.map((p, i) => (
+                <button key={i} onClick={() => applyQuickPrompt(p)} disabled={isThinking} className="text-xs px-3 py-1.5 rounded-2xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-40 cursor-pointer">
                   {p}
                 </button>
               ))}
@@ -498,15 +536,15 @@ function StudioContent() {
               </button>
             </div>
             <div className="flex justify-between mt-2 text-[10px] text-slate-400">
-              <span>{credits} {t.creditsLeft}</span>
+              <span>{credits} {t.creditsLeft} · {t.creditHint}</span>
               <Link href="/guia" className="text-indigo-600 hover:underline">{lang === 'es' ? 'Ver guía' : 'View guide'}</Link>
             </div>
           </div>
         </div>
 
-        <div className="flex-1 bg-slate-100 p-6 md:p-8 overflow-auto min-w-0">
-          <div className="max-w-[1120px] mx-auto">
-            <div className="flex flex-wrap justify-between items-center gap-3 mb-4 px-1">
+        <div className="flex-1 bg-slate-100 p-4 md:p-6 overflow-auto min-w-0 flex flex-col">
+          <div className="w-full max-w-[1400px] mx-auto flex-1 flex flex-col">
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-3 px-1 shrink-0">
               <div className="flex items-center gap-4">
                 <div className="font-medium tracking-tight text-xl">{projectName}</div>
                 <div className={`text-xs px-3 py-px rounded-full border font-semibold ${paid ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
@@ -517,7 +555,21 @@ function StudioContent() {
                   {t.livePreview}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex text-xs border border-slate-200 rounded-2xl bg-white p-1 flex-wrap">
+                  {previewSections.map((sec) => (
+                    <button
+                      key={sec.id}
+                      onClick={() => {
+                        setSelectedSectionId(sec.id);
+                        sectionRefs.current[sec.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }}
+                      className={`px-3 py-1.5 rounded-[14px] transition cursor-pointer text-[11px] ${selectedSectionId === sec.id ? 'bg-indigo-600 text-white' : 'hover:bg-slate-100'}`}
+                    >
+                      {sectionLabel(sec.type)}
+                    </button>
+                  ))}
+                </div>
                 <div className="flex text-xs border border-slate-200 rounded-2xl bg-white p-1">
                   {(['elegante', 'minimal', 'moderno'] as const).map((s, i) => (
                     <button key={s} onClick={() => changeStyle(s)} className={`px-4 py-1.5 rounded-[14px] transition cursor-pointer ${style === s ? 'bg-slate-900 text-white' : 'hover:bg-slate-100'}`}>
@@ -536,25 +588,28 @@ function StudioContent() {
               </div>
             </div>
 
+            {selectedSectionId && (
+              <p className="text-xs text-indigo-600 font-medium mb-2 px-1 shrink-0">{t.selectSection}: {sectionLabel(previewSections.find((s) => s.id === selectedSectionId)?.type ?? '')}</p>
+            )}
+
             <motion.div
-              animate={previewPulse ? { boxShadow: '0 0 0 3px rgba(99,102,241,0.5)' } : { boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' }}
-              className={`mx-auto bg-white transition-all border border-slate-200 ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-[1120px] rounded-[4rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
+              animate={previewPulse ? { boxShadow: '0 0 0 4px rgba(99,102,241,0.45)' } : { boxShadow: '0 25px 50px -12px rgba(0,0,0,0.18)' }}
+              className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
             >
-              <div className="h-9 bg-slate-100 border-b flex items-center px-5 text-xs text-slate-500">
-                <div className="flex items-center gap-2 mr-3">
-                  <span className="w-2.5 h-2.5 bg-red-400 rounded-full" />
-                  <span className="w-2.5 h-2.5 bg-amber-400 rounded-full" />
-                  <span className="w-2.5 h-2.5 bg-green-400 rounded-full" />
-                </div>
-                <div className="flex-1 text-center font-mono tracking-[2px] text-[10px]">{projectName.toLowerCase().replace(/\s/g, '')}.creauna.com</div>
-              </div>
-              <div className="p-8 md:p-10 space-y-8 bg-white">
+              <div className="p-6 md:p-10 space-y-8 bg-white">
                 {previewSections.map((section) => (
-                  <div key={section.id} className="group relative">
+                  <div
+                    key={section.id}
+                    ref={(el) => { sectionRefs.current[section.id] = el; }}
+                    onClick={() => setSelectedSectionId(section.id)}
+                    className={`group relative rounded-2xl transition-all duration-500 cursor-pointer ${
+                      selectedSectionId === section.id ? 'ring-2 ring-indigo-400 ring-offset-2' : ''
+                    } ${highlightedIds.includes(section.id) ? 'ring-4 ring-emerald-400 ring-offset-4 scale-[1.01]' : ''}`}
+                  >
                     <div dangerouslySetInnerHTML={{ __html: section.html }} />
                     <button
-                      onClick={() => improveSection(section.id)}
-                      className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition bg-white text-slate-900 text-xs px-3 py-1 rounded-full border shadow flex items-center gap-1 cursor-pointer"
+                      onClick={(e) => { e.stopPropagation(); improveSection(section.id); }}
+                      className="absolute top-2 right-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 cursor-pointer z-10"
                     >
                       <Zap className="w-3 h-3" /> {t.improve}
                     </button>
@@ -563,7 +618,7 @@ function StudioContent() {
               </div>
             </motion.div>
 
-            <div className="text-center text-xs text-slate-400 mt-5 tracking-widest">
+            <div className="text-center text-xs text-slate-400 mt-4 tracking-widest shrink-0 pb-2">
               {t.livePreview} • {t.instant}
             </div>
           </div>

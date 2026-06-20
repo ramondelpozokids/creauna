@@ -34,12 +34,12 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pricing',
     keywords: ['precio', 'precios', 'plan', 'planes', 'cuanto cuesta', 'cuánto cuesta', 'tarifa', 'coste', 'costo', 'gratis', 'pago', 'suscripción', 'mensual', 'anual'],
-    answer: 'Tenemos 3 planes:\n\n• Gratis — 0€, 15 créditos/mes\n• Pro — 19€/mes (15€ anual), 120 créditos/mes\n• Business — 49€/mes (39€ anual), 300 créditos/mes\n\nMás económico que Lovable ($25) y Emergent ($20), sin coste extra por mantener tu web publicada. Detalle completo en /precios',
+    answer: 'Tenemos 3 planes transparentes:\n\n• Gratis — 0€, 15 créditos/mes (0€ por cambio)\n• Pro — 19€/mes, 120 créditos/mes (~0,16€ por cambio)\n• Business — 49€/mes, 300 créditos/mes (~0,16€ por cambio)\n\nWeb a Medida aparte: 2.900€ + IVA. Todo el detalle en /precios',
   },
   {
     id: 'credits',
     keywords: ['crédito', 'créditos', 'credito', 'creditos', 'consumen', 'gastan', 'cuantos cambios', 'cuántos cambios', 'ediciones'],
-    answer: 'Cada cambio que haces en el Studio consume 1 crédito. Los créditos se renuevan cada mes según tu plan (15 / 120 / 300). A diferencia de otras plataformas, no gastamos créditos extra solo por tener tu web publicada.',
+    answer: '1 crédito = 1 cambio en el Studio. Coste en euros:\n\n• Gratis: 0€ por cambio (15/mes)\n• Pro: ~0,16€ por cambio (19€ ÷ 120 créditos)\n• Business: ~0,16€ por cambio (49€ ÷ 300 créditos)\n\nLos créditos se renuevan cada mes. No cobramos extra por mantener tu web publicada. Detalle en /precios',
   },
   {
     id: 'how-it-works',
@@ -54,7 +54,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'templates',
     keywords: ['plantilla', 'plantillas', 'template', 'templates', 'catálogo', 'catalogo', 'diseños', 'modelos'],
-    answer: 'Tenemos 36 plantillas premium organizadas en 5 categorías: Gastronomía (6), Servicios (12), Lujo & Estilo (6), Corporativo (6) y Tecnología (6). Cada una con imagen acorde al sector. Explóralas en /templates',
+    answer: 'Tenemos 60 plantillas premium organizadas en 5 categorías: Gastronomía (12), Servicios (12), Lujo & Estilo (12), Corporativo (12) y Tecnología (12). Cada una con imagen acorde al sector. Explóralas en /templates',
   },
   {
     id: 'ai-tech',
@@ -74,7 +74,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'custom-web',
     keywords: ['medida', 'personalizada', 'personalizado', 'exclusivo', 'agencia', 'proyecto especial'],
-    answer: 'Para webs completamente a medida o proyectos de agencia, visita /web-a-medida. Ramón del Pozo Rott supervisa cada proyecto y te contacta en menos de 24h con una propuesta personalizada.',
+    answer: 'Web a Medida: precio cerrado desde 2.900€ + IVA. Incluye diseño exclusivo, copywriting, desarrollo, SEO, publicación y 3 meses de soporte. Proceso completo en /web-a-medida. Ramón del Pozo Rott supervisa cada proyecto. Contacto en /contacto',
   },
   {
     id: 'export',
@@ -94,7 +94,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'competitors',
     keywords: ['emergent', 'lovable', 'competencia', 'comparar', 'comparativa', 'alternativa', 'mejor que'],
-    answer: 'Frente a Emergent ($20/mes, 100 créditos, ~50 extra por web publicada) y Lovable ($25/mes), CREAUNA ofrece Pro a 19€ con 120 créditos, 36 plantillas premium, interfaz en español y sin penalización por despliegue. Comparativa en /precios',
+    answer: 'En CREAUNA no comparamos con otras plataformas: tú eliges el plan que encaje contigo. Precios claros en /precios — cada cambio en el Studio = 1 crédito, con coste en euros visible. Studio desde 0€ o Web a Medida desde 2.900€.',
   },
   {
     id: 'free-trial',
@@ -144,7 +144,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pro-plan',
     keywords: ['plan pro', 'pro plan', ' suscripcion pro', 'suscripción pro'],
-    answer: 'Plan Pro: 19€/mes (15€ anual), 120 créditos/mes, webs ilimitadas, 36 plantillas, exportación de código, soporte prioritario y 3 meses de ajustes. El más popular. Empieza en /studio',
+    answer: 'Plan Pro: 19€/mes (15€ anual), 120 créditos/mes, webs ilimitadas, 60 plantillas, exportación de código, soporte prioritario y 3 meses de ajustes. El más popular. Empieza en /studio',
   },
   {
     id: 'free-plan',
@@ -197,7 +197,7 @@ export const knowledgeBaseEn: KnowledgeEntry[] = [
   {
     id: 'templates',
     keywords: ['template', 'templates', 'catalog', 'designs', 'models'],
-    answer: 'We have 36 premium templates in 5 categories: Gastronomy (6), Services (12), Luxury (6), Corporate (6), Technology (6). Browse at /templates',
+    answer: 'We have 60 premium templates in 5 categories: Gastronomy (12), Services (12), Luxury (12), Corporate (12), Technology (12). Browse at /templates',
   },
   {
     id: 'studio',
