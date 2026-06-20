@@ -6,7 +6,8 @@ import { useLanguage } from '../components/LanguageProvider';
 import { LayoutGrid, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TemplatePreviewFrame from '../components/TemplatePreviewFrame';
-import { getPublishedTemplates, getTemplateBySlug, type TemplateItem } from '../data/templates';
+import TemplateThumbnail from '../components/TemplateThumbnail';
+import { getPublishedTemplates, getTemplateBySlug, type TemplateItem, type TemplateCategory } from '../data/templates';
 
 const translations = {
   es: {
@@ -152,10 +153,10 @@ export default function Templates() {
                 className="card-luxe group cursor-pointer overflow-hidden rounded-[2rem] border border-slate-200 bg-white"
               >
                 <div className="relative h-72 overflow-hidden">
-                  <img
-                    src={tpl.image}
-                    alt={tpl.name}
-                    loading="lazy"
+                  <TemplateThumbnail
+                    slug={tpl.slug}
+                    name={tpl.name}
+                    categoryKey={tpl.categoryKey as TemplateCategory}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent opacity-65" />

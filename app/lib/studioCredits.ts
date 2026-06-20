@@ -13,17 +13,20 @@ export function setCredits(amount: number) {
   sessionStorage.setItem('creauna_credits', String(Math.max(0, amount)));
 }
 
-export async function syncCreditsFromServer(): Promise<number> {
-  if (typeof window === 'undefined') return FREE_CREDITS;
+export type CreditSync = { credits: number; unlimited: boolean };
+
+export async function syncCreditsFromServer(): Promise<CreditSync> {
+  if (typeof window === 'undefined') return { credits: FREE_CREDITS, unlimited: false };
   try {
     const res = await fetch('/api/credits');
-    if (!res.ok) return getCredits();
+    if (!res.ok) return { credits: getCredits(), unlimited: false };
     const data = await res.json();
     const credits = typeof data.credits === 'number' ? data.credits : FREE_CREDITS;
-    setCredits(credits);
-    return credits;
+    const unlimited = data.unlimited === true;
+    if (!unlimited) setCredits(credits);
+    return { credits, unlimited };
   } catch {
-    return getCredits();
+    return { credits: getCredits(), unlimited: false };
   }
 }
 

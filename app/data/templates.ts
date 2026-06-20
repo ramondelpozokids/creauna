@@ -1,3 +1,5 @@
+import { templateImageUrl } from '../lib/templateImages';
+
 export type TemplateCategory = 'gastronomy' | 'services' | 'luxury' | 'corporate' | 'tech';
 
 export interface TemplateItem {
@@ -519,12 +521,14 @@ export const TEMPLATE_LIMITS: Record<TemplateCategory, number> = {
 
 export function getPublishedTemplates(): TemplateItem[] {
   const counts: Partial<Record<TemplateCategory, number>> = {};
-  return templatesCatalog.filter((t) => {
-    const current = counts[t.categoryKey] ?? 0;
-    if (current >= TEMPLATE_LIMITS[t.categoryKey]) return false;
-    counts[t.categoryKey] = current + 1;
-    return true;
-  });
+  return templatesCatalog
+    .filter((t) => {
+      const current = counts[t.categoryKey] ?? 0;
+      if (current >= TEMPLATE_LIMITS[t.categoryKey]) return false;
+      counts[t.categoryKey] = current + 1;
+      return true;
+    })
+    .map((t) => ({ ...t, image: templateImageUrl(t.slug) }));
 }
 
 export function getTemplateBySlug(slug: string): TemplateItem | undefined {

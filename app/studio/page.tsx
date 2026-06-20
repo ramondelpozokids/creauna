@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import StudioAITeam from '../components/StudioAITeam';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
+import StudioOnboarding from '../components/StudioOnboarding';
 import { useLanguage } from '../components/LanguageProvider';
 import { getCredits, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
@@ -41,6 +42,8 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'Diseño con IA',
     welcome: 'Hola. Soy tu director de diseño. Los 4 motores de IA trabajan en equipo para crear tu web. ¿Qué quieres diseñar hoy?',
+    welcomeOnboarding: 'Bienvenido al Studio. Antes de diseñar, elige cómo quieres empezar en el panel de la derecha: una plantilla del catálogo o describe tu web desde cero.',
+    welcomeDescribe: 'Perfecto. Cuéntame tu negocio: sector, estilo visual, secciones que necesitas (contacto, menú, reservas…) y crearé tu primera versión.',
     welcomeTemplate: (name: string) => `Plantilla «${name}» cargada. Navega la vista en tiempo real a la derecha y dime qué quieres mejorar.`,
     placeholder: 'Describe lo que quieres cambiar...',
     regenerate: 'Regenerar',
@@ -67,6 +70,7 @@ const translations = {
     creditHint: '1 cambio = 1 crédito · Gratis: 0€ · Pro: ~0,16€/cambio',
     paymentRequired: 'Completa el pago para exportar o publicar',
     creditsLeft: 'créditos',
+    unlimitedAccess: 'Acceso ilimitado',
     changes: 'Historial de cambios',
     noChanges: 'Los cambios aparecerán aquí al editar',
     viewCollection: 'Ver colección',
@@ -81,6 +85,8 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'AI Design',
     welcome: 'Hello. Your design director here. 4 AI engines work as a team to build your site. What shall we design today?',
+    welcomeOnboarding: 'Welcome to the Studio. Before we design, choose how to start in the panel on the right: a catalog template or describe your site from scratch.',
+    welcomeDescribe: 'Great. Tell me about your business: industry, visual style, sections you need (contact, menu, booking…) and I will build your first version.',
     welcomeTemplate: (name: string) => `Template «${name}» loaded. Check the live preview on the right and tell me what to improve.`,
     placeholder: 'Describe what you want to change...',
     regenerate: 'Regenerate',
@@ -107,6 +113,7 @@ const translations = {
     creditHint: '1 change = 1 credit · Free: €0 · Pro: ~€0.16/change',
     paymentRequired: 'Complete payment to export or publish',
     creditsLeft: 'credits',
+    unlimitedAccess: 'Unlimited access',
     changes: 'Change history',
     noChanges: 'Changes will appear here as you edit',
     viewCollection: 'View collection',
@@ -118,6 +125,13 @@ const translations = {
     changeApplied: 'Visible change applied',
   },
 };
+
+function buildDescribePlaceholder(lang: Language) {
+  return `<div class="border-2 border-dashed border-slate-200 rounded-[3rem] px-12 py-24 text-center text-slate-400">
+  <p class="text-lg font-medium">${lang === 'es' ? 'Tu web aparecerá aquí' : 'Your site will appear here'}</p>
+  <p class="mt-2 text-sm">${lang === 'es' ? 'Describe tu proyecto en el chat ←' : 'Describe your project in the chat ←'}</p>
+</div>`;
+}
 
 function buildDefaultHero(lang: Language, templateSlug?: string) {
   const collection = lang === 'es' ? 'Ver colección' : 'View collection';
@@ -161,6 +175,10 @@ function StudioContent() {
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [credits, setCredits] = useState(FREE_CREDITS);
+  const [unlimitedAccess, setUnlimitedAccess] = useState(false);
+  const [studioPhase, setStudioPhase] = useState<'onboarding' | 'describe' | 'active'>(
+    templateParam || projectParam ? 'active' : 'onboarding'
+  );
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -181,13 +199,17 @@ function StudioContent() {
 
   useEffect(() => {
     setMounted(true);
-    syncCreditsFromServer().then(setCredits);
+    syncCreditsFromServer().then(({ credits: balance, unlimited }) => {
+      setCredits(balance);
+      setUnlimitedAccess(unlimited);
+    });
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
     if (projectParam && !templateLoadedRef.current) {
       templateLoadedRef.current = true;
+      setStudioPhase('active');
       fetch(`/api/projects/${projectParam}`)
         .then((r) => r.json())
         .then((data) => {
@@ -214,6 +236,7 @@ function StudioContent() {
       const tpl = getTemplateBySlug(templateParam);
       if (tpl) {
         templateLoadedRef.current = true;
+        setStudioPhase('active');
         const sections = toStudioSections(buildTemplateSections(tpl, lang));
         setPreviewSections(sections);
         setProjectName(lang === 'es' ? tpl.nameEs : tpl.nameEn);
@@ -235,9 +258,20 @@ function StudioContent() {
         return;
       }
     }
-    setMessages([{ id: 1, role: 'ai', content: t.welcome }]);
-    setPreviewSections([{ id: 101, type: 'hero', html: buildDefaultHero(lang, activeTemplateSlug) }]);
-  }, [mounted, templateParam, projectParam, lang, t.welcome, t.welcomeTemplate, activeTemplateSlug]);
+    if (studioPhase === 'onboarding') {
+      setMessages([{ id: 1, role: 'ai', content: t.welcomeOnboarding }]);
+      return;
+    }
+    if (studioPhase === 'describe') {
+      setMessages([{ id: 1, role: 'ai', content: t.welcomeDescribe }]);
+      setPreviewSections([{ id: 101, type: 'hero', html: buildDescribePlaceholder(lang) }]);
+    }
+  }, [mounted, templateParam, projectParam, lang, studioPhase, t.welcomeOnboarding, t.welcomeDescribe, t.welcomeTemplate]);
+
+  const handleChooseDescribe = () => {
+    setStudioPhase('describe');
+    setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
+  };
 
   const addChange = (summary: string) => {
     setChangeLog((prev) => [
@@ -253,20 +287,25 @@ function StudioContent() {
   };
 
   const checkCredits = useCallback((): boolean => {
+    if (unlimitedAccess) return true;
     if (getCredits() <= 0) {
       toast.error(t.noCredits);
       return false;
     }
     return true;
-  }, [t.noCredits]);
+  }, [unlimitedAccess, t.noCredits]);
 
   const applyCreditFromResponse = useCallback((balance?: number) => {
+    if (unlimitedAccess) return;
     if (typeof balance === 'number') {
       setCredits(balance);
     } else {
-      syncCreditsFromServer().then(setCredits);
+      syncCreditsFromServer().then(({ credits: c, unlimited }) => {
+        setCredits(c);
+        setUnlimitedAccess(unlimited);
+      });
     }
-  }, []);
+  }, [unlimitedAccess]);
 
   const persistProject = useCallback(
     async (sections: PreviewSection[], log: ChangeEntry[], name: string) => {
@@ -322,7 +361,8 @@ function StudioContent() {
       throw new Error(data.error || 'Error en el Studio');
     }
     if (typeof data.credits === 'number') setCredits(data.credits);
-    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number };
+    if (data.unlimited === true) setUnlimitedAccess(true);
+    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; unlimited?: boolean };
   };
 
   const flashSections = (ids: number[]) => {
@@ -342,6 +382,7 @@ function StudioContent() {
       });
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
       setPreviewSections(data.previewSections);
+      if (studioPhase === 'describe') setStudioPhase('active');
       applyCreditFromResponse(data.credits);
       const summary = currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : '');
       addChange(summary);
@@ -362,6 +403,10 @@ function StudioContent() {
 
   const sendMessage = async () => {
     if (!input.trim() || isThinking) return;
+    if (studioPhase === 'onboarding') {
+      toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
+      return;
+    }
     if (!checkCredits()) return;
 
     const userMsg: Message = { id: Date.now(), role: 'user', content: input.trim() };
@@ -373,6 +418,10 @@ function StudioContent() {
   };
 
   const applyQuickPrompt = (prompt: string) => {
+    if (studioPhase === 'onboarding') {
+      toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
+      return;
+    }
     if (!checkCredits()) return;
     setMessages((prev) => [...prev, { id: Date.now(), role: 'user', content: prompt }]);
     setInput('');
@@ -381,6 +430,7 @@ function StudioContent() {
   };
 
   const changeStyle = async (newStyle: 'elegante' | 'minimal' | 'moderno') => {
+    if (studioPhase === 'onboarding') return;
     if (!checkCredits()) return;
     setStyle(newStyle);
     setIsThinking(true);
@@ -401,6 +451,7 @@ function StudioContent() {
   };
 
   const regenerate = async () => {
+    if (studioPhase === 'onboarding') return;
     if (!checkCredits()) return;
     setIsThinking(true);
     try {
@@ -420,6 +471,7 @@ function StudioContent() {
   };
 
   const improveSection = async (id: number) => {
+    if (studioPhase === 'onboarding') return;
     if (!checkCredits()) return;
     setSelectedSectionId(id);
     setIsThinking(true);
@@ -495,7 +547,7 @@ function StudioContent() {
           )}
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-800">
             <Coins className="w-3.5 h-3.5" />
-            {credits} {t.creditsLeft}
+            {unlimitedAccess ? t.unlimitedAccess : `${credits} ${t.creditsLeft}`}
           </div>
         </div>
 
@@ -604,7 +656,11 @@ function StudioContent() {
               </button>
             </div>
             <div className="flex justify-between mt-2 text-[10px] text-slate-400">
-              <span>{credits} {t.creditsLeft} · {t.creditHint}</span>
+              <span>
+                {unlimitedAccess
+                  ? `${t.unlimitedAccess} · Superadmin`
+                  : `${credits} ${t.creditsLeft} · ${t.creditHint}`}
+              </span>
               <Link href="/guia" className="text-indigo-600 hover:underline">{lang === 'es' ? 'Ver guía' : 'View guide'}</Link>
             </div>
           </div>
@@ -664,6 +720,9 @@ function StudioContent() {
               animate={previewPulse ? { boxShadow: '0 0 0 4px rgba(99,102,241,0.45)' } : { boxShadow: '0 25px 50px -12px rgba(0,0,0,0.18)' }}
               className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
             >
+              {studioPhase === 'onboarding' ? (
+                <StudioOnboarding lang={lang} onChooseDescribe={handleChooseDescribe} />
+              ) : (
               <div className="p-6 md:p-10 space-y-8 bg-white">
                 {previewSections.map((section) => (
                   <div
@@ -684,6 +743,7 @@ function StudioContent() {
                   </div>
                 ))}
               </div>
+              )}
             </motion.div>
 
             <div className="text-center text-xs text-slate-400 mt-4 tracking-widest shrink-0 pb-2">

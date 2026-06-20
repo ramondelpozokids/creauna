@@ -13,15 +13,18 @@ export async function POST(req: Request) {
   try {
     const session = await getSessionUser();
     const creditStatus = await resolveCredits(session?.id ?? null, ip);
+    const unlimited = creditStatus.unlimited === true;
 
-    if (creditStatus.credits <= 0) {
+    if (!unlimited && creditStatus.credits <= 0) {
       return NextResponse.json(
         { error: 'Sin créditos. Regístrate o mejora tu plan en /precios', credits: 0 },
         { status: 402 }
       );
     }
 
-    const spent = await consumeCredit(session?.id ?? null, ip, 'studio_generate');
+    const spent = unlimited
+      ? { ok: true as const, credits: creditStatus.credits }
+      : await consumeCredit(session?.id ?? null, ip, 'studio_generate');
     if (!spent.ok) {
       return NextResponse.json({ error: 'Sin créditos disponibles', credits: spent.credits }, { status: 402 });
     }
@@ -51,6 +54,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       ...result,
       credits: spent.credits,
+      unlimited,
     });
   } catch (error) {
     console.error('api/studio/generate:', error);
