@@ -1,3 +1,5 @@
+Set-Location $PSScriptRoot
+
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host "   CREAUNA - Iniciando servidor local" -ForegroundColor Cyan
 Write-Host "============================================`n" -ForegroundColor Cyan
@@ -14,7 +16,7 @@ Write-Host "[OK] Node.js encontrado" -ForegroundColor Green
 
 # Instalar dependencias si no existen
 if (-not (Test-Path "node_modules")) {
-    Write-Host "`n[INFO] Instalando dependencias (primera vez)..." -ForegroundColor Yellow
+    Write-Host "`n[INFO] Instalando dependencias - primera vez..." -ForegroundColor Yellow
     npm install
 }
 

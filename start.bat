@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 title CREAUNA - Servidor Local
 echo.
 echo ==========================================

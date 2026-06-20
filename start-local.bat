@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 echo ============================================
 echo   CREAUNA - Iniciando en local
 echo ============================================
@@ -18,7 +19,7 @@ echo.
 
 REM Instalar dependencias si no existen
 if not exist "node_modules" (
-    echo [INFO] Instalando dependencias (primera vez)...
+    echo [INFO] Instalando dependencias - primera vez...
     call npm install
     if %errorlevel% neq 0 (
         echo [ERROR] Fallo al instalar dependencias.
