@@ -176,6 +176,53 @@ export const mapaI18n = {
   },
 } as const;
 
+export const settingsI18n = {
+  es: {
+    title: 'Ajustes',
+    subtitle: 'Gestiona tu cuenta y preferencias.',
+    profile: 'Perfil',
+    fullName: 'Nombre completo',
+    company: 'Empresa',
+    email: 'Correo electrónico',
+    saveProfile: 'Guardar perfil',
+    notifications: 'Notificaciones',
+    notifEmail: 'Email',
+    notifEmailDesc: 'Recibir notificaciones por correo',
+    notifMarketing: 'Marketing',
+    notifMarketingDesc: 'Ofertas y novedades',
+    notifUpdates: 'Actualizaciones',
+    notifUpdatesDesc: 'Cambios en tus proyectos',
+    billing: 'Facturación y plan',
+    billingText: 'Actualmente tienes el plan',
+    manage: 'Gestionar suscripción',
+    cancel: 'Cancelar plan',
+    demoNote: 'Los cambios se guardan automáticamente en esta demo.',
+    saved: 'Ajustes guardados correctamente',
+  },
+  en: {
+    title: 'Settings',
+    subtitle: 'Manage your account and preferences.',
+    profile: 'Profile',
+    fullName: 'Full name',
+    company: 'Company',
+    email: 'Email address',
+    saveProfile: 'Save profile',
+    notifications: 'Notifications',
+    notifEmail: 'Email',
+    notifEmailDesc: 'Receive email notifications',
+    notifMarketing: 'Marketing',
+    notifMarketingDesc: 'Offers and news',
+    notifUpdates: 'Updates',
+    notifUpdatesDesc: 'Changes to your projects',
+    billing: 'Billing & plan',
+    billingText: 'You are currently on the',
+    manage: 'Manage subscription',
+    cancel: 'Cancel plan',
+    demoNote: 'Changes are saved automatically in this demo.',
+    saved: 'Settings saved successfully',
+  },
+} as const;
+
 export const dashboardI18n = {
   es: {
     welcome: 'Bienvenido de nuevo',

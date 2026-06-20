@@ -28,7 +28,7 @@ export default function Contacto() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, lang }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || t.toastError);

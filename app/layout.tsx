@@ -4,10 +4,14 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
 import ChatAssistant from "./components/ChatAssistant";
+import HtmlLangSync from "./components/HtmlLangSync";
 import { LanguageProvider } from "./components/LanguageProvider";
 import { CREAUNA_SECURITY_SCRIPT } from "./lib/securityLayers";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://creauna.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "CREAUNA — Crea webs con IA en minutos | Diseño premium",
   description: "Crea webs modernas, rápidas y profesionales en minutos. Diseño premium y tecnología avanzada. Español. Fundado por Ramón del Pozo Rott.",
   keywords: [
@@ -51,6 +55,7 @@ export default function RootLayout({
     <html lang="es">
       <body className="antialiased">
         <LanguageProvider>
+          <HtmlLangSync />
           {children}
           
           <Footer />

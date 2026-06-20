@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const baseUrl = 'https://creauna.com';
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://creauna.vercel.app').replace(/\/$/, '');
 
   const urls = [
     '',
@@ -22,23 +22,24 @@ export async function GET() {
     '/contacto',
     '/equipo-ias',
     '/about',
+    '/blog',
     '/precios',
   ];
 
+  const today = new Date().toISOString().split('T')[0];
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(url => `
+${urls.map((url) => `
   <url>
     <loc>${baseUrl}${url}</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${url === '' ? '1.0' : '0.8'}</priority>
   </url>`).join('')}
 </urlset>`;
 
   return new NextResponse(sitemap, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
+    headers: { 'Content-Type': 'application/xml' },
   });
 }
