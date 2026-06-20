@@ -1,4 +1,4 @@
-export type AiProvider = 'gemini' | 'claude' | 'groq' | 'manus';
+export type AiProvider = 'gemini' | 'claude' | 'openai' | 'groq' | 'manus';
 export type MotorId = 'visual' | 'copy' | 'code' | 'ux';
 
 export interface AiMessage {
@@ -16,7 +16,7 @@ export interface AiCompletionResult {
 export const MOTOR_PROVIDER: Record<MotorId, AiProvider> = {
   visual: 'gemini',
   copy: 'claude',
-  code: 'gemini',
+  code: 'openai',   // Motor de Código (rol tipo Composer)
   ux: 'claude',
 };
 
@@ -26,6 +26,8 @@ export function isProviderConfigured(provider: AiProvider): boolean {
       return Boolean(process.env.GEMINI_API_KEY?.trim());
     case 'claude':
       return Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+    case 'openai':
+      return Boolean(process.env.OPENAI_API_KEY?.trim());
     case 'groq':
       return Boolean(process.env.GROQ_API_KEY?.trim());
     case 'manus':
@@ -36,7 +38,7 @@ export function isProviderConfigured(provider: AiProvider): boolean {
 }
 
 export function getConfiguredProviders(): AiProvider[] {
-  return (['gemini', 'claude', 'groq', 'manus'] as AiProvider[]).filter(isProviderConfigured);
+  return (['gemini', 'claude', 'openai', 'groq', 'manus'] as AiProvider[]).filter(isProviderConfigured);
 }
 
 function pickMotorForPrompt(prompt: string): MotorId {
@@ -112,6 +114,35 @@ async function callClaude(messages: AiMessage[], maxTokens: number): Promise<str
   return block?.text?.trim() || null;
 }
 
+async function callOpenAI(messages: AiMessage[], maxTokens: number): Promise<string | null> {
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  if (!apiKey) return null;
+
+  const model = process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini';
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      temperature: 0.6,
+      max_tokens: maxTokens,
+    }),
+  });
+
+  if (!res.ok) {
+    console.error('openai error:', res.status, await res.text());
+    return null;
+  }
+
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content?.trim() || null;
+}
+
 async function callGroq(messages: AiMessage[], maxTokens: number): Promise<string | null> {
   const apiKey = process.env.GROQ_API_KEY?.trim();
   if (!apiKey) return null;
@@ -151,6 +182,8 @@ async function callProvider(
       return callGemini(messages, maxTokens);
     case 'claude':
       return callClaude(messages, maxTokens);
+    case 'openai':
+      return callOpenAI(messages, maxTokens);
     case 'groq':
       return callGroq(messages, maxTokens);
     case 'manus':
@@ -160,7 +193,7 @@ async function callProvider(
   }
 }
 
-const FALLBACK_ORDER: AiProvider[] = ['gemini', 'claude', 'groq'];
+const FALLBACK_ORDER: AiProvider[] = ['gemini', 'claude', 'openai', 'groq'];
 
 export async function chatCompletion(
   messages: AiMessage[],

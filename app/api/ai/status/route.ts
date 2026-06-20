@@ -17,5 +17,10 @@ export async function GET() {
       configured: isProviderConfigured('manus'),
       note: 'Manus es agente async para tareas complejas, no para preview instantáneo del Studio.',
     },
+    composer: {
+      note: 'Cursor Composer no tiene API pública. En CREAUNA el Motor de Código usa OpenAI (ChatGPT).',
+      provider: MOTOR_PROVIDER.code,
+      configured: isProviderConfigured(MOTOR_PROVIDER.code),
+    },
   });
 }
