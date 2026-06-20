@@ -33,12 +33,12 @@ const translations = {
     },
     aiTeam: {
       tag: "TECNOLOGÍA REVOLUCIONARIA",
-      title: "Cuatro Inteligencias Artificiales de élite",
-      desc: "Nuestra plataforma orquesta 4 inteligencias artificiales en tiempo real bajo la dirección creativa de Ramón del Pozo. Cada una especializada en su campo para lograr un acabado perfecto.",
-      feature1: "Gemini: Diseño visual e iluminación",
-      feature2: "Claude 3.5 Sonnet: Redacción y copy comercial",
-      feature3: "Composer 2.5: Código limpio y animaciones",
-      feature4: "GPT-4o: UX y optimización de conversión"
+      title: "Un equipo de inteligencia artificial de élite",
+      desc: "Nuestra plataforma orquesta múltiples motores de inteligencia artificial en tiempo real bajo la supervisión creativa de Ramón del Pozo Rott. Cada motor está especializado en su campo para lograr un acabado perfecto.",
+      feature1: "Diseño visual e iluminación profesional",
+      feature2: "Redacción y copy comercial persuasivo",
+      feature3: "Código limpio y animaciones fluidas",
+      feature4: "UX y optimización de conversión"
     },
     templatesSection: {
       title: "Plantillas espectaculares",
@@ -61,7 +61,7 @@ const translations = {
     ctaSection: {
       title: "Si tu web representa tu marca, que sea espectacular.",
       button: "Crear mi web ahora",
-      signature: "Bajo la dirección de Ramón del Pozo Rott"
+      signature: "Supervisado por Ramón del Pozo Rott"
     }
   },
   en: {
@@ -90,12 +90,12 @@ const translations = {
     },
     aiTeam: {
       tag: "REVOLUTIONARY TECH",
-      title: "Four Elite Artificial Intelligence Agents",
-      desc: "Our platform orchestrates 4 AI engines in real-time under the creative direction of Ramón del Pozo. Each specializes in its domain to deliver absolute perfection.",
-      feature1: "Gemini: Visual design and premium lighting",
-      feature2: "Claude 3.5 Sonnet: Copywriting & marketing copy",
-      feature3: "Composer 2.5: Clean code & fluid animations",
-      feature4: "GPT-4o: UX & conversion rate optimization"
+      title: "An elite artificial intelligence team",
+      desc: "Our platform orchestrates multiple AI engines in real-time under the creative supervision of Ramón del Pozo Rott. Each engine specializes in its domain to deliver absolute perfection.",
+      feature1: "Professional visual design and lighting",
+      feature2: "Persuasive copywriting and commercial content",
+      feature3: "Clean code and fluid animations",
+      feature4: "UX and conversion rate optimization"
     },
     templatesSection: {
       title: "Spectacular Templates",
@@ -118,7 +118,7 @@ const translations = {
     ctaSection: {
       title: "If your website represents your brand, make it spectacular.",
       button: "Create my website now",
-      signature: "Under the direction of Ramón del Pozo Rott"
+      signature: "Supervised by Ramón del Pozo Rott"
     }
   }
 };
@@ -430,18 +430,18 @@ export default function CreaunaLanding() {
             </div>
           </div>
           <div className="text-xs tracking-[3px] font-bold text-slate-500 uppercase">
-            {t.founder.tag}
+            Supervisado por Ramón del Pozo Rott
           </div>
           <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-slate-800 leading-snug italic">
             {t.founder.quote}
           </p>
           <div className="mt-8">
-            <div className="font-bold text-lg text-slate-950 flex items-center justify-center gap-1.5">
+            <div className="text-sm font-medium text-slate-700">
               Ramón del Pozo Rott
             </div>
             <div className="text-xs text-slate-500 font-medium mt-1 flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-indigo-600" />
-              {t.founder.role}
+              Supervisor Creativo de CREAUNA
             </div>
           </div>
         </div>

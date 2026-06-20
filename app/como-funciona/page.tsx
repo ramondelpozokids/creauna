@@ -94,24 +94,27 @@ export default function ComoFunciona() {
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
           <div>
             <div className="text-xs font-bold tracking-widest text-indigo-600 mb-2">PASO 03</div>
-            <h2 className="text-4xl font-bold tracking-tight text-slate-950">Publica o exporta</h2>
+            <h2 className="text-4xl font-bold tracking-tight text-slate-950">Recibe y publica tu web</h2>
             <p className="mt-4 text-base text-slate-600 leading-relaxed">
-              Una vez que el diseño esté tal como deseas, puedes elegir cómo proceder de forma inmediata:
+              Cuando el diseño esté listo y hayas completado el pago, te entregamos la web. La publicación en tu dominio la haces tú:
             </p>
             <div className="mt-6 space-y-4 text-sm text-slate-700 font-semibold">
               <div className="flex items-center gap-3">
                 <ArrowUpRight className="w-5 h-5 text-indigo-600" />
-                Publicar directamente con tu dominio propio (.com, .es, etc.)
+                Recibes un paquete con todos los archivos (HTML, CSS, JS, imágenes)
               </div>
               <div className="flex items-center gap-3">
                 <ArrowUpRight className="w-5 h-5 text-indigo-600" />
-                Exportar el código limpio (HTML/CSS/JS optimizado)
+                Exportas el código limpio y lo subes a tu hosting (planes Pro y Business)
               </div>
               <div className="flex items-center gap-3">
                 <ArrowUpRight className="w-5 h-5 text-indigo-600" />
-                Dejar la configuración técnica del hosting en nuestras manos
+                Conectas tu dominio propio (.com, .es, etc.) siguiendo nuestra guía
               </div>
             </div>
+            <Link href="/guia#entrega" className="mt-6 inline-flex items-center gap-1 text-sm text-indigo-600 font-semibold hover:text-indigo-800">
+              Ver guía de publicación <ArrowUpRight className="w-4 h-4" />
+            </Link>
           </div>
           
           <div className="relative rounded-[2.5rem] overflow-hidden h-[340px] flex items-end shadow-xl border border-slate-200">
@@ -131,7 +134,8 @@ export default function ComoFunciona() {
 
       {/* Final CTA */}
       <div className="border-t border-slate-200 py-16 text-center bg-white">
-        <h3 className="text-2xl font-bold tracking-tight mb-6">¿Listo para crear la web perfecta para tu negocio?</h3>
+        <h3 className="text-2xl font-bold tracking-tight mb-3">¿Listo para crear la web perfecta para tu negocio?</h3>
+        <p className="text-sm text-slate-500 mb-6">Consulta la <Link href="/guia" className="text-indigo-600 font-semibold hover:underline">guía completa</Link> si necesitas más detalle.</p>
         <Link href="/studio" className="btn-gradient px-12 py-4 rounded-2xl text-base font-semibold inline-block shadow-md">
           Empezar ahora en el Studio
         </Link>

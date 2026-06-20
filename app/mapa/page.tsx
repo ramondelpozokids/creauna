@@ -6,6 +6,13 @@ import Navbar from '../components/Navbar';
 export default function Mapa() {
   const links = [
     { href: '/', label: 'Inicio' },
+    { href: '/guia', label: 'Guía completa' },
+    { href: '/como-funciona', label: 'Cómo funciona' },
+    { href: '/modernizacion', label: 'Modernización' },
+    { href: '/web-a-medida', label: 'Web a medida' },
+    { href: '/contacto', label: 'Contacto' },
+    { href: '/about', label: 'Sobre nosotros' },
+    { href: '/equipo-ias', label: 'Equipo IA' },
     { href: '/studio', label: 'Studio IA' },
     { href: '/templates', label: 'Plantillas' },
     { href: '/precios', label: 'Precios' },

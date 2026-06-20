@@ -33,7 +33,7 @@ export default function Signup() {
           <Link href="/" className="inline-flex items-center gap-3">
             <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200">
               <img 
-                src="/logo.webp" 
+                src="/images/logo.png" 
                 alt="CREAUNA Logo" 
                 className="w-full h-full object-cover" 
               />

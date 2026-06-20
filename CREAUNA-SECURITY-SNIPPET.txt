@@ -1,0 +1,17 @@
+CREAUNA — Snippet de 4 capas de seguridad
+================================================
+Copiar en el <body> de cualquier proyecto Next.js (layout.tsx):
+
+  import { CREAUNA_SECURITY_SCRIPT } from "./lib/securityLayers";
+  ...
+  <script dangerouslySetInnerHTML={{ __html: CREAUNA_SECURITY_SCRIPT }} />
+
+El archivo fuente está en: app/lib/securityLayers.ts
+
+Capas:
+  1. Bloquea clic derecho (menú contextual)
+  2. Bloquea F12, Ctrl+Shift+I/J/C/K, Ctrl+U, Cmd+Alt+I/J/C
+  3. Detecta DevTools abierto (normal e incógnito) y bloquea la página
+  4. Protección adicional en bloques pre/code
+
+Propiedad: Ramón del Pozo Rott

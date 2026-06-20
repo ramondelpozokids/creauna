@@ -2,28 +2,28 @@
 
 import Navbar from '../components/Navbar';
 
-const ias = [
+const motores = [
   {
-    name: "Gemini",
+    name: "Motor Visual",
     role: "Imágenes & Visuales",
-    desc: "Genera fotos de alta calidad de Unsplash + imágenes creadas con IA. Iluminación perfecta, composición profesional.",
+    desc: "Genera fotos de alta calidad y visuales profesionales. Iluminación perfecta y composición de nivel estudio.",
     color: "from-blue-500 to-cyan-400"
   },
   {
-    name: "Claude 3.5 Sonnet",
+    name: "Motor de Redacción",
     role: "Textos & Copywriting",
     desc: "Escribe textos persuasivos, SEO optimizados, descripciones de producto y storytelling emocional.",
     color: "from-purple-500 to-violet-500"
   },
   {
-    name: "Composer 2.5",
+    name: "Motor de Código",
     role: "Código & Estructura",
     desc: "Construye componentes modernos, animaciones suaves, código limpio y responsive perfecto.",
     color: "from-emerald-500 to-teal-500"
   },
   {
-    name: "GPT-4o",
-    role: "Diseño & Experiencia",
+    name: "Motor de Experiencia",
+    role: "Diseño & UX",
     desc: "Elige paletas de color vibrantes, tipografía elegante y crea la mejor experiencia de usuario.",
     color: "from-orange-500 to-rose-500"
   }
@@ -37,24 +37,24 @@ export default function EquipoIAs() {
       <div className="container pt-16 pb-20">
         <div className="max-w-3xl mx-auto text-center">
           <div className="text-sm font-medium text-indigo-600">EL EQUIPO DETRÁS DE CADA WEB</div>
-          <h1 className="text-6xl font-semibold tracking-tight mt-3">4 inteligencias artificiales trabajando como un solo equipo</h1>
-          <p className="mt-6 text-xl text-slate-600">Ramón del Pozo Rott es el director de orquesta. Cada IA hace lo que mejor sabe hacer.</p>
+          <h1 className="text-6xl font-semibold tracking-tight mt-3">Inteligencia artificial trabajando como un solo equipo</h1>
+          <p className="mt-6 text-xl text-slate-600">Ramón del Pozo Rott supervisa el proceso. Cada motor hace lo que mejor sabe hacer.</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
-          {ias.map((ia, index) => (
+          {motores.map((motor, index) => (
             <div key={index} className="premium-card p-8 rounded-3xl border">
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${ia.color} mb-6`} />
-              <div className="font-semibold text-2xl">{ia.name}</div>
-              <div className="text-sm text-indigo-600 font-medium mt-1">{ia.role}</div>
-              <p className="mt-4 text-slate-600">{ia.desc}</p>
+              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${motor.color} mb-6`} />
+              <div className="font-semibold text-2xl">{motor.name}</div>
+              <div className="text-sm text-indigo-600 font-medium mt-1">{motor.role}</div>
+              <p className="mt-4 text-slate-600">{motor.desc}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-16 text-center bg-slate-50 rounded-3xl p-12">
           <div className="text-2xl font-medium">“No es solo una IA. Es un equipo completo de especialistas trabajando en sincronía.”</div>
-          <div className="mt-6 text-sm text-slate-500">— Ramón del Pozo Rott, Fundador</div>
+          <div className="mt-6 text-sm text-slate-500">— Ramón del Pozo Rott, Supervisor Creativo</div>
         </div>
       </div>
     </div>

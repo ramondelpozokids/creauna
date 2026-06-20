@@ -34,13 +34,13 @@ export default function About() {
               <div className="relative rounded-[3rem] overflow-hidden shadow-2xl ring-1 ring-black/5">
                 <img 
                   src="/creador.webp" 
-                  alt="Ramón del Pozo Rott - Fundador y Director Creativo de CREAUNA" 
+                  alt="Ramón del Pozo Rott - Supervisor Creativo de CREAUNA" 
                   className="w-full aspect-[4/3] object-cover" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/75" />
-                <div className="absolute bottom-10 left-10 text-white">
-                  <div className="text-[11px] tracking-[3px] font-medium opacity-75">FUNDADOR &amp; DIRECTOR CREATIVO</div>
-                  <div className="text-5xl font-semibold tracking-[-1.2px] mt-2">Ramón del Pozo Rott</div>
+                <div className="absolute bottom-6 left-0 right-0 text-center text-white">
+                  <div className="text-[10px] tracking-[3px] font-medium opacity-75">SUPERVISADO POR</div>
+                  <div className="text-sm font-medium tracking-tight mt-1">Ramón del Pozo Rott</div>
                 </div>
               </div>
             </div>
@@ -67,9 +67,10 @@ export default function About() {
                   </p>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-slate-200">
-                  <div className="text-sm font-medium">Ramón del Pozo Rott</div>
-                  <div className="text-sm text-slate-500">Fundador &amp; Director Creativo</div>
+                <div className="mt-8 pt-8 border-t border-slate-200 text-center">
+                  <div className="text-[10px] tracking-[2px] text-slate-500 uppercase">Supervisado por</div>
+                  <div className="text-sm font-medium text-slate-800 mt-1">Ramón del Pozo Rott</div>
+                  <div className="text-xs text-slate-500">Supervisor Creativo</div>
                 </div>
               </div>
             </div>
@@ -96,7 +97,7 @@ export default function About() {
             },
             {
               title: "Tecnología con alma",
-              desc: "Usamos IA avanzada, pero todo el proceso creativo está dirigido por humanos con gusto exquisito."
+              desc: "Usamos IA avanzada, pero todo el proceso creativo está supervisado por humanos con gusto exquisito."
             }
           ].map((item, i) => (
             <div key={i} className="p-8 border border-slate-200 rounded-3xl">

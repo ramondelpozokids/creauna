@@ -83,12 +83,12 @@ export default function SuperAdmin() {
           </div>
 
           <div className="premium-card p-6">
-            <div className="text-sm text-slate-500">EQUIPO DE IAS</div>
+            <div className="text-sm text-slate-500">MOTORES DE IA</div>
             <div className="mt-6 space-y-3 text-sm">
-              <div>✅ Gemini — Imágenes (98%)</div>
-              <div>✅ Claude 3.5 — Textos (100%)</div>
-              <div>✅ Composer 2.5 — Código (94%)</div>
-              <div>✅ GPT-4o — Copywriting (99%)</div>
+              <div>✅ Motor Visual — Imágenes (98%)</div>
+              <div>✅ Motor de Redacción — Textos (100%)</div>
+              <div>✅ Motor de Código — Estructura (94%)</div>
+              <div>✅ Motor de Experiencia — UX (99%)</div>
             </div>
           </div>
         </div>

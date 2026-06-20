@@ -122,18 +122,18 @@ export default function Contacto() {
             
             {/* Ramón profile Card */}
             <div className="card-luxe bg-[#f8f7f4] border border-slate-200/80 p-8 rounded-[2.5rem] text-center">
-              <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-xl mx-auto mb-5 transition-transform hover:scale-105 duration-300">
+              <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-xl mx-auto mb-4 transition-transform hover:scale-105 duration-300">
                 <img 
                   src="/creador.webp" 
                   alt="Ramón del Pozo Rott" 
                   className="w-full h-full object-cover" 
                 />
               </div>
-              <div className="text-[10px] tracking-[3px] text-slate-500 font-bold uppercase">DIRECCIÓN DIRECTA</div>
-              <h2 className="font-bold text-2xl tracking-tight text-slate-900 mt-1">Ramón del Pozo Rott</h2>
-              <p className="text-xs text-slate-500 font-semibold flex items-center justify-center gap-1 mt-0.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-                Fundador &amp; Director Creativo
+              <div className="text-[10px] tracking-[3px] text-slate-500 font-bold uppercase">Supervisado por</div>
+              <h2 className="font-medium text-sm tracking-tight text-slate-700 mt-1">Ramón del Pozo Rott</h2>
+              <p className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1 mt-0.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                Supervisor Creativo
               </p>
               
               <blockquote className="mt-6 text-slate-700 italic text-sm leading-relaxed border-t border-slate-200/60 pt-6">
@@ -152,7 +152,7 @@ export default function Contacto() {
                   </div>
                   <div>
                     <div className="text-xs text-slate-400 font-semibold uppercase">Email directo</div>
-                    <a href="mailto:hola@creauna.com" className="font-semibold text-slate-800 hover:text-indigo-600 transition-colors">hola@creauna.com</a>
+                    <a href="mailto:info@ramondelpozorott.es" className="font-semibold text-slate-800 hover:text-indigo-600 transition-colors">info@ramondelpozorott.es</a>
                   </div>
                 </div>
 
@@ -161,17 +161,11 @@ export default function Contacto() {
                     <MessageSquare className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 font-semibold uppercase">WhatsApp Business</div>
-                    <a href="https://wa.me" target="_blank" className="font-semibold text-slate-800 hover:text-indigo-600 transition-colors">Iniciar conversación</a>
+                    <div className="text-xs text-slate-400 font-semibold uppercase">WhatsApp (solo urgencias)</div>
+                    <a href="https://wa.me/34656398640" target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-800 hover:text-indigo-600 transition-colors">+34 656 398 640</a>
+                    <p className="text-xs text-slate-500 mt-0.5">Para el resto de consultas, usa nuestro asistente o el formulario.</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="h-px bg-slate-100 my-2" />
-
-              <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 rounded-2xl text-xs text-slate-500 border border-slate-100">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                Protección SSL de nivel bancario activa
               </div>
             </div>
 

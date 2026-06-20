@@ -15,6 +15,12 @@ export async function GET() {
     '/cookies',
     '/datos',
     '/mapa',
+    '/guia',
+    '/como-funciona',
+    '/modernizacion',
+    '/web-a-medida',
+    '/contacto',
+    '/equipo-ias',
     '/about',
     '/precios',
   ];

@@ -17,7 +17,7 @@ export default function Navbar({ variant = 'landing' }: { variant?: 'landing' | 
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200/50 shadow-sm transition-transform duration-500 group-hover:rotate-6">
               <img 
-                src="/logo.webp" 
+                src="/images/logo.png" 
                 alt="CREAUNA Logo" 
                 className="w-full h-full object-cover" 
               />
@@ -66,7 +66,7 @@ export default function Navbar({ variant = 'landing' }: { variant?: 'landing' | 
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200/50 shadow-sm transition-transform duration-500 group-hover:rotate-6">
             <img 
-              src="/logo.webp" 
+              src="/images/logo.png" 
               alt="CREAUNA Logo" 
               className="w-full h-full object-cover" 
             />

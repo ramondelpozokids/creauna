@@ -129,7 +129,7 @@ export default function Dashboard() {
             <Link href="/dashboard" className="flex items-center gap-3.5 group">
               <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-black/10 shadow-sm">
                 <img 
-                  src="/logo.webp" 
+                  src="/images/logo.png" 
                   alt="CREAUNA" 
                   className="w-full h-full object-cover" 
                 />

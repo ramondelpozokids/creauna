@@ -24,15 +24,27 @@ const translations = {
     resultsSubtitle: "Diseño de estudio, tecnología avanzada y atención personalizada.",
     featuresTitle: "Comparativa detallada",
     featuresCol: "Característica",
+    competitorTitle: "¿Cómo nos comparamos?",
+    competitorSubtitle: "Precios ajustados frente a Emergent, Lovable y otras plataformas de IA. Más créditos, sin costes ocultos de despliegue.",
+    competitorCol: "Plataforma",
+    creditsCol: "Créditos/mes",
+    entryPriceCol: "Plan de entrada",
+    businessPriceCol: "Plan avanzado",
+    creaunaAdvantage: "Ventaja CREAUNA",
+    advantage1: "Sin penalización por mantener tu web publicada",
+    advantage2: "60+ plantillas premium por sector",
+    advantage3: "Interfaz y soporte en español",
+    advantage4: "Diseño de estudio, no plantillas genéricas",
     faqTitle: "Preguntas frecuentes",
     customNote: "¿Necesitas algo más grande o una web completamente a medida?",
     customLink: "Ver Web a Medida",
-    designedBy: "DISEÑADO CON LA DIRECCIÓN CREATIVA DE",
-    founderTitle: "Fundador de CREAUNA",
+    designedBy: "SUPERVISADO POR",
+    founderTitle: "Supervisor Creativo de CREAUNA",
     features: [
       "Hasta 3 webs activas",
       "Webs ilimitadas",
-      "Todas las plantillas premium",
+      "60+ plantillas premium por sector",
+      "Créditos de edición mensuales",
       "Tecnología IA avanzada",
       "Dominio personalizado",
       "Exportación de código completo",
@@ -57,15 +69,27 @@ const translations = {
     resultsSubtitle: "Studio design, advanced tech, and personalized creative direction.",
     featuresTitle: "Detailed Comparison",
     featuresCol: "Feature",
+    competitorTitle: "How do we compare?",
+    competitorSubtitle: "Pricing benchmarked against Emergent, Lovable, and other AI builders. More credits, no hidden deployment costs.",
+    competitorCol: "Platform",
+    creditsCol: "Credits/month",
+    entryPriceCol: "Entry plan",
+    businessPriceCol: "Advanced plan",
+    creaunaAdvantage: "CREAUNA advantage",
+    advantage1: "No penalty for keeping your site live",
+    advantage2: "60+ premium templates by industry",
+    advantage3: "Spanish interface and support",
+    advantage4: "Studio-grade design, not generic templates",
     faqTitle: "Frequently Asked Questions",
     customNote: "Need something larger or a fully custom website?",
     customLink: "View Custom Web",
-    designedBy: "DESIGNED WITH THE CREATIVE DIRECTION OF",
-    founderTitle: "Founder of CREAUNA",
+    designedBy: "SUPERVISED BY",
+    founderTitle: "Creative Supervisor of CREAUNA",
     features: [
       "Up to 3 active websites",
       "Unlimited websites",
-      "All premium templates",
+      "60+ premium templates by industry",
+      "Monthly editing credits",
       "Advanced AI technology",
       "Custom domain",
       "Full code export",
@@ -83,9 +107,11 @@ const plans = [
     nameEn: "Free",
     priceMonthly: 0,
     priceYearly: 0,
-    description: "Perfecto para probar la plataforma y proyectos personales pequeños.",
-    descriptionEn: "Perfect for testing the platform and small personal projects.",
-    featuresIdx: [0, 2, 3], // indices from features array
+    credits: 15,
+    creditsEn: "15 credits",
+    description: "15 créditos/mes para probar. Ideal para explorar la plataforma sin compromiso.",
+    descriptionEn: "15 credits/month to explore. Perfect for testing the platform with no commitment.",
+    featuresIdx: [0, 2, 3, 4],
     cta: "Empezar gratis",
     ctaEn: "Start for free",
     popular: false,
@@ -96,11 +122,13 @@ const plans = [
     id: "pro",
     name: "Pro",
     nameEn: "Pro",
-    priceMonthly: 29,
-    priceYearly: 23,
-    description: "La opción más elegida por profesionales y pequeñas empresas.",
-    descriptionEn: "The most popular choice for professionals and small businesses.",
-    featuresIdx: [1, 2, 3, 4, 5, 6, 7, 8],
+    priceMonthly: 19,
+    priceYearly: 15,
+    credits: 120,
+    creditsEn: "120 credits",
+    description: "120 créditos/mes. Más económico que Lovable ($25) y Emergent ($20), con más valor de diseño.",
+    descriptionEn: "120 credits/month. Cheaper than Lovable ($25) and Emergent ($20), with superior design quality.",
+    featuresIdx: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     cta: "Empezar prueba de 14 días",
     ctaEn: "Start 14-day trial",
     popular: true,
@@ -111,11 +139,13 @@ const plans = [
     id: "business",
     name: "Business",
     nameEn: "Business",
-    priceMonthly: 79,
-    priceYearly: 63,
-    description: "Para agencias, marcas y equipos que necesitan lo mejor.",
-    descriptionEn: "For agencies, brands, and teams who demand the absolute best.",
-    featuresIdx: [1, 2, 3, 4, 5, 6, 7, 8],
+    priceMonthly: 49,
+    priceYearly: 39,
+    credits: 300,
+    creditsEn: "300 credits",
+    description: "300 créditos/mes. Competitivo con Lovable Business ($50) e ideal para agencias y equipos.",
+    descriptionEn: "300 credits/month. Competitive with Lovable Business ($50), ideal for agencies and teams.",
+    featuresIdx: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     extraFeatures: [
       "Hosting + dominio incluido (1 año)",
       "Colaboración en equipo ilimitada",
@@ -138,7 +168,67 @@ const plans = [
   }
 ];
 
+const competitors = [
+  {
+    name: "CREAUNA",
+    highlight: true,
+    freeCredits: "15",
+    entryPriceEs: "19€/mes",
+    entryPriceEn: "€19/mo",
+    entryCredits: "120",
+    businessPriceEs: "49€/mes",
+    businessPriceEn: "€49/mo",
+    businessCredits: "300",
+    deployCostEs: "Sin coste extra",
+    deployCostEn: "No extra cost",
+    templatesEs: "60+ premium",
+    templatesEn: "60+ premium",
+    languageEs: "Español nativo",
+    languageEn: "Native Spanish",
+  },
+  {
+    name: "Emergent",
+    highlight: false,
+    freeCredits: "10",
+    entryPriceEs: "$20/mes",
+    entryPriceEn: "$20/mo",
+    entryCredits: "100",
+    businessPriceEs: "$200/mes",
+    businessPriceEn: "$200/mo",
+    businessCredits: "750",
+    deployCostEs: "~50 créditos/web/mes",
+    deployCostEn: "~50 credits/site/mo",
+    templatesEs: "Limitadas",
+    templatesEn: "Limited",
+    languageEs: "Inglés",
+    languageEn: "English",
+  },
+  {
+    name: "Lovable",
+    highlight: false,
+    freeCredits: "30 máx.",
+    entryPriceEs: "$25/mes",
+    entryPriceEn: "$25/mo",
+    entryCredits: "100+",
+    businessPriceEs: "$50/mes",
+    businessPriceEn: "$50/mo",
+    businessCredits: "100+",
+    deployCostEs: "Incluido",
+    deployCostEn: "Included",
+    templatesEs: "Básicas",
+    templatesEn: "Basic",
+    languageEs: "Inglés",
+    languageEn: "English",
+  },
+];
+
 const faqs = [
+  {
+    q: "¿Cómo funcionan los créditos?",
+    qEn: "How do credits work?",
+    a: "Cada cambio que haces en el Studio consume 1 crédito. Los créditos se renuevan cada mes. A diferencia de Emergent, no gastamos créditos extra solo por mantener tu web publicada.",
+    aEn: "Each change you make in the Studio uses 1 credit. Credits renew monthly. Unlike Emergent, we don't charge extra credits just to keep your site live."
+  },
   {
     q: "¿Puedo cambiar de plan en cualquier momento?",
     qEn: "Can I change my plan at any time?",
@@ -280,6 +370,10 @@ export default function Precios() {
                   <p className="mt-4 text-sm text-slate-600 leading-relaxed min-h-[40px]">
                     {lang === 'es' ? plan.description : plan.descriptionEn}
                   </p>
+
+                  <div className="mt-3 inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">
+                    {plan.credits} {lang === 'es' ? 'créditos/mes' : 'credits/mo'}
+                  </div>
                   
                   <div className="h-px bg-slate-100 my-6" />
 
@@ -354,6 +448,73 @@ export default function Precios() {
         </div>
       </div>
 
+      {/* Competitor Comparison */}
+      <div className="bg-slate-900 text-white py-20">
+        <div className="container max-w-5xl">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-bold tracking-tight">
+              {t.competitorTitle}
+            </h3>
+            <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              {t.competitorSubtitle}
+            </p>
+          </div>
+
+          <div className="overflow-x-auto rounded-3xl border border-white/10 shadow-sm">
+            <table className="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/10 bg-white/5 text-slate-400">
+                  <th className="px-6 py-4 font-semibold text-xs tracking-wider uppercase">{t.competitorCol}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{lang === 'es' ? 'Gratis' : 'Free'}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.entryPriceCol}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{t.businessPriceCol}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{lang === 'es' ? 'Coste despliegue' : 'Deploy cost'}</th>
+                  <th className="px-4 py-4 text-center font-semibold text-xs tracking-wider uppercase">{lang === 'es' ? 'Plantillas' : 'Templates'}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {competitors.map((c) => (
+                  <tr key={c.name} className={c.highlight ? 'bg-indigo-600/20' : 'hover:bg-white/5'}>
+                    <td className={`px-6 py-4 font-bold ${c.highlight ? 'text-indigo-300' : 'text-white'}`}>
+                      {c.name}
+                      {c.highlight && <span className="ml-2 text-[10px] bg-indigo-500 text-white px-2 py-0.5 rounded-full font-bold">TÚ</span>}
+                    </td>
+                    <td className="px-4 py-4 text-center text-slate-300">{c.freeCredits}</td>
+                    <td className="px-4 py-4 text-center">
+                      <div className={c.highlight ? 'text-indigo-300 font-semibold' : 'text-slate-300'}>
+                        {lang === 'es' ? c.entryPriceEs : c.entryPriceEn}
+                      </div>
+                      <div className="text-xs text-slate-500">{c.entryCredits} {t.creditsCol.toLowerCase()}</div>
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <div className={c.highlight ? 'text-indigo-300 font-semibold' : 'text-slate-300'}>
+                        {lang === 'es' ? c.businessPriceEs : c.businessPriceEn}
+                      </div>
+                      <div className="text-xs text-slate-500">{c.businessCredits} {t.creditsCol.toLowerCase()}</div>
+                    </td>
+                    <td className={`px-4 py-4 text-center text-xs ${c.highlight ? 'text-emerald-400 font-semibold' : 'text-slate-400'}`}>
+                      {lang === 'es' ? c.deployCostEs : c.deployCostEn}
+                    </td>
+                    <td className={`px-4 py-4 text-center text-xs ${c.highlight ? 'text-indigo-300 font-semibold' : 'text-slate-400'}`}>
+                      {lang === 'es' ? c.templatesEs : c.templatesEn}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[t.advantage1, t.advantage2, t.advantage3, t.advantage4].map((adv, i) => (
+              <div key={i} className="flex items-start gap-2 bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-slate-300">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                {adv}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Detail Comparison Table */}
       <div className="bg-white border-y border-slate-200 py-20">
         <div className="container max-w-5xl">
@@ -374,9 +535,11 @@ export default function Precios() {
               <tbody className="divide-y divide-slate-100">
                 {[
                   ["Webs activas", "Hasta 3", "Ilimitadas", "Ilimitadas"],
-                  ["Plantillas premium", "Básicas", "Todas (12+)", "Todas (12+)"],
+                  ["Créditos de edición/mes", "15", "120", "300"],
+                  ["Plantillas premium", "12 por categoría", "60+ (todas)", "60+ (todas)"],
                   ["Dominio personalizado", "—", "✓", "✓"],
                   ["Exportación código", "HTML básico", "Completo (HTML/CSS/JS)", "Completo (HTML/CSS/JS)"],
+                  ["Coste de despliegue", "Sin coste", "Sin coste", "Sin coste"],
                   ["Soporte", "Comunidad", "Prioritario (4h)", "VIP + SLA"],
                   ["Hosting incluido", "—", "—", "1 año"],
                   ["Colaboración equipo", "—", "—", "Ilimitada"],
@@ -441,7 +604,7 @@ export default function Precios() {
             <div className="text-[10px] tracking-[3px] text-slate-500 uppercase font-semibold">
               {t.designedBy}
             </div>
-            <div className="font-bold text-xl text-slate-900 tracking-tight mt-1">
+            <div className="font-semibold text-sm text-slate-700 tracking-tight mt-1">
               Ramón del Pozo Rott
             </div>
             <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1 font-medium">

@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import Footer from "./components/Footer";
 import ChatAssistant from "./components/ChatAssistant";
 import { LanguageProvider } from "./components/LanguageProvider";
+import { CREAUNA_SECURITY_SCRIPT } from "./lib/securityLayers";
 
 export const metadata: Metadata = {
   title: "CREAUNA — Crea webs con IA en minutos | Diseño premium",
@@ -57,30 +58,7 @@ export default function RootLayout({
           <Toaster position="top-center" richColors closeButton />
         </LanguageProvider>
 
-        {/* Security Layer 1: Client-side protection */}
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            // CREAUNA Security Layer 1 & 2
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('keydown', function(e) {
-              if (e.key === "F12" || 
-                  (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || 
-                  (e.ctrlKey && e.key === 'u')) {
-                e.preventDefault();
-                console.log('%c[CREAUNA] Protección de seguridad activada. Acceso no autorizado registrado.', 'color:#f43f5e;font-size:10px');
-              }
-            });
-            
-            // Security Layer 3: Anti-inspect
-            setInterval(() => {
-              if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-                document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:system-ui;color:#64748b">Acceso restringido por seguridad CREAUNA.</div>';
-              }
-            }, 3000);
-
-            console.log('%c[CREAUNA] 4 capas de seguridad activas. Propiedad de Ramón del Pozo Rott.', 'color:#6366f1;font-size:9px');
-          `
-        }} />
+        <script dangerouslySetInnerHTML={{ __html: CREAUNA_SECURITY_SCRIPT }} />
       </body>
     </html>
   );
