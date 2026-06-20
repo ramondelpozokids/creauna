@@ -6,7 +6,6 @@ import Footer from "./components/Footer";
 import ChatAssistant from "./components/ChatAssistant";
 import HtmlLangSync from "./components/HtmlLangSync";
 import { LanguageProvider } from "./components/LanguageProvider";
-import { CREAUNA_SECURITY_SCRIPT } from "./lib/securityLayers";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://creauna.vercel.app';
 
@@ -28,9 +27,9 @@ export const metadata: Metadata = {
     siteName: "CREAUNA",
   },
   icons: {
-    icon: "/favicon.webp",
-    apple: "/favicon.webp",
-    shortcut: "/favicon.webp",
+    icon: "/logo.webp",
+    apple: "/logo.webp",
+    shortcut: "/logo.webp",
   },
   manifest: "/manifest.json",
   robots: {
@@ -62,8 +61,6 @@ export default function RootLayout({
           <ChatAssistant />
           <Toaster position="top-center" richColors closeButton />
         </LanguageProvider>
-
-        <script dangerouslySetInnerHTML={{ __html: CREAUNA_SECURITY_SCRIPT }} />
       </body>
     </html>
   );

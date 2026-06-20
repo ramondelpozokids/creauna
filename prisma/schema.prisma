@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  passwordHash String
+  credits      Int           @default(15)
+  role         String        @default("user")
+  createdAt    DateTime      @default(now())
+  projects     Project[]
+  creditLogs   CreditLog[]
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  templateSlug String?
+  lang         String   @default("es")
+  sections     String
+  changeLog    String   @default("[]")
+  status       String   @default("draft")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CreditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ipHash    String?
+  delta     Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([ipHash])
+}
+
+model GuestUsage {
+  id      String @id @default(cuid())
+  ipHash  String @unique
+  credits Int    @default(15)
+}

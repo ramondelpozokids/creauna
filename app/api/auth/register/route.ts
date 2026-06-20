@@ -25,12 +25,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'La contraseña debe tener al menos 6 caracteres' }, { status: 400 });
     }
 
-    const user = registerUser(name, email, password);
+    const user = await registerUser(name, email, password);
     await setSessionCookie({ id: user.id, email: user.email, name: user.name });
 
     return NextResponse.json({
       ok: true,
-      user: { id: user.id, email: user.email, name: user.name, company: company || null },
+      user: { id: user.id, email: user.email, name: user.name, role: user.role, credits: user.credits, company: company || null },
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al registrar';

@@ -508,13 +508,13 @@ export const templatesCatalog: TemplateItem[] = [
   },
 ];
 
-/** Orden de trabajo: 12 plantillas por categoría = 60 totales */
+/** Orden de trabajo: 6 gastronomía, 12 servicios, 6 lujo, 6 corporativo, 6 tech = 36 totales */
 export const TEMPLATE_LIMITS: Record<TemplateCategory, number> = {
-  gastronomy: 12,
+  gastronomy: 6,
   services: 12,
-  luxury: 12,
-  corporate: 12,
-  tech: 12,
+  luxury: 6,
+  corporate: 6,
+  tech: 6,
 };
 
 export function getPublishedTemplates(): TemplateItem[] {

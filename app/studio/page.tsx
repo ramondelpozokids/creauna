@@ -4,7 +4,7 @@ import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Send, Sparkles, RefreshCw, Download, Share2,
-  Monitor, Smartphone, Zap, Coins, Lock, Rocket, History, Eye
+  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import StudioAITeam from '../components/StudioAITeam';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
 import { useLanguage } from '../components/LanguageProvider';
-import { getCredits, consumeCredit, isPaid, FREE_CREDITS } from '../lib/studioCredits';
+import { getCredits, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
 import { buildTemplateSections, toStudioSections } from '../lib/templatePages';
 
@@ -140,6 +140,7 @@ function StudioContent() {
   const searchParams = useSearchParams();
   const { lang: globalLang, setLang: setGlobalLang } = useLanguage();
   const templateParam = searchParams.get('template');
+  const projectParam = searchParams.get('project');
   const langParam = searchParams.get('lang') as Language | null;
 
   const [lang, setLangLocal] = useState<Language>(
@@ -160,8 +161,9 @@ function StudioContent() {
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [credits, setCredits] = useState(FREE_CREDITS);
-  const [paid, setPaidState] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [projectId, setProjectId] = useState<string | null>(null);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [previewSections, setPreviewSections] = useState<PreviewSection[]>([
     { id: 101, type: 'hero', html: buildDefaultHero('es') },
   ]);
@@ -179,11 +181,34 @@ function StudioContent() {
 
   useEffect(() => {
     setMounted(true);
-    setCredits(getCredits());
-    setPaidState(isPaid());
+    syncCreditsFromServer().then(setCredits);
   }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+    if (projectParam && !templateLoadedRef.current) {
+      templateLoadedRef.current = true;
+      fetch(`/api/projects/${projectParam}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (!data.project) return;
+          setProjectId(data.project.id);
+          setProjectName(data.project.name);
+          setPreviewSections(data.project.sections);
+          setChangeLog(data.project.changeLog ?? []);
+          if (data.project.templateSlug) setActiveTemplateSlug(data.project.templateSlug);
+          if (data.project.lang === 'en' || data.project.lang === 'es') setLangLocal(data.project.lang);
+          setMessages([
+            {
+              id: 1,
+              role: 'ai',
+              content: lang === 'es' ? `Proyecto «${data.project.name}» cargado.` : `Project «${data.project.name}» loaded.`,
+            },
+          ]);
+        })
+        .catch(() => undefined);
+      return;
+    }
     if (!mounted || templateLoadedRef.current) return;
     if (templateParam) {
       const tpl = getTemplateBySlug(templateParam);
@@ -212,7 +237,7 @@ function StudioContent() {
     }
     setMessages([{ id: 1, role: 'ai', content: t.welcome }]);
     setPreviewSections([{ id: 101, type: 'hero', html: buildDefaultHero(lang, activeTemplateSlug) }]);
-  }, [mounted, templateParam, lang, t.welcome, t.welcomeTemplate, activeTemplateSlug]);
+  }, [mounted, templateParam, projectParam, lang, t.welcome, t.welcomeTemplate, activeTemplateSlug]);
 
   const addChange = (summary: string) => {
     setChangeLog((prev) => [
@@ -235,20 +260,49 @@ function StudioContent() {
     return true;
   }, [t.noCredits]);
 
-  const applyCreditOnSuccess = useCallback(() => {
-    consumeCredit();
-    setCredits(getCredits());
+  const applyCreditFromResponse = useCallback((balance?: number) => {
+    if (typeof balance === 'number') {
+      setCredits(balance);
+    } else {
+      syncCreditsFromServer().then(setCredits);
+    }
   }, []);
 
-  const requirePayment = useCallback(() => {
-    if (!paid) {
-      toast.error(t.paymentRequired, {
-        description: lang === 'es' ? 'Pulsa "Finalizar y pagar" para desbloquear.' : 'Click "Finalize & pay" to unlock.',
-      });
-      return true;
-    }
-    return false;
-  }, [paid, t.paymentRequired, lang]);
+  const persistProject = useCallback(
+    async (sections: PreviewSection[], log: ChangeEntry[], name: string) => {
+      try {
+        const me = await fetch('/api/auth/me');
+        if (!me.ok) return;
+        const payload = { name, sections, changeLog: log, templateSlug: activeTemplateSlug, lang };
+        if (projectId) {
+          await fetch(`/api/projects/${projectId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        } else {
+          const res = await fetch('/api/projects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (data.project?.id) setProjectId(data.project.id);
+        }
+      } catch {
+        /* silent */
+      }
+    },
+    [projectId, activeTemplateSlug, lang]
+  );
+
+  const scheduleSave = useCallback(
+    (sections: PreviewSection[], log: ChangeEntry[], name: string) => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(() => persistProject(sections, log, name), 800);
+    },
+    [persistProject]
+  );
 
   const callStudioApi = async (payload: Record<string, unknown>) => {
     const res = await fetch('/api/studio/generate', {
@@ -261,8 +315,14 @@ function StudioContent() {
       }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Error en el Studio');
-    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[] };
+    if (!res.ok) {
+      if (res.status === 402) {
+        setCredits(typeof data.credits === 'number' ? data.credits : 0);
+      }
+      throw new Error(data.error || 'Error en el Studio');
+    }
+    if (typeof data.credits === 'number') setCredits(data.credits);
+    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number };
   };
 
   const flashSections = (ids: number[]) => {
@@ -282,8 +342,15 @@ function StudioContent() {
       });
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
       setPreviewSections(data.previewSections);
-      applyCreditOnSuccess();
-      addChange(currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : ''));
+      applyCreditFromResponse(data.credits);
+      const summary = currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : '');
+      addChange(summary);
+      const nextLog = [
+        { id: Date.now(), summary, time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) },
+        ...changeLog.slice(0, 9),
+      ];
+      setChangeLog(nextLog);
+      scheduleSave(data.previewSections, nextLog, projectName);
       flashSections(data.changedSectionIds ?? []);
       toast.success(t.changeApplied, { description: t.creditUsed });
     } catch (err) {
@@ -320,8 +387,10 @@ function StudioContent() {
     try {
       const data = await callStudioApi({ prompt: `estilo ${newStyle}`, action: 'style', style: newStyle });
       setPreviewSections(data.previewSections);
-      applyCreditOnSuccess();
-      addChange(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`);
+      applyCreditFromResponse(data.credits);
+      const summary = lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`;
+      addChange(summary);
+      scheduleSave(data.previewSections, changeLog, projectName);
       flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
       toast.success(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`, { description: t.creditUsed });
     } catch (err) {
@@ -337,8 +406,10 @@ function StudioContent() {
     try {
       const data = await callStudioApi({ prompt: 'regenerar', action: 'regenerate' });
       setPreviewSections(data.previewSections);
-      applyCreditOnSuccess();
-      addChange(lang === 'es' ? 'Regeneración completa' : 'Full regeneration');
+      applyCreditFromResponse(data.credits);
+      const summary = lang === 'es' ? 'Regeneración completa' : 'Full regeneration';
+      addChange(summary);
+      scheduleSave(data.previewSections, changeLog, projectName);
       flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
       toast.success(lang === 'es' ? 'Nuevas variaciones' : 'New variations', { description: t.creditUsed });
     } catch (err) {
@@ -355,8 +426,10 @@ function StudioContent() {
     try {
       const data = await callStudioApi({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
       setPreviewSections(data.previewSections);
-      applyCreditOnSuccess();
-      addChange(lang === 'es' ? `Sección #${id} mejorada` : `Section #${id} improved`);
+      applyCreditFromResponse(data.credits);
+      const summary = lang === 'es' ? `Sección #${id} mejorada` : `Section #${id} improved`;
+      addChange(summary);
+      scheduleSave(data.previewSections, changeLog, projectName);
       flashSections(data.changedSectionIds ?? [id]);
       toast.success(lang === 'es' ? 'Sección mejorada' : 'Section improved', { description: t.creditUsed });
     } catch (err) {
@@ -372,10 +445,6 @@ function StudioContent() {
   };
 
   const handleExport = async () => {
-    if (requirePayment()) {
-      setCheckoutOpen(true);
-      return;
-    }
     try {
       const res = await fetch('/api/studio/export', {
         method: 'POST',
@@ -442,7 +511,6 @@ function StudioContent() {
             <Share2 className="w-3.5 h-3.5" /> {t.share}
           </button>
           <button onClick={handleExport} className="flex items-center gap-2 px-4 py-1.5 rounded-2xl border border-slate-200 hover:bg-slate-100 cursor-pointer">
-            {!paid && <Lock className="w-3 h-3 text-slate-400" />}
             <Download className="w-3.5 h-3.5" /> {t.export}
           </button>
           <button
@@ -547,8 +615,8 @@ function StudioContent() {
             <div className="flex flex-wrap justify-between items-center gap-3 mb-3 px-1 shrink-0">
               <div className="flex items-center gap-4">
                 <div className="font-medium tracking-tight text-xl">{projectName}</div>
-                <div className={`text-xs px-3 py-px rounded-full border font-semibold ${paid ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
-                  {paid ? t.ready : t.draft}
+                <div className="text-xs px-3 py-px rounded-full border font-semibold bg-amber-50 border-amber-200 text-amber-700">
+                  {t.draft}
                 </div>
                 <div className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-indigo-600 uppercase">
                   <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-indigo-500 animate-pulse' : 'bg-emerald-500'}`} />
@@ -630,7 +698,7 @@ function StudioContent() {
         onClose={() => setCheckoutOpen(false)}
         lang={lang}
         projectName={projectName}
-        onPaymentComplete={() => setPaidState(true)}
+        onPaymentComplete={() => toast.info(lang === 'es' ? 'Pagos disponibles próximamente' : 'Payments coming soon')}
       />
     </div>
   );

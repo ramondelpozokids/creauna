@@ -1,0 +1,16 @@
+{
+  "name": "CREAUNA",
+  "short_name": "CREAUNA",
+  "description": "Crea webs premium con IA en minutos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

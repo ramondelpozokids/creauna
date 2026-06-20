@@ -11,7 +11,7 @@ import { getPublishedTemplates, getTemplateBySlug, type TemplateItem } from '../
 const translations = {
   es: {
     title: "Plantillas espectaculares",
-    subtitle: "60 diseños premium — 12 por categoría. Cada imagen coincide con el negocio que representa.",
+    subtitle: "36 diseños premium — 6 por categoría (12 en Servicios). Cada imagen coincide con el negocio que representa.",
     all: "Todos",
     gastronomy: "Gastronomía",
     services: "Servicios",
@@ -28,7 +28,7 @@ const translations = {
   },
   en: {
     title: "Spectacular Templates",
-    subtitle: "60 premium designs — 12 per category. Every image matches the business it represents.",
+    subtitle: "36 premium designs — 6 per category (12 in Services). Every image matches the business it represents.",
     all: "All",
     gastronomy: "Gastronomy",
     services: "Services",

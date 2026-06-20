@@ -1,0 +1,141 @@
+export const superadminI18n = {
+  es: {
+    loading: 'Verificando acceso…',
+    forbiddenTitle: 'Acceso restringido',
+    forbiddenText: 'Esta zona es solo para administradores de CREAUNA.',
+    backDashboard: '← Volver al panel',
+    badge: 'SUPERADMIN',
+    exit: 'Salir',
+    title: 'Panel de administración',
+    subtitle: 'Operaciones internas de CREAUNA (sin métricas simuladas).',
+    panelOps: 'Operaciones',
+    itemUsers: 'Usuarios registrados (BD local)',
+    itemProjects: 'Proyectos guardados en Studio',
+    itemCredits: 'Créditos y consumo por usuario/IP',
+    itemAi: 'Estado de motores IA (/api/ai/status)',
+    panelStatus: 'Estado del producto',
+    statusText: 'Stripe y facturación automática pendientes de activación. El Studio, plantillas y créditos en servidor ya están operativos.',
+    openStudio: 'Abrir Studio',
+    openTemplates: 'Ver plantillas',
+  },
+  en: {
+    loading: 'Checking access…',
+    forbiddenTitle: 'Restricted access',
+    forbiddenText: 'This area is for CREAUNA administrators only.',
+    backDashboard: '← Back to dashboard',
+    badge: 'SUPERADMIN',
+    exit: 'Exit',
+    title: 'Admin panel',
+    subtitle: 'Internal CREAUNA operations (no simulated metrics).',
+    panelOps: 'Operations',
+    itemUsers: 'Registered users (local DB)',
+    itemProjects: 'Projects saved from Studio',
+    itemCredits: 'Credits and usage per user/IP',
+    itemAi: 'AI engine status (/api/ai/status)',
+    panelStatus: 'Product status',
+    statusText: 'Stripe and automated billing pending activation. Studio, templates and server-side credits are operational.',
+    openStudio: 'Open Studio',
+    openTemplates: 'Browse templates',
+  },
+} as const;
+
+export const legalPageI18n = {
+  es: {
+    legalTitle: 'Aviso Legal',
+    legalUpdated: 'Última actualización: 20 de junio de 2026',
+    privacyTitle: 'Política de Privacidad',
+    privacyUpdated: 'Última actualización: 20 de junio de 2026',
+    cookiesTitle: 'Política de Cookies',
+    cookiesUpdated: 'Última actualización: 20 de junio de 2026',
+    dataTitle: 'Protección de Datos',
+    dataUpdated: 'Última actualización: 20 de junio de 2026',
+  },
+  en: {
+    legalTitle: 'Legal Notice',
+    legalUpdated: 'Last updated: June 20, 2026',
+    privacyTitle: 'Privacy Policy',
+    privacyUpdated: 'Last updated: June 20, 2026',
+    cookiesTitle: 'Cookie Policy',
+    cookiesUpdated: 'Last updated: June 20, 2026',
+    dataTitle: 'Data Protection',
+    dataUpdated: 'Last updated: June 20, 2026',
+  },
+} as const;
+
+export const legalSectionsI18n = {
+  es: {
+    legal: [
+      { h: '1. Información general', p: 'Este sitio web es propiedad de Ramón del Pozo Rott, con domicilio en España. CREAUNA es una marca operada bajo su titularidad.' },
+      { h: '2. Objeto', p: 'El presente Aviso Legal regula el acceso y uso del sitio www.creauna.com y de los servicios de la plataforma CREAUNA.' },
+      { h: '3. Propiedad intelectual', p: 'Los contenidos del sitio (diseños, textos, código, imágenes, logotipos y software) son propiedad de Ramón del Pozo Rott o de terceros autorizados. Las webs generadas por usuarios son propiedad del usuario cuando corresponda según el plan contratado.' },
+      { h: '4. Responsabilidad', p: 'CREAUNA no se hace responsable del uso indebido de la plataforma ni de contenidos generados por terceros. El usuario es responsable de revisar textos e imágenes antes de publicar.' },
+    ],
+    privacy: [
+      { h: '1. Responsable', p: 'Responsable: Ramón del Pozo Rott — contacto: info@ramondelpozorott.es' },
+      { h: '2. Datos que recogemos', p: 'Datos de registro (nombre, email), proyectos guardados en Studio, logs técnicos y datos de contacto del formulario.' },
+      { h: '3. Finalidad', p: 'Prestar el servicio CREAUNA, gestionar cuentas, créditos, soporte y mejoras del producto.' },
+      { h: '4. Conservación y seguridad', p: 'Los datos se conservan mientras exista la relación con el usuario. Aplicamos medidas técnicas razonables (HTTPS, contraseñas cifradas, acceso restringido).' },
+      { h: '5. Derechos', p: 'Puedes acceder, rectificar o suprimir tus datos escribiendo a info@ramondelpozorott.es.' },
+    ],
+    cookies: [
+      { h: '1. Qué son', p: 'Las cookies son archivos pequeños que el navegador almacena para recordar preferencias o mantener la sesión.' },
+      { h: '2. Cookies que usamos', p: 'Cookie de sesión (creauna_session), preferencia de idioma (localStorage) y cookies técnicas necesarias para el funcionamiento.' },
+      { h: '3. Gestión', p: 'Puedes bloquear cookies desde tu navegador. Algunas funciones pueden dejar de estar disponibles.' },
+    ],
+    data: [
+      { h: '1. Marco', p: 'CREAUNA cumple el RGPD y la LOPDGDD en el tratamiento de datos personales.' },
+      { h: '2. Encargados', p: 'Podemos usar proveedores de hosting (Vercel), email (Resend) e IA (Google, Anthropic, OpenAI, Groq) bajo contrato y cláusulas adecuadas.' },
+      { h: '3. Transferencias', p: 'Si algún proveedor procesa datos fuera del EEE, se aplican garantías contractuales estándar.' },
+    ],
+  },
+  en: {
+    legal: [
+      { h: '1. General information', p: 'This website is owned by Ramón del Pozo Rott, based in Spain. CREAUNA is a brand operated under his ownership.' },
+      { h: '2. Purpose', p: 'This Legal Notice governs access to and use of www.creauna.com and CREAUNA platform services.' },
+      { h: '3. Intellectual property', p: 'Site content (designs, text, code, images, logos and software) belongs to Ramón del Pozo Rott or authorized third parties. User-generated sites belong to the user when applicable under the chosen plan.' },
+      { h: '4. Liability', p: 'CREAUNA is not liable for misuse of the platform or third-party generated content. Users must review text and images before publishing.' },
+    ],
+    privacy: [
+      { h: '1. Controller', p: 'Controller: Ramón del Pozo Rott — contact: info@ramondelpozorott.es' },
+      { h: '2. Data we collect', p: 'Registration data (name, email), Studio saved projects, technical logs and contact form data.' },
+      { h: '3. Purpose', p: 'To provide CREAUNA, manage accounts, credits, support and product improvements.' },
+      { h: '4. Retention and security', p: 'Data is kept while the user relationship exists. We apply reasonable technical measures (HTTPS, hashed passwords, restricted access).' },
+      { h: '5. Your rights', p: 'You may access, rectify or delete your data by emailing info@ramondelpozorott.es.' },
+    ],
+    cookies: [
+      { h: '1. What they are', p: 'Cookies are small files stored by the browser to remember preferences or maintain your session.' },
+      { h: '2. Cookies we use', p: 'Session cookie (creauna_session), language preference (localStorage) and technical cookies required for operation.' },
+      { h: '3. Management', p: 'You can block cookies in your browser. Some features may become unavailable.' },
+    ],
+    data: [
+      { h: '1. Framework', p: 'CREAUNA complies with GDPR and applicable Spanish data protection law.' },
+      { h: '2. Processors', p: 'We may use hosting (Vercel), email (Resend) and AI providers (Google, Anthropic, OpenAI, Groq) under appropriate agreements.' },
+      { h: '3. Transfers', p: 'If a provider processes data outside the EEA, standard contractual safeguards apply.' },
+    ],
+  },
+} as const;
+
+export const editorI18n = {
+  es: {
+    back: '← Volver al panel',
+    title: 'Editor de bloques',
+    save: 'Guardar',
+    saving: 'Guardando…',
+    preview: 'Vista previa',
+    addBlock: 'Añadir bloque',
+    blocks: { hero: 'Hero', text: 'Texto', cta: 'Botón', image: 'Imagen', features: 'Features', testimonial: 'Testimonio' },
+    notice: 'Editor clásico en beta. Para edición con IA usa el Studio.',
+    openStudio: 'Abrir Studio',
+  },
+  en: {
+    back: '← Back to dashboard',
+    title: 'Block editor',
+    save: 'Save',
+    saving: 'Saving…',
+    preview: 'Preview',
+    addBlock: 'Add block',
+    blocks: { hero: 'Hero', text: 'Text', cta: 'Button', image: 'Image', features: 'Features', testimonial: 'Testimonial' },
+    notice: 'Classic editor in beta. For AI editing use the Studio.',
+    openStudio: 'Open Studio',
+  },
+} as const;

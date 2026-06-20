@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { authenticateUser, isDemoAuthEnabled } from '../../../lib/auth/users';
+import { authenticateUser, createDemoUser, isDemoAuthEnabled } from '../../../lib/auth/users';
 import { setSessionCookie } from '../../../lib/auth/session';
 import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { isValidEmail, requireFields, sanitizeText } from '../../../lib/api/validate';
@@ -20,16 +20,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Correo no válido' }, { status: 400 });
     }
 
-    let user = authenticateUser(email, password);
+    let user = await authenticateUser(email, password);
+    let demo = false;
 
     if (!user && isDemoAuthEnabled()) {
-      user = {
-        id: `demo_${Date.now()}`,
-        email: email.toLowerCase(),
-        name: email.split('@')[0],
-        passwordHash: '',
-        createdAt: new Date().toISOString(),
-      };
+      user = await createDemoUser(email);
+      demo = true;
     }
 
     if (!user) {
@@ -40,8 +36,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       ok: true,
-      user: { id: user.id, email: user.email, name: user.name },
-      demo: isDemoAuthEnabled() && !authenticateUser(email, password),
+      user: { id: user.id, email: user.email, name: user.name, role: user.role, credits: user.credits },
+      demo,
     });
   } catch (error) {
     console.error('api/auth/login:', error);

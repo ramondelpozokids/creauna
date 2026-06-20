@@ -74,12 +74,29 @@ Abre en el navegador:
 
 ---
 
+## Deploy en Vercel
+
+1. Crea una base **PostgreSQL** gratuita en [Neon](https://neon.tech) o Supabase.
+2. En `prisma/schema.prisma`, cambia `provider = "sqlite"` por `provider = "postgresql"`.
+3. En Vercel → **Environment Variables**, añade:
+   - `DATABASE_URL` (URL Postgres)
+   - `CREAUNA_AUTH_SECRET` (cadena aleatoria larga)
+   - `CREAUNA_ADMIN_EMAIL=info@ramondelpozorott.es`
+   - `CREAUNA_DEMO_AUTH=false`
+   - `VERCEL_PREVIEW_FEEDBACK_ENABLED=0`
+   - Claves IA que uses (`GEMINI_API_KEY`, etc.)
+4. Tras el primer deploy, ejecuta una vez: `npx prisma db push` contra la URL de producción (o inclúyelo en el build).
+5. Push a `main` → Vercel despliega automáticamente.
+
+---
+
 ## Comandos útiles
 
 ```bash
 npm run dev          # Desarrollo
 npm run build        # Build de producción
-npm run start        # Ejecutar build
+npm run db:push      # Sincronizar esquema Prisma (local)
+npm run db:migrate   # Migraciones en desarrollo
 ```
 
 ---

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { generateStudioChange } from '../../../lib/ai/studioEngine';
 import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { sanitizeText } from '../../../lib/api/validate';
+import { getSessionUser } from '../../../lib/auth/session';
+import { consumeCredit, refundCredit, resolveCredits } from '../../../lib/credits';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -9,6 +11,21 @@ export async function POST(req: Request) {
   if (limited) return limited;
 
   try {
+    const session = await getSessionUser();
+    const creditStatus = await resolveCredits(session?.id ?? null, ip);
+
+    if (creditStatus.credits <= 0) {
+      return NextResponse.json(
+        { error: 'Sin créditos. Regístrate o mejora tu plan en /precios', credits: 0 },
+        { status: 402 }
+      );
+    }
+
+    const spent = await consumeCredit(session?.id ?? null, ip, 'studio_generate');
+    if (!spent.ok) {
+      return NextResponse.json({ error: 'Sin créditos disponibles', credits: spent.credits }, { status: 402 });
+    }
+
     const body = await req.json();
     const prompt = sanitizeText(body.prompt, 2000);
     const lang = body.lang === 'en' ? 'en' : 'es';
@@ -18,7 +35,8 @@ export async function POST(req: Request) {
     const previewSections = Array.isArray(body.previewSections) ? body.previewSections : [];
 
     if (!prompt && action === 'change') {
-      return NextResponse.json({ error: 'Prompt requerido' }, { status: 400 });
+      await refundCredit(session?.id ?? null, ip, 'studio_refund_empty_prompt');
+      return NextResponse.json({ error: 'Prompt requerido', credits: spent.credits + 1 }, { status: 400 });
     }
 
     const result = await generateStudioChange({
@@ -30,9 +48,15 @@ export async function POST(req: Request) {
       sectionId,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      ...result,
+      credits: spent.credits,
+    });
   } catch (error) {
     console.error('api/studio/generate:', error);
-    return NextResponse.json({ error: 'Error al generar el diseño' }, { status: 500 });
+    const session = await getSessionUser();
+    const ip = getClientIp(req);
+    const credits = await refundCredit(session?.id ?? null, ip, 'studio_refund_error');
+    return NextResponse.json({ error: 'Error al generar el diseño', credits }, { status: 500 });
   }
 }
