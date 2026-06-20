@@ -143,72 +143,32 @@ export default function CreaunaStudio() {
     return false;
   }, [paid, t.paymentRequired, lang]);
 
-  const processAIChange = async (currentInput: string) => {
-    await new Promise((r) => setTimeout(r, 900));
+  const callStudioApi = async (payload: Record<string, unknown>) => {
+    const res = await fetch('/api/studio/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        lang,
+        previewSections,
+        ...payload,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error en el Studio');
+    return data as { message: string; previewSections: PreviewSection[] };
+  };
 
-    let aiText = lang === 'es'
-      ? 'He refinado el diseño con más detalles de calidad.'
-      : "I've refined the design with higher quality details.";
-
-    let newSections = [...previewSections];
-    const lower = currentInput.toLowerCase();
-
-    if (lower.includes('elegante') || lower.includes('refinada') || lower.includes('premium') || lower.includes('elegant')) {
-      aiText = lang === 'es' ? 'Motor Visual + UX: más espacio, tipografía refinada y detalles de lujo.' : 'Visual + UX engines: more space, refined typography and luxury details.';
-      newSections = previewSections.map((sec) => ({
-        ...sec,
-        html: sec.html.replace(/bg-white/g, 'bg-slate-50').replace(/rounded-\[3\.5rem\]/g, 'rounded-[4rem]'),
-      }));
-    } else if (lower.includes('testimonio') || lower.includes('testimonial')) {
-      aiText = lang === 'es' ? 'Motor de Redacción: sección de testimonios añadida.' : 'Copy engine: testimonial section added.';
-      newSections = [
-        ...previewSections,
-        {
-          id: Date.now(),
-          type: 'testimonial',
-          html: `<div class="bg-white border border-slate-200 px-12 py-14 rounded-[3.5rem]">
-          <div class="max-w-lg">
-            <div class="text-3xl leading-snug italic text-slate-800">"La web más bonita que he creado. Todo el mundo me pregunta quién la hizo."</div>
-            <div class="mt-8 flex items-center gap-4">
-              <div class="w-9 h-9 rounded-full bg-slate-200"></div>
-              <div><div class="font-medium">Laura Mendoza</div><div class="text-xs text-slate-500">Fundadora, Atelier</div></div>
-            </div>
-          </div>
-        </div>`,
-        },
-      ];
-    } else if (lower.includes('hero') || lower.includes('impactante') || lower.includes('cinematic')) {
-      aiText = lang === 'es' ? 'Motor Visual: hero más impactante y emotivo.' : 'Visual engine: more impactful hero.';
-      newSections = previewSections.map((sec) =>
-        sec.type === 'hero'
-          ? {
-              ...sec,
-              html: `<div class="bg-white border border-slate-200 px-16 py-24 rounded-[4rem]">
-          <div class="max-w-2xl">
-            <div class="text-xs tracking-[3px] text-slate-400">EDICIÓN 2026</div>
-            <h1 class="text-[70px] font-semibold tracking-[-5px] leading-none mt-3 text-slate-900">Creado con<br/>cuidado.</h1>
-            <p class="mt-5 text-2xl text-slate-600">La nueva forma de hacer webs excepcionales.</p>
-          </div>
-        </div>`,
-            }
-          : sec
-      );
-    } else if (lower.includes('clara') || lower.includes('luminosa') || lower.includes('bright')) {
-      aiText = lang === 'es' ? 'Motor de Experiencia: versión más clara y luminosa.' : 'UX engine: brighter, lighter version.';
-      newSections = previewSections.map((sec) => ({
-        ...sec,
-        html: sec.html.replace(/bg-slate-50|bg-white/g, 'bg-white'),
-      }));
-    } else {
-      aiText = lang === 'es'
-        ? 'Motores IA sincronizados: cambio aplicado al instante.'
-        : 'AI engines synced: change applied instantly.';
+  const processAIChange = async (currentInput: string, action: 'change' | 'regenerate' | 'improve' = 'change', sectionId?: number) => {
+    try {
+      const data = await callStudioApi({ prompt: currentInput, action, sectionId });
+      setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
+      setPreviewSections(data.previewSections);
+      toast.success(t.successUpdate, { description: t.creditUsed });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error al generar');
+    } finally {
+      setIsThinking(false);
     }
-
-    setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: aiText }]);
-    setPreviewSections(newSections);
-    setIsThinking(false);
-    toast.success(t.successUpdate, { description: t.creditUsed });
   };
 
   const sendMessage = async () => {
@@ -234,59 +194,74 @@ export default function CreaunaStudio() {
     }, 30);
   };
 
-  const changeStyle = (newStyle: 'elegante' | 'minimal' | 'moderno') => {
+  const changeStyle = async (newStyle: 'elegante' | 'minimal' | 'moderno') => {
     if (!useCreditOrBlock()) return;
     setStyle(newStyle);
-    let replacement = 'bg-white';
-    if (newStyle === 'elegante') replacement = 'bg-slate-50';
-    if (newStyle === 'minimal') replacement = 'bg-white border border-slate-200';
-    if (newStyle === 'moderno') replacement = 'bg-slate-100';
-    setPreviewSections((prev) =>
-      prev.map((section) => ({
-        ...section,
-        html: section.html.replace(/bg-white|bg-slate-50|bg-slate-100/g, replacement),
-      }))
-    );
-    toast.success(lang === 'es' ? `Estilo: ${newStyle} (1 crédito)` : `Style: ${newStyle} (1 credit)`);
+    setIsThinking(true);
+    try {
+      const data = await callStudioApi({ prompt: `estilo ${newStyle}`, action: 'style', style: newStyle });
+      setPreviewSections(data.previewSections);
+      toast.success(lang === 'es' ? `Estilo: ${newStyle} (1 crédito)` : `Style: ${newStyle} (1 credit)`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setIsThinking(false);
+    }
   };
 
-  const regenerate = () => {
+  const regenerate = async () => {
     if (!useCreditOrBlock()) return;
     setIsThinking(true);
-    setTimeout(() => {
-      setPreviewSections((prev) =>
-        prev.map((s, i) => ({
-          ...s,
-          html: s.html.replace(/rounded-\[3\.5rem\]/g, i % 2 === 0 ? 'rounded-[4.5rem]' : 'rounded-[3.5rem]'),
-        }))
-      );
-      setIsThinking(false);
+    try {
+      const data = await callStudioApi({ prompt: 'regenerar', action: 'regenerate' });
+      setPreviewSections(data.previewSections);
       toast.success(lang === 'es' ? 'Nuevas variaciones (1 crédito)' : 'New variations (1 credit)');
-    }, 900);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setIsThinking(false);
+    }
   };
 
-  const improveSection = (id: number) => {
+  const improveSection = async (id: number) => {
     if (!useCreditOrBlock()) return;
     setIsThinking(true);
-    setTimeout(() => {
-      setPreviewSections((prev) =>
-        prev.map((section) =>
-          section.id === id
-            ? { ...section, html: section.html + `<div class="mt-4 text-xs text-slate-400 tracking-widest">— REFINADO POR MOTORES IA</div>` }
-            : section
-        )
-      );
-      setIsThinking(false);
+    try {
+      const data = await callStudioApi({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
+      setPreviewSections(data.previewSections);
       toast.success(lang === 'es' ? 'Sección mejorada (1 crédito)' : 'Section improved (1 credit)');
-    }, 700);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setIsThinking(false);
+    }
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (requirePayment('export')) {
       setCheckoutOpen(true);
       return;
     }
-    toast.success(lang === 'es' ? 'Exportado como código limpio' : 'Exported as clean code');
+    try {
+      const res = await fetch('/api/studio/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName, previewSections }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al exportar');
+      const html = data.files?.['index.html'] || '';
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${projectName.replace(/\s+/g, '-').toLowerCase()}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success(lang === 'es' ? 'Exportado como código limpio' : 'Exported as clean code');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error al exportar');
+    }
   };
 
   if (!mounted) return null;

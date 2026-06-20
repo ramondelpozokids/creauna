@@ -9,14 +9,25 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
       toast.success("¡Bienvenido de nuevo!");
       window.location.href = '/dashboard';
-    }, 800);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'No se pudo iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

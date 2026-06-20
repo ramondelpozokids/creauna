@@ -62,16 +62,29 @@ export default function ChatAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  const reply = (userInput: string) => {
+  const reply = async (userInput: string) => {
     setIsTyping(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userInput }),
+      });
+      const data = await res.json();
+      const answer = data.answer || 'No pude procesar tu pregunta. Escribe a info@ramondelpozorott.es o usa /contacto.';
+      setMessages(prev => [
+        ...prev,
+        { role: 'ai', text: answer, isFallback: !data.matched },
+      ]);
+    } catch {
       const { answer, matched } = findChatAnswer(userInput);
       setMessages(prev => [
         ...prev,
         { role: 'ai', text: answer, isFallback: !matched },
       ]);
+    } finally {
       setIsTyping(false);
-    }, 600);
+    }
   };
 
   const sendMessage = (text?: string) => {

@@ -15,17 +15,28 @@ export default function Contacto() {
   });
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al enviar');
+
       toast.success("Solicitud enviada correctamente", {
         description: "Ramón del Pozo Rott te contactará en menos de 24h."
       });
       setForm({ name: '', email: '', phone: '', type: 'web-a-medida', message: '' });
-    }, 1200);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'No se pudo enviar la solicitud');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

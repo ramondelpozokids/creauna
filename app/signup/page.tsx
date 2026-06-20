@@ -12,7 +12,7 @@ export default function Signup() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password) {
       toast.error("Por favor completa los campos obligatorios");
@@ -20,10 +20,21 @@ export default function Signup() {
     }
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al registrar');
       toast.success("¡Cuenta creada con éxito!");
       window.location.href = '/dashboard';
-    }, 900);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'No se pudo crear la cuenta');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

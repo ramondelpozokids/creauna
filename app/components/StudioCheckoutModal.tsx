@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, CreditCard, Package, Mail, FileArchive, Link2, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -27,6 +27,19 @@ export default function StudioCheckoutModal({ open, onClose, lang, projectName, 
   const [step, setStep] = useState<Step>('payment');
   const [selectedDelivery, setSelectedDelivery] = useState('zip');
   const [processing, setProcessing] = useState(false);
+  const [stripeEnabled, setStripeEnabled] = useState(false);
+  const [stripeNoteOverride, setStripeNoteOverride] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    fetch('/api/stripe/status')
+      .then((r) => r.json())
+      .then((data) => {
+        setStripeEnabled(Boolean(data.enabled));
+        if (data.note) setStripeNoteOverride(data.note);
+      })
+      .catch(() => setStripeEnabled(false));
+  }, [open]);
 
   const t = lang === 'es' ? {
     paymentTitle: 'Finalizar y pagar',
@@ -71,17 +84,48 @@ export default function StudioCheckoutModal({ open, onClose, lang, projectName, 
     }, 1200);
   };
 
-  const handleConfirmDelivery = () => {
+  const handleStripePayment = async () => {
     setProcessing(true);
-    setTimeout(() => {
-      setStep('done');
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: 'pro', projectName }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Stripe no disponible');
+      if (data.url) window.location.href = data.url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error al iniciar pago');
+    } finally {
       setProcessing(false);
+    }
+  };
+
+  const handleConfirmDelivery = async () => {
+    setProcessing(true);
+    try {
+      const res = await fetch('/api/studio/delivery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectName,
+          deliveryMethod: selectedDelivery,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al programar entrega');
+      setStep('done');
       toast.success(lang === 'es' ? 'Entrega programada' : 'Delivery scheduled', {
         description: lang === 'es'
-          ? `Método: ${deliveryOptions.find(d => d.id === selectedDelivery)?.[lang === 'es' ? 'es' : 'en']}`
+          ? `Método: ${deliveryOptions.find(d => d.id === selectedDelivery)?.es}`
           : undefined,
       });
-    }, 900);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleClose = () => {
@@ -128,7 +172,7 @@ export default function StudioCheckoutModal({ open, onClose, lang, projectName, 
                   </div>
                   <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 leading-relaxed">
                     <ShieldCheck className="w-4 h-4 inline mr-1 -mt-0.5" />
-                    {t.stripeNote}
+                    {stripeNoteOverride || t.stripeNote}
                   </div>
                   <button
                     onClick={handleSimulatePayment}
@@ -138,11 +182,12 @@ export default function StudioCheckoutModal({ open, onClose, lang, projectName, 
                     {processing ? '...' : t.simulate}
                   </button>
                   <button
-                    disabled
-                    className="w-full py-3.5 rounded-2xl font-semibold text-sm border border-slate-200 text-slate-400 flex items-center justify-center gap-2 cursor-not-allowed"
+                    onClick={handleStripePayment}
+                    disabled={processing || !stripeEnabled}
+                    className="w-full py-3.5 rounded-2xl font-semibold text-sm border border-slate-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-slate-50"
                   >
                     <CreditCard className="w-4 h-4" />
-                    {t.stripeSoon}
+                    {stripeEnabled ? (lang === 'es' ? 'Pagar con Stripe' : 'Pay with Stripe') : t.stripeSoon}
                   </button>
                 </div>
               )}
