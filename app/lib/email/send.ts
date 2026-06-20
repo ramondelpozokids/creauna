@@ -15,7 +15,7 @@ function parseResendError(body: string): string {
     const data = JSON.parse(body) as { message?: string; error?: string };
     const msg = data.message || data.error || '';
     if (/only send testing emails to your own/i.test(msg)) {
-      return 'Resend (plan gratis): solo puede enviar a tu email de registro. Pon CONTACT_TO_EMAIL=ramondelpozokids@gmail.com en Vercel o verifica un dominio en resend.com/domains.';
+      return 'Resend: verifica el dominio ramondelpozorott.es en resend.com/domains y usa CONTACT_TO_EMAIL=info@ramondelpozorott.es en Vercel.';
     }
     if (msg) return msg;
   } catch {
@@ -32,6 +32,10 @@ function getRecipients(): string[] {
 function getFromAddress(): string {
   const custom = process.env.CONTACT_FROM_EMAIL?.trim();
   if (custom) return custom;
+
+  const domain = process.env.RESEND_FROM_DOMAIN?.trim();
+  if (domain) return `CREAUNA <contacto@${domain}>`;
+
   return 'CREAUNA <onboarding@resend.dev>';
 }
 
