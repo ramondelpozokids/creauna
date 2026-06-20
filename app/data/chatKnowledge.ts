@@ -12,6 +12,14 @@ export const quickTopics = [
   { label: 'Contacto', query: '¿Cómo os contacto?' },
 ];
 
+export const quickTopicsEn = [
+  { label: 'Pricing', query: 'How much does CREAUNA cost?' },
+  { label: 'How it works', query: 'How do I create my website?' },
+  { label: 'Templates', query: 'What templates do you have?' },
+  { label: 'Guide', query: 'Where is the full guide?' },
+  { label: 'Contact', query: 'How can I contact you?' },
+];
+
 export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'guide',
@@ -46,7 +54,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'templates',
     keywords: ['plantilla', 'plantillas', 'template', 'templates', 'catálogo', 'catalogo', 'diseños', 'modelos'],
-    answer: 'Tenemos 60+ plantillas premium organizadas en 5 categorías: Gastronomía, Servicios, Lujo & Estilo, Corporativo y Tecnología. Cada una con imagen acorde al sector (restaurante, taller de motos, tatuajes, etc.). Explóralas en /templates',
+    answer: 'Tenemos 36 plantillas premium organizadas en 5 categorías: Gastronomía (6), Servicios (12), Lujo & Estilo (6), Corporativo (6) y Tecnología (6). Cada una con imagen acorde al sector. Explóralas en /templates',
   },
   {
     id: 'ai-tech',
@@ -86,7 +94,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'competitors',
     keywords: ['emergent', 'lovable', 'competencia', 'comparar', 'comparativa', 'alternativa', 'mejor que'],
-    answer: 'Frente a Emergent ($20/mes, 100 créditos, ~50 extra por web publicada) y Lovable ($25/mes), CREAUNA ofrece Pro a 19€ con 120 créditos, 60+ plantillas premium, interfaz en español y sin penalización por despliegue. Comparativa en /precios',
+    answer: 'Frente a Emergent ($20/mes, 100 créditos, ~50 extra por web publicada) y Lovable ($25/mes), CREAUNA ofrece Pro a 19€ con 120 créditos, 36 plantillas premium, interfaz en español y sin penalización por despliegue. Comparativa en /precios',
   },
   {
     id: 'free-trial',
@@ -136,7 +144,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pro-plan',
     keywords: ['plan pro', 'pro plan', ' suscripcion pro', 'suscripción pro'],
-    answer: 'Plan Pro: 19€/mes (15€ anual), 120 créditos/mes, webs ilimitadas, 60+ plantillas, exportación de código, soporte prioritario y 3 meses de ajustes. El más popular. Empieza en /studio',
+    answer: 'Plan Pro: 19€/mes (15€ anual), 120 créditos/mes, webs ilimitadas, 36 plantillas, exportación de código, soporte prioritario y 3 meses de ajustes. El más popular. Empieza en /studio',
   },
   {
     id: 'free-plan',
@@ -165,11 +173,70 @@ export const knowledgeBase: KnowledgeEntry[] = [
   },
 ];
 
+export const knowledgeBaseEn: KnowledgeEntry[] = [
+  {
+    id: 'guide',
+    keywords: ['guide', 'tutorial', 'manual', 'step by step', 'learn', 'documentation', 'help'],
+    answer: 'We have a full guide covering the entire process: creating sites, templates, credits, refinement, delivery, modernization, payment and contact. Visit /guia',
+  },
+  {
+    id: 'greeting',
+    keywords: ['hello', 'hi', 'hey', 'good morning', 'good afternoon'],
+    answer: 'Hi! I am the CREAUNA Assistant. I can help with pricing, templates, Studio, credits, modernization and more. What do you need?',
+  },
+  {
+    id: 'pricing',
+    keywords: ['price', 'pricing', 'cost', 'how much', 'plan', 'subscription', 'credits', 'free', 'pro', 'business'],
+    answer: 'Plans: Free €0 (15 credits/month), Pro €19/month (120 credits), Business €49/month (300 credits). Full comparison at /precios',
+  },
+  {
+    id: 'how',
+    keywords: ['how', 'create', 'build', 'website', 'process', 'steps', 'start'],
+    answer: 'Simple process:\n\n1. Open Studio (/studio)\n2. Describe your business or pick a template (/templates)\n3. AI generates your site in minutes\n4. Refine with changes (1 credit each)\n5. Export or request delivery when ready\n\nFull guide at /guia',
+  },
+  {
+    id: 'templates',
+    keywords: ['template', 'templates', 'catalog', 'designs', 'models'],
+    answer: 'We have 36 premium templates in 5 categories: Gastronomy (6), Services (12), Luxury (6), Corporate (6), Technology (6). Browse at /templates',
+  },
+  {
+    id: 'studio',
+    keywords: ['studio', 'editor', 'design', 'preview', 'live'],
+    answer: 'CREAUNA Studio is where you design with AI. Open /studio, describe changes and see live preview. Each change uses 1 credit.',
+  },
+  {
+    id: 'modernization',
+    keywords: ['modernize', 'modernization', 'old website', 'redesign', 'before after'],
+    answer: 'Modernization transforms old websites (5+ years) into modern sites. From €890. Includes before/after, legacy archive and 3 months of adjustments. See /modernizacion',
+  },
+  {
+    id: 'custom',
+    keywords: ['custom', 'bespoke', 'tailored', 'agency', 'exclusive'],
+    answer: 'Custom Web is for exclusive projects supervised by Ramón del Pozo Rott. From €2,900. Request at /contacto or /web-a-medida',
+  },
+  {
+    id: 'contact',
+    keywords: ['contact', 'email', 'support', 'help', 'whatsapp'],
+    answer: 'Contact us at /contacto or info@ramondelpozorott.es — we reply within 24h. WhatsApp +34 656 398 640 for real urgencies only.',
+  },
+  {
+    id: 'thanks',
+    keywords: ['thanks', 'thank you', 'perfect', 'great', 'ok', 'got it'],
+    answer: 'You are welcome! For anything I cannot resolve, use /contacto or info@ramondelpozorott.es',
+  },
+];
+
 export const fallbackAnswer =
   'No tengo una respuesta específica para eso. Como última opción, puedes:\n\n' +
   '1. Rellenar el formulario en /contacto — te respondemos en 24h\n' +
   '2. Escribir a info@ramondelpozorott.es\n\n' +
   'WhatsApp +34 656 398 640 solo para urgencias reales. Este asistente y el formulario resuelven la gran mayoría de consultas sin esperas.';
+
+export const fallbackAnswerEn =
+  "I don't have a specific answer for that. As a last resort:\n\n" +
+  '1. Fill out the form at /contacto — we reply within 24h\n' +
+  '2. Email info@ramondelpozorott.es\n\n' +
+  'WhatsApp +34 656 398 640 is for real emergencies only. This assistant and the contact form handle most questions without waiting.';
 
 function normalize(text: string): string {
   return text
@@ -179,16 +246,19 @@ function normalize(text: string): string {
     .trim();
 }
 
-export function findChatAnswer(input: string): { answer: string; matched: boolean } {
+export function findChatAnswer(input: string, lang: 'es' | 'en' = 'es'): { answer: string; matched: boolean } {
   const normalized = normalize(input);
   if (!normalized) {
-    return { answer: 'Escribe tu pregunta y te ayudo enseguida.', matched: false };
+    return {
+      answer: lang === 'en' ? 'Type your question and I will help right away.' : 'Escribe tu pregunta y te ayudo enseguida.',
+      matched: false,
+    };
   }
 
   let bestScore = 0;
   let bestAnswer = '';
 
-  for (const entry of knowledgeBase) {
+  for (const entry of (lang === 'en' ? knowledgeBaseEn : knowledgeBase)) {
     let score = 0;
     for (const keyword of entry.keywords) {
       const nk = normalize(keyword);
@@ -206,5 +276,5 @@ export function findChatAnswer(input: string): { answer: string; matched: boolea
     return { answer: bestAnswer, matched: true };
   }
 
-  return { answer: fallbackAnswer, matched: false };
+  return { answer: lang === 'en' ? fallbackAnswerEn : fallbackAnswer, matched: false };
 }

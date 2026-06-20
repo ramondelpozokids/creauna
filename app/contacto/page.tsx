@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import { useLanguage } from '../components/LanguageProvider';
+import { contactoI18n } from '../data/i18n/marketing';
 import { toast } from 'sonner';
-import { ShieldCheck, Mail, Phone, MessageSquare, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Mail, MessageSquare, ArrowRight } from 'lucide-react';
 
 export default function Contacto() {
+  const { lang } = useLanguage();
+  const t = contactoI18n[lang];
+
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -26,14 +31,12 @@ export default function Contacto() {
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Error al enviar');
+      if (!res.ok) throw new Error(data.error || t.toastError);
 
-      toast.success("Solicitud enviada correctamente", {
-        description: "Ramón del Pozo Rott te contactará en menos de 24h."
-      });
+      toast.success(t.toastSuccess, { description: t.toastSuccessDesc });
       setForm({ name: '', email: '', phone: '', type: 'web-a-medida', message: '' });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'No se pudo enviar la solicitud');
+      toast.error(err instanceof Error ? err.message : t.toastError);
     } finally {
       setLoading(false);
     }
@@ -45,141 +48,97 @@ export default function Contacto() {
 
       <div className="container pt-20 pb-20 max-w-6xl">
         <div className="grid lg:grid-cols-12 gap-12 items-start mt-6">
-          
-          {/* Form Column */}
           <div className="lg:col-span-7 bg-white border border-slate-200 p-8 md:p-10 rounded-[2.5rem] shadow-sm">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-950">Hablemos de tu proyecto</h1>
-            <p className="mt-4 text-slate-600 text-base leading-relaxed">
-              Ya sea una web a medida, modernización de tu web actual o un proyecto especial, estamos aquí para ayudarte.
-            </p>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-950">{t.title}</h1>
+            <p className="mt-4 text-slate-600 text-base leading-relaxed">{t.subtitle}</p>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-slate-700">Nombre completo</label>
-                  <input 
-                    type="text" 
-                    value={form.name} 
-                    onChange={(e) => setForm({...form, name: e.target.value})}
-                    required 
-                    className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors"
-                  />
+                  <label className="block text-sm font-semibold mb-2 text-slate-700">{t.name}</label>
+                  <input type="text" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required
+                    className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-slate-700">Correo electrónico</label>
-                  <input 
-                    type="email" 
-                    value={form.email} 
-                    onChange={(e) => setForm({...form, email: e.target.value})}
-                    required 
-                    className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors" 
-                  />
+                  <label className="block text-sm font-semibold mb-2 text-slate-700">{t.email}</label>
+                  <input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} required
+                    className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-slate-700">Teléfono (opcional)</label>
-                <input 
-                  type="tel" 
-                  value={form.phone} 
-                  onChange={(e) => setForm({...form, phone: e.target.value})}
-                  className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors" 
-                />
+                <label className="block text-sm font-semibold mb-2 text-slate-700">{t.phone}</label>
+                <input type="tel" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})}
+                  className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors" />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-slate-700">¿Qué tipo de proyecto necesitas?</label>
-                <select 
-                  value={form.type} 
-                  onChange={(e) => setForm({...form, type: e.target.value})}
-                  className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors cursor-pointer"
-                >
-                  <option value="web-a-medida">Web a Medida (diseño exclusivo)</option>
-                  <option value="modernizacion">Modernización de web antigua</option>
-                  <option value="proyecto-especial">Proyecto especial / Agencia</option>
-                  <option value="otro">Otro</option>
+                <label className="block text-sm font-semibold mb-2 text-slate-700">{t.type}</label>
+                <select value={form.type} onChange={(e) => setForm({...form, type: e.target.value})}
+                  className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-2xl px-5 py-3.5 focus:outline-none transition-colors cursor-pointer">
+                  {(Object.keys(t.types) as Array<keyof typeof t.types>).map((key) => (
+                    <option key={key} value={key}>{t.types[key]}</option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-slate-700">Cuéntanos tu proyecto</label>
-                <textarea 
-                  value={form.message} 
-                  onChange={(e) => setForm({...form, message: e.target.value})}
-                  required
-                  rows={6}
+                <label className="block text-sm font-semibold mb-2 text-slate-700">{t.message}</label>
+                <textarea value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} required rows={6}
                   className="w-full border border-slate-200 focus:border-slate-400 bg-slate-50/50 rounded-[1.5rem] px-5 py-4 resize-y focus:outline-none transition-colors"
-                  placeholder="Describe lo que tienes en mente, el sector, objetivos, estilo que te gusta..."
-                />
+                  placeholder={t.messagePlaceholder} />
               </div>
 
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="btn-gradient w-full py-4.5 rounded-2xl text-base font-semibold disabled:opacity-70 cursor-pointer shadow-md flex items-center justify-center gap-2"
-              >
-                {loading ? "Enviando..." : "Enviar solicitud"}
+              <button type="submit" disabled={loading}
+                className="btn-gradient w-full py-4.5 rounded-2xl text-base font-semibold disabled:opacity-70 cursor-pointer shadow-md flex items-center justify-center gap-2">
+                {loading ? t.sending : t.submit}
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <p className="text-center text-xs text-slate-500 font-medium">
-                Te responderemos personalmente en menos de 24 horas.
-              </p>
+              <p className="text-center text-xs text-slate-500 font-medium">{t.footer}</p>
             </form>
           </div>
 
-          {/* Info & Trust Column */}
           <div className="lg:col-span-5 space-y-8">
-            
-            {/* Ramón profile Card */}
             <div className="card-luxe bg-[#f8f7f4] border border-slate-200/80 p-8 rounded-[2.5rem] text-center">
               <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-xl mx-auto mb-4 transition-transform hover:scale-105 duration-300">
-                <img 
-                  src="/creador.webp" 
-                  alt="Ramón del Pozo Rott" 
-                  className="w-full h-full object-cover" 
-                />
+                <img src="/creador.webp" alt="Ramón del Pozo Rott" className="w-full h-full object-cover" />
               </div>
-              <div className="text-[10px] tracking-[3px] text-slate-500 font-bold uppercase">Supervisado por</div>
+              <div className="text-[10px] tracking-[3px] text-slate-500 font-bold uppercase">{t.supervised}</div>
               <h2 className="font-medium text-sm tracking-tight text-slate-700 mt-1">Ramón del Pozo Rott</h2>
               <p className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1 mt-0.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-                Supervisor Creativo
+                {t.supervisor}
               </p>
-              
               <blockquote className="mt-6 text-slate-700 italic text-sm leading-relaxed border-t border-slate-200/60 pt-6">
-                “En CREAUNA tratamos cada solicitud a medida de manera individualizada. Estudiaré tu caso y me pondré en contacto contigo personalmente en un plazo máximo de 24 horas.”
+                {t.quote}
               </blockquote>
             </div>
 
-            {/* Quick contact list */}
             <div className="bg-white border border-slate-200 p-8 rounded-[2.5rem] shadow-sm space-y-6">
-              <h3 className="font-bold text-lg text-slate-950">Información de Contacto</h3>
-              
+              <h3 className="font-bold text-lg text-slate-950">{t.contactInfo}</h3>
               <div className="space-y-4 text-sm">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center border text-slate-600">
                     <Mail className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 font-semibold uppercase">Email directo</div>
+                    <div className="text-xs text-slate-400 font-semibold uppercase">{t.emailDirect}</div>
                     <a href="mailto:info@ramondelpozorott.es" className="font-semibold text-slate-800 hover:text-indigo-600 transition-colors">info@ramondelpozorott.es</a>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center border text-slate-600">
                     <MessageSquare className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 font-semibold uppercase">WhatsApp (solo urgencias)</div>
+                    <div className="text-xs text-slate-400 font-semibold uppercase">{t.whatsapp}</div>
                     <a href="https://wa.me/34656398640" target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-800 hover:text-indigo-600 transition-colors">+34 656 398 640</a>
-                    <p className="text-xs text-slate-500 mt-0.5">Para el resto de consultas, usa nuestro asistente o el formulario.</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{t.whatsappNote}</p>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

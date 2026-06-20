@@ -510,7 +510,7 @@ export default function Dashboard() {
         <div className="mt-16 text-center">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-2xl text-xs text-slate-500">
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            100% seguro • Cifrado de nivel bancario • Propiedad de Ramón del Pozo Rott
+            100% seguro • Supervisado por Ramón del Pozo Rott
           </div>
         </div>
       </div>

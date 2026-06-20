@@ -12,24 +12,29 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const message = sanitizeText(body.message, 2000);
+    const lang = body.lang === 'en' ? 'en' : 'es';
     if (!message) {
-      return NextResponse.json({ error: 'Mensaje vacío' }, { status: 400 });
+      return NextResponse.json({ error: lang === 'en' ? 'Empty message' : 'Mensaje vacío' }, { status: 400 });
     }
 
-    const { answer, matched } = findChatAnswer(message);
+    const { answer, matched } = findChatAnswer(message, lang);
 
     if (matched) {
       return NextResponse.json({ answer, matched: true, source: 'knowledge' });
     }
 
-    const aiResult = await chatCompletion([
-      {
-        role: 'system',
-        content: `Eres el Asistente CREAUNA, plataforma española para crear webs con IA.
+    const systemPrompt = lang === 'en'
+      ? `You are the CREAUNA Assistant, a Spanish platform for building websites with AI.
+Reply in English, briefly and helpfully. Do not reveal which AIs we use internally.
+If unsure, suggest /contacto or info@ramondelpozorott.es as last resort.
+You may use internal links: /precios /studio /templates /guia /modernizacion /contacto`
+      : `Eres el Asistente CREAUNA, plataforma española para crear webs con IA.
 Responde en español, breve y útil. No reveles qué IAs usamos internamente.
 Si no sabes algo, indica /contacto o info@ramondelpozorott.es como último recurso.
-Puedes usar enlaces internos: /precios /studio /templates /guia /modernizacion /contacto`,
-      },
+Puedes usar enlaces internos: /precios /studio /templates /guia /modernizacion /contacto`;
+
+    const aiResult = await chatCompletion([
+      { role: 'system', content: systemPrompt },
       { role: 'user', content: message },
     ], { temperature: 0.4, maxTokens: 500, motor: 'copy', prompt: message });
 

@@ -508,10 +508,33 @@ export const templatesCatalog: TemplateItem[] = [
   },
 ];
 
+/** Límites según orden de trabajo: 6 + 12 + 6 + 6 + 6 = 36 plantillas */
+export const TEMPLATE_LIMITS: Record<TemplateCategory, number> = {
+  gastronomy: 6,
+  services: 12,
+  luxury: 6,
+  corporate: 6,
+  tech: 6,
+};
+
+export function getPublishedTemplates(): TemplateItem[] {
+  const counts: Partial<Record<TemplateCategory, number>> = {};
+  return templatesCatalog.filter((t) => {
+    const current = counts[t.categoryKey] ?? 0;
+    if (current >= TEMPLATE_LIMITS[t.categoryKey]) return false;
+    counts[t.categoryKey] = current + 1;
+    return true;
+  });
+}
+
+export function getTemplateBySlug(slug: string): TemplateItem | undefined {
+  return getPublishedTemplates().find((t) => t.slug === slug);
+}
+
 export const categoryCounts = {
-  gastronomy: templatesCatalog.filter(t => t.categoryKey === 'gastronomy').length,
-  services: templatesCatalog.filter(t => t.categoryKey === 'services').length,
-  luxury: templatesCatalog.filter(t => t.categoryKey === 'luxury').length,
-  corporate: templatesCatalog.filter(t => t.categoryKey === 'corporate').length,
-  tech: templatesCatalog.filter(t => t.categoryKey === 'tech').length,
+  gastronomy: getPublishedTemplates().filter((t) => t.categoryKey === 'gastronomy').length,
+  services: getPublishedTemplates().filter((t) => t.categoryKey === 'services').length,
+  luxury: getPublishedTemplates().filter((t) => t.categoryKey === 'luxury').length,
+  corporate: getPublishedTemplates().filter((t) => t.categoryKey === 'corporate').length,
+  tech: getPublishedTemplates().filter((t) => t.categoryKey === 'tech').length,
 };

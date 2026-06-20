@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '../components/Navbar';
+import LegalLangNotice from '../components/LegalLangNotice';
 
 export default function Legal() {
   return (
@@ -8,6 +9,7 @@ export default function Legal() {
       <Navbar />
 
       <div className="container max-w-4xl py-16">
+        <LegalLangNotice />
         <div className="max-w-3xl">
           <h1 className="text-6xl font-semibold tracking-tight">Aviso Legal</h1>
           <p className="mt-2 text-slate-500">Última actualización: 19 de junio de 2026</p>

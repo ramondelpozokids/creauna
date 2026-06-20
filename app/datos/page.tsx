@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '../components/Navbar';
+import LegalLangNotice from '../components/LegalLangNotice';
 
 export default function Datos() {
   return (
@@ -8,6 +9,7 @@ export default function Datos() {
       <Navbar />
 
       <div className="container max-w-4xl py-16">
+        <LegalLangNotice />
         <div className="max-w-3xl">
           <h1 className="text-6xl font-semibold tracking-tight">Protección de Datos</h1>
           <p className="mt-2 text-slate-500">Cumplimos estrictamente con el RGPD y la LOPD-GDD</p>

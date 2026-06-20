@@ -1,16 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Send, Sparkles, RefreshCw, Download, Share2,
-  Monitor, Smartphone, Zap, Coins, Lock, Rocket
+  Monitor, Smartphone, Zap, Coins, Lock, Rocket, History, Eye
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import StudioAITeam from '../components/StudioAITeam';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
+import { useLanguage } from '../components/LanguageProvider';
 import { getCredits, consumeCredit, isPaid, FREE_CREDITS } from '../lib/studioCredits';
+import { getTemplateBySlug } from '../data/templates';
+import { buildTemplateSections, toStudioSections } from '../lib/templatePages';
 
 type Language = 'es' | 'en';
 
@@ -26,11 +30,18 @@ interface PreviewSection {
   html: string;
 }
 
+interface ChangeEntry {
+  id: number;
+  summary: string;
+  time: string;
+}
+
 const translations = {
   es: {
     title: 'CREAUNA Studio',
     subtitle: 'Diseño con IA',
     welcome: 'Hola. Soy tu director de diseño. Los 4 motores de IA trabajan en equipo para crear tu web. ¿Qué quieres diseñar hoy?',
+    welcomeTemplate: (name: string) => `Plantilla «${name}» cargada. Navega la vista en tiempo real a la derecha y dime qué quieres mejorar.`,
     placeholder: 'Describe lo que quieres cambiar...',
     regenerate: 'Regenerar',
     share: 'Compartir',
@@ -55,11 +66,18 @@ const translations = {
     creditUsed: '1 crédito usado',
     paymentRequired: 'Completa el pago para exportar o publicar',
     creditsLeft: 'créditos',
+    changes: 'Historial de cambios',
+    noChanges: 'Los cambios aparecerán aquí al editar',
+    viewCollection: 'Ver colección',
+    viewDemo: 'Ver demo',
+    templateLoaded: 'Plantilla activa',
+    instant: 'CADA CAMBIO ES INSTANTÁNEO',
   },
   en: {
     title: 'CREAUNA Studio',
     subtitle: 'AI Design',
     welcome: 'Hello. Your design director here. 4 AI engines work as a team to build your site. What shall we design today?',
+    welcomeTemplate: (name: string) => `Template «${name}» loaded. Check the live preview on the right and tell me what to improve.`,
     placeholder: 'Describe what you want to change...',
     regenerate: 'Regenerate',
     share: 'Share',
@@ -84,24 +102,51 @@ const translations = {
     creditUsed: '1 credit used',
     paymentRequired: 'Complete payment to export or publish',
     creditsLeft: 'credits',
+    changes: 'Change history',
+    noChanges: 'Changes will appear here as you edit',
+    viewCollection: 'View collection',
+    viewDemo: 'View demo',
+    templateLoaded: 'Active template',
+    instant: 'EVERY CHANGE IS INSTANT',
   },
 };
 
-const defaultHero = `<div class="bg-white border border-slate-200 px-16 py-20 rounded-[3.5rem]">
+function buildDefaultHero(lang: Language, templateSlug?: string) {
+  const collection = lang === 'es' ? 'Ver colección' : 'View collection';
+  const demo = lang === 'es' ? 'Ver demo' : 'View demo';
+  const demoHref = templateSlug ? `/templates/preview/${templateSlug}` : '/templates';
+  return `<div class="bg-white border border-slate-200 px-16 py-20 rounded-[3.5rem]">
   <div class="max-w-2xl">
     <div class="text-xs tracking-[3px] text-slate-400">CREAUNA • 2026</div>
-    <h1 class="text-[64px] font-semibold tracking-[-4.5px] leading-none mt-4 text-slate-900">Diseño que<br/>se siente premium.</h1>
-    <p class="mt-5 text-xl text-slate-600">Webs elegantes creadas con inteligencia artificial.</p>
+    <h1 class="text-[64px] font-semibold tracking-[-4.5px] leading-none mt-4 text-slate-900">${lang === 'es' ? 'Diseño que<br/>se siente premium.' : 'Design that<br/>feels premium.'}</h1>
+    <p class="mt-5 text-xl text-slate-600">${lang === 'es' ? 'Webs elegantes creadas con inteligencia artificial.' : 'Elegant websites built with artificial intelligence.'}</p>
     <div class="mt-8 flex gap-3">
-      <button class="px-8 py-3 bg-slate-900 text-white rounded-2xl text-sm font-medium">Ver colección</button>
-      <button class="px-8 py-3 border border-slate-200 rounded-2xl text-sm">Ver demo</button>
+      <a href="/templates" class="px-8 py-3 bg-slate-900 text-white rounded-2xl text-sm font-medium inline-block">${collection}</a>
+      <a href="${demoHref}" class="px-8 py-3 border border-slate-200 rounded-2xl text-sm inline-block">${demo}</a>
     </div>
   </div>
 </div>`;
+}
 
-export default function CreaunaStudio() {
-  const [lang, setLang] = useState<Language>('es');
+function StudioContent() {
+  const searchParams = useSearchParams();
+  const { lang: globalLang, setLang: setGlobalLang } = useLanguage();
+  const templateParam = searchParams.get('template');
+  const langParam = searchParams.get('lang') as Language | null;
+
+  const [lang, setLangLocal] = useState<Language>(
+    langParam === 'en' || langParam === 'es' ? langParam : globalLang
+  );
   const t = translations[lang];
+
+  const setLang = (l: Language) => {
+    setLangLocal(l);
+    setGlobalLang(l);
+  };
+
+  useEffect(() => {
+    setLangLocal(globalLang);
+  }, [globalLang]);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -110,19 +155,66 @@ export default function CreaunaStudio() {
   const [paid, setPaidState] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [previewSections, setPreviewSections] = useState<PreviewSection[]>([
-    { id: 101, type: 'hero', html: defaultHero },
+    { id: 101, type: 'hero', html: buildDefaultHero('es') },
   ]);
   const [projectName, setProjectName] = useState('Mi nueva web');
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [style, setStyle] = useState<'elegante' | 'minimal' | 'moderno'>('elegante');
   const [mounted, setMounted] = useState(false);
+  const [activeTemplateSlug, setActiveTemplateSlug] = useState<string | undefined>();
+  const [changeLog, setChangeLog] = useState<ChangeEntry[]>([]);
+  const [previewPulse, setPreviewPulse] = useState(false);
+  const templateLoadedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
     setCredits(getCredits());
     setPaidState(isPaid());
-    setMessages([{ id: 1, role: 'ai', content: t.welcome }]);
   }, []);
+
+  useEffect(() => {
+    if (!mounted || templateLoadedRef.current) return;
+    if (templateParam) {
+      const tpl = getTemplateBySlug(templateParam);
+      if (tpl) {
+        templateLoadedRef.current = true;
+        const sections = toStudioSections(buildTemplateSections(tpl, lang));
+        setPreviewSections(sections);
+        setProjectName(lang === 'es' ? tpl.nameEs : tpl.nameEn);
+        setActiveTemplateSlug(tpl.slug);
+        setMessages([
+          {
+            id: 1,
+            role: 'ai',
+            content: t.welcomeTemplate(lang === 'es' ? tpl.nameEs : tpl.nameEn),
+          },
+        ]);
+        setChangeLog([
+          {
+            id: Date.now(),
+            summary: lang === 'es' ? `Plantilla ${tpl.nameEs} cargada` : `Template ${tpl.nameEn} loaded`,
+            time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
+          },
+        ]);
+        return;
+      }
+    }
+    setMessages([{ id: 1, role: 'ai', content: t.welcome }]);
+    setPreviewSections([{ id: 101, type: 'hero', html: buildDefaultHero(lang, activeTemplateSlug) }]);
+  }, [mounted, templateParam, lang, t.welcome, t.welcomeTemplate, activeTemplateSlug]);
+
+  const addChange = (summary: string) => {
+    setChangeLog((prev) => [
+      {
+        id: Date.now(),
+        summary,
+        time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
+      },
+      ...prev.slice(0, 9),
+    ]);
+    setPreviewPulse(true);
+    setTimeout(() => setPreviewPulse(false), 1200);
+  };
 
   const useCreditOrBlock = useCallback((): boolean => {
     if (!consumeCredit()) {
@@ -133,7 +225,7 @@ export default function CreaunaStudio() {
     return true;
   }, [t.noCredits]);
 
-  const requirePayment = useCallback((action: string) => {
+  const requirePayment = useCallback(() => {
     if (!paid) {
       toast.error(t.paymentRequired, {
         description: lang === 'es' ? 'Pulsa "Finalizar y pagar" para desbloquear.' : 'Click "Finalize & pay" to unlock.',
@@ -163,6 +255,7 @@ export default function CreaunaStudio() {
       const data = await callStudioApi({ prompt: currentInput, action, sectionId });
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
       setPreviewSections(data.previewSections);
+      addChange(currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : ''));
       toast.success(t.successUpdate, { description: t.creditUsed });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error al generar');
@@ -201,6 +294,7 @@ export default function CreaunaStudio() {
     try {
       const data = await callStudioApi({ prompt: `estilo ${newStyle}`, action: 'style', style: newStyle });
       setPreviewSections(data.previewSections);
+      addChange(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`);
       toast.success(lang === 'es' ? `Estilo: ${newStyle} (1 crédito)` : `Style: ${newStyle} (1 credit)`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
@@ -215,6 +309,7 @@ export default function CreaunaStudio() {
     try {
       const data = await callStudioApi({ prompt: 'regenerar', action: 'regenerate' });
       setPreviewSections(data.previewSections);
+      addChange(lang === 'es' ? 'Regeneración completa' : 'Full regeneration');
       toast.success(lang === 'es' ? 'Nuevas variaciones (1 crédito)' : 'New variations (1 credit)');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
@@ -229,6 +324,7 @@ export default function CreaunaStudio() {
     try {
       const data = await callStudioApi({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
       setPreviewSections(data.previewSections);
+      addChange(lang === 'es' ? `Sección #${id} mejorada` : `Section #${id} improved`);
       toast.success(lang === 'es' ? 'Sección mejorada (1 crédito)' : 'Section improved (1 credit)');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
@@ -238,7 +334,7 @@ export default function CreaunaStudio() {
   };
 
   const handleExport = async () => {
-    if (requirePayment('export')) {
+    if (requirePayment()) {
       setCheckoutOpen(true);
       return;
     }
@@ -281,6 +377,15 @@ export default function CreaunaStudio() {
             onChange={(e) => setProjectName(e.target.value)}
             className="bg-transparent font-semibold tracking-tight text-xl focus:outline-none w-[200px] md:w-[260px]"
           />
+          {activeTemplateSlug && (
+            <Link
+              href={`/templates/preview/${activeTemplateSlug}`}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-semibold text-indigo-700"
+            >
+              <Eye className="w-3 h-3" />
+              {t.templateLoaded}
+            </Link>
+          )}
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-800">
             <Coins className="w-3.5 h-3.5" />
             {credits} {t.creditsLeft}
@@ -289,8 +394,8 @@ export default function CreaunaStudio() {
 
         <div className="flex items-center gap-2 text-xs">
           <div className="flex items-center border border-slate-200 rounded-2xl bg-white mr-1">
-            <button onClick={() => setLang('es')} className={`px-3 py-1 rounded-2xl text-xs ${lang === 'es' ? 'bg-slate-900 text-white' : ''}`}>ES</button>
-            <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-2xl text-xs ${lang === 'en' ? 'bg-slate-900 text-white' : ''}`}>EN</button>
+            <button onClick={() => setLang('es')} className={`px-3 py-1 rounded-2xl text-xs cursor-pointer ${lang === 'es' ? 'bg-slate-900 text-white' : ''}`}>ES</button>
+            <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-2xl text-xs cursor-pointer ${lang === 'en' ? 'bg-slate-900 text-white' : ''}`}>EN</button>
           </div>
           <button onClick={regenerate} className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-2xl border border-slate-200 hover:bg-slate-100 cursor-pointer">
             <RefreshCw className="w-3.5 h-3.5" /> {t.regenerate}
@@ -345,6 +450,25 @@ export default function CreaunaStudio() {
             )}
           </div>
 
+          <div className="px-7 py-4 border-t border-slate-100 shrink-0 bg-slate-50/80">
+            <div className="flex items-center gap-2 text-[10px] tracking-widest text-slate-400 mb-2">
+              <History className="w-3 h-3" />
+              {t.changes}
+            </div>
+            {changeLog.length === 0 ? (
+              <p className="text-xs text-slate-400">{t.noChanges}</p>
+            ) : (
+              <ul className="space-y-1.5 max-h-24 overflow-y-auto">
+                {changeLog.map((entry) => (
+                  <li key={entry.id} className="text-xs text-slate-600 flex justify-between gap-2">
+                    <span className="truncate">{entry.summary}</span>
+                    <span className="text-slate-400 shrink-0">{entry.time}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <div className="px-7 pt-4 pb-3 border-t border-slate-100 shrink-0">
             <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
             <div className="flex flex-wrap gap-2">
@@ -380,13 +504,17 @@ export default function CreaunaStudio() {
           </div>
         </div>
 
-        <div className="flex-1 bg-slate-100 p-8 overflow-auto min-w-0">
+        <div className="flex-1 bg-slate-100 p-6 md:p-8 overflow-auto min-w-0">
           <div className="max-w-[1120px] mx-auto">
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4 px-1">
               <div className="flex items-center gap-4">
                 <div className="font-medium tracking-tight text-xl">{projectName}</div>
                 <div className={`text-xs px-3 py-px rounded-full border font-semibold ${paid ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
                   {paid ? t.ready : t.draft}
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-indigo-600 uppercase">
+                  <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-indigo-500 animate-pulse' : 'bg-emerald-500'}`} />
+                  {t.livePreview}
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -408,11 +536,19 @@ export default function CreaunaStudio() {
               </div>
             </div>
 
-            <div className={`mx-auto bg-white transition-all shadow-xl border border-slate-200 ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-[1120px] rounded-[4rem]'}`}>
+            <motion.div
+              animate={previewPulse ? { boxShadow: '0 0 0 3px rgba(99,102,241,0.5)' } : { boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' }}
+              className={`mx-auto bg-white transition-all border border-slate-200 ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-[1120px] rounded-[4rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
+            >
               <div className="h-9 bg-slate-100 border-b flex items-center px-5 text-xs text-slate-500">
+                <div className="flex items-center gap-2 mr-3">
+                  <span className="w-2.5 h-2.5 bg-red-400 rounded-full" />
+                  <span className="w-2.5 h-2.5 bg-amber-400 rounded-full" />
+                  <span className="w-2.5 h-2.5 bg-green-400 rounded-full" />
+                </div>
                 <div className="flex-1 text-center font-mono tracking-[2px] text-[10px]">{projectName.toLowerCase().replace(/\s/g, '')}.creauna.com</div>
               </div>
-              <div className="p-10 space-y-8 bg-white">
+              <div className="p-8 md:p-10 space-y-8 bg-white">
                 {previewSections.map((section) => (
                   <div key={section.id} className="group relative">
                     <div dangerouslySetInnerHTML={{ __html: section.html }} />
@@ -425,10 +561,10 @@ export default function CreaunaStudio() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             <div className="text-center text-xs text-slate-400 mt-5 tracking-widest">
-              {t.livePreview} • {lang === 'es' ? 'CADA CAMBIO ES INSTANTÁNEO' : 'EVERY CHANGE IS INSTANT'}
+              {t.livePreview} • {t.instant}
             </div>
           </div>
         </div>
@@ -442,5 +578,13 @@ export default function CreaunaStudio() {
         onPaymentComplete={() => setPaidState(true)}
       />
     </div>
+  );
+}
+
+export default function CreaunaStudio() {
+  return (
+    <Suspense fallback={null}>
+      <StudioContent />
+    </Suspense>
   );
 }

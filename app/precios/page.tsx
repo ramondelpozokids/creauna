@@ -32,7 +32,7 @@ const translations = {
     businessPriceCol: "Plan avanzado",
     creaunaAdvantage: "Ventaja CREAUNA",
     advantage1: "Sin penalización por mantener tu web publicada",
-    advantage2: "60+ plantillas premium por sector",
+    advantage2: "36 plantillas premium por sector",
     advantage3: "Interfaz y soporte en español",
     advantage4: "Diseño de estudio, no plantillas genéricas",
     faqTitle: "Preguntas frecuentes",
@@ -43,7 +43,7 @@ const translations = {
     features: [
       "Hasta 3 webs activas",
       "Webs ilimitadas",
-      "60+ plantillas premium por sector",
+      "36 plantillas premium por sector",
       "Créditos de edición mensuales",
       "Tecnología IA avanzada",
       "Dominio personalizado",
@@ -51,7 +51,19 @@ const translations = {
       "Soporte prioritario",
       "Analíticas avanzadas",
       "3 meses de ajustes incluidos"
-    ]
+    ],
+    featureTableRows: [
+      ["Webs activas", "Hasta 3", "Ilimitadas", "Ilimitadas"],
+      ["Créditos de edición/mes", "15", "120", "300"],
+      ["Plantillas premium", "36 (catálogo)", "36 (todas)", "36 (todas)"],
+      ["Dominio personalizado", "—", "✓", "✓"],
+      ["Exportación código", "HTML básico", "Completo (HTML/CSS/JS)", "Completo (HTML/CSS/JS)"],
+      ["Coste de despliegue", "Sin coste", "Sin coste", "Sin coste"],
+      ["Soporte", "Comunidad", "Prioritario (4h)", "VIP + SLA"],
+      ["Hosting incluido", "—", "—", "1 año"],
+      ["Colaboración equipo", "—", "—", "Ilimitada"],
+      ["Web a medida", "—", "Descuento 10%", "Descuento 20% + Prioridad"],
+    ],
   },
   en: {
     transparentPricing: "TRANSPARENT PRICING",
@@ -77,7 +89,7 @@ const translations = {
     businessPriceCol: "Advanced plan",
     creaunaAdvantage: "CREAUNA advantage",
     advantage1: "No penalty for keeping your site live",
-    advantage2: "60+ premium templates by industry",
+    advantage2: "36 premium templates by industry",
     advantage3: "Spanish interface and support",
     advantage4: "Studio-grade design, not generic templates",
     faqTitle: "Frequently Asked Questions",
@@ -88,7 +100,7 @@ const translations = {
     features: [
       "Up to 3 active websites",
       "Unlimited websites",
-      "60+ premium templates by industry",
+      "36 premium templates by industry",
       "Monthly editing credits",
       "Advanced AI technology",
       "Custom domain",
@@ -96,7 +108,19 @@ const translations = {
       "Priority support",
       "Advanced analytics",
       "3 months of adjustments included"
-    ]
+    ],
+    featureTableRows: [
+      ["Active websites", "Up to 3", "Unlimited", "Unlimited"],
+      ["Editing credits/month", "15", "120", "300"],
+      ["Premium templates", "36 (catalog)", "36 (all)", "36 (all)"],
+      ["Custom domain", "—", "✓", "✓"],
+      ["Code export", "Basic HTML", "Full (HTML/CSS/JS)", "Full (HTML/CSS/JS)"],
+      ["Deployment cost", "No cost", "No cost", "No cost"],
+      ["Support", "Community", "Priority (4h)", "VIP + SLA"],
+      ["Hosting included", "—", "—", "1 year"],
+      ["Team collaboration", "—", "—", "Unlimited"],
+      ["Custom web", "—", "10% discount", "20% discount + Priority"],
+    ],
   }
 };
 
@@ -181,8 +205,8 @@ const competitors = [
     businessCredits: "300",
     deployCostEs: "Sin coste extra",
     deployCostEn: "No extra cost",
-    templatesEs: "60+ premium",
-    templatesEn: "60+ premium",
+    templatesEs: "36 premium",
+    templatesEn: "36 premium",
     languageEs: "Español nativo",
     languageEn: "Native Spanish",
   },
@@ -533,18 +557,7 @@ export default function Precios() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {[
-                  ["Webs activas", "Hasta 3", "Ilimitadas", "Ilimitadas"],
-                  ["Créditos de edición/mes", "15", "120", "300"],
-                  ["Plantillas premium", "12 por categoría", "60+ (todas)", "60+ (todas)"],
-                  ["Dominio personalizado", "—", "✓", "✓"],
-                  ["Exportación código", "HTML básico", "Completo (HTML/CSS/JS)", "Completo (HTML/CSS/JS)"],
-                  ["Coste de despliegue", "Sin coste", "Sin coste", "Sin coste"],
-                  ["Soporte", "Comunidad", "Prioritario (4h)", "VIP + SLA"],
-                  ["Hosting incluido", "—", "—", "1 año"],
-                  ["Colaboración equipo", "—", "—", "Ilimitada"],
-                  ["Web a medida", "—", "Descuento 10%", "Descuento 20% + Prioridad"]
-                ].map((row, i) => (
+                {t.featureTableRows.map((row, i) => (
                   <tr key={i} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-8 py-4.5 font-medium text-slate-900">{row[0]}</td>
                     <td className="px-6 py-4.5 text-center text-slate-500">{row[1]}</td>
