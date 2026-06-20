@@ -33,6 +33,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('api/contact:', error);
-    return NextResponse.json({ error: 'No se pudo enviar la solicitud' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'No se pudo enviar la solicitud';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
