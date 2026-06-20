@@ -1,13 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { 
+import { useLanguage } from '../components/LanguageProvider';
+import { dashboardI18n } from '../data/i18n/secondary';
+import {
   Plus, Sparkles, TrendingUp, Users, Globe, Clock, ArrowUpRight, 
   Activity, Award, BarChart3, Eye, Edit3, ExternalLink, Calendar,
   ChevronRight, Star
 } from 'lucide-react';
 
 export default function Dashboard() {
+  const { lang } = useLanguage();
+  const d = dashboardI18n[lang];
+
   const stats = [
     { 
       label: "Webs activas", 
@@ -152,21 +157,16 @@ export default function Dashboard() {
               href="/templates" 
               className="flex items-center gap-2.5 px-6 py-2.5 text-sm font-medium hover:bg-slate-100 rounded-2xl transition-all text-slate-700 hover:text-slate-900"
             >
-              Plantillas
+              {lang === 'es' ? 'Plantillas' : 'Templates'}
             </Link>
-            
             <div className="flex items-center gap-4 pl-6 ml-2 border-l border-slate-200">
               <div className="flex items-center gap-3">
                 <div className="text-right">
                   <div className="text-[15px] font-semibold tracking-tight text-slate-900">Ramón del Pozo Rott</div>
-                  <div className="text-xs text-slate-500 tracking-wide">Fundador • Superadmin</div>
+                  <div className="text-xs text-slate-500 tracking-wide">{lang === 'es' ? 'Fundador • Superadmin' : 'Founder • Superadmin'}</div>
                 </div>
                 <div className="w-10 h-10 rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-inner">
-                  <img 
-                    src="/creador.webp" 
-                    alt="Ramón del Pozo Rott" 
-                    className="w-full h-full object-cover" 
-                  />
+                  <img src="/creador.webp" alt="Ramón del Pozo Rott" className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function Dashboard() {
         {/* Luxurious Header - Ultra Refined */}
         <div className="mb-14">
           <div className="flex items-center gap-3 mb-3">
-            <div className="text-xs font-medium text-slate-500 tracking-[3px] uppercase">DASHBOARD PRIVADO</div>
+            <div className="text-xs font-medium text-slate-500 tracking-[3px] uppercase">{lang === 'es' ? 'DASHBOARD PRIVADO' : 'PRIVATE DASHBOARD'}</div>
             <div className="h-px w-8 bg-slate-300"></div>
             <div className="text-xs font-medium text-emerald-700 tracking-wider">19 de junio, 2026</div>
           </div>
@@ -186,10 +186,12 @@ export default function Dashboard() {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
               <h1 className="luxury-heading text-[64px] leading-[1.05] font-semibold tracking-[-5.2px] text-slate-950">
-                Buenos días, Ramón.
+                {lang === 'es' ? 'Buenos días, Ramón.' : 'Good morning, Ramón.'}
               </h1>
               <p className="text-2xl text-slate-600 mt-3 max-w-[620px] tracking-[-0.2px]">
-                Tienes 47 webs activas. El 66% ya están generando resultados medibles.
+                {lang === 'es'
+                  ? 'Tienes 47 webs activas. El 66% ya están generando resultados medibles.'
+                  : 'You have 47 active sites. 66% are already generating measurable results.'}
               </p>
             </div>
 
@@ -199,13 +201,13 @@ export default function Dashboard() {
                 className="flex items-center gap-3 px-7 py-3.5 rounded-3xl border border-slate-200 hover:bg-white hover:border-slate-300 text-sm font-medium transition-all group"
               >
                 <Sparkles className="w-4 h-4" /> 
-                Abrir Studio
+                {d.openStudio}
               </Link>
               <Link 
                 href="/studio" 
                 className="premium-btn premium-btn-primary flex items-center gap-3 px-7 py-3.5 rounded-3xl text-sm font-medium shadow-sm"
               >
-                <Plus className="w-4 h-4" /> Nueva web premium
+                <Plus className="w-4 h-4" /> {d.newProject}
               </Link>
             </div>
           </div>
@@ -501,7 +503,7 @@ export default function Dashboard() {
             href="/studio" 
             className="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-2 font-medium group"
           >
-            ¿Quieres crear algo nuevo? <span className="font-semibold underline group-hover:no-underline">Abrir Studio</span> 
+            {d.studioLink} <span className="font-semibold underline group-hover:no-underline">{d.studioLinkAction}</span> 
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition" />
           </Link>
         </div>
@@ -510,7 +512,7 @@ export default function Dashboard() {
         <div className="mt-16 text-center">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-2xl text-xs text-slate-500">
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            100% seguro • Supervisado por Ramón del Pozo Rott
+            {d.secure}
           </div>
         </div>
       </div>
