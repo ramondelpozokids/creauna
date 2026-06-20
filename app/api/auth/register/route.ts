@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { registerUser } from '../../lib/auth/users';
-import { setSessionCookie } from '../../lib/auth/session';
-import { checkRateLimit, getClientIp, rateLimitResponse } from '../../lib/api/rateLimit';
-import { isValidEmail, requireFields, sanitizeText } from '../../lib/api/validate';
+import { registerUser } from '../../../lib/auth/users';
+import { setSessionCookie } from '../../../lib/auth/session';
+import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
+import { isValidEmail, requireFields, sanitizeText } from '../../../lib/api/validate';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  const rate = checkRateLimit(`auth-register:${ip}`, 10, 60_000);
-  if (!rate.ok) return rateLimitResponse(rate.retryAfterSec);
+  const limited = applyRateLimit(`auth-register:${ip}`, 10, 60_000);
+  if (limited) return limited;
 
   try {
     const body = await req.json();

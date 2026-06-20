@@ -10,11 +10,15 @@ export function getClientIp(req: Request): string {
   return 'unknown';
 }
 
+export type RateLimitResult =
+  | { ok: true }
+  | { ok: false; retryAfterSec: number };
+
 export function checkRateLimit(
   key: string,
   limit: number,
   windowMs: number
-): { ok: true } | { ok: false; retryAfterSec: number } {
+): RateLimitResult {
   const now = Date.now();
   const bucket = rateBuckets.get(key);
 
@@ -36,4 +40,10 @@ export function rateLimitResponse(retryAfterSec: number) {
     { error: 'Demasiadas solicitudes. Inténtalo más tarde.' },
     { status: 429, headers: { 'Retry-After': String(retryAfterSec) } }
   );
+}
+
+export function applyRateLimit(key: string, limit: number, windowMs: number) {
+  const rate = checkRateLimit(key, limit, windowMs);
+  if (rate.ok === false) return rateLimitResponse(rate.retryAfterSec);
+  return null;
 }

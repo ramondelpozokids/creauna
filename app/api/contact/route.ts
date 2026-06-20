@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { sendContactEmail } from '../../lib/email/send';
-import { checkRateLimit, getClientIp, rateLimitResponse } from '../../lib/api/rateLimit';
+import { applyRateLimit, getClientIp } from '../../lib/api/rateLimit';
 import { isValidEmail, requireFields, sanitizeText } from '../../lib/api/validate';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  const rate = checkRateLimit(`contact:${ip}`, 5, 60_000);
-  if (!rate.ok) return rateLimitResponse(rate.retryAfterSec);
+  const limited = applyRateLimit(`contact:${ip}`, 5, 60_000);
+  if (limited) return limited;
 
   try {
     const body = await req.json();

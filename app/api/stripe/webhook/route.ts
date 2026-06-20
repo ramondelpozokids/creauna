@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getStripe } from '../../lib/stripe/client';
-import { isStripeConfigured } from '../../lib/stripe/config';
+import { getStripe } from '../../../lib/stripe/client';
+import { isStripeConfigured } from '../../../lib/stripe/config';
 
 export async function POST(req: Request) {
   if (!isStripeConfigured()) {

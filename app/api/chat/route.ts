@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { findChatAnswer } from '../../data/chatKnowledge';
 import { chatCompletion } from '../../lib/ai/providers';
-import { checkRateLimit, getClientIp, rateLimitResponse } from '../../lib/api/rateLimit';
+import { applyRateLimit, getClientIp } from '../../lib/api/rateLimit';
 import { sanitizeText } from '../../lib/api/validate';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  const rate = checkRateLimit(`chat:${ip}`, 30, 60_000);
-  if (!rate.ok) return rateLimitResponse(rate.retryAfterSec);
+  const limited = applyRateLimit(`chat:${ip}`, 30, 60_000);
+  if (limited) return limited;
 
   try {
     const body = await req.json();

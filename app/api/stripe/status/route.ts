@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { CREAUNA_PLANS, getStripePublishableKey, isStripeConfigured } from '../../lib/stripe/config';
+import { CREAUNA_PLANS, getStripePublishableKey, isStripeConfigured } from '../../../lib/stripe/config';
 
 export async function GET() {
   return NextResponse.json({
