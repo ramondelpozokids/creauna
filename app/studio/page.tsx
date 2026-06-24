@@ -77,7 +77,7 @@ const translations = {
     templateLoaded: 'Plantilla activa',
     instant: 'CADA CAMBIO ES INSTANTÁNEO',
     selectSection: 'Selecciona una sección para editarla',
-    sections: { hero: 'Inicio', services: 'Servicios', about: 'Sobre nosotros', gallery: 'Galería', blog: 'Blog', reservation: 'Reservas', contact: 'Contacto', footer: 'Legal', widgets: 'Accesos', testimonial: 'Testimonios' },
+    sections: { hero: 'Inicio', menu: 'Menú', services: 'Servicios', about: 'Sobre nosotros', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', blog: 'Blog', reservation: 'Reservas', contact: 'Contacto', footer: 'Legal', widgets: 'Accesos', testimonial: 'Testimonios' },
     changeApplied: 'Cambio visible aplicado',
   },
   en: {
@@ -120,7 +120,7 @@ const translations = {
     templateLoaded: 'Active template',
     instant: 'EVERY CHANGE IS INSTANT',
     selectSection: 'Select a section to edit it',
-    sections: { hero: 'Home', services: 'Services', about: 'About us', gallery: 'Gallery', blog: 'Blog', reservation: 'Booking', contact: 'Contact', footer: 'Legal', widgets: 'Shortcuts', testimonial: 'Testimonials' },
+    sections: { hero: 'Home', menu: 'Menu', services: 'Services', about: 'About us', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', blog: 'Blog', reservation: 'Booking', contact: 'Contact', footer: 'Legal', widgets: 'Shortcuts', testimonial: 'Testimonials' },
     changeApplied: 'Visible change applied',
   },
 };

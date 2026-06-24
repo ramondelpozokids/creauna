@@ -1,14 +1,20 @@
 import type { TemplateCategory } from '../../data/templates';
+import { detectVariant, type BusinessVariant } from './businessProfiles';
+import { isGoogleListingPrompt, parseGoogleListing } from './googleListingParser';
 
 export interface SiteFeatures {
+  menu: boolean;
   services: boolean;
   about: boolean;
   blog: boolean;
   gallery: boolean;
+  reviews: boolean;
+  location: boolean;
   contact: boolean;
   reservation: boolean;
   calendar: boolean;
   legalFooter: boolean;
+  social: boolean;
   whatsapp: boolean;
   scrollUp: boolean;
 }
@@ -19,6 +25,7 @@ export interface ParsedIntent {
   businessType: string;
   categoryKey: TemplateCategory;
   features: SiteFeatures;
+  variant: BusinessVariant;
 }
 
 type IntentRule = {
@@ -32,6 +39,7 @@ type IntentRule = {
 };
 
 const INTENT_RULES: IntentRule[] = [
+  { slug: 'vesper', categoryKey: 'gastronomy', keywords: /kebab|d[öo]ner|doner|durum|falafel/i, typeEs: 'Restaurante Kebab', typeEn: 'Kebab Restaurant', defaultNameEs: 'Kebab Hut Vallecas', defaultNameEn: 'Kebab Hut Vallecas' },
   { slug: 'trattoria', categoryKey: 'gastronomy', keywords: /italian[oa]|trattoria|pizza|pasta|risotto|italiano/i, typeEs: 'Restaurante Italiano', typeEn: 'Italian Restaurant', defaultNameEs: 'Trattoria Bella', defaultNameEn: 'Bella Trattoria' },
   { slug: 'sakura', categoryKey: 'gastronomy', keywords: /japon[eé]s|sushi|ramen|izakaya|japanese/i, typeEs: 'Restaurante Japonés', typeEn: 'Japanese Restaurant', defaultNameEs: 'Sakura House', defaultNameEn: 'Sakura House' },
   { slug: 'mokka', categoryKey: 'gastronomy', keywords: /cafeter[ií]a|caf[eé]|coffee|especialidad|barista|tostad/i, typeEs: 'Cafetería de Especialidad', typeEn: 'Specialty Coffee Shop', defaultNameEs: 'Mokka Coffee', defaultNameEn: 'Mokka Coffee' },
@@ -40,7 +48,7 @@ const INTENT_RULES: IntentRule[] = [
   { slug: 'vesper', categoryKey: 'gastronomy', keywords: /restaurante|resaurante|restaurant|gourmet|fine dining|alta cocina|comida|gastronom|men[uú]|carta|mesa|comedor|cocina/i, typeEs: 'Restaurante', typeEn: 'Restaurant', defaultNameEs: 'Restaurante Vesper', defaultNameEn: 'Vesper Restaurant' },
   { slug: 'classic-cut', categoryKey: 'services', keywords: /barber[ií]a|barber|barbershop|afeitad|grooming masculin/i, typeEs: 'Barbería Premium', typeEn: 'Premium Barbershop', defaultNameEs: 'Classic Cut', defaultNameEn: 'Classic Cut' },
   { slug: 'lumen', categoryKey: 'services', keywords: /est[eé]tica|cl[ií]nica|dental|spa m[eé]dico|wellness|belleza/i, typeEs: 'Clínica de Estética', typeEn: 'Aesthetic Clinic', defaultNameEs: 'Clínica Lumen', defaultNameEn: 'Lumen Clinic' },
-  { slug: 'iron-ink', categoryKey: 'services', keywords: /tatuaje|tattoo|piercing|tinta/i, typeEs: 'Estudio de Tatuajes', typeEn: 'Tattoo Studio', defaultNameEs: 'Iron & Ink', defaultNameEn: 'Iron & Ink' },
+  { slug: 'iron-ink', categoryKey: 'services', keywords: /tatuaje|tattoo|piercing|tinta|royal bang|gemas dentales/i, typeEs: 'Estudio de Tatuajes', typeEn: 'Tattoo Studio', defaultNameEs: 'Royal Bang Tattoo & Piercing Studio', defaultNameEn: 'Royal Bang Tattoo & Piercing Studio' },
   { slug: 'torque', categoryKey: 'services', keywords: /taller de motos|motorcycle|motocicleta|custom shop/i, typeEs: 'Taller de Motos', typeEn: 'Motorcycle Workshop', defaultNameEs: 'Torque Garage', defaultNameEn: 'Torque Garage' },
   { slug: 'pistons', categoryKey: 'services', keywords: /mec[aá]nic|taller mec|auto repair|automotriz|chapa|veh[ií]culo/i, typeEs: 'Taller Mecánico', typeEn: 'Auto Repair Shop', defaultNameEs: 'Pistons Auto', defaultNameEn: 'Pistons Auto' },
   { slug: 'flow', categoryKey: 'services', keywords: /fontaner[ií]a|plumb|electric|reforma|reformas|construc/i, typeEs: 'Fontanería & Reformas', typeEn: 'Plumbing & Renovation', defaultNameEs: 'Flow Reformas', defaultNameEn: 'Flow Renovations' },
@@ -69,9 +77,8 @@ const INTENT_RULES: IntentRule[] = [
   { slug: 'cloudline', categoryKey: 'tech', keywords: /cloud|infraestructura|devops|hosting/i, typeEs: 'Infraestructura Cloud', typeEn: 'Cloud Infrastructure', defaultNameEs: 'Cloudline', defaultNameEn: 'Cloudline' },
 ];
 
-const GENERIC_NAMES = /^(restaurante|resaurante|restaurant|cafeter[ií]a|caf[eé]|web|sitio|p[aá]gina|negocio|empresa|tienda)$/i;
+const GENERIC_NAMES = /^(restaurante|resaurante|restaurant|cafeter[ií]a|caf[eé]|web|sitio|p[aá]gina|negocio|empresa|tienda|d[öo]ner kebab|kebab)$/i;
 
-/** Quita menciones a páginas legales del footer para no confundirlas con despacho de abogados. */
 function stripLegalPageNoise(prompt: string): string {
   return prompt.replace(
     /\b(p[áa]ginas?\s+legales?|aviso\s+legal|pol[íi]tica\s+de\s+(privacidad|cookies)|pol[íi]tica\s+legal|t[ée]rminos\s+y\s+condiciones|footer\s+legal|legal\s+pages?|rgpd|gdpr)\b/gi,
@@ -81,14 +88,18 @@ function stripLegalPageNoise(prompt: string): string {
 
 function extractBusinessName(prompt: string, rule: IntentRule, lang: 'es' | 'en'): string {
   const patterns = [
+    /(?:que\s+)?se\s+llama\s+([A-ZÁÉÍÓÚÑ][\wáéíóúñ0-9\s&'-]{2,50}?)(?:\s*,|\s+que|\s+y|\s+con|\.|$)/i,
     /(?:llamad[oa]|named|called)\s+["']([^"']+)["']/i,
-    /(?:llamad[oa]|named|called)\s+([A-ZÁÉÍÓÚÑ][\wáéíóúñ\s&'-]{1,40})/i,
+    /(?:llamad[oa]|named|called)\s+([A-ZÁÉÍÓÚÑ][\wáéíóúñ0-9\s&'-]{2,40})/i,
+    /(Royal Bang[\w\s&'-]+(?:Studio)?)/i,
+    /(Kebab Hut[\w\s]*Vallecas?)/i,
+    /(Kebab Hut[\w\s]*)/i,
   ];
 
   for (const pattern of patterns) {
     const match = prompt.match(pattern);
     if (match?.[1]) {
-      const name = match[1].trim();
+      const name = match[1].trim().replace(/\s+(que|con|y)$/i, '').trim();
       if (name.length >= 3 && !GENERIC_NAMES.test(name)) return name;
     }
   }
@@ -98,22 +109,42 @@ function extractBusinessName(prompt: string, rule: IntentRule, lang: 'es' | 'en'
 
 export function parseSiteFeatures(prompt: string): SiteFeatures {
   const lower = prompt.toLowerCase();
+  const listing = isGoogleListingPrompt(prompt);
   const hasList = /,|\by\b|con\s+/i.test(prompt);
-
   const mentioned = (re: RegExp) => re.test(lower);
+  const menu = mentioned(/men[uú]|menu|carta|producto|tatuaje|piercing|servicio/i) || listing;
 
   return {
-    services: !hasList || mentioned(/servicio|servicos|service|men[uú]|menu|carta/),
-    about: mentioned(/sobre nosotros|about us|quienes somos|nosotros|about/),
+    menu,
+    services: !menu && (!hasList || mentioned(/servicio|servicos|service/)),
+    about: mentioned(/sobre nosotros|about us|quienes somos|about/) || listing,
     blog: mentioned(/blog|noticias|art[ií]culo|news/),
-    gallery: mentioned(/galer[ií]a|gallery|im[aá]gen|foto/),
-    contact: !hasList || mentioned(/contacto|contact|formulario/),
-    reservation: mentioned(/reserva|reservar|mesa|booking|table/),
+    gallery: !hasList || mentioned(/galer[ií]a|gallery|im[aá]gen|foto|ver fotos/i) || listing,
+    reviews: mentioned(/reseñ|review|testimonio|opinion|opiniones/i) || listing,
+    location: mentioned(/ubicaci|location|mapa|direcci|llegar|puente de vallecas/i) || listing,
+    contact: mentioned(/contacto|contact|formulario|tel[eé]fono|llamar/i) || listing,
+    reservation: mentioned(/reserva|reservar|mesa|booking|table|cita/i) || (listing && /tatuaje|tattoo|piercing/i.test(lower)),
     calendar: mentioned(/calendario|calendar|fecha|disponibilidad/),
-    legalFooter: mentioned(/legal|aviso|privacidad|cookies|t[ée]rminos|footer/),
-    whatsapp: mentioned(/whatsapp|wa\.me/),
+    legalFooter: !hasList || mentioned(/legal|aviso|privacidad|cookies|t[ée]rminos|footer/) || listing,
+    social: mentioned(/redes sociales|social|instagram|facebook|google/i) || listing,
+    whatsapp: mentioned(/whatsapp|wa\.me/i) || (listing && /tatuaje|tattoo|piercing/i.test(lower)),
     scrollUp: mentioned(/scroll up|scroll-up|subir|volver arriba/),
   };
+}
+
+export function isSiteBuildPrompt(prompt: string): boolean {
+  if (isGoogleListingPrompt(prompt)) return true;
+  const lower = prompt.toLowerCase();
+  if (/crea(r?)|genera|diseña|haz(me)?|quiero.*(web|sitio|p[aá]gina)/i.test(lower)) return true;
+  if (/que\s+(tenga|se\s+llame)|estilo.*(kebab|d[öo]ner|restaur|tatuaje|tattoo)/i.test(lower)) return true;
+  if (/(inicio|men[uú]|galer[ií]a|reseñas|footer).*(inicio|men[uú]|galer[ií]a|reseñas)/i.test(lower)) return true;
+  return false;
+}
+
+export function isCosmeticPrompt(prompt: string): boolean {
+  if (isSiteBuildPrompt(prompt)) return false;
+  const lower = prompt.toLowerCase();
+  return /elegante|refinad|testimonio|tipograf|luminosa|clara|animac|impactante|cabecera|hero|color|tierra|premium|sofisticad/.test(lower);
 }
 
 function scoreRule(rule: IntentRule, normalized: string): number {
@@ -125,6 +156,7 @@ function scoreRule(rule: IntentRule, normalized: string): number {
 
 export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
   const features = parseSiteFeatures(prompt);
+  const variant = detectVariant(prompt);
   const normalized = stripLegalPageNoise(prompt).toLowerCase();
 
   let bestRule = INTENT_RULES.find((r) => r.slug === 'vesper')!;
@@ -138,15 +170,27 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
     }
   }
 
-  if (bestScore === 0) {
-    bestRule = INTENT_RULES.find((r) => r.slug === 'vesper')!;
-  }
+  const profileRule =
+    variant === 'kebab'
+      ? INTENT_RULES.find((r) => r.keywords.test('kebab'))!
+      : variant === 'tattoo'
+        ? INTENT_RULES.find((r) => r.slug === 'iron-ink')!
+        : bestRule;
+
+  const listing = parseGoogleListing(prompt);
+  const businessName = listing?.businessName ?? extractBusinessName(prompt, profileRule, lang);
 
   return {
-    templateSlug: bestRule.slug,
-    businessName: extractBusinessName(prompt, bestRule, lang),
-    businessType: lang === 'es' ? bestRule.typeEs : bestRule.typeEn,
-    categoryKey: bestRule.categoryKey,
+    templateSlug: profileRule.slug,
+    businessName,
+    businessType:
+      variant === 'kebab'
+        ? (lang === 'es' ? 'Restaurante Kebab' : 'Kebab Restaurant')
+        : variant === 'tattoo'
+          ? (lang === 'es' ? 'Estudio de Tatuajes & Piercing' : 'Tattoo & Piercing Studio')
+          : (lang === 'es' ? profileRule.typeEs : profileRule.typeEn),
+    categoryKey: profileRule.categoryKey,
     features,
+    variant,
   };
 }
