@@ -1,8 +1,10 @@
-import type { TemplateCategory } from '../data/templates';
+import { templatesCatalog, type TemplateCategory } from '../data/templates';
 
-/** Miniatura fiable por plantilla (estilo catálogo Canva/Nicepage). */
+const SLUG_TO_IMAGE = new Map(templatesCatalog.map((t) => [t.slug, t.image]));
+
+/** Miniatura por plantilla — imagen Unsplash alineada con la categoría del negocio. */
 export function templateImageUrl(slug: string): string {
-  return `https://picsum.photos/seed/creauna-${encodeURIComponent(slug)}/900/600`;
+  return SLUG_TO_IMAGE.get(slug) ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&h=600&q=80';
 }
 
 const CATEGORY_GRADIENT: Record<TemplateCategory, [string, string]> = {

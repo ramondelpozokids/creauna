@@ -1,4 +1,5 @@
 import type { TemplateItem } from '../data/templates';
+import type { ServiceItem } from './ai/siteContent';
 
 export interface TemplatePageSection {
   id: string;
@@ -14,17 +15,34 @@ export interface StudioPreviewSection {
   html: string;
 }
 
-export function buildTemplateSections(tpl: TemplateItem, lang: 'es' | 'en'): TemplatePageSection[] {
-  const name = lang === 'es' ? tpl.nameEs : tpl.nameEn;
+export interface TemplateCustomization {
+  businessName?: string;
+  tagline?: string;
+  services?: ServiceItem[];
+  ctaPrimary?: string;
+  ctaSecondary?: string;
+}
+
+export function buildTemplateSections(
+  tpl: TemplateItem,
+  lang: 'es' | 'en',
+  customization?: TemplateCustomization
+): TemplatePageSection[] {
+  const name = customization?.businessName ?? (lang === 'es' ? tpl.nameEs : tpl.nameEn);
   const category = lang === 'es' ? tpl.categoryEs : tpl.categoryEn;
-  const desc = lang === 'es' ? tpl.descEs : tpl.descEn;
+  const desc = customization?.tagline ?? (lang === 'es' ? tpl.descEs : tpl.descEn);
 
   const nav = lang === 'es'
     ? { home: 'Inicio', services: 'Servicios', gallery: 'Galería', contact: 'Contacto' }
     : { home: 'Home', services: 'Services', gallery: 'Gallery', contact: 'Contact' };
 
-  const ctaPrimary = lang === 'es' ? 'Ver colección' : 'View collection';
-  const ctaSecondary = lang === 'es' ? 'Reservar / Contactar' : 'Book / Contact';
+  const ctaPrimary = customization?.ctaPrimary ?? (lang === 'es' ? 'Ver colección' : 'View collection');
+  const ctaSecondary = customization?.ctaSecondary ?? (lang === 'es' ? 'Reservar / Contactar' : 'Book / Contact');
+
+  const defaultServices: ServiceItem[] = customization?.services ?? [1, 2, 3].map((i) => ({
+    title: lang === 'es' ? `Servicio ${i}` : `Service ${i}`,
+    desc: lang === 'es' ? 'Experiencia premium adaptada a tu negocio.' : 'Premium experience tailored to your business.',
+  }));
 
   return [
     {
@@ -54,9 +72,9 @@ export function buildTemplateSections(tpl: TemplateItem, lang: 'es' | 'en'): Tem
         <h2 class="text-3xl font-semibold tracking-tight text-slate-900">${lang === 'es' ? 'Nuestros servicios' : 'Our services'}</h2>
         <p class="mt-3 text-slate-600 max-w-2xl">${desc}</p>
         <div class="mt-8 grid md:grid-cols-3 gap-5">
-          ${[1, 2, 3].map((i) => `<div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
-            <div class="text-sm font-bold text-indigo-600">${lang === 'es' ? 'Servicio' : 'Service'} ${i}</div>
-            <p class="mt-2 text-sm text-slate-600">${lang === 'es' ? 'Experiencia premium adaptada a tu negocio.' : 'Premium experience tailored to your business.'}</p>
+          ${defaultServices.map((svc) => `<div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
+            <div class="text-sm font-bold text-indigo-600">${svc.title}</div>
+            <p class="mt-2 text-sm text-slate-600">${svc.desc}</p>
           </div>`).join('')}
         </div>
       </div>`,

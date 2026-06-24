@@ -1,5 +1,3 @@
-import { templateImageUrl } from '../lib/templateImages';
-
 export type TemplateCategory = 'gastronomy' | 'services' | 'luxury' | 'corporate' | 'tech';
 
 export interface TemplateItem {
@@ -528,7 +526,7 @@ export function getPublishedTemplates(): TemplateItem[] {
       counts[t.categoryKey] = current + 1;
       return true;
     })
-    .map((t) => ({ ...t, image: templateImageUrl(t.slug) }));
+    ;
 }
 
 export function getTemplateBySlug(slug: string): TemplateItem | undefined {

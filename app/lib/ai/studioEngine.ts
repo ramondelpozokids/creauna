@@ -1,4 +1,5 @@
 import { chatCompletion } from './providers';
+import { generateInitialSite } from './siteGenerator';
 
 export interface PreviewSection {
   id: number;
@@ -6,7 +7,7 @@ export interface PreviewSection {
   html: string;
 }
 
-export type StudioAction = 'change' | 'regenerate' | 'improve' | 'style';
+export type StudioAction = 'change' | 'regenerate' | 'improve' | 'style' | 'initial';
 
 export interface StudioGenerateInput {
   prompt: string;
@@ -23,6 +24,8 @@ export interface StudioGenerateResult {
   motorsUsed: string[];
   source: 'rules' | 'ai';
   changedSectionIds: number[];
+  templateSlug?: string;
+  businessName?: string;
 }
 
 function cloneSections(sections: PreviewSection[]): PreviewSection[] {
@@ -334,6 +337,19 @@ Action: ${input.action || 'change'}`,
 }
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
+  if (input.action === 'initial') {
+    const result = generateInitialSite(input.prompt, input.lang);
+    return {
+      message: result.message,
+      previewSections: result.previewSections,
+      motorsUsed: ['visual', 'copy', 'ux', 'code'],
+      source: 'rules',
+      changedSectionIds: result.changedSectionIds,
+      templateSlug: result.templateSlug,
+      businessName: result.businessName,
+    };
+  }
+
   const ruleResult = applyPromptRules(input);
   if (ruleResult && ruleResult.changedSectionIds.length > 0) {
     return ruleResult;

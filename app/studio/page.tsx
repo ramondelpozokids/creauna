@@ -362,7 +362,7 @@ function StudioContent() {
     }
     if (typeof data.credits === 'number') setCredits(data.credits);
     if (data.unlimited === true) setUnlimitedAccess(true);
-    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; unlimited?: boolean };
+    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; unlimited?: boolean; templateSlug?: string; businessName?: string };
   };
 
   const flashSections = (ids: number[]) => {
@@ -373,16 +373,19 @@ function StudioContent() {
     first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
-  const processAIChange = async (currentInput: string, action: 'change' | 'regenerate' | 'improve' = 'change', sectionId?: number) => {
+  const processAIChange = async (currentInput: string, action: 'change' | 'regenerate' | 'improve' | 'initial' = 'change', sectionId?: number) => {
     try {
+      const isInitialGeneration = studioPhase === 'describe';
       const data = await callStudioApi({
         prompt: currentInput,
-        action,
+        action: isInitialGeneration ? 'initial' : action,
         sectionId: sectionId ?? selectedSectionId ?? undefined,
       });
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
       setPreviewSections(data.previewSections);
       if (studioPhase === 'describe') setStudioPhase('active');
+      if (data.templateSlug) setActiveTemplateSlug(data.templateSlug);
+      if (data.businessName) setProjectName(data.businessName);
       applyCreditFromResponse(data.credits);
       const summary = currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : '');
       addChange(summary);
