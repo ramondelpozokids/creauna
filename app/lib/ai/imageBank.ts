@@ -60,8 +60,9 @@ export const IMAGE_BANK = {
 } as const;
 
 export type ImageBankCategory = keyof typeof IMAGE_BANK;
+export type ImageBankEntry = (typeof IMAGE_BANK)[ImageBankCategory];
 
-export function imagesForVariant(variant: string): typeof IMAGE_BANK.cafe {
+export function imagesForVariant(variant: string): ImageBankEntry {
   if (variant in IMAGE_BANK) return IMAGE_BANK[variant as ImageBankCategory];
   return IMAGE_BANK.cafe;
 }

@@ -3,7 +3,7 @@ import type { ParsedIntent, SiteFeatures } from './intentAnalyzer';
 import type { ContentPreset } from './siteContent';
 import type { TemplatePageSection } from '../templatePages';
 import type { ServiceItem } from './siteContent';
-import { getBusinessProfile, type BusinessProfile } from './businessProfiles';
+import { getBusinessProfile, type AccentColor, type BusinessProfile } from './businessProfiles';
 import type { ParsedGoogleListing } from './googleListingParser';
 
 const GALLERY_BY_CATEGORY: Record<string, string[]> = {
@@ -47,7 +47,7 @@ function esc(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
-function accentBg(accent: BuildCtx['accent']): string {
+function accentBg(accent: AccentColor): string {
   const map: Record<string, string> = {
     red: 'bg-red-600 hover:bg-red-700',
     indigo: 'bg-indigo-600 hover:bg-indigo-700',
@@ -1409,7 +1409,7 @@ interface BuildCtx {
   images: string[];
   lang: 'es' | 'en';
   profile: BusinessProfile | null;
-  accent: BuildCtx['accent'];
+  accent: AccentColor;
 }
 
 export function buildCustomSite(
