@@ -14,7 +14,11 @@ export interface TemplateItem {
 }
 
 const u = (id: string) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&h=600&q=80`;
+  `https://images.unsplash.com/photo-${id}?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600&q=80`;
+
+/** Pexels — imágenes gratuitas (licencia Pexels, uso comercial permitido). */
+const p = (id: number) =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop`;
 
 export const templatesCatalog: TemplateItem[] = [
   // ── GASTRONOMÍA (12) ──────────────────────────────────────────
@@ -32,7 +36,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Cafetería de Especialidad', categoryEn: 'Specialty Coffee',
     descEs: 'Ambiente acogedor para cafeterías boutique, tostaderos y pastelerías artesanales.',
     descEn: 'Warm atmosphere for boutique coffee shops, roasters, and artisan bakeries.',
-    image: u('1495474472287-4d71bcff2085'),
+    image: p(302899),
   },
   {
     id: 3, slug: 'sable', categoryKey: 'gastronomy',
@@ -56,7 +60,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Restaurante Japonés', categoryEn: 'Japanese Restaurant',
     descEs: 'Minimalismo zen para sushi bars, ramen shops y restaurantes de cocina asiática contemporánea.',
     descEn: 'Zen minimalism for sushi bars, ramen shops, and contemporary Asian cuisine.',
-    image: u('1579584425558-c3ce17fd4351'),
+    image: p(357756),
   },
   {
     id: 6, slug: 'ember', categoryKey: 'gastronomy',
@@ -122,7 +126,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Barbería Premium', categoryEn: 'Premium Barbershop',
     descEs: 'Estilo retro-moderno para barberías, peluquerías masculinas y grooming de lujo.',
     descEn: 'Retro-modern style for barbershops, men\'s salons, and luxury grooming.',
-    image: u('1585747860715-893d185c7a7e'),
+    image: p(3993449),
   },
   {
     id: 14, slug: 'lumen', categoryKey: 'services',
@@ -138,7 +142,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Estudio de Tatuajes', categoryEn: 'Tattoo Studio',
     descEs: 'Identidad audaz para estudios de tatuaje, piercing y arte corporal profesional.',
     descEn: 'Bold identity for tattoo studios, piercing shops, and professional body art.',
-    image: u('1590246814881-780e4b6cfbc0'),
+    image: p(1874644),
   },
   {
     id: 16, slug: 'torque', categoryKey: 'services',
@@ -162,7 +166,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Limpieza Profesional', categoryEn: 'Professional Cleaning',
     descEs: 'Frescura y fiabilidad para empresas de limpieza, mantenimiento y servicios domésticos.',
     descEn: 'Fresh reliability for cleaning companies, maintenance, and domestic services.',
-    image: u('1581578731546-c6a7937f0c6'),
+    image: p(4194622),
   },
   {
     id: 19, slug: 'forge', categoryKey: 'services',
@@ -178,7 +182,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Estudio de Yoga', categoryEn: 'Yoga Studio',
     descEs: 'Serenidad y equilibrio para estudios de yoga, pilates y mindfulness.',
     descEn: 'Serenity and balance for yoga studios, pilates, and mindfulness centers.',
-    image: u('1544367567-0f2fcb009e7b'),
+    image: p(4056535),
   },
   {
     id: 21, slug: 'paw', categoryKey: 'services',
@@ -194,7 +198,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Taller Mecánico', categoryEn: 'Auto Repair Shop',
     descEs: 'Robustez profesional para talleres mecánicos, chapa y pintura y servicios automotrices.',
     descEn: 'Professional robustness for auto repair shops, bodywork, and automotive services.',
-    image: u('1486265117393-65fc8e36df08'),
+    image: p(4489706),
   },
   {
     id: 23, slug: 'verde', categoryKey: 'services',
@@ -202,7 +206,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Jardinería & Paisajismo', categoryEn: 'Landscaping',
     descEs: 'Naturaleza y diseño para jardineros, paisajistas y viveros especializados.',
     descEn: 'Nature and design for gardeners, landscapers, and specialized nurseries.',
-    image: u('1416879595402-3359a0470b05'),
+    image: p(1131458),
   },
   {
     id: 24, slug: 'lens', categoryKey: 'services',
@@ -228,7 +232,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Moda Boutique', categoryEn: 'Fashion Boutique',
     descEs: 'Elegancia editorial para boutiques de moda, showrooms y marcas de diseño.',
     descEn: 'Editorial elegance for fashion boutiques, showrooms, and designer brands.',
-    image: u('1441984904996-e9621dcb1e3b'),
+    image: p(1926769),
   },
   {
     id: 27, slug: 'serene', categoryKey: 'luxury',
@@ -252,7 +256,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Hotel Boutique', categoryEn: 'Boutique Hotel',
     descEs: 'Inmersivo y sugerente para hoteles boutique, villas privadas y alojamientos exclusivos.',
     descEn: 'Immersive atmosphere for boutique hotels, private villas, and exclusive lodging.',
-    image: u('1566073771259-6a8506099935'),
+    image: p(271624),
   },
   {
     id: 30, slug: 'essence', categoryKey: 'luxury',
@@ -318,7 +322,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Consultoría B2B', categoryEn: 'B2B Consulting',
     descEs: 'Corporativo moderno para consultoras, despachos profesionales y servicios empresariales.',
     descEn: 'Modern corporate for consultancies, professional firms, and business services.',
-    image: u('1497366814753-038bc935e455'),
+    image: p(3184292),
   },
   {
     id: 38, slug: 'vanguard', categoryKey: 'corporate',
@@ -342,7 +346,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Despacho de Abogados', categoryEn: 'Law Firm',
     descEs: 'Autoridad y confianza para bufetes de abogados, notarías y servicios jurídicos.',
     descEn: 'Authority and trust for law firms, notaries, and legal services.',
-    image: u('1589829545856-d10d9456a3e3'),
+    image: p(5668473),
   },
   {
     id: 41, slug: 'ledger', categoryKey: 'corporate',

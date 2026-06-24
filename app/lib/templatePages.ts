@@ -21,6 +21,7 @@ export interface TemplateCustomization {
   services?: ServiceItem[];
   ctaPrimary?: string;
   ctaSecondary?: string;
+  galleryImages?: string[];
 }
 
 export function buildTemplateSections(
@@ -87,8 +88,8 @@ export function buildTemplateSections(
       html: `<div class="bg-slate-50 border border-slate-200 rounded-[2rem] p-10 md:p-14">
         <h2 class="text-3xl font-semibold tracking-tight text-slate-900">${lang === 'es' ? 'Galería' : 'Gallery'}</h2>
         <div class="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4">
-          ${[tpl.image, tpl.image, tpl.image].map((img, i) => `<div class="aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200">
-            <img src="${img}" alt="" class="w-full h-full object-cover" />
+          ${(customization?.galleryImages ?? [tpl.image, tpl.image, tpl.image]).slice(0, 6).map((img) => `<div class="aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200">
+            <img src="${img}" alt="" class="w-full h-full object-cover" loading="lazy" referrerpolicy="no-referrer" />
           </div>`).join('')}
         </div>
       </div>`,

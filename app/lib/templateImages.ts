@@ -4,7 +4,7 @@ const SLUG_TO_IMAGE = new Map(templatesCatalog.map((t) => [t.slug, t.image]));
 
 /** Miniatura por plantilla — imagen Unsplash alineada con la categoría del negocio. */
 export function templateImageUrl(slug: string): string {
-  return SLUG_TO_IMAGE.get(slug) ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&h=600&q=80';
+  return SLUG_TO_IMAGE.get(slug) ?? 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600&q=80';
 }
 
 const CATEGORY_GRADIENT: Record<TemplateCategory, [string, string]> = {

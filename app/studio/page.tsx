@@ -9,7 +9,6 @@ import {
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import StudioAITeam from '../components/StudioAITeam';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
 import StudioOnboarding from '../components/StudioOnboarding';
 import { useLanguage } from '../components/LanguageProvider';
@@ -78,7 +77,7 @@ const translations = {
     templateLoaded: 'Plantilla activa',
     instant: 'CADA CAMBIO ES INSTANTÁNEO',
     selectSection: 'Selecciona una sección para editarla',
-    sections: { hero: 'Inicio', services: 'Servicios', gallery: 'Galería', contact: 'Contacto', testimonial: 'Testimonios' },
+    sections: { hero: 'Inicio', services: 'Servicios', about: 'Sobre nosotros', gallery: 'Galería', blog: 'Blog', reservation: 'Reservas', contact: 'Contacto', footer: 'Legal', widgets: 'Accesos', testimonial: 'Testimonios' },
     changeApplied: 'Cambio visible aplicado',
   },
   en: {
@@ -121,7 +120,7 @@ const translations = {
     templateLoaded: 'Active template',
     instant: 'EVERY CHANGE IS INSTANT',
     selectSection: 'Select a section to edit it',
-    sections: { hero: 'Home', services: 'Services', gallery: 'Gallery', contact: 'Contact', testimonial: 'Testimonials' },
+    sections: { hero: 'Home', services: 'Services', about: 'About us', gallery: 'Gallery', blog: 'Blog', reservation: 'Booking', contact: 'Contact', footer: 'Legal', widgets: 'Shortcuts', testimonial: 'Testimonials' },
     changeApplied: 'Visible change applied',
   },
 };
@@ -590,8 +589,6 @@ function StudioContent() {
               </div>
             </div>
           </div>
-
-          <StudioAITeam isActive={isThinking} lang={lang} />
 
           <div className="flex-1 overflow-auto p-7 space-y-7 text-[15px] min-h-0">
             <AnimatePresence>

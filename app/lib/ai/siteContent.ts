@@ -5,6 +5,8 @@ export interface ServiceItem {
 
 type ContentPreset = { es: ServiceItem[]; en: ServiceItem[]; taglineEs: string; taglineEn: string; ctaPrimaryEs: string; ctaPrimaryEn: string; ctaSecondaryEs: string; ctaSecondaryEn: string };
 
+export type { ContentPreset };
+
 const CONTENT_PRESETS: Record<string, ContentPreset> = {
   trattoria: {
     taglineEs: 'Auténtica cocina italiana con ingredientes frescos y recetas de la nonna.',
