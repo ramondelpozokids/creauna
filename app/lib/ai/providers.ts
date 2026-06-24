@@ -21,17 +21,18 @@ export const MOTOR_PROVIDER: Record<MotorId, AiProvider> = {
 };
 
 export function isProviderConfigured(provider: AiProvider): boolean {
+  const minLen = 20;
   switch (provider) {
     case 'gemini':
-      return Boolean(process.env.GEMINI_API_KEY?.trim());
+      return (process.env.GEMINI_API_KEY?.trim().length ?? 0) >= minLen;
     case 'claude':
-      return Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+      return (process.env.ANTHROPIC_API_KEY?.trim().length ?? 0) >= minLen;
     case 'openai':
-      return Boolean(process.env.OPENAI_API_KEY?.trim());
+      return (process.env.OPENAI_API_KEY?.trim().length ?? 0) >= minLen;
     case 'groq':
-      return Boolean(process.env.GROQ_API_KEY?.trim());
+      return (process.env.GROQ_API_KEY?.trim().length ?? 0) >= minLen;
     case 'manus':
-      return Boolean(process.env.MANUS_API_KEY?.trim());
+      return (process.env.MANUS_API_KEY?.trim().length ?? 0) >= minLen;
     default:
       return false;
   }

@@ -1,4 +1,5 @@
 import type { ParsedGoogleListing } from './googleListingParser';
+import { IMAGE_BANK } from './imageBank';
 
 export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'default';
 
@@ -190,19 +191,19 @@ export const TATTOO_PROFILE: BusinessProfile = {
 };
 
 const CAFE_IMAGES = {
-  hero: 'https://images.pexels.com/photos/6261332/pexels-photo-6261332.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&fit=crop',
-  gal1: 'https://images.pexels.com/photos/1023613/pexels-photo-1023613.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
-  gal2: 'https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
-  gal3: 'https://images.pexels.com/photos/6248864/pexels-photo-6248864.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
-  gal4: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
-  gal5: 'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
-  gal6: 'https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
-  m1: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  m2: 'https://images.pexels.com/photos/6248864/pexels-photo-6248864.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  m3: 'https://images.pexels.com/photos/1023613/pexels-photo-1023613.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  m4: 'https://images.pexels.com/photos/2609220/pexels-photo-2609220.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  m5: 'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  m6: 'https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+  hero: IMAGE_BANK.cafe.hero,
+  gal1: IMAGE_BANK.cafe.gallery[0],
+  gal2: IMAGE_BANK.cafe.gallery[1],
+  gal3: IMAGE_BANK.cafe.gallery[2],
+  gal4: IMAGE_BANK.cafe.gallery[3],
+  gal5: IMAGE_BANK.cafe.gallery[4],
+  gal6: IMAGE_BANK.cafe.gallery[5],
+  m1: IMAGE_BANK.cafe.menu[0],
+  m2: IMAGE_BANK.cafe.menu[1],
+  m3: IMAGE_BANK.cafe.menu[2],
+  m4: IMAGE_BANK.cafe.menu[3],
+  m5: IMAGE_BANK.cafe.menu[3],
+  m6: IMAGE_BANK.cafe.menu[2],
 };
 
 export const CAFE_PROFILE: BusinessProfile = {

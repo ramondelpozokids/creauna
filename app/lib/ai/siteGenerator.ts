@@ -27,17 +27,26 @@ export async function generateInitialSite(prompt: string, lang: 'es' | 'en'): Pr
 
   const ruleSections = buildCustomSite(intent, tpl, preset, lang, listing);
   const brief = buildSiteBrief(intent, profile, listing, lang, prompt);
-  const { sections, motorsUsed, aiEnhanced } = await enhanceSiteWithAgents(ruleSections, brief);
+  const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason } = await enhanceSiteWithAgents(ruleSections, brief);
 
   const previewSections = toStudioSections(sections);
   const created = describeCreatedSections(intent.features, lang);
   const businessName = listing?.businessName ?? intent.businessName;
 
-  const motorNote = aiEnhanced && motorsUsed.length
-    ? (lang === 'es'
-      ? ` Motores IA: ${motorsUsed.join(', ')}.`
-      : ` AI engines: ${motorsUsed.join(', ')}.`)
-    : '';
+  let motorNote = '';
+  if (providersUsed.length) {
+    motorNote = lang === 'es'
+      ? ` Motores IA activos (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`
+      : ` AI engines active (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`;
+  } else if (aiSkippedReason === 'no_api_keys') {
+    motorNote = lang === 'es'
+      ? ' Añade GEMINI/ANTHROPIC/OPENAI/GROQ en .env.local (local) o Vercel → Settings → Environment Variables (producción).'
+      : ' Add GEMINI/ANTHROPIC/OPENAI/GROQ to .env.local (local) or Vercel env vars (production).';
+  } else if (aiSkippedReason === 'ai_parse_failed') {
+    motorNote = lang === 'es'
+      ? ' Estructura generada; refinamiento IA no respondió en formato válido (reintenta o mejora una sección).'
+      : ' Structure generated; AI refinement did not return valid format (retry or improve a section).';
+  }
 
   const message = lang === 'es'
     ? `He creado la web de «${businessName}» (${intent.businessType}) con: ${created}.${motorNote} Puedes pedirme cambios en cualquier sección.`
@@ -49,7 +58,7 @@ export async function generateInitialSite(prompt: string, lang: 'es' | 'en'): Pr
     templateSlug: tpl.slug,
     businessName,
     changedSectionIds: previewSections.map((s) => s.id),
-    motorsUsed: aiEnhanced ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
-    source: aiEnhanced ? 'hybrid' : 'rules',
+    motorsUsed: providersUsed.length ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
+    source: providersUsed.length ? (aiEnhanced ? 'hybrid' : 'hybrid') : 'rules',
   };
 }
