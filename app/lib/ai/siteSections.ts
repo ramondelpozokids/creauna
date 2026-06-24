@@ -47,27 +47,532 @@ function esc(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
-function accentBg(accent: 'red' | 'indigo'): string {
-  return accent === 'red' ? 'bg-red-600 hover:bg-red-700' : 'bg-indigo-600 hover:bg-indigo-700';
+function accentBg(accent: BuildCtx['accent']): string {
+  const map: Record<string, string> = {
+    red: 'bg-red-600 hover:bg-red-700',
+    indigo: 'bg-indigo-600 hover:bg-indigo-700',
+    gold: 'bg-amber-700 hover:bg-amber-600',
+    blue: 'bg-blue-800 hover:bg-blue-900',
+    rose: 'bg-rose-400 hover:bg-rose-500',
+  };
+  return map[accent] ?? map.indigo;
+}
+
+function premiumWidgets(ctx: BuildCtx, dark = false): TemplatePageSection {
+  const es = ctx.lang === 'es';
+  const phone = ctx.profile?.phone?.replace(/\D/g, '') ?? '';
+  return {
+    id: 'widgets', type: 'widgets', navLabelEs: 'Accesos', navLabelEn: 'Shortcuts',
+    html: `<div class="relative pointer-events-none">
+      ${phone ? `<a href="https://wa.me/34${phone}" class="pointer-events-auto fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-xl flex items-center justify-center text-xs font-bold animate-pulse" aria-label="WhatsApp">WA</a>` : ''}
+      <button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="pointer-events-auto fixed ${phone ? 'bottom-24' : 'bottom-6'} right-6 z-50 w-11 h-11 ${dark ? 'bg-white text-stone-900' : 'bg-stone-950 text-white'} hover:opacity-80 rounded-full shadow-xl flex items-center justify-center text-sm" aria-label="${es ? 'Subir' : 'Scroll up'}">↑</button>
+    </div>`,
+  };
+}
+
+function sectionHead(title: string, subtitle?: string, accentClass = 'bg-orange-700/80'): string {
+  return `<div class="text-center mb-14">
+    <h2 class="text-3xl md:text-4xl font-bold font-serif text-stone-900 tracking-tight">${esc(title)}</h2>
+    ${subtitle ? `<p class="mt-3 text-stone-500 text-base md:text-lg max-w-2xl mx-auto">${esc(subtitle)}</p>` : ''}
+    <div class="mt-5 mx-auto h-0.5 w-16 ${accentClass}"></div>
+  </div>`;
+}
+
+function buildBeautySite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const { name, heroImage, tagline, profile, lang, images, ctaPrimary, ctaSecondary } = ctx;
+  const es = lang === 'es';
+  const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const items = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
+  const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
+  const initials = (n: string) => n.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-[#FDF8F3] overflow-hidden rounded-[2rem] shadow-xl border border-stone-100">
+      <div class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-stone-100/80 bg-white/90">
+        <div class="font-serif font-semibold text-xl text-stone-900">${esc(name)}</div>
+        <div class="hidden md:flex gap-8 text-[11px] tracking-[0.2em] uppercase text-stone-500 font-medium">
+          ${(es ? ['Inicio', 'Servicios', 'Galería', 'Reservas', 'Contacto'] : ['Home', 'Services', 'Gallery', 'Booking', 'Contact']).map((n) => `<span>${n}</span>`).join('')}
+        </div>
+        ${phone ? `<span class="text-sm font-medium text-rose-500">📞 <a href="tel:+34${phoneDigits}">${esc(phone)}</a></span>` : ''}
+      </div>
+      <div class="relative min-h-[480px] flex items-center justify-center text-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-b from-stone-950/40 via-stone-950/50 to-stone-950/70"></div>
+        <div class="relative z-10 px-6 py-16 max-w-3xl mx-auto">
+          <p class="text-rose-300 text-lg md:text-xl font-serif italic">${esc(tagline)}</p>
+          <h1 class="mt-4 text-5xl md:text-6xl font-bold font-serif text-white tracking-tight">${esc(name)}</h1>
+          ${rating ? `<div class="mt-6 inline-flex items-center gap-2 px-5 py-2 bg-white/10 backdrop-blur rounded-full border border-white/20"><span class="text-amber-400 text-sm">★★★★★</span><span class="text-white/90 text-sm">${esc(rating)}</span></div>` : ''}
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <span class="px-10 py-4 bg-rose-400 hover:bg-rose-500 text-white rounded-full text-sm font-bold tracking-wide uppercase shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-10 py-4 bg-white/90 text-stone-900 rounded-full text-sm font-bold tracking-wide uppercase shadow-lg">${esc(ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const services: TemplatePageSection = {
+    id: 'menu', type: 'menu', navLabelEs: 'Servicios', navLabelEn: 'Services',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100 shadow-sm">
+      ${sectionHead(es ? 'Nuestros Servicios' : 'Our Services', es ? 'Tratamientos premium con productos de primera calidad' : 'Premium treatments with top-quality products', 'bg-rose-400')}
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        ${items.map((item) => `<article class="group bg-[#FDF8F3] rounded-2xl overflow-hidden border border-stone-100 hover:shadow-lg transition-all hover:-translate-y-1">
+          <div class="aspect-[4/3] overflow-hidden"><img src="${item.image}" alt="${esc(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" /></div>
+          <div class="p-6"><h3 class="font-serif font-bold text-stone-900 text-lg">${esc(item.title)}</h3>${item.price ? `<p class="mt-2 text-rose-500 font-semibold">${esc(item.price)}</p>` : ''}<span class="mt-4 inline-block text-xs font-bold tracking-widest uppercase text-rose-500">${esc(item.cta)} →</span></div>
+        </article>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const about: TemplatePageSection = {
+    id: 'about', type: 'about', navLabelEs: 'Nosotros', navLabelEn: 'About',
+    html: `<div class="bg-[#FDF8F3] rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${sectionHead(es ? 'Tu belleza, nuestra pasión' : 'Your beauty, our passion', profile ? (es ? profile.aboutEs : profile.aboutEn) : '', 'bg-rose-400')}
+      <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-4">
+        ${(es ? ['Estilistas expertos', 'Productos premium', 'Ambiente de lujo'] : ['Expert stylists', 'Premium products', 'Luxury atmosphere']).map((v) => `<div class="bg-white rounded-xl p-8 text-center shadow-sm border border-stone-100"><div class="text-2xl mb-3">✨</div><div class="font-serif font-bold text-stone-900">${v}</div></div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const gallery: TemplatePageSection = {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${sectionHead(es ? 'Galería' : 'Gallery', es ? 'Inspiración, estilo y resultados reales' : 'Inspiration, style and real results', 'bg-rose-400')}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden shadow-md aspect-square"><img src="${img}" alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const reviewsSec: TemplatePageSection = {
+    id: 'reviews', type: 'reviews', navLabelEs: 'Reseñas', navLabelEn: 'Reviews',
+    html: `<div class="bg-[#FDF8F3] rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${sectionHead(es ? 'Reseñas' : 'Reviews', es ? 'Lo que dicen nuestras clientas' : 'What our clients say', 'bg-rose-400')}
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${reviews.map((r) => `<div class="bg-white rounded-xl p-8 shadow-sm border-l-4 border-rose-400">
+          <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-rose-200 text-rose-800 flex items-center justify-center text-xs font-bold">${initials(r.name)}</div><div class="font-serif font-bold text-stone-900 text-sm">${esc(r.name)}</div></div>
+          <div class="mt-3 text-amber-500 text-xs">${'★'.repeat(r.stars)}</div>
+          <p class="mt-4 text-stone-600 text-sm italic leading-relaxed">"${esc(r.text)}"</p>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const booking: TemplatePageSection = {
+    id: 'reservation', type: 'reservation', navLabelEs: 'Reservas', navLabelEn: 'Booking',
+    html: `<div class="bg-white rounded-[2rem] overflow-hidden border border-stone-200 shadow-lg max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2">
+        <div class="bg-stone-900 text-white p-10 md:p-12 flex flex-col justify-center">
+          <h2 class="text-3xl font-serif font-bold">${es ? 'Reserva tu cita' : 'Book your appointment'}</h2>
+          <p class="mt-4 text-stone-400 text-sm">${es ? 'Elige fecha y servicio. Confirmación inmediata.' : 'Pick date and service. Instant confirmation.'}</p>
+          <ul class="mt-8 space-y-3 text-sm text-stone-300">${(es ? ['Confirmación inmediata', 'Cancelación gratuita 24h antes', 'Estilistas certificados'] : ['Instant confirmation', 'Free cancellation 24h before', 'Certified stylists']).map((b) => `<li>✅ ${b}</li>`).join('')}</ul>
+        </div>
+        <div class="p-10 md:p-12 space-y-5">
+          <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Servicio' : 'Service'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Seleccionar' : 'Select'}</div></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Fecha' : 'Date'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">dd/mm/aaaa</div></div>
+            <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Hora' : 'Time'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Seleccionar' : 'Select'}</div></div>
+          </div>
+          <div class="px-6 py-4 bg-rose-400 text-white font-serif font-bold text-center rounded-full">${es ? 'Confirmar cita' : 'Confirm booking'}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const contact: TemplatePageSection = {
+    id: 'location', type: 'location', navLabelEs: 'Contacto', navLabelEn: 'Contact',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-stone-900">${es ? 'Visítanos' : 'Visit us'}</h2>
+          <p class="mt-4 text-stone-600">${esc(profile ? (es ? profile.addressEs : profile.addressEn) : '')}</p>
+          <p class="mt-2 text-stone-500 text-sm">${esc(profile ? (es ? profile.hoursEs : profile.hoursEn) : '')}</p>
+          ${phone ? `<p class="mt-4 text-rose-500 font-semibold">📞 ${esc(phone)}</p>` : ''}
+        </div>
+        <div class="rounded-xl overflow-hidden border border-stone-200 min-h-[220px]">
+          <iframe title="Mapa" src="https://maps.google.com/maps?q=${encodeURIComponent(profile ? (es ? profile.addressEs : profile.addressEn) : 'Madrid')}&amp;output=embed" class="w-full min-h-[220px] border-0" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const footer: TemplatePageSection = {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-stone-900 text-stone-400 rounded-[2rem] p-10 md:p-14">
+      <div class="text-center"><h3 class="text-white font-serif font-bold text-xl">${esc(name)}</h3><p class="mt-3 text-sm">© ${new Date().getFullYear()} ${esc(name)}. ${es ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p></div>
+    </div>`,
+  };
+
+  return [
+    hero, services, about,
+    ...(features.gallery ? [gallery] : []),
+    ...(features.reviews ? [reviewsSec] : []),
+    ...(features.reservation || features.calendar ? [booking] : []),
+    ...(features.location || features.contact ? [contact] : []),
+    ...(features.legalFooter || features.social ? [footer] : []),
+    premiumWidgets(ctx),
+  ];
+}
+
+function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const { name, heroImage, tagline, profile, lang, ctaPrimary, ctaSecondary } = ctx;
+  const es = lang === 'es';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const items = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
+  const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
+  const aboutText = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
+
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="overflow-hidden rounded-[2rem] shadow-xl border border-blue-100">
+      <div class="bg-blue-900 text-white text-sm px-6 py-2 flex flex-wrap justify-between gap-2">
+        <span>${es ? 'Asesoría integral desde 1991' : 'Full advisory since 1991'}</span>
+        ${phone ? `<a href="tel:+34${phoneDigits}" class="font-semibold">📞 ${esc(phone)}</a>` : ''}
+      </div>
+      <div class="bg-white flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-stone-100">
+        <div class="font-bold text-xl text-blue-900">${esc(name)}</div>
+        <div class="hidden lg:flex gap-8 text-xs tracking-wider uppercase text-stone-500 font-semibold">
+          ${(es ? ['Inicio', 'Servicios', 'Nosotros', 'Reseñas', 'Contacto'] : ['Home', 'Services', 'About', 'Reviews', 'Contact']).map((n) => `<span>${n}</span>`).join('')}
+        </div>
+        <span class="px-4 py-2 bg-blue-800 text-white text-xs font-bold rounded-md">${esc(ctaPrimary)}</span>
+      </div>
+      <div class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 text-white text-center px-6 py-16 md:py-20">
+        <img src="${heroImage}" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20" referrerpolicy="no-referrer" />
+        <div class="relative z-10 max-w-3xl mx-auto">
+          <span class="inline-block px-4 py-1 bg-amber-400 text-blue-900 text-xs font-bold rounded-full mb-6">${profile ? esc(es ? profile.badgeEs : profile.badgeEn) : ''}</span>
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight">${esc(name)}</h1>
+          <p class="mt-6 text-lg text-blue-100 max-w-2xl mx-auto">${esc(tagline)}</p>
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <span class="px-8 py-4 bg-white text-blue-900 rounded-md font-bold text-sm shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-8 py-4 border-2 border-white/60 text-white rounded-md font-semibold text-sm">${esc(ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const services: TemplatePageSection = {
+    id: 'services', type: 'services', navLabelEs: 'Servicios', navLabelEn: 'Services',
+    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${sectionHead(es ? 'Nuestros Servicios' : 'Our Services', es ? 'Soluciones integrales para autónomos y PYMES' : 'Integrated solutions for freelancers and SMEs', 'bg-blue-800')}
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${items.map((item) => `<div class="bg-white rounded-xl p-8 shadow-sm border border-stone-100 hover:shadow-lg hover:-translate-y-1 transition-all">
+          <h3 class="font-bold text-blue-900 text-lg flex items-center gap-2">📋 ${esc(item.title)}</h3>
+          <p class="mt-2 text-sm text-stone-500">${esc(item.price ?? '')}</p>
+          <ul class="mt-4 space-y-2 text-sm text-stone-600">${(es ? ['Gestión completa', 'Asesor personal', 'Respuesta en 24h'] : ['Full management', 'Personal advisor', '24h response']).map((l) => `<li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-800 before:font-bold">${l}</li>`).join('')}</ul>
+          <span class="mt-6 inline-block text-blue-800 text-sm font-semibold">${esc(item.cta)} →</span>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const about: TemplatePageSection = {
+    id: 'about', type: 'about', navLabelEs: 'Nosotros', navLabelEn: 'About',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-blue-900">${es ? 'Sobre nosotros' : 'About us'}</h2>
+          <p class="mt-6 text-stone-600 leading-relaxed">${esc(aboutText ?? '')}</p>
+          <div class="mt-8 space-y-3">${(es ? ['Más de 30 años de experiencia', 'Especialistas en autónomos y PYMES', 'Trato cercano y profesional'] : ['Over 30 years of experience', 'Specialists in freelancers and SMEs', 'Professional and personal service']).map((f) => `<div class="flex items-center gap-2 text-sm text-stone-700"><span class="text-green-500">✅</span>${f}</div>`).join('')}</div>
+        </div>
+        <div class="rounded-xl overflow-hidden shadow-lg"><img src="${heroImage}" alt="" class="w-full aspect-[4/3] object-cover" referrerpolicy="no-referrer" /></div>
+      </div>
+    </div>`,
+  };
+
+  const reviewsSec: TemplatePageSection = {
+    id: 'reviews', type: 'reviews', navLabelEs: 'Reseñas', navLabelEn: 'Reviews',
+    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${sectionHead(es ? 'Opiniones de clientes' : 'Client reviews', profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '', 'bg-blue-800')}
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${reviews.map((r) => `<div class="bg-white rounded-xl p-8 shadow-sm">
+          <div class="text-amber-400">${'★'.repeat(r.stars)}</div>
+          <p class="mt-4 text-stone-600 italic text-sm leading-relaxed">"${esc(r.text)}"</p>
+          <div class="mt-6 font-bold text-blue-900">${esc(r.name)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const contact: TemplatePageSection = {
+    id: 'contact', type: 'contact', navLabelEs: 'Contacto', navLabelEn: 'Contact',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100 max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold text-blue-900 text-center">${es ? 'Contacta con nosotros' : 'Contact us'}</h2>
+      <div class="mt-10 grid md:grid-cols-2 gap-8">
+        <div class="space-y-4">
+          <p class="text-stone-600">📍 ${esc(profile ? (es ? profile.addressEs : profile.addressEn) : '')}</p>
+          <p class="text-stone-600">🕐 ${esc(profile ? (es ? profile.hoursEs : profile.hoursEn) : '')}</p>
+          ${phone ? `<p class="text-blue-800 font-semibold">📞 ${esc(phone)}</p>` : ''}
+          ${profile?.email ? `<p class="text-blue-800">✉️ ${esc(profile.email)}</p>` : ''}
+        </div>
+        <div class="space-y-4">
+          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Tu nombre' : 'Your name'}</div>
+          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Tu email' : 'Your email'}</div>
+          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400 h-24">${es ? 'Tu consulta...' : 'Your enquiry...'}</div>
+          <div class="px-6 py-4 bg-blue-800 text-white font-bold text-center rounded-md">${es ? 'Enviar consulta' : 'Send enquiry'}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const footer: TemplatePageSection = {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-blue-950 text-stone-400 rounded-[2rem] p-10 md:p-14">
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div><h3 class="text-white font-bold">${esc(name)}</h3><p class="mt-3 text-sm">${esc(aboutText?.slice(0, 100) ?? '')}</p></div>
+        <div><h4 class="text-amber-400 text-xs font-bold tracking-widest uppercase">${es ? 'Servicios' : 'Services'}</h4><div class="mt-3 space-y-1 text-sm">${items.map((i) => `<div>${esc(i.title)}</div>`).join('')}</div></div>
+        <div><h4 class="text-amber-400 text-xs font-bold tracking-widest uppercase">Legal</h4><div class="mt-3 space-y-1 text-sm underline"><div>Aviso Legal</div><div>Política de Privacidad</div><div>Política de Cookies</div></div></div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-blue-900 text-center text-xs">© ${new Date().getFullYear()} ${esc(name)}</div>
+    </div>`,
+  };
+
+  return [
+    hero, services, about,
+    ...(features.reviews ? [reviewsSec] : []),
+    ...(features.contact ? [contact] : []),
+    ...(features.legalFooter || features.social ? [footer] : []),
+    premiumWidgets(ctx),
+  ];
+}
+
+function buildAutomotiveSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const { name, heroImage, tagline, profile, lang, images, ctaPrimary, ctaSecondary } = ctx;
+  const es = lang === 'es';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const items = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
+  const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
+  const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '';
+
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-stone-950 overflow-hidden rounded-[2rem] shadow-xl border border-stone-800">
+      <div class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-4 border-b border-stone-800">
+        <div class="font-bold text-lg uppercase tracking-[0.15em] text-white">${esc(name)}<div class="text-[10px] text-stone-500 tracking-[0.3em] mt-1">${es ? 'Concesionario Oficial' : 'Official Dealer'}</div></div>
+        <div class="hidden md:flex gap-8 text-[10px] tracking-[0.2em] uppercase text-stone-500 font-semibold">
+          ${(es ? ['Modelos', 'Taller', 'Recambios', 'Contacto'] : ['Models', 'Workshop', 'Parts', 'Contact']).map((n) => `<span>${n}</span>`).join('')}
+        </div>
+        ${phone ? `<a href="tel:+34${phoneDigits}" class="text-red-500 font-bold text-sm">📞 ${esc(phone)}</a>` : ''}
+      </div>
+      <div class="relative min-h-[520px] flex items-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover opacity-40" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/80 to-transparent"></div>
+        <div class="relative z-10 px-8 md:px-16 py-16 max-w-2xl">
+          <span class="inline-flex items-center gap-2 px-3 py-1 bg-red-600/20 border border-red-600/40 text-red-400 text-[10px] font-bold uppercase tracking-widest rounded">${profile ? esc(es ? profile.badgeEs : profile.badgeEn) : ''}</span>
+          <h1 class="mt-6 text-5xl md:text-7xl font-bold uppercase tracking-tight text-white leading-none">${esc(name.split(' ')[0] ?? name)}<span class="text-red-600"> ${esc(name.split(' ').slice(1).join(' '))}</span></h1>
+          <p class="mt-6 text-stone-400 text-lg">${esc(tagline)}</p>
+          ${rating ? `<div class="mt-4 text-amber-400 text-sm">★★★★★ <span class="text-stone-500 ml-2">${esc(rating)}</span></div>` : ''}
+          <div class="mt-10 flex flex-wrap gap-4">
+            <span class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-bold uppercase tracking-wider">${esc(ctaPrimary)}</span>
+            <span class="px-8 py-4 border border-stone-600 text-white rounded text-sm font-bold uppercase tracking-wider">${esc(ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const stats: TemplatePageSection = {
+    id: 'about', type: 'about', navLabelEs: 'Datos', navLabelEn: 'Stats',
+    html: `<div class="bg-stone-900 rounded-[2rem] p-8 md:p-12 border border-stone-800">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto text-center">
+        ${(es ? [['+40', 'Años de experiencia'], ['1.282', 'Reseñas Google'], ['100%', 'Recambios originales'], ['24h', 'Respuesta taller']] : [['40+', 'Years experience'], ['1,282', 'Google reviews'], ['100%', 'Genuine parts'], ['24h', 'Workshop response']]).map(([n, l]) => `<div><div class="text-3xl md:text-4xl font-bold text-red-600">${n}</div><div class="mt-2 text-xs uppercase tracking-widest text-stone-500">${l}</div></div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const services: TemplatePageSection = {
+    id: 'services', type: 'services', navLabelEs: 'Servicios', navLabelEn: 'Services',
+    html: `<div class="bg-stone-950 rounded-[2rem] p-10 md:p-16 border border-stone-800 text-white">
+      <div class="text-center mb-14"><h2 class="text-3xl md:text-4xl font-bold uppercase tracking-tight">${es ? 'Nuestros Servicios' : 'Our Services'}</h2><div class="mt-4 mx-auto h-0.5 w-16 bg-red-600"></div></div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        ${items.map((item) => `<article class="group bg-stone-900 border border-stone-800 rounded-xl overflow-hidden hover:border-red-600/50 transition-colors">
+          <div class="aspect-[4/3] overflow-hidden"><img src="${item.image}" alt="${esc(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80" loading="lazy" referrerpolicy="no-referrer" /></div>
+          <div class="p-6"><h3 class="font-bold uppercase tracking-wide text-sm">${esc(item.title)}</h3><p class="mt-2 text-stone-500 text-xs">${esc(item.price ?? '')}</p><span class="mt-4 inline-block text-red-500 text-xs font-bold uppercase">${esc(item.cta)} →</span></div>
+        </article>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const gallery: TemplatePageSection = {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
+    html: `<div class="bg-stone-900 rounded-[2rem] p-10 md:p-16 border border-stone-800">
+      <div class="text-center mb-10"><h2 class="text-3xl font-bold uppercase text-white tracking-tight">${es ? 'Galería' : 'Gallery'}</h2></div>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
+        ${images.slice(0, 6).map((img) => `<div class="rounded-lg overflow-hidden aspect-[4/3]"><img src="${img}" alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const reviewsSec: TemplatePageSection = {
+    id: 'reviews', type: 'reviews', navLabelEs: 'Reseñas', navLabelEn: 'Reviews',
+    html: `<div class="bg-stone-950 rounded-[2rem] p-10 md:p-16 border border-stone-800 text-white">
+      <div class="text-center mb-10"><h2 class="text-3xl font-bold uppercase tracking-tight">${es ? 'Opiniones' : 'Reviews'}</h2></div>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${reviews.map((r) => `<div class="bg-stone-900 border border-stone-800 rounded-xl p-8">
+          <div class="text-red-500">${'★'.repeat(r.stars)}</div>
+          <p class="mt-4 text-stone-400 italic text-sm">"${esc(r.text)}"</p>
+          <div class="mt-6 font-bold uppercase tracking-wide text-sm">${esc(r.name)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const contact: TemplatePageSection = {
+    id: 'location', type: 'location', navLabelEs: 'Contacto', navLabelEn: 'Contact',
+    html: `<div class="bg-stone-900 rounded-[2rem] p-10 md:p-16 border border-stone-800 text-white">
+      <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+        <div>
+          <h2 class="text-2xl font-bold uppercase">${es ? 'Visítanos' : 'Visit us'}</h2>
+          <p class="mt-4 text-stone-400">📍 ${esc(profile ? (es ? profile.addressEs : profile.addressEn) : '')}</p>
+          <p class="mt-2 text-stone-400">🕐 ${esc(profile ? (es ? profile.hoursEs : profile.hoursEn) : '')}</p>
+          ${phone ? `<p class="mt-4 text-red-500 font-bold text-lg">📞 ${esc(phone)}</p>` : ''}
+        </div>
+        <div class="rounded-xl overflow-hidden border border-stone-700 min-h-[220px]">
+          <iframe title="Mapa" src="https://maps.google.com/maps?q=${encodeURIComponent(profile ? (es ? profile.addressEs : profile.addressEn) : 'Madrid')}&amp;output=embed" class="w-full min-h-[220px] border-0 invert hue-rotate-180" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const footer: TemplatePageSection = {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-stone-950 text-stone-500 rounded-[2rem] p-10 border border-stone-800 text-center text-xs">
+      <div class="font-bold uppercase tracking-widest text-white text-sm">${esc(name)}</div>
+      <div class="mt-4">© ${new Date().getFullYear()} ${esc(name)}. ${es ? 'Concesionario Oficial.' : 'Official Dealer.'}</div>
+    </div>`,
+  };
+
+  return [
+    hero, stats, services,
+    ...(features.gallery ? [gallery] : []),
+    ...(features.reviews ? [reviewsSec] : []),
+    ...(features.location || features.contact ? [contact] : []),
+    ...(features.legalFooter || features.social ? [footer] : []),
+    premiumWidgets(ctx, true),
+  ];
+}
+
+function buildLuxurySite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const es = ctx.lang === 'es';
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-stone-950 overflow-hidden rounded-[2rem] shadow-2xl border border-amber-900/30">
+      <div class="relative min-h-[560px] flex items-center justify-center text-center">
+        <img src="${ctx.heroImage}" alt="${esc(ctx.name)}" class="absolute inset-0 w-full h-full object-cover opacity-40" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-b from-stone-950/80 via-stone-950/60 to-stone-950/90"></div>
+        <div class="relative z-10 px-6 py-20 max-w-3xl">
+          <p class="text-amber-400/90 text-2xl md:text-3xl font-serif italic">${esc(ctx.tagline)}</p>
+          <h1 class="mt-6 text-5xl md:text-7xl font-serif font-bold text-white tracking-tight">${esc(ctx.name)}</h1>
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <span class="px-10 py-4 bg-amber-700 hover:bg-amber-600 text-stone-950 rounded-sm text-sm font-bold tracking-[0.15em] uppercase">${esc(ctx.ctaPrimary)}</span>
+            <span class="px-10 py-4 border border-amber-600/60 text-amber-200 rounded-sm text-sm font-bold tracking-[0.15em] uppercase">${esc(ctx.ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+  const menu = buildMenu({ ...ctx, accent: 'gold' });
+  menu.id = 'menu';
+  const about = buildAbout(ctx);
+  const gallery = buildGallery(ctx);
+  const reviews = buildCafeReviews(ctx);
+  const booking = buildCafeBooking(ctx);
+  const contact = buildCafeContact(ctx);
+  const footer = buildCafeFooter(ctx);
+  return [
+    hero, about, menu,
+    ...(features.gallery ? [gallery] : []),
+    ...(features.reviews ? [reviews] : []),
+    ...(features.reservation ? [booking] : []),
+    ...(features.contact || features.location ? [contact] : []),
+    ...(features.legalFooter ? [footer] : []),
+    premiumWidgets(ctx, true),
+  ];
+}
+
+function buildNonprofitSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const es = ctx.lang === 'es';
+  const items = ctx.profile ? (es ? ctx.profile.menuItems.es : ctx.profile.menuItems.en) : [];
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-blue-700 overflow-hidden rounded-[2rem] shadow-xl">
+      <div class="relative min-h-[480px] flex items-center px-8 md:px-16">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600"></div>
+        <div class="relative z-10 max-w-2xl text-white py-16">
+          <span class="inline-block px-4 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-6">${esc(ctx.badge)}</span>
+          <h1 class="text-4xl md:text-6xl font-bold tracking-tight">${esc(ctx.name)}</h1>
+          <p class="mt-4 text-xl text-blue-100 italic font-serif">${esc(ctx.tagline)}</p>
+          <p class="mt-6 text-blue-100/90 leading-relaxed max-w-xl">${esc(ctx.profile ? (es ? ctx.profile.aboutEs : ctx.profile.aboutEn) ?? '' : '')}</p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <span class="px-8 py-4 bg-white text-blue-800 rounded-lg font-bold text-sm">${esc(ctx.ctaPrimary)}</span>
+            <span class="px-8 py-4 border-2 border-white/50 text-white rounded-lg font-semibold text-sm">${esc(ctx.ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+  const services: TemplatePageSection = {
+    id: 'services', type: 'services', navLabelEs: 'Recursos', navLabelEn: 'Resources',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-blue-100">
+      ${sectionHead(es ? 'Nuestros Recursos' : 'Our Resources', es ? 'Contenido 100% accesible con subtítulos y LSE' : '100% accessible content with captions and sign language', 'bg-blue-700')}
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${items.map((item) => `<article class="bg-blue-50 rounded-xl p-8 border border-blue-100 hover:shadow-lg transition-all">
+          <h3 class="font-bold text-blue-900 text-lg">${esc(item.title)}</h3>
+          <p class="mt-2 text-blue-600 font-semibold">${esc(item.price ?? '')}</p>
+          <span class="mt-4 inline-block text-blue-800 text-sm font-bold">${esc(item.cta)} →</span>
+        </article>`).join('')}
+      </div>
+    </div>`,
+  };
+  const reviewsSec = buildCafeReviews(ctx);
+  const contact = buildLocation(ctx);
+  const footer: TemplatePageSection = {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-blue-950 text-blue-200 rounded-[2rem] p-10 text-center text-sm">
+      <div class="font-bold text-white text-lg">${esc(ctx.name)}</div>
+      <div class="mt-4">© ${new Date().getFullYear()} · ${es ? 'Comunicación sin barreras' : 'Communication without barriers'}</div>
+    </div>`,
+  };
+  return [
+    hero, services,
+    ...(features.reviews ? [reviewsSec] : []),
+    ...(features.contact ? [contact] : []),
+    ...(features.legalFooter ? [footer] : []),
+    premiumWidgets(ctx),
+  ];
 }
 
 function buildHero(ctx: BuildCtx): TemplatePageSection {
   const { name, tagline, badge, heroImage, ctaPrimary, ctaSecondary, accent, profile, lang } = ctx;
   const es = lang === 'es';
   const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : undefined;
+  const phone = profile?.phone?.replace(/\D/g, '') ?? '';
+  const nav = es ? ['Inicio', 'Servicios', 'Galería', 'Contacto'] : ['Home', 'Services', 'Gallery', 'Contact'];
   return {
     id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
-    html: `<div class="relative min-h-[520px] md:min-h-[580px] bg-slate-950 text-white overflow-hidden rounded-[2rem] shadow-xl">
-      <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/30"></div>
-      <div class="relative z-10 p-10 md:p-20 flex flex-col justify-center min-h-[520px] md:min-h-[580px] max-w-4xl">
-        <span class="inline-block w-fit px-4 py-1.5 ${accentBg(accent)} text-white text-xs font-bold tracking-widest uppercase rounded-full">${esc(badge)}</span>
-        ${rating ? `<div class="mt-4 inline-flex items-center gap-2 text-amber-400 text-sm font-semibold"><span>★★★★★</span><span class="text-slate-200">${esc(rating)}</span></div>` : ''}
-        <h1 class="mt-6 text-4xl md:text-6xl lg:text-7xl font-bold font-serif tracking-tight leading-[1.05] drop-shadow-lg">${esc(name)}</h1>
-        <p class="mt-6 text-xl md:text-2xl lg:text-3xl text-slate-100 leading-relaxed max-w-3xl font-light drop-shadow-md">${esc(tagline)}</p>
-        <div class="mt-10 flex flex-wrap gap-4">
-          <span class="px-8 py-4 ${accentBg(accent)} text-white rounded-2xl text-base font-semibold shadow-lg">${esc(ctaPrimary)}</span>
-          <span class="px-8 py-4 border-2 border-white/80 text-white rounded-2xl text-base font-medium">${esc(ctaSecondary)}</span>
+    html: `<div class="bg-white overflow-hidden rounded-[2rem] shadow-xl border border-slate-100">
+      <div class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-4 border-b border-slate-100">
+        <div class="font-serif font-bold text-lg text-slate-900">${esc(name)}</div>
+        <div class="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-slate-500 font-medium">${nav.map((n) => `<span>${n}</span>`).join('')}</div>
+        ${phone ? `<span class="text-sm font-medium text-slate-700">📞 ${esc(profile!.phone!)}</span>` : ''}
+      </div>
+      <div class="relative min-h-[480px] md:min-h-[540px] flex items-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/30"></div>
+        <div class="relative z-10 p-10 md:p-16 max-w-4xl">
+          <span class="inline-block px-4 py-1.5 ${accentBg(accent)} text-white text-xs font-bold tracking-widest uppercase rounded-full">${esc(badge)}</span>
+          ${rating ? `<div class="mt-4 inline-flex items-center gap-2 text-amber-400 text-sm font-semibold"><span>★★★★★</span><span class="text-slate-200">${esc(rating)}</span></div>` : ''}
+          <h1 class="mt-6 text-4xl md:text-6xl font-bold font-serif text-white tracking-tight leading-tight drop-shadow-lg">${esc(name)}</h1>
+          <p class="mt-5 text-lg md:text-xl text-slate-200 leading-relaxed max-w-2xl font-light">${esc(tagline)}</p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <span class="px-8 py-4 ${accentBg(accent)} text-white rounded-xl text-sm font-semibold shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-8 py-4 border-2 border-white/80 text-white rounded-xl text-sm font-medium">${esc(ctaSecondary)}</span>
+          </div>
         </div>
       </div>
     </div>`,
@@ -83,7 +588,11 @@ function buildMenu(ctx: BuildCtx): TemplatePageSection {
   const subtitle = isTattoo
     ? (es ? 'Tatuajes, piercings y diseños personalizados. Precios orientativos — consulta en estudio.' : 'Tattoos, piercings and custom designs. Guide prices — ask in studio.')
     : (es ? 'Platos preparados al momento con ingredientes frescos y recetas auténticas.' : 'Dishes prepared to order with fresh ingredients and authentic recipes.');
-  const btnAccent = profile?.accent === 'red' ? 'bg-red-600 hover:bg-red-700' : 'bg-indigo-600 hover:bg-indigo-700';
+  const btnAccent = profile?.accent === 'red' ? 'bg-red-600 hover:bg-red-700'
+    : profile?.accent === 'gold' ? 'bg-amber-700 hover:bg-amber-600'
+      : profile?.accent === 'rose' ? 'bg-rose-400 hover:bg-rose-500'
+        : profile?.accent === 'blue' ? 'bg-blue-800 hover:bg-blue-900'
+          : 'bg-indigo-600 hover:bg-indigo-700';
   return {
     id: 'menu', type: 'menu', navLabelEs: isTattoo ? 'Servicios' : 'Menú', navLabelEn: isTattoo ? 'Services' : 'Menu',
     html: `<div class="bg-white border border-slate-200 rounded-[2rem] p-10 md:p-16 shadow-sm">
@@ -117,7 +626,7 @@ function buildReviews(ctx: BuildCtx): TemplatePageSection {
         ${tattooHeading(es ? 'Opiniones de clientes' : 'Client reviews')}
         <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           ${reviews.map((r) => `<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-8">
-            <div class="text-amber-400">${'★'.repeat(r.stars)}</div>
+            <div class="text-amber-400">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>
             <p class="mt-4 text-zinc-300 italic leading-relaxed">"${esc(r.text)}"</p>
             <div class="mt-6 font-bold text-white tracking-wide">${esc(r.name)}</div>
           </div>`).join('')}
@@ -365,6 +874,336 @@ function buildWidgets(ctx: BuildCtx): TemplatePageSection {
   };
 }
 
+function cafeHeadingLight(title: string, subtitle?: string): string {
+  return `<div class="text-center mb-14">
+    <h2 class="text-3xl md:text-4xl font-bold font-serif text-stone-900 tracking-tight">${esc(title)}</h2>
+    ${subtitle ? `<p class="mt-3 text-stone-500 text-base md:text-lg">${esc(subtitle)}</p>` : ''}
+    <div class="mt-5 mx-auto h-0.5 w-16 bg-orange-700/80"></div>
+  </div>`;
+}
+
+function buildCafeHero(ctx: BuildCtx): TemplatePageSection {
+  const { heroImage, tagline, ctaPrimary, ctaSecondary, profile, lang, name } = ctx;
+  const es = lang === 'es';
+  const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '4.3 · 819 reseñas verificadas';
+  const phone = profile?.phone ?? '910 71 23 22';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const nav = es
+    ? ['Inicio', 'Menú', 'Carta', 'Reservas', 'Galería', 'Ubicación']
+    : ['Home', 'Menu', 'Menu', 'Booking', 'Gallery', 'Location'];
+  return {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-white overflow-hidden rounded-[2rem] shadow-xl border border-stone-100">
+      <div class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-stone-100">
+        <div class="font-serif font-semibold text-xl md:text-2xl text-stone-900 tracking-tight">${esc(name)}</div>
+        <div class="hidden lg:flex gap-8 text-[11px] tracking-[0.2em] uppercase text-stone-500 font-medium">
+          ${nav.map((n) => `<span>${n}</span>`).join('')}
+        </div>
+        <div class="flex items-center gap-3 ml-auto">
+          <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 text-white text-xs font-semibold rounded-full">WhatsApp</span>
+          <span class="inline-flex items-center gap-2 text-sm font-medium text-stone-700">📞 <a href="tel:+34${phoneDigits}">${esc(phone)}</a></span>
+        </div>
+      </div>
+      <div class="relative min-h-[480px] md:min-h-[560px] flex items-center justify-center text-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-b from-stone-950/50 via-stone-950/40 to-stone-950/75"></div>
+        <div class="relative z-10 px-6 py-16 max-w-3xl mx-auto">
+          <p class="text-amber-400/90 text-xl md:text-2xl font-serif italic">${esc(tagline)}</p>
+          <h1 class="mt-4 text-5xl md:text-7xl font-bold font-serif text-white tracking-tight drop-shadow-lg">${esc(name)}</h1>
+          <div class="mt-6 inline-flex items-center gap-2 px-5 py-2 bg-stone-950/70 backdrop-blur rounded-full border border-white/10">
+            <span class="text-amber-400 text-sm">★★★★☆</span>
+            <span class="text-white/90 text-sm font-medium">${esc(rating)}</span>
+          </div>
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <span class="px-10 py-4 bg-orange-700 hover:bg-orange-600 text-white rounded-md text-sm font-bold tracking-[0.12em] uppercase shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-10 py-4 bg-white text-stone-900 rounded-md text-sm font-bold tracking-[0.12em] uppercase shadow-lg">${esc(ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeInfoBar(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const address = profile ? (es ? profile.addressEs : profile.addressEn) : '';
+  const hours = profile ? (es ? profile.hoursEs : profile.hoursEn) : '';
+  const services = es
+    ? ['Terraza con jardines', 'Accesible PMR', 'Para llevar']
+    : ['Garden terrace', 'Wheelchair access', 'Takeaway'];
+  return {
+    id: 'about', type: 'about', navLabelEs: 'Info', navLabelEn: 'Info',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-14 border border-stone-100 shadow-sm">
+      <div class="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        <div class="text-center px-4 pt-4 md:pt-0">
+          <h3 class="font-serif font-bold text-orange-800 text-lg">${es ? 'Ubicación' : 'Location'}</h3>
+          <p class="mt-4 text-stone-600 text-sm leading-relaxed">${esc(address)}</p>
+          <span class="mt-4 inline-block text-orange-700 text-sm font-medium">${es ? 'Cómo llegar →' : 'Get directions →'}</span>
+        </div>
+        <div class="text-center px-4 pt-8 md:pt-0">
+          <h3 class="font-serif font-bold text-orange-800 text-lg">${es ? 'Horario' : 'Hours'}</h3>
+          <p class="mt-4 text-stone-600 text-sm leading-relaxed">${esc(hours)}</p>
+        </div>
+        <div class="text-center px-4 pt-8 md:pt-0">
+          <h3 class="font-serif font-bold text-orange-800 text-lg">${es ? 'Servicios' : 'Services'}</h3>
+          <div class="mt-4 space-y-2">${services.map((s) => `<div class="text-stone-600 text-sm">✅ ${esc(s)}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeDailyMenu(ctx: BuildCtx): TemplatePageSection {
+  const es = ctx.lang === 'es';
+  const cols = es
+    ? [
+        { title: '🥗 Primeros Platos', items: ['Alubias blancas con matanza asturiana', 'Tallarines con langostinos y verduritas', 'Calabacín relleno de picada de ternera gratinado', 'Ensalada mixta'] },
+        { title: '🍖 Segundos Platos', items: ['Entraña de ternera a la plancha', 'Pechuga de pollo crispy', 'Lomo de salmón a la plancha'] },
+        { title: '🍮 Postres', items: ['Flan casero', 'Natillas', 'Fruta del tiempo', 'Café o infusión'] },
+      ]
+    : [
+        { title: '🥗 Starters', items: ['White beans with Asturian sausage', 'Noodles with prawns and vegetables', 'Stuffed courgette with beef gratin', 'Mixed salad'] },
+        { title: '🍖 Main courses', items: ['Grilled skirt steak', 'Crispy chicken breast', 'Grilled salmon fillet'] },
+        { title: '🍮 Desserts', items: ['Homemade flan', 'Custard', 'Seasonal fruit', 'Coffee or tea'] },
+      ];
+  return {
+    id: 'menu', type: 'menu', navLabelEs: 'Menú del día', navLabelEn: 'Daily menu',
+    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      <div class="text-center mb-14">
+        <p class="text-orange-700/90 text-sm italic font-serif">${es ? 'Lunes a Viernes' : 'Monday – Friday'}</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold font-serif text-stone-900 tracking-tight">${es ? 'Menú del Día' : 'Daily Menu'}</h2>
+        <p class="mt-3 text-stone-500 text-sm">${es ? 'Disfruta de nuestra cocina casera al mejor precio. Incluye pan, postre o café.' : 'Enjoy our home cooking at the best price. Includes bread, dessert or coffee.'}</p>
+      </div>
+      <div class="text-center mb-10"><span class="inline-block px-8 py-3 border-2 border-orange-700 text-orange-800 font-serif font-bold text-2xl rounded-sm">12,50 €</span></div>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${cols.map((col) => `<div class="bg-white rounded-xl p-8 shadow-sm border-t-4 border-orange-700">
+          <h3 class="font-serif font-bold text-stone-900 text-lg">${col.title}</h3>
+          <ul class="mt-6 space-y-3">${col.items.map((i) => `<li class="text-stone-600 text-sm leading-relaxed border-b border-stone-100 pb-3">${esc(i)}</li>`).join('')}</ul>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeDigitalMenu(ctx: BuildCtx): TemplatePageSection {
+  const es = ctx.lang === 'es';
+  return {
+    id: 'services', type: 'services', navLabelEs: 'Menú digital', navLabelEn: 'Digital menu',
+    html: `<div class="relative rounded-[2rem] overflow-hidden min-h-[280px] border border-stone-200">
+      <img src="${ctx.images[2] ?? ctx.heroImage}" alt="" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
+      <div class="absolute inset-0 bg-stone-950/75"></div>
+      <div class="relative z-10 p-10 md:p-16 text-center text-white">
+        <h2 class="text-2xl md:text-3xl font-serif font-bold">${es ? '¿Estás en una de nuestras mesas?' : 'Are you at one of our tables?'}</h2>
+        <p class="mt-3 text-stone-300">${es ? 'Selecciona tu número para acceder al menú digital' : 'Select your table number for the digital menu'}</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3 max-w-lg mx-auto">
+          ${Array.from({ length: 10 }, (_, i) => `<span class="w-12 h-12 flex items-center justify-center bg-orange-700 hover:bg-orange-600 text-white font-bold rounded-md cursor-pointer">${i + 1}</span>`).join('')}
+        </div>
+        <p class="mt-8 text-orange-400 text-sm font-medium">${es ? 'Ver carta completa sin asignar mesa →' : 'View full menu without a table →'}</p>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeCarta(ctx: BuildCtx): TemplatePageSection {
+  const es = ctx.lang === 'es';
+  const carnes = es
+    ? [
+        { name: 'Medallones de solomillo', price: '12,80€', desc: 'Queso cheddar, cebolla caramelizada, crema de P.X.' },
+        { name: 'Sartén de Huevos camperos', price: '13,50€', desc: 'Con patatas panaderas, chistorra y pimientos del piquillo.' },
+        { name: 'Hamburguesa de vaca madurada', price: '14,90€', desc: 'Pan brioche, bacon crujiente, queso gouda y salsa BBQ.' },
+      ]
+    : [
+        { name: 'Sirloin medallions', price: '€12.80', desc: 'Cheddar, caramelized onion, Pedro Ximénez cream.' },
+        { name: 'Farm egg skillet', price: '€13.50', desc: 'With pan-fried potatoes, chorizo and piquillo peppers.' },
+        { name: 'Dry-aged beef burger', price: '€14.90', desc: 'Brioche bun, crispy bacon, gouda and BBQ sauce.' },
+      ];
+  const patatas = es
+    ? [
+        { name: 'Patatas bravas', price: '8,50€', desc: 'Con alioli casero y salsa brava suave.' },
+        { name: 'Patatas gajo al romero', price: '7,90€', desc: 'Con salsa de ajo y perejil.' },
+        { name: 'Nachos con guacamole', price: '9,50€', desc: 'Totopos, queso fundido, jalapeños y pico de gallo.' },
+      ]
+    : [
+        { name: 'Patatas bravas', price: '€8.50', desc: 'With homemade aioli and mild brava sauce.' },
+        { name: 'Rosemary wedge fries', price: '€7.90', desc: 'With garlic and parsley sauce.' },
+        { name: 'Nachos with guacamole', price: '€9.50', desc: 'Tortilla chips, melted cheese, jalapeños and pico de gallo.' },
+      ];
+  const col = (title: string, items: typeof carnes) => `<div>
+    <h3 class="font-serif font-bold text-orange-800 text-xl pb-3 border-b-2 border-orange-700/30">${title}</h3>
+    <div class="mt-6 space-y-6">${items.map((i) => `<div>
+      <div class="flex justify-between gap-4"><span class="font-semibold text-stone-900">${esc(i.name)}</span><span class="font-bold text-orange-800 whitespace-nowrap">${esc(i.price)}</span></div>
+      <p class="mt-1 text-sm text-stone-500">${esc(i.desc)}</p>
+    </div>`).join('')}</div>
+  </div>`;
+  return {
+    id: 'carta', type: 'menu', navLabelEs: 'Carta', navLabelEn: 'Menu',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100 shadow-sm">
+      ${cafeHeadingLight(es ? 'Nuestra Carta' : 'Our Menu', es ? 'Una selección de nuestros platos más populares' : 'A selection of our most popular dishes')}
+      <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+        ${col(es ? '🥩 Carnes' : '🥩 Meats', carnes)}
+        ${col(es ? '🍟 De Patatas' : '🍟 Potato dishes', patatas)}
+      </div>
+      <div class="mt-12 text-center"><span class="inline-block px-8 py-3 border-2 border-orange-700 text-orange-800 font-semibold rounded-md text-sm tracking-wide uppercase">${es ? 'Ver carta completa' : 'View full menu'}</span></div>
+    </div>`,
+  };
+}
+
+function buildCafeGallery(ctx: BuildCtx): TemplatePageSection {
+  const { images, lang } = ctx;
+  const es = lang === 'es';
+  return {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${cafeHeadingLight(es ? 'Galería' : 'Gallery', es ? 'Descubre nuestro espacio, nuestra terraza y nuestros platos' : 'Discover our space, terrace and dishes')}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]"><img src="${img}" alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeReviews(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
+  const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '';
+  const initials = (n: string) => n.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  return {
+    id: 'reviews', type: 'reviews', navLabelEs: 'Reseñas', navLabelEn: 'Reviews',
+    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${cafeHeadingLight(es ? 'Reseñas' : 'Reviews', es ? 'Lo que dicen nuestros clientes' : 'What our customers say')}
+      <div class="text-center -mt-8 mb-10"><span class="text-amber-500">★★★★☆</span> <span class="text-stone-500 text-sm ml-2">${esc(rating ?? '')}</span></div>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${reviews.map((r) => `<div class="bg-white rounded-xl p-8 shadow-sm border-l-4 border-orange-700 relative">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center text-xs font-bold">${initials(r.name)}</div>
+            <div><div class="font-serif font-bold text-stone-900 text-sm">${esc(r.name)}</div><div class="text-xs text-stone-400">${es ? 'Local Guide' : 'Local Guide'}</div></div>
+          </div>
+          <div class="mt-3 text-amber-500 text-xs">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>
+          <p class="mt-4 text-stone-600 text-sm italic leading-relaxed">"${esc(r.text)}"</p>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeBooking(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const phone = profile?.phone ?? '910 71 23 22';
+  return {
+    id: 'reservation', type: 'reservation', navLabelEs: 'Reservas', navLabelEn: 'Booking',
+    html: `<div class="bg-white rounded-[2rem] overflow-hidden border border-stone-200 shadow-lg max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2">
+        <div class="bg-stone-950 text-white p-10 md:p-12 flex flex-col justify-center">
+          <h2 class="text-3xl font-serif font-bold">${es ? 'Reserva tu Mesa' : 'Book your Table'}</h2>
+          <p class="mt-4 text-stone-400 text-sm leading-relaxed">${es ? 'Reserva ahora y asegura tu lugar. Confirmación inmediata.' : 'Book now and secure your spot. Instant confirmation.'}</p>
+          <ul class="mt-8 space-y-3 text-sm text-stone-300">${(es ? ['Confirmación inmediata', 'Cancelación gratuita hasta 2h antes', 'Mejor precio garantizado'] : ['Instant confirmation', 'Free cancellation up to 2h before', 'Best price guaranteed']).map((b) => `<li>✅ ${b}</li>`).join('')}</ul>
+          <div class="mt-10 p-5 bg-stone-900 rounded-xl border border-stone-800">
+            <div class="text-xs text-stone-500 uppercase tracking-wider">${es ? 'O reserva por teléfono' : 'Or book by phone'}</div>
+            <div class="mt-2 text-xl font-bold text-orange-400">📞 ${esc(phone)}</div>
+          </div>
+        </div>
+        <div class="p-10 md:p-12 bg-white space-y-5">
+          <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Fecha' : 'Date'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">dd/mm/aaaa 📅</div></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Hora' : 'Time'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Seleccionar' : 'Select'}</div></div>
+            <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Personas' : 'Guests'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Seleccionar' : 'Select'}</div></div>
+          </div>
+          <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Teléfono' : 'Phone'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">+34 600 000 000</div></div>
+          <div class="px-6 py-4 bg-orange-700 text-white font-serif font-bold text-center rounded-md tracking-wide">${es ? 'Confirmar Reserva' : 'Confirm Booking'}</div>
+          <p class="text-[10px] text-stone-400 text-center">${es ? 'Al reservar aceptas nuestra Política de Privacidad.' : 'By booking you accept our Privacy Policy.'}</p>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeContact(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const address = profile ? (es ? profile.addressEs : profile.addressEn) : '';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const email = profile?.email ?? 'info@restartcafe.com';
+  return {
+    id: 'location', type: 'location', navLabelEs: 'Ubicación', navLabelEn: 'Location',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-stone-900">${es ? 'Ubicación' : 'Location'}</h2>
+          <div class="mt-6 p-6 bg-stone-50 rounded-xl border border-stone-100">
+            <div class="font-semibold text-stone-900">📍 ${es ? 'Dirección' : 'Address'}</div>
+            <p class="mt-2 text-stone-600 text-sm">${esc(address)}</p>
+            <span class="mt-3 inline-block text-orange-700 text-sm font-medium">${es ? 'Abrir en Google Maps →' : 'Open in Google Maps →'}</span>
+          </div>
+          <div class="mt-6 text-sm text-stone-600">
+            <div class="font-semibold text-stone-900">🚇 ${es ? 'Cómo llegar' : 'Getting here'}</div>
+            <p class="mt-2">${es ? 'Metro: Puente de Vallecas (Línea 1)' : 'Metro: Puente de Vallecas (Line 1)'}</p>
+            <p>${es ? 'Bus: Líneas de EMT cercanas' : 'Bus: Nearby EMT lines'}</p>
+          </div>
+          <div class="mt-6 rounded-xl overflow-hidden border border-stone-200 min-h-[220px]">
+            <iframe title="Mapa" src="https://maps.google.com/maps?q=${encodeURIComponent(address)}&amp;output=embed" class="w-full min-h-[220px] border-0" loading="lazy" referrerpolicy="no-referrer"></iframe>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-stone-900">${es ? 'Contacto' : 'Contact'}</h2>
+          <div class="mt-6 space-y-5">
+            <div class="flex items-center gap-4"><span class="text-2xl">📞</span><div><div class="text-xs text-stone-400 uppercase">${es ? 'Teléfono' : 'Phone'}</div><a href="tel:+34${phoneDigits}" class="text-orange-700 font-semibold">${esc(phone)}</a></div></div>
+            <div class="flex items-center gap-4"><span class="text-2xl">💬</span><div><div class="text-xs text-stone-400 uppercase">WhatsApp</div><span class="text-orange-700 font-semibold">${es ? 'Enviar mensaje' : 'Send message'}</span></div></div>
+            <div class="flex items-center gap-4"><span class="text-2xl">✉️</span><div><div class="text-xs text-stone-400 uppercase">Email</div><span class="text-orange-700 font-semibold">${esc(email)}</span></div></div>
+          </div>
+          <div class="mt-10"><div class="font-semibold text-stone-900">${es ? 'Síguenos en Redes' : 'Follow us'}</div>
+          <div class="mt-4 flex gap-3">${['f', 'ig', 'x', 'yt', 'ta'].map((s) => `<span class="w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center text-xs font-bold">${s}</span>`).join('')}</div></div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeFooter(ctx: BuildCtx): TemplatePageSection {
+  const { name, lang, profile } = ctx;
+  const es = lang === 'es';
+  const year = new Date().getFullYear();
+  const about = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
+  return {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-stone-950 text-stone-400 rounded-[2rem] p-10 md:p-16">
+      <div class="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div><h3 class="text-white font-serif font-bold text-xl">${esc(name)}</h3><p class="mt-4 text-sm leading-relaxed">${esc(about?.slice(0, 120) ?? '')}</p>
+        <div class="mt-5 flex gap-3"><span class="w-9 h-9 rounded-full border border-stone-700 flex items-center justify-center text-xs">IG</span><span class="w-9 h-9 rounded-full border border-stone-700 flex items-center justify-center text-xs">f</span></div></div>
+        <div><h4 class="text-white text-xs font-bold tracking-[0.2em] uppercase">${es ? 'Explorar' : 'Explore'}</h4><div class="mt-4 space-y-2 text-sm">${(es ? ['Inicio', 'Menú del Día', 'Carta', 'Reservas', 'Galería', 'Ubicación'] : ['Home', 'Daily Menu', 'Menu', 'Booking', 'Gallery', 'Location']).map((l) => `<div>${l}</div>`).join('')}</div></div>
+        <div><h4 class="text-white text-xs font-bold tracking-[0.2em] uppercase">Legal</h4><div class="mt-4 space-y-2 text-sm underline"><div>Aviso Legal</div><div>Política de Privacidad</div><div>Política de Cookies</div><div>Mapa del Sitio</div></div></div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-stone-800 text-center text-xs space-y-2">
+        <div>© ${year} ${esc(name)}. ${es ? 'Todos los derechos reservados.' : 'All rights reserved.'}</div>
+        <div class="text-stone-500">${es ? 'Este sitio usa cookies de Google para ofrecer sus servicios y analizar el tráfico.' : 'This site uses Google cookies to provide services and analyze traffic.'}</div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCafeWidgets(ctx: BuildCtx): TemplatePageSection {
+  return premiumWidgets(ctx);
+}
+
+function buildCafeSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  return [
+    buildCafeHero(ctx),
+    buildCafeInfoBar(ctx),
+    buildCafeDailyMenu(ctx),
+    buildCafeDigitalMenu(ctx),
+    buildCafeCarta(ctx),
+    ...(features.gallery ? [buildCafeGallery(ctx)] : []),
+    ...(features.reviews ? [buildCafeReviews(ctx)] : []),
+    ...(features.reservation || features.calendar ? [buildCafeBooking(ctx)] : []),
+    ...(features.location || features.contact ? [buildCafeContact(ctx)] : []),
+    ...(features.legalFooter || features.social ? [buildCafeFooter(ctx)] : []),
+    buildCafeWidgets(ctx),
+  ];
+}
+
 function tattooHeading(title: string): string {
   return `<div class="text-center mb-12"><h2 class="text-2xl md:text-3xl font-bold tracking-[0.25em] text-white uppercase">${esc(title)}</h2><div class="mt-4 mx-auto h-1 w-14 bg-red-600"></div></div>`;
 }
@@ -570,7 +1409,7 @@ interface BuildCtx {
   images: string[];
   lang: 'es' | 'en';
   profile: BusinessProfile | null;
-  accent: 'red' | 'indigo';
+  accent: BuildCtx['accent'];
 }
 
 export function buildCustomSite(
@@ -602,6 +1441,30 @@ export function buildCustomSite(
 
   if (profile?.variant === 'tattoo') {
     return buildTattooSite(ctx, features);
+  }
+
+  if (profile?.variant === 'cafe') {
+    return buildCafeSite(ctx, features);
+  }
+
+  if (profile?.variant === 'beauty') {
+    return buildBeautySite(ctx, features);
+  }
+
+  if (profile?.variant === 'corporate') {
+    return buildCorporateSite(ctx, features);
+  }
+
+  if (profile?.variant === 'automotive') {
+    return buildAutomotiveSite(ctx, features);
+  }
+
+  if (profile?.variant === 'luxury') {
+    return buildLuxurySite(ctx, features);
+  }
+
+  if (profile?.variant === 'nonprofit') {
+    return buildNonprofitSite(ctx, features);
   }
 
   const sections: TemplatePageSection[] = [buildHero(ctx)];

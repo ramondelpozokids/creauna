@@ -25,7 +25,7 @@ export interface StudioGenerateResult {
   message: string;
   previewSections: PreviewSection[];
   motorsUsed: string[];
-  source: 'rules' | 'ai';
+  source: 'rules' | 'ai' | 'hybrid';
   changedSectionIds: number[];
   templateSlug?: string;
   businessName?: string;
@@ -56,8 +56,9 @@ function enrichPromptFromSections(prompt: string, sections: PreviewSection[]): s
   const variant = detectVariant(blob + ' ' + prompt);
   const variantHint =
     variant === 'tattoo' ? 'tattoo piercing royal bang'
-      : variant === 'kebab' ? 'kebab döner vallecas'
-        : '';
+      : variant === 'cafe' ? 'rest art café restaurante terraza'
+        : variant === 'kebab' ? 'kebab döner vallecas'
+          : '';
   const hints = [prompt, name, variantHint].filter(Boolean);
   return hints.join(' ');
 }
@@ -83,7 +84,7 @@ function applyStyleTransform(html: string, style: 'elegante' | 'minimal' | 'mode
     .replace(/rounded-\[2rem\]/g, 'rounded-3xl');
 }
 
-function applyPromptRules(input: StudioGenerateInput): StudioGenerateResult | null {
+async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
   const { prompt, lang, previewSections, action, sectionId, style } = input;
   const lower = prompt.toLowerCase();
   const target = targetSection(input);
@@ -135,12 +136,12 @@ function applyPromptRules(input: StudioGenerateInput): StudioGenerateResult | nu
   }
 
   if (lower.includes('testimonio') || lower.includes('testimonial') || lower.includes('reseñ')) {
-    const result = generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
+    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
     return {
       message: lang === 'es' ? 'Bloque de reseñas añadido con opiniones reales.' : 'Reviews section added with real testimonials.',
       previewSections: result.previewSections,
-      motorsUsed: ['copy'],
-      source: 'rules',
+      motorsUsed: result.motorsUsed ?? ['copy'],
+      source: result.source,
       changedSectionIds: result.changedSectionIds,
       templateSlug: result.templateSlug,
       businessName: result.businessName,
@@ -239,12 +240,12 @@ function applyPromptRules(input: StudioGenerateInput): StudioGenerateResult | nu
   }
 
   if (lower.includes('servicio') || lower.includes('service') || lower.includes('sección') || lower.includes('section')) {
-    const result = generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
+    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
     return {
       message: lang === 'es' ? 'Secciones actualizadas con contenido real.' : 'Sections updated with real content.',
       previewSections: result.previewSections,
-      motorsUsed: ['copy', 'ux'],
-      source: 'rules',
+      motorsUsed: result.motorsUsed ?? ['copy', 'ux'],
+      source: result.source,
       changedSectionIds: result.changedSectionIds,
       templateSlug: result.templateSlug,
       businessName: result.businessName,
@@ -320,12 +321,12 @@ Action: ${input.action || 'change'}`,
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
   if (input.action === 'initial' || (input.action === 'change' && isSiteBuildPrompt(input.prompt))) {
-    const result = generateInitialSite(input.prompt, input.lang);
+    const result = await generateInitialSite(input.prompt, input.lang);
     return {
       message: result.message,
       previewSections: result.previewSections,
-      motorsUsed: ['visual', 'copy', 'ux', 'code'],
-      source: 'rules',
+      motorsUsed: result.motorsUsed ?? ['visual', 'copy', 'ux', 'code'],
+      source: result.source,
       changedSectionIds: result.changedSectionIds,
       templateSlug: result.templateSlug,
       businessName: result.businessName,
@@ -333,11 +334,11 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
   }
 
   if (input.action === 'change' && isCosmeticPrompt(input.prompt)) {
-    const ruleResult = applyPromptRules(input);
+    const ruleResult = await applyPromptRules(input);
     if (ruleResult) return ruleResult;
   }
 
-  const ruleResult = applyPromptRules(input);
+  const ruleResult = await applyPromptRules(input);
   if (ruleResult && ruleResult.changedSectionIds.length > 0) {
     return ruleResult;
   }

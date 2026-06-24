@@ -92,6 +92,7 @@ function extractBusinessName(prompt: string, rule: IntentRule, lang: 'es' | 'en'
     /(?:llamad[oa]|named|called)\s+["']([^"']+)["']/i,
     /(?:llamad[oa]|named|called)\s+([A-ZÁÉÍÓÚÑ][\wáéíóúñ0-9\s&'-]{2,40})/i,
     /(Royal Bang[\w\s&'-]+(?:Studio)?)/i,
+    /(Rest Art[\w\s'&.-]*)/i,
     /(Kebab Hut[\w\s]*Vallecas?)/i,
     /(Kebab Hut[\w\s]*)/i,
   ];
@@ -123,12 +124,12 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
     reviews: mentioned(/reseñ|review|testimonio|opinion|opiniones/i) || listing,
     location: mentioned(/ubicaci|location|mapa|direcci|llegar|puente de vallecas/i) || listing,
     contact: mentioned(/contacto|contact|formulario|tel[eé]fono|llamar/i) || listing,
-    reservation: mentioned(/reserva|reservar|mesa|booking|table|cita/i) || (listing && /tatuaje|tattoo|piercing/i.test(lower)),
+    reservation: mentioned(/reserva|reservar|mesa|booking|table|cita/i) || (listing && /tatuaje|tattoo|piercing|restaurante|caf[ée]|terraza/i.test(lower)),
     calendar: mentioned(/calendario|calendar|fecha|disponibilidad/),
     legalFooter: !hasList || mentioned(/legal|aviso|privacidad|cookies|t[ée]rminos|footer/) || listing,
     social: mentioned(/redes sociales|social|instagram|facebook|google/i) || listing,
-    whatsapp: mentioned(/whatsapp|wa\.me/i) || (listing && /tatuaje|tattoo|piercing/i.test(lower)),
-    scrollUp: mentioned(/scroll up|scroll-up|subir|volver arriba/),
+    whatsapp: mentioned(/whatsapp|wa\.me/i) || !!listing,
+    scrollUp: mentioned(/scroll up|scroll-up|subir|volver arriba/i) || !!listing,
   };
 }
 
@@ -175,7 +176,19 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
       ? INTENT_RULES.find((r) => r.keywords.test('kebab'))!
       : variant === 'tattoo'
         ? INTENT_RULES.find((r) => r.slug === 'iron-ink')!
-        : bestRule;
+        : variant === 'cafe'
+          ? INTENT_RULES.find((r) => r.slug === 'sable')!
+          : variant === 'beauty'
+            ? INTENT_RULES.find((r) => r.slug === 'lumen')!
+            : variant === 'corporate'
+              ? INTENT_RULES.find((r) => r.slug === 'ledger')!
+              : variant === 'automotive'
+                ? INTENT_RULES.find((r) => r.slug === 'torque')!
+                : variant === 'luxury'
+                  ? INTENT_RULES.find((r) => r.slug === 'vesper')!
+                  : variant === 'nonprofit'
+                    ? INTENT_RULES.find((r) => r.slug === 'arc')!
+                    : bestRule;
 
   const listing = parseGoogleListing(prompt);
   const businessName = listing?.businessName ?? extractBusinessName(prompt, profileRule, lang);
@@ -188,7 +201,19 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
         ? (lang === 'es' ? 'Restaurante Kebab' : 'Kebab Restaurant')
         : variant === 'tattoo'
           ? (lang === 'es' ? 'Estudio de Tatuajes & Piercing' : 'Tattoo & Piercing Studio')
-          : (lang === 'es' ? profileRule.typeEs : profileRule.typeEn),
+          : variant === 'cafe'
+            ? (lang === 'es' ? 'Restaurante & Café' : 'Restaurant & Café')
+            : variant === 'beauty'
+              ? (lang === 'es' ? 'Salón de Belleza' : 'Beauty Salon')
+              : variant === 'corporate'
+                ? (lang === 'es' ? 'Asesoría Fiscal & Contable' : 'Tax & Accounting Advisory')
+                : variant === 'automotive'
+                  ? (lang === 'es' ? 'Concesionario de Motos' : 'Motorcycle Dealer')
+                  : variant === 'luxury'
+                    ? (lang === 'es' ? 'Restaurante Gourmet' : 'Fine Dining Restaurant')
+                    : variant === 'nonprofit'
+                      ? (lang === 'es' ? 'Plataforma de Accesibilidad' : 'Accessibility Platform')
+                      : (lang === 'es' ? profileRule.typeEs : profileRule.typeEn),
     categoryKey: profileRule.categoryKey,
     features,
     variant,
