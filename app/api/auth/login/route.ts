@@ -50,6 +50,15 @@ export async function POST(req: Request) {
     }
 
     if (!user) {
+      if (isAdminEmail(email) && !getAdminBootstrapPassword()) {
+        return NextResponse.json(
+          {
+            error:
+              'Cuenta admin pendiente de configurar. Añade CREAUNA_ADMIN_PASSWORD en Vercel y redeploy, o regístrate en /signup con este correo.',
+          },
+          { status: 401 }
+        );
+      }
       return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 });
     }
 
