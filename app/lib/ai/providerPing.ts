@@ -72,8 +72,8 @@ function parseApiError(status: number, body: string): string {
 
 async function pingGemini(): Promise<Omit<ProviderPingResult, 'provider' | 'label' | 'bestFor' | 'motors'>> {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
-  const primary = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
-  const models = [...new Set([primary, 'gemini-2.0-flash-lite', 'gemini-1.5-flash'])];
+  const primary = process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash';
+  const models = [...new Set([primary, 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-3.1-flash-lite'])];
   if (!apiKey) {
     return { configured: false, status: 'missing', model: primary, latencyMs: null, sample: null, httpStatus: null, error: 'GEMINI_API_KEY no configurada' };
   }

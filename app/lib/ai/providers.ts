@@ -54,8 +54,8 @@ async function callGemini(messages: AiMessage[], maxTokens: number): Promise<str
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) return null;
 
-  const primary = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
-  const models = [...new Set([primary, 'gemini-2.0-flash-lite', 'gemini-1.5-flash'])];
+  const primary = process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash';
+  const models = [...new Set([primary, 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-3.1-flash-lite'])];
   const system = messages.find((m) => m.role === 'system')?.content || '';
   const userParts = messages.filter((m) => m.role !== 'system').map((m) => m.content).join('\n\n');
 
