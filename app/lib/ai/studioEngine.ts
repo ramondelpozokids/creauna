@@ -1,9 +1,12 @@
-import { chatCompletion } from './providers';
+import { chatCompletion, type MotorId } from './providers';
 import { generateInitialSite } from './siteGenerator';
 import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
 import { detectVariant } from './businessProfiles';
-import { applyVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
+import { applyVisualEnhancement, applyStrongVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
 import { validateSectionHtml } from '../studio/sectionValidator';
+import { planStudioChange, executeDirectorPlan } from '../studio/studioDirector';
+import { resolveStudioSector, buildSectorAgentPlaybook } from '../studio/sectorAgentPlaybook';
+import { extractPreviewBusinessName } from './siteSections';
 
 export interface PreviewSection {
   id: number;
@@ -108,7 +111,12 @@ function corporateUpgradePrompt(lower: string): boolean {
     lower.includes('lujo') ||
     lower.includes('luxury') ||
     lower.includes('ferrari') ||
-    lower.includes('cinemat')
+    lower.includes('cinemat') ||
+    lower.includes('tipograf') ||
+    lower.includes('sofisticad') ||
+    lower.includes('luminosa') ||
+    lower.includes('clara') ||
+    lower.includes('bonit')
   );
 }
 
@@ -169,8 +177,20 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   ) {
     const reviewsSec = sections.find((s) => s.type === 'reviews');
     if (reviewsSec) {
-      const aiResult = await applyAIChange({ ...input, previewSections: sections, sectionId: reviewsSec.id });
-      if (aiResult) return aiResult;
+      let enhanced = applyStrongVisualEnhancement(reviewsSec.html, 'elegante');
+      enhanced = enhanced
+        .replace(/rounded-xl/g, 'rounded-3xl')
+        .replace(/shadow-sm/g, 'shadow-xl shadow-indigo-100/50')
+        .replace(/bg-white/g, 'bg-gradient-to-br from-white to-indigo-50/40');
+      sections = patchSection(sections, reviewsSec.id, enhanced);
+      changedIds.push(reviewsSec.id);
+      return {
+        message: lang === 'es' ? 'Testimonios rediseñados con tarjetas premium visibles.' : 'Testimonials redesigned with visible premium cards.',
+        previewSections: sections,
+        motorsUsed: ['visual', 'ux'],
+        source: 'rules',
+        changedSectionIds: changedIds,
+      };
     }
   }
 
@@ -208,7 +228,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   if (lower.includes('elegante') || lower.includes('refinad') || lower.includes('elegant') || lower.includes('premium')) {
     sections = sections.map((s) => {
       changedIds.push(s.id);
-      return { ...s, html: applyVisualEnhancement(applyStyleTransform(s.html, 'elegante'), 'elegante') };
+      return { ...s, html: applyStrongVisualEnhancement(applyStyleTransform(s.html, 'elegante'), 'elegante') };
     });
     return {
       message: lang === 'es' ? 'Motor Visual + UX: más espacio, tipografía refinada y detalles premium.' : 'Visual + UX: more space, refined typography and premium details.',
@@ -221,11 +241,16 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
 
   if (lower.includes('hero') || lower.includes('impactante') || lower.includes('impactful') || lower.includes('cabecera')) {
     const hero = sections.find((s) => s.type === 'hero') ?? target;
-    const newHero = applyVisualEnhancement(hero.html, 'hero');
+    const newHero = applyStrongVisualEnhancement(hero.html, 'hero');
     sections = patchSection(sections, hero.id, newHero);
     changedIds.push(hero.id);
+    sections = sections.map((s) => {
+      if (s.id === hero.id) return s;
+      changedIds.push(s.id);
+      return { ...s, html: applyStrongVisualEnhancement(s.html, 'animacion') };
+    });
     return {
-      message: lang === 'es' ? 'Hero más grande e impactante.' : 'Larger, more impactful hero.',
+      message: lang === 'es' ? 'Hero ampliado con overlay cinematográfico y animación en el resto de secciones.' : 'Expanded hero with cinematic overlay and animation on other sections.',
       previewSections: sections,
       motorsUsed: ['visual'],
       source: 'rules',
@@ -236,7 +261,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   if (lower.includes('clara') || lower.includes('luminosa') || lower.includes('bright') || lower.includes('blanco')) {
     sections = sections.map((s) => {
       changedIds.push(s.id);
-      return { ...s, html: applyVisualEnhancement(s.html, 'luminosa') };
+      return { ...s, html: applyStrongVisualEnhancement(s.html, 'luminosa') };
     });
     return {
       message: lang === 'es' ? 'Motor de Experiencia: versión más clara y luminosa.' : 'UX engine: brighter, lighter version.',
@@ -271,7 +296,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   if (lower.includes('animac') || lower.includes('animat')) {
     sections = sections.map((s) => {
       changedIds.push(s.id);
-      return { ...s, html: applyVisualEnhancement(s.html, 'animacion') };
+      return { ...s, html: applyStrongVisualEnhancement(s.html, 'animacion') };
     });
     return {
       message: lang === 'es' ? 'Animaciones sutiles añadidas.' : 'Subtle animations added.',
@@ -285,7 +310,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   if (lower.includes('tipograf') || lower.includes('typography') || lower.includes('font')) {
     sections = sections.map((s) => {
       changedIds.push(s.id);
-      return { ...s, html: applyVisualEnhancement(s.html, 'tipografia') };
+      return { ...s, html: applyStrongVisualEnhancement(s.html, 'tipografia') };
     });
     return {
       message: lang === 'es' ? 'Motor Visual: tipografía más sofisticada.' : 'Visual engine: more sophisticated typography.',
@@ -334,9 +359,41 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   return null;
 }
 
+function previewBlob(sections: PreviewSection[]): string {
+  return sections.map((s) => s.html).join(' ');
+}
+
+const SECTION_MOTOR: Record<string, MotorId> = {
+  hero: 'visual',
+  gallery: 'visual',
+  about: 'copy',
+  reviews: 'copy',
+  blog: 'copy',
+  menu: 'code',
+  services: 'code',
+  carta: 'code',
+  reservation: 'ux',
+  location: 'ux',
+  contact: 'ux',
+  footer: 'code',
+};
+
+function pickMotorForSection(prompt: string, sectionType: string): MotorId {
+  const lower = prompt.toLowerCase();
+  if (/testimonio|texto|copy|redacci|about|sobre/i.test(lower)) return 'copy';
+  if (/contacto|formulario|mapa|ubicaci|reserva|ux|móvil|mobile/i.test(lower)) return 'ux';
+  if (/servicio|menú|menu|carta|código|estructura/i.test(lower)) return 'code';
+  if (/elegante|hero|visual|imagen|animaci|tipograf/i.test(lower)) return 'visual';
+  return SECTION_MOTOR[sectionType] ?? 'visual';
+}
+
 async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
   const target = targetSection(input);
   if (!target) return null;
+
+  const sector = resolveStudioSector(input.prompt + previewBlob(input.previewSections), input.sectorId);
+  const playbook = sector ? buildSectorAgentPlaybook(sector, input.lang) : '';
+  const businessName = extractPreviewBusinessName(input.previewSections);
 
   const chatBlock =
     input.recentMessages && input.recentMessages.length > 0
@@ -349,13 +406,17 @@ async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerate
     ? `\nOther sections on page (do not rewrite): ${input.sectionOutline}\n`
     : '';
 
+  const motor = pickMotorForSection(input.prompt, target.type);
+
   const aiResult = await chatCompletion(
     [
       {
         role: 'system',
-        content: `You are CREAUNA's design engine (like Lovable/Emergent). Modify ONE website section HTML.
+        content: `You are CREAUNA's ${motor} design engine. Modify ONE website section HTML.
+The client already has a premium agency-grade site for «${businessName}». IMPROVE it — never downgrade.
+${playbook ? `\n${playbook}\n` : ''}
 Return ONLY valid JSON: {"message":"short user-facing message","html":"complete updated section HTML"}
-Use Tailwind CSS classes only. No <script>. Make changes VISIBLY obvious (colors, sizes, spacing).
+Use Tailwind CSS classes only. No <script>. Make changes VISIBLY obvious (colors, sizes, spacing, mobile-friendly).
 Language for visible text: ${input.lang === 'es' ? 'Spanish' : 'English'}.`,
       },
       {
@@ -368,7 +429,7 @@ User request: ${input.prompt}
 Action: ${input.action || 'change'}`,
       },
     ],
-    { temperature: 0.6, maxTokens: 2000, motor: 'code', prompt: input.prompt }
+    { temperature: 0.6, maxTokens: 2000, motor, prompt: input.prompt }
   );
 
   if (!aiResult.content) return null;
@@ -385,7 +446,7 @@ Action: ${input.action || 'change'}`,
     return {
       message: parsed.message,
       previewSections: sections,
-      motorsUsed: ['visual', 'copy', 'code', 'ux'],
+      motorsUsed: [motor],
       source: 'ai',
       changedSectionIds: [target.id],
     };
@@ -420,6 +481,12 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
     return ruleResult;
   }
 
+  const plan = planStudioChange(input);
+  const directorResult = await executeDirectorPlan(input, plan);
+  if (directorResult) {
+    return directorResult;
+  }
+
   const aiResult = await applyAIChange(input);
   if (aiResult) return aiResult;
 
@@ -427,7 +494,7 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
   const sections = patchSection(
     cloneSections(input.previewSections),
     target.id,
-    applyVisualEnhancement(target.html, 'elegante')
+    applyStrongVisualEnhancement(target.html, 'elegante')
   );
 
   return {

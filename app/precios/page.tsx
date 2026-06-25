@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
+import ModernizationPricing from '../components/ModernizationPricing';
 import { useLanguage } from '../components/LanguageProvider';
 import {
   Check, X, ChevronDown, HelpCircle, Sparkles, ShieldCheck, Coins,
@@ -95,17 +96,17 @@ const translations = {
       'Mantener la web publicada',
       'Soporte y presupuestos',
     ],
-    customWebTitle: 'Web a Medida — 2.900€',
+    customWebTitle: 'Web a Medida — 1.790€',
     customWebSubtitle:
-      'Como contratar una agencia: diseño 100% exclusivo cuando el Studio no basta. Precio cerrado, sin cuotas ocultas.',
-    customWebPrice: '2.900€',
-    customWebPriceNote: 'Pago único · Llave en mano · IVA no incluido',
+      'Web premium exclusiva cuando el Studio no basta. Mismo techo de precio que nuestro rescate premium: diseño de nivel internacional, precio cerrado.',
+    customWebPrice: '1.790€',
+    customWebPriceNote: 'Pago único · Máximo web premium · IVA no incluido',
     customWebIncludes:
       'Briefing, 2 propuestas, desarrollo, SEO, publicación y 3 meses de soporte supervisados por Ramón del Pozo Rott.',
     customWebLink: 'Ver proceso completo',
     faqTitle: 'Preguntas frecuentes',
     customNote: '¿Necesitas una web 100% exclusiva, sin plantilla?',
-    customLink: 'Web a Medida desde 2.900€',
+    customLink: 'Web a Medida desde 1.790€',
     designedBy: 'SUPERVISADO POR',
     founderTitle: 'Supervisor Creativo de CREAUNA',
     resultsLabel: 'RESULTADOS REALES',
@@ -194,17 +195,17 @@ const translations = {
       'Keeping your site live',
       'Support and quotes',
     ],
-    customWebTitle: 'Custom Web — €2,900',
+    customWebTitle: 'Custom Web — €1,790',
     customWebSubtitle:
-      'Like hiring an agency: 100% exclusive design when Studio is not enough. Fixed price, no hidden fees.',
-    customWebPrice: '€2,900',
-    customWebPriceNote: 'One-time · Turnkey · VAT not included',
+      'Exclusive premium web when Studio is not enough. Same price cap as our premium rescue: international-grade design, fixed price.',
+    customWebPrice: '€1,790',
+    customWebPriceNote: 'One-time · Premium web cap · VAT not included',
     customWebIncludes:
       'Briefing, 2 proposals, development, SEO, launch and 3 months of supervised support by Ramón del Pozo Rott.',
     customWebLink: 'See full process',
     faqTitle: 'Frequently asked questions',
     customNote: 'Need a 100% exclusive site, no template?',
-    customLink: 'Custom Web from €2,900',
+    customLink: 'Custom Web from €1,790',
     designedBy: 'SUPERVISED BY',
     founderTitle: 'Creative Supervisor of CREAUNA',
     resultsLabel: 'REAL RESULTS',
@@ -351,8 +352,8 @@ const faqs = [
     aEn: 'Yes, on Pro and Business you export clean HTML/CSS/JS and host it anywhere. No penalty.',
   },
   {
-    q: '¿Qué es la Web a Medida (2.900€)?',
-    qEn: 'What is Custom Web (€2,900)?',
+    q: '¿Qué es la Web a Medida (1.790€)?',
+    qEn: 'What is Custom Web (€1,790)?',
     a: 'Servicio aparte para proyectos exclusivos: diseño a medida, copy, desarrollo, SEO y 3 meses de soporte. Detalle en /web-a-medida',
     aEn: 'Separate service for exclusive projects: bespoke design, copy, development, SEO and 3 months support. Details at /web-a-medida',
   },
@@ -653,6 +654,13 @@ export default function Precios() {
               ))}
             </ul>
           </div>
+        </div>
+      </div>
+
+      {/* Modernization one-time plans */}
+      <div className="bg-slate-50 border-y border-slate-200 py-14">
+        <div className="container max-w-6xl">
+          <ModernizationPricing />
         </div>
       </div>
 

@@ -34,7 +34,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pricing',
     keywords: ['precio', 'precios', 'plan', 'planes', 'cuanto cuesta', 'cuánto cuesta', 'tarifa', 'coste', 'costo', 'gratis', 'pago', 'suscripción', 'mensual', 'anual'],
-    answer: 'Planes CREAUNA:\n\n• Gratis — 0€, 1 sitio, 15 créditos IA/mes\n• Pro — desde 15€/mes (anual) o 19€/mes, 120 créditos, dominio propio\n• Business — desde 39€/mes (anual) o 49€/mes, sitios ilimitados, 300 créditos\n\nWeb a Medida aparte: 2.900€ + IVA. Detalle en /precios',
+    answer: 'Planes CREAUNA:\n\n• Gratis — 0€, 1 sitio, 15 créditos IA/mes\n• Pro — desde 15€/mes (anual) o 19€/mes, 120 créditos, dominio propio\n• Business — desde 39€/mes (anual) o 49€/mes, sitios ilimitados, 300 créditos\n\nWeb a Medida aparte: 1.790€ + IVA (máximo web premium). Detalle en /precios',
   },
   {
     id: 'credits',
@@ -74,7 +74,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'custom-web',
     keywords: ['medida', 'personalizada', 'personalizado', 'exclusivo', 'agencia', 'proyecto especial'],
-    answer: 'Web a Medida: precio cerrado desde 2.900€ + IVA. Incluye diseño exclusivo, copywriting, desarrollo, SEO, publicación y 3 meses de soporte. Proceso completo en /web-a-medida. Ramón del Pozo Rott supervisa cada proyecto. Contacto en /contacto',
+    answer: 'Web a Medida: precio cerrado 1.790€ + IVA (máximo web premium). Incluye diseño exclusivo, copywriting, desarrollo, SEO, publicación y 3 meses de soporte. Proceso completo en /web-a-medida. Ramón del Pozo Rott supervisa cada proyecto. Contacto en /contacto',
   },
   {
     id: 'export',
@@ -94,7 +94,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'competitors',
     keywords: ['emergent', 'lovable', 'competencia', 'comparar', 'comparativa', 'alternativa', 'mejor que'],
-    answer: 'En CREAUNA no comparamos con otras plataformas: tú eliges el plan que encaje contigo. Precios claros en /precios — cada cambio en el Studio = 1 crédito, con coste en euros visible. Studio desde 0€ o Web a Medida desde 2.900€.',
+    answer: 'En CREAUNA no comparamos con otras plataformas: tú eliges el plan que encaje contigo. Precios claros en /precios — cada cambio en el Studio = 1 crédito, con coste en euros visible. Studio desde 0€ o Web a Medida desde 1.790€.',
   },
   {
     id: 'free-trial',
@@ -212,7 +212,7 @@ export const knowledgeBaseEn: KnowledgeEntry[] = [
   {
     id: 'custom',
     keywords: ['custom', 'bespoke', 'tailored', 'agency', 'exclusive'],
-    answer: 'Custom Web is for exclusive projects supervised by Ramón del Pozo Rott. From €2,900. Request at /contacto or /web-a-medida',
+    answer: 'Custom Web is for exclusive projects supervised by Ramón del Pozo Rott. From €1,790 (premium web cap). Request at /contacto or /web-a-medida',
   },
   {
     id: 'contact',

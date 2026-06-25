@@ -245,3 +245,49 @@ export async function enhanceSiteWithAgents(
     aiSkippedReason: anyCalled ? undefined : 'ai_parse_failed',
   };
 }
+
+/** Mejora solo las secciones indicadas — cada una con su motor especializado. */
+export async function enhanceSelectedSections(
+  sections: TemplatePageSection[],
+  brief: SiteBrief,
+  targetTypes: Set<string>
+): Promise<{ sections: TemplatePageSection[]; motorsUsed: string[]; aiEnhanced: boolean; providersUsed: string[]; aiSkippedReason?: string }> {
+  const configured = getConfiguredProviders();
+  if (configured.length === 0) {
+    return { sections, motorsUsed: [], aiEnhanced: false, providersUsed: [], aiSkippedReason: 'no_api_keys' };
+  }
+
+  const targets = sections.filter((s) => targetTypes.has(s.type) && ENHANCE_TYPES.has(s.type));
+  if (targets.length === 0) {
+    return { sections, motorsUsed: [], aiEnhanced: false, providersUsed: [], aiSkippedReason: 'no_targets' };
+  }
+
+  const motorsUsed = new Set<string>();
+  const providersUsed = new Set<string>();
+  const byId = new Map(sections.map((s) => [s.id, { ...s }]));
+  let anyChanged = false;
+  let anyCalled = false;
+
+  const BATCH = 2;
+  for (let i = 0; i < targets.length; i += BATCH) {
+    const batch = targets.slice(i, i + BATCH);
+    const results = await Promise.all(batch.map((s) => enhanceSection(s, brief)));
+    for (const r of results) {
+      byId.set(r.section.id, r.section);
+      if (r.motor) motorsUsed.add(r.motor);
+      if (r.provider && r.provider !== 'rules') {
+        providersUsed.add(r.provider);
+        anyCalled = true;
+      }
+      if (r.changed) anyChanged = true;
+    }
+  }
+
+  return {
+    sections: sections.map((s) => byId.get(s.id) ?? s),
+    motorsUsed: [...motorsUsed],
+    providersUsed: [...providersUsed],
+    aiEnhanced: anyChanged || anyCalled,
+    aiSkippedReason: anyCalled ? undefined : 'ai_parse_failed',
+  };
+}

@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
-import { useLanguage } from '../components/LanguageProvider';
 import BeforeAfterDemo from '../components/BeforeAfterDemo';
-import { User, Briefcase, Building2, RefreshCw, Check, ArrowRight, Sparkles } from 'lucide-react';
+import ModernizationPricing from '../components/ModernizationPricing';
+import { useLanguage } from '../components/LanguageProvider';
+import { Sparkles, Check, ArrowRight } from 'lucide-react';
 
 const t = {
   es: {
@@ -31,57 +32,7 @@ const t = {
     ],
     personasTitle: 'Un plan para cada persona',
     personasSubtitle: 'Individual, autónomo, empresa o web antigua: pagas solo lo que necesitas.',
-    personas: [
-      {
-        id: 'particular',
-        icon: User,
-        name: 'Particular',
-        tagline: 'Portfolio, blog o web personal',
-        price: '690€',
-        desc: 'Ideal si tienes 1 web sencilla que quieres renovar sin complicaciones.',
-        features: ['Rediseño moderno', 'Versión móvil', 'Antes/Después', 'Entrega en 72h'],
-        cta: 'Solicitar presupuesto',
-        href: '/contacto?plan=particular',
-        color: 'border-slate-200',
-      },
-      {
-        id: 'autonomo',
-        icon: Briefcase,
-        name: 'Autónomo',
-        tagline: 'Profesional liberal o freelancer',
-        price: '890€',
-        desc: 'Rescate Digital: tu marca profesional con formularios, WhatsApp y SEO.',
-        features: ['Todo lo anterior', 'Archivo Legacy', 'Migración de contenidos', '3 meses de ajustes'],
-        cta: 'Empezar rescate',
-        href: '/contacto?plan=autonomo',
-        color: 'border-indigo-300 ring-2 ring-indigo-500/30',
-        popular: true,
-      },
-      {
-        id: 'empresa',
-        icon: Building2,
-        name: 'Empresa / PYME',
-        tagline: 'Negocio local o equipo pequeño',
-        price: '1.290€',
-        desc: 'Rescate Completo: varias secciones, blog, tienda básica o reservas.',
-        features: ['Todo Rescate Digital', 'Guía de publicación', 'Informe SEO completo', 'Soporte prioritario'],
-        cta: 'Hablar con ventas',
-        href: '/contacto?plan=empresa',
-        color: 'border-slate-200',
-      },
-      {
-        id: 'modernizar',
-        icon: RefreshCw,
-        name: 'Ya tengo web',
-        tagline: 'Modernizar sin empezar de cero',
-        price: '1.790€',
-        desc: 'Rescate Premium: hosting 1 año, formación y prioridad máxima en entrega.',
-        features: ['Todo Rescate Completo', 'Hosting + dominio 1 año', 'Formación gestión', 'SLA garantizado'],
-        cta: 'Modernizar mi web',
-        href: '/contacto?plan=modernizar',
-        color: 'border-amber-200',
-      },
-    ],
+    pricingLink: 'Ver todos los precios en /precios →',
     studioAltTitle: '¿Prefieres ver el resultado tú mismo?',
     studioAltDesc:
       'Abre el Studio gratis, pega la descripción de tu negocio y genera una preview en minutos. Si te gusta, contratas modernización completa o sigues editando con créditos.',
@@ -148,57 +99,7 @@ const t = {
     ],
     personasTitle: 'A plan for every profile',
     personasSubtitle: 'Individual, freelancer, business or legacy site: pay only for what you need.',
-    personas: [
-      {
-        id: 'particular',
-        icon: User,
-        name: 'Individual',
-        tagline: 'Portfolio, blog or personal site',
-        price: '€690',
-        desc: 'Ideal for a simple site you want renewed without hassle.',
-        features: ['Modern redesign', 'Mobile version', 'Before/After', '72h delivery'],
-        cta: 'Request quote',
-        href: '/contacto?plan=particular',
-        color: 'border-slate-200',
-      },
-      {
-        id: 'autonomo',
-        icon: Briefcase,
-        name: 'Freelancer',
-        tagline: 'Self-employed professional',
-        price: '€890',
-        desc: 'Digital Rescue: professional brand with forms, WhatsApp and SEO.',
-        features: ['All above', 'Legacy Archive', 'Content migration', '3 months adjustments'],
-        cta: 'Start rescue',
-        href: '/contacto?plan=autonomo',
-        color: 'border-indigo-300 ring-2 ring-indigo-500/30',
-        popular: true,
-      },
-      {
-        id: 'empresa',
-        icon: Building2,
-        name: 'Business / SMB',
-        tagline: 'Local business or small team',
-        price: '€1,290',
-        desc: 'Complete Rescue: multiple sections, blog, basic shop or booking.',
-        features: ['All Digital Rescue', 'Publishing guide', 'Full SEO report', 'Priority support'],
-        cta: 'Talk to sales',
-        href: '/contacto?plan=empresa',
-        color: 'border-slate-200',
-      },
-      {
-        id: 'modernizar',
-        icon: RefreshCw,
-        name: 'Already have a site',
-        tagline: 'Modernize without starting over',
-        price: '€1,790',
-        desc: 'Premium Rescue: 1 year hosting, training and top delivery priority.',
-        features: ['All Complete Rescue', 'Hosting + domain 1 year', 'Management training', 'Guaranteed SLA'],
-        cta: 'Modernize my site',
-        href: '/contacto?plan=modernizar',
-        color: 'border-amber-200',
-      },
-    ],
+    pricingLink: 'See all pricing at /precios →',
     studioAltTitle: 'Prefer to see the result yourself?',
     studioAltDesc:
       'Open Studio for free, describe your business and generate a preview in minutes. Like it? Hire full modernization or keep editing with credits.',
@@ -292,49 +193,15 @@ export default function Modernizacion() {
         </div>
       </div>
 
-      {/* Persona plans */}
+      {/* Persona plans — same block as /precios#modernizacion */}
       <div className="bg-slate-50 border-y border-slate-200 py-14">
         <div className="container max-w-6xl">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">{c.personasTitle}</h2>
-            <p className="text-slate-600 mt-2 text-sm max-w-xl mx-auto">{c.personasSubtitle}</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {c.personas.map((plan) => {
-              const Icon = plan.icon;
-              return (
-                <div
-                  key={plan.id}
-                  className={`relative bg-white rounded-2xl p-6 flex flex-col border ${plan.color} shadow-sm`}
-                >
-                  {'popular' in plan && plan.popular && (
-                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[9px] px-3 py-0.5 rounded-full font-bold tracking-wider">
-                      {c.popular}
-                    </div>
-                  )}
-                  <Icon className="w-8 h-8 text-indigo-600 mb-3" />
-                  <div className="font-bold text-lg">{plan.name}</div>
-                  <div className="text-xs text-slate-500 mt-0.5">{plan.tagline}</div>
-                  <div className="text-3xl font-bold tracking-tight mt-4 text-slate-900">{plan.price}</div>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed flex-1">{plan.desc}</p>
-                  <ul className="mt-4 space-y-1.5 text-xs text-slate-700">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex gap-1.5">
-                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={plan.href}
-                    className="mt-5 block text-center py-2.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-black transition"
-                  >
-                    {plan.cta}
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
+          <ModernizationPricing showDemoLink={false} />
+          <p className="text-center mt-6">
+            <Link href="/precios#modernizacion" className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">
+              {c.pricingLink}
+            </Link>
+          </p>
         </div>
       </div>
 

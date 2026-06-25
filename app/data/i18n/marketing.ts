@@ -149,11 +149,11 @@ export const beforeAfterI18n = {
         accent: 'text-amber-300',
       },
       gestoria: {
-        afterTitle: 'Tu gestoría, clara y de confianza.',
-        afterDesc: 'Asesoría fiscal, laboral y contable con respuesta en 24h. Solicita cita online en un clic.',
-        afterCta1: 'Solicitar cita',
+        afterTitle: 'VERUM · Asesoría premium Madrid.',
+        afterDesc: 'Gestoría y asesoría estratégica con diseño de firma internacional, documentos seguros y contacto en un clic.',
+        afterCta1: 'Solicitar asesoramiento',
         afterCta2: 'Ver servicios',
-        afterItems: ['Asesoría fiscal', 'Laboral y nóminas', 'Documentos seguros'],
+        afterItems: ['Asesoría fiscal y laboral', 'Contabilidad avanzada', 'Documentos encriptados'],
         accent: 'text-blue-300',
       },
       autonomo: {
@@ -186,11 +186,11 @@ export const beforeAfterI18n = {
         accent: 'text-amber-300',
       },
       gestoria: {
-        afterTitle: 'Your advisory firm, clear and trusted.',
-        afterDesc: 'Tax, payroll and accounting advice with 24h response. Book online in one click.',
-        afterCta1: 'Book appointment',
+        afterTitle: 'VERUM · Premium advisory Madrid.',
+        afterDesc: 'Strategic tax and accounting advisory with international firm design, secure documents and one-click contact.',
+        afterCta1: 'Request advisory',
         afterCta2: 'View services',
-        afterItems: ['Tax advisory', 'Payroll & HR', 'Secure documents'],
+        afterItems: ['Tax & labor advisory', 'Advanced accounting', 'Encrypted documents'],
         accent: 'text-blue-300',
       },
       autonomo: {

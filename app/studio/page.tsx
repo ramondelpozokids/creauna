@@ -4,14 +4,14 @@ import { Suspense, useState, useEffect, useCallback, useRef, useMemo } from 'rea
 import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Send, Sparkles, RefreshCw, Download, Share2,
-  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye, BookOpen
+  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye,
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
 import StudioOnboarding from '../components/StudioOnboarding';
-import StudioSectorLibrary, { type SectorPublic } from '../components/StudioSectorLibrary';
+import StudioSectionPreview from '../components/StudioSectionPreview';
 import { useLanguage } from '../components/LanguageProvider';
 import { getCredits, setCredits as setCreditsCache, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
@@ -57,7 +57,7 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'Diseño con IA',
     welcome: 'Hola. Soy tu director de diseño. Los 4 motores de IA trabajan en equipo para crear tu web. ¿Qué quieres diseñar hoy?',
-    welcomeOnboarding: 'Bienvenido al Studio. Antes de diseñar, elige cómo quieres empezar en el panel de la derecha: una plantilla del catálogo o describe tu web desde cero.',
+    welcomeOnboarding: 'Bienvenido al Studio. Elige una plantilla del catálogo o describe tu web en el panel de conversación.',
     welcomeDescribe: 'Perfecto. Cuéntame tu negocio: sector, estilo visual, secciones que necesitas (contacto, menú, reservas…) y crearé tu primera versión.',
     welcomeTemplate: (name: string) => `Plantilla «${name}» cargada. Navega la vista en tiempo real a la derecha y dime qué quieres mejorar.`,
     placeholder: 'Describe lo que quieres cambiar...',
@@ -66,7 +66,6 @@ const translations = {
     share: 'Compartir',
     export: 'Exportar',
     finalize: 'Finalizar y pagar',
-    styles: ['Elegante', 'Minimal', 'Moderno'],
     quickPrompts: [
       'Hazla más elegante y refinada',
       'Añade testimonios bonitos',
@@ -105,7 +104,7 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'AI Design',
     welcome: 'Hello. Your design director here. 4 AI engines work as a team to build your site. What shall we design today?',
-    welcomeOnboarding: 'Welcome to the Studio. Before we design, choose how to start in the panel on the right: a catalog template or describe your site from scratch.',
+    welcomeOnboarding: 'Welcome to the Studio. Pick a catalog template or describe your site in the conversation panel.',
     welcomeDescribe: 'Great. Tell me about your business: industry, visual style, sections you need (contact, menu, booking…) and I will build your first version.',
     welcomeTemplate: (name: string) => `Template «${name}» loaded. Check the live preview on the right and tell me what to improve.`,
     placeholder: 'Describe what you want to change...',
@@ -114,7 +113,6 @@ const translations = {
     share: 'Share',
     export: 'Export',
     finalize: 'Finalize & pay',
-    styles: ['Elegant', 'Minimal', 'Modern'],
     quickPrompts: [
       'Make it more elegant and refined',
       'Add beautiful testimonials',
@@ -212,7 +210,6 @@ function StudioContent() {
   ]);
   const [projectName, setProjectName] = useState('Mi nueva web');
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
-  const [style, setStyle] = useState<'elegante' | 'minimal' | 'moderno'>('elegante');
   const [mounted, setMounted] = useState(false);
   const [activeTemplateSlug, setActiveTemplateSlug] = useState<string | undefined>();
   const [changeLog, setChangeLog] = useState<ChangeEntry[]>([]);
@@ -411,23 +408,7 @@ function StudioContent() {
   const handleChooseDescribe = () => {
     setStudioPhase('describe');
     setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
-  };
-
-  const handleChooseLibrary = () => {
-    setStudioPhase('describe');
-    setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
-  };
-
-  const handleSectorSelect = (sector: SectorPublic) => {
-    setSelectedSectorId(sector.id);
-    setSelectedSectorLabel(sector.label);
-    setActiveTemplateSlug(sector.templateSlug);
-    const hint = sector.promptHint ?? (lang === 'es' ? `Web para ${sector.label}` : `Website for ${sector.label}`);
-    setInput(hint);
-    toast.success(
-      lang === 'es' ? `Sector: ${sector.label}` : `Sector: ${sector.label}`,
-      { description: lang === 'es' ? 'Los agentes IA usarán este playbook' : 'AI agents will use this sector playbook' }
-    );
+    setPreviewSections([{ id: 101, type: 'hero', html: buildDescribePlaceholder(lang) }]);
   };
 
   const addChange = (summary: string, prev?: ChangeEntry[]) => {
@@ -542,14 +523,25 @@ function StudioContent() {
         setCredits(bal);
         setCreditsCache(bal);
       }
+      if (typeof data.credits === 'number') {
+        setCredits(data.credits);
+        setCreditsCache(data.credits);
+      }
+      const errText = data.error || 'Error en el Studio';
+      if (res.status === 422 && errText.includes('No hubo cambio visible')) {
+        throw new Error(errText);
+      }
+      if (res.status === 422 && errText.includes('No visible change')) {
+        throw new Error(errText);
+      }
       if (res.status === 422 && data.snapshotId) {
         throw new Error(
           lang === 'es'
-            ? `${data.error}. Usa «Restaurar versión» en el historial.`
-            : `${data.error}. Use «Restore version» in history.`
+            ? `${errText}. Usa «Restaurar versión» en el historial.`
+            : `${errText}. Use «Restore version» in history.`
         );
       }
-      throw new Error(data.error || 'Error en el Studio');
+      throw new Error(errText);
     }
     if (typeof data.credits === 'number') {
       setCredits(data.credits);
@@ -611,7 +603,12 @@ function StudioContent() {
         description: data.diffSummary ? `${t.creditUsed} · ${data.diffSummary}` : t.creditUsed,
       });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Error al generar');
+      const msg = err instanceof Error ? err.message : 'Error al generar';
+      if (msg.includes('No hubo cambio visible') || msg.includes('No visible change')) {
+        toast.info(msg);
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setIsThinking(false);
     }
@@ -657,30 +654,6 @@ function StudioContent() {
     setInput('');
     setIsThinking(true);
     await processAIChange(prompt);
-  };
-
-  const changeStyle = async (newStyle: 'elegante' | 'minimal' | 'moderno') => {
-    if (studioPhase === 'onboarding') return;
-    if (!(await ensureCredits())) return;
-    const impact = await previewImpact({ prompt: `estilo ${newStyle}`, action: 'style' });
-    if (!(await confirmImpactIfNeeded(impact))) return;
-    setStyle(newStyle);
-    setIsThinking(true);
-    try {
-      const data = await callStudioApi({ prompt: `estilo ${newStyle}`, action: 'style', style: newStyle });
-      setPreviewSections(data.previewSections);
-      applyCreditFromResponse(data.credits);
-      const summary = lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`;
-      const nextLog = addChange(summary);
-      scheduleSave(data.previewSections, nextLog, projectName);
-      loadSnapshots();
-      flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
-      toast.success(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`, { description: t.creditUsed });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Error');
-    } finally {
-      setIsThinking(false);
-    }
   };
 
   const regenerate = async () => {
@@ -774,12 +747,6 @@ function StudioContent() {
             onChange={(e) => setProjectName(e.target.value)}
             className="bg-transparent font-semibold tracking-tight text-xl focus:outline-none w-[200px] md:w-[260px]"
           />
-          {selectedSectorLabel && (
-            <span className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-semibold text-emerald-800">
-              <BookOpen className="w-3 h-3" />
-              {selectedSectorLabel}
-            </span>
-          )}
           {activeTemplateSlug && (
             <Link
               href={`/templates/preview/${activeTemplateSlug}`}
@@ -900,11 +867,6 @@ function StudioContent() {
                     </button>
                   ))}
                 </div>
-                {studioPhase === 'describe' && (
-                  <p className="mt-2 text-[10px] text-slate-400">
-                    {lang === 'es' ? 'O elige sector en la biblioteca (panel derecho) →' : 'Or pick a sector in the library (right panel) →'}
-                  </p>
-                )}
               </div>
             )}
 
@@ -1022,13 +984,6 @@ function StudioContent() {
                   ))}
                 </div>
                 <div className="flex text-xs border border-slate-200 rounded-2xl bg-white p-1">
-                  {(['elegante', 'minimal', 'moderno'] as const).map((s, i) => (
-                    <button key={s} onClick={() => changeStyle(s)} className={`px-4 py-1.5 rounded-[14px] transition cursor-pointer ${style === s ? 'bg-slate-900 text-white' : 'hover:bg-slate-100'}`}>
-                      {t.styles[i]}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex text-xs border border-slate-200 rounded-2xl bg-white p-1">
                   <button onClick={() => setViewMode('desktop')} className={`px-4 py-1.5 flex items-center gap-2 rounded-[14px] cursor-pointer ${viewMode === 'desktop' ? 'bg-slate-900 text-white' : ''}`}>
                     <Monitor className="w-3.5 h-3.5" />
                   </button>
@@ -1045,37 +1000,27 @@ function StudioContent() {
 
             <motion.div
               animate={previewPulse ? { boxShadow: '0 0 0 4px rgba(99,102,241,0.45)' } : { boxShadow: '0 25px 50px -12px rgba(0,0,0,0.18)' }}
-              className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
+              className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full overflow-hidden ${viewMode === 'mobile' ? 'max-w-[390px] rounded-[2.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
             >
               {studioPhase === 'onboarding' ? (
-                <StudioOnboarding lang={lang} onChooseDescribe={handleChooseDescribe} onChooseLibrary={handleChooseLibrary} />
-              ) : studioPhase === 'describe' ? (
-                <StudioSectorLibrary
-                  lang={lang}
-                  selectedId={selectedSectorId}
-                  onSelect={handleSectorSelect}
-                />
+                <StudioOnboarding lang={lang} onChooseDescribe={handleChooseDescribe} />
+              ) : studioPhase === 'describe' && previewSections.length === 1 && (previewSections[0]?.html.includes('Tu web aparecerá') || previewSections[0]?.html.includes('Your site will appear')) ? (
+                <div className="p-6 md:p-10">
+                  <div dangerouslySetInnerHTML={{ __html: previewSections[0].html }} />
+                </div>
               ) : (
-              <div className="p-6 md:p-10 space-y-8 bg-white">
-                {previewSections.map((section) => (
-                  <div
-                    key={section.id}
-                    ref={(el) => { sectionRefs.current[section.id] = el; }}
-                    onClick={() => setSelectedSectionId(section.id)}
-                    className={`group relative rounded-2xl transition-all duration-500 cursor-pointer ${
-                      selectedSectionId === section.id ? 'ring-2 ring-indigo-400 ring-offset-2' : ''
-                    } ${highlightedIds.includes(section.id) ? 'ring-4 ring-emerald-400 ring-offset-4 scale-[1.01]' : ''}`}
-                  >
-                    <div dangerouslySetInnerHTML={{ __html: section.html }} />
-                    <button
-                      onClick={(e) => { e.stopPropagation(); improveSection(section.id); }}
-                      className="absolute top-2 right-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 cursor-pointer z-10"
-                    >
-                      <Zap className="w-3 h-3" /> {t.improve}
-                    </button>
-                  </div>
-                ))}
-              </div>
+                <StudioSectionPreview
+                  sections={previewSections}
+                  viewMode={viewMode}
+                  lang={lang}
+                  selectedSectionId={selectedSectionId}
+                  highlightedIds={highlightedIds}
+                  isThinking={isThinking}
+                  improveLabel={t.improve}
+                  sectionRefs={sectionRefs}
+                  onSelectSection={setSelectedSectionId}
+                  onImproveSection={improveSection}
+                />
               )}
             </motion.div>
 

@@ -1,5 +1,6 @@
 import type { TemplateItem } from '../data/templates';
 import type { ServiceItem } from './ai/siteContent';
+import { wrapSectionHtml } from './ai/siteSectionWrap';
 
 export interface TemplatePageSection {
   id: string;
@@ -51,15 +52,15 @@ export function buildTemplateSections(
       type: 'hero',
       navLabelEs: nav.home,
       navLabelEn: nav.home,
-      html: `<div class="relative min-h-[420px] bg-slate-900 text-white overflow-hidden rounded-[2rem]">
+      html: `<div class="relative cua-hero-minh min-h-[420px] bg-slate-900 text-white overflow-hidden rounded-[2rem]">
         <img src="${tpl.image}" alt="${name}" class="absolute inset-0 w-full h-full object-cover opacity-50" />
-        <div class="relative z-10 p-10 md:p-16 flex flex-col justify-end min-h-[420px]">
+        <div class="relative z-10 cua-hero-pad p-6 sm:p-10 md:p-16 flex flex-col justify-end min-h-[420px] w-full">
           <div class="text-xs tracking-[3px] text-slate-300 uppercase">${category}</div>
-          <h1 class="text-4xl md:text-6xl font-semibold tracking-tight mt-3 leading-none">${name}</h1>
-          <p class="mt-4 text-lg text-slate-200 max-w-xl">${desc}</p>
-          <div class="mt-8 flex flex-wrap gap-3">
-            <span class="px-6 py-3 bg-white text-slate-900 rounded-2xl text-sm font-semibold">${ctaPrimary}</span>
-            <span class="px-6 py-3 border border-white/40 rounded-2xl text-sm">${ctaSecondary}</span>
+          <h1 class="cua-hero-title text-3xl sm:text-4xl md:text-6xl font-semibold tracking-tight mt-3 leading-tight break-words">${name}</h1>
+          <p class="mt-4 text-base sm:text-lg text-slate-200 max-w-xl">${desc}</p>
+          <div class="cua-cta-row mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+            <span class="px-6 py-3 bg-white text-slate-900 rounded-2xl text-sm font-semibold text-center">${ctaPrimary}</span>
+            <span class="px-6 py-3 border border-white/40 rounded-2xl text-sm text-center">${ctaSecondary}</span>
           </div>
         </div>
       </div>`,
@@ -99,13 +100,13 @@ export function buildTemplateSections(
       type: 'contact',
       navLabelEs: nav.contact,
       navLabelEn: nav.contact,
-      html: `<div class="bg-slate-900 text-white rounded-[2rem] p-10 md:p-14">
+      html: `<div class="bg-slate-900 text-white rounded-[2rem] cua-section-pad p-6 sm:p-10 md:p-14">
         <h2 class="text-3xl font-semibold tracking-tight">${lang === 'es' ? 'Contacto' : 'Contact'}</h2>
         <p class="mt-3 text-slate-300">${lang === 'es' ? 'Cuéntanos tu proyecto y te respondemos en 24h.' : 'Tell us about your project — we reply within 24h.'}</p>
-        <div class="mt-8 grid md:grid-cols-2 gap-4 max-w-xl">
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 cua-contact-grid gap-4 max-w-xl w-full">
           <div class="bg-white/10 rounded-xl px-4 py-3 text-sm">${lang === 'es' ? 'Nombre' : 'Name'}</div>
           <div class="bg-white/10 rounded-xl px-4 py-3 text-sm">Email</div>
-          <div class="md:col-span-2 bg-white/10 rounded-xl px-4 py-3 text-sm h-24">${lang === 'es' ? 'Mensaje' : 'Message'}</div>
+          <div class="sm:col-span-2 bg-white/10 rounded-xl px-4 py-3 text-sm h-24">${lang === 'es' ? 'Mensaje' : 'Message'}</div>
         </div>
       </div>`,
     },
@@ -116,6 +117,6 @@ export function toStudioSections(sections: TemplatePageSection[]): StudioPreview
   return sections.map((s, i) => ({
     id: 100 + i,
     type: s.type,
-    html: s.html,
+    html: wrapSectionHtml(s.html),
   }));
 }

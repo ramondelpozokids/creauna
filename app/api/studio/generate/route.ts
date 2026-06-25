@@ -9,7 +9,7 @@ import { createProjectSnapshot } from '../../../lib/studio/snapshotService';
 import { studioFeatureEnabled, type StudioChatMessage } from '../../../lib/studio/contextTypes';
 import { hydrateStudioContext } from '../../../lib/studio/contextManager';
 import { validatePreviewSections } from '../../../lib/studio/sectionValidator';
-import { summarizeSectionDiff } from '../../../lib/studio/sectionDiff';
+import { summarizeSectionDiff, hasMeaningfulSectionChanges } from '../../../lib/studio/sectionDiff';
 import { logProjectChangeAudit } from '../../../lib/studio/auditService';
 import { updateProject } from '../../../lib/projects';
 import { canUseServerSections } from '../../../lib/studio/sectionSelector';
@@ -145,6 +145,43 @@ export async function POST(req: Request) {
       result.previewSections,
       result.changedSectionIds
     );
+
+    const meaningful = hasMeaningfulSectionChanges(
+      previewSections,
+      result.previewSections,
+      result.changedSectionIds
+    );
+
+    if (!meaningful && action !== 'initial') {
+      await refundCredit(session?.id ?? null, ip, 'studio_refund_no_change', session?.email);
+      await logProjectChangeAudit({
+        projectId,
+        userId: session?.id,
+        ip,
+        action,
+        prompt,
+        sectionId: effectiveSectionId,
+        affectedSectionIds: result.changedSectionIds,
+        source: result.source,
+        motorsUsed: result.motorsUsed,
+        validationOk: false,
+        validationErrors: ['no_meaningful_diff'],
+        diffSummary,
+        durationMs: Date.now() - started,
+        snapshotId,
+      });
+      return NextResponse.json(
+        {
+          error:
+            lang === 'es'
+              ? 'No hubo cambio visible. No se ha consumido crédito. Prueba otra sugerencia o describe el cambio con más detalle.'
+              : 'No visible change. No credit was used. Try another suggestion or describe the change in more detail.',
+          credits: spent.credits + (unlimited ? 0 : 1),
+          snapshotId,
+        },
+        { status: 422 }
+      );
+    }
 
     if (!validationOk) {
       await refundCredit(session?.id ?? null, ip, 'studio_refund_validation', session?.email);

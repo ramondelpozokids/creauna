@@ -8,6 +8,7 @@ import type { ServiceItem } from './siteContent';
 import { getBusinessProfile, type AccentColor, type BusinessProfile } from './businessProfiles';
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
+import { wrapSectionHtml } from './siteSectionWrap';
 
 const GALLERY_BY_CATEGORY: Record<string, string[]> = {
   gastronomy: [
@@ -1052,22 +1053,23 @@ function buildHero(ctx: BuildCtx): TemplatePageSection {
   return {
     id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
     html: `<div class="bg-white overflow-hidden rounded-[2rem] shadow-xl border border-slate-100">
-      <div class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-4 border-b border-slate-100">
-        <div class="font-serif font-bold text-lg text-slate-900">${esc(name)}</div>
-        <div class="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-slate-500 font-medium">${nav.map((n) => `<span>${n}</span>`).join('')}</div>
-        ${phone ? `<span class="text-sm font-medium text-slate-700">📞 ${esc(profile!.phone!)}</span>` : ''}
+      <div class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 md:px-10 py-4 border-b border-slate-100">
+        <div class="font-serif font-bold text-base sm:text-lg text-slate-900 min-w-0 break-words shrink-0 max-w-[45%] sm:max-w-none">${esc(name)}</div>
+        <div class="cua-nav-desktop hidden md:flex gap-4 lg:gap-6 text-[10px] md:text-[11px] tracking-[0.15em] uppercase text-slate-500 font-medium">${nav.map((n) => `<span class="whitespace-nowrap">${n}</span>`).join('')}</div>
+        <div class="cua-nav-mobile hidden gap-2 overflow-x-auto max-w-full text-[9px] tracking-[0.12em] uppercase text-slate-500 font-medium order-last w-full md:order-none md:w-auto">${nav.map((n) => `<span class="whitespace-nowrap shrink-0 px-1">${n}</span>`).join('')}</div>
+        ${phone ? `<span class="text-xs sm:text-sm font-medium text-slate-700 shrink-0">📞 ${esc(profile!.phone!)}</span>` : ''}
       </div>
-      <div class="relative min-h-[480px] md:min-h-[540px] flex items-center">
+      <div class="relative cua-hero-minh min-h-[480px] md:min-h-[540px] flex items-center overflow-hidden">
         <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/30"></div>
-        <div class="relative z-10 p-10 md:p-16 max-w-4xl">
+        <div class="relative z-10 cua-hero-pad p-6 sm:p-10 md:p-16 max-w-4xl w-full">
           <span class="inline-block px-4 py-1.5 ${accentBg(accent)} text-white text-xs font-bold tracking-widest uppercase rounded-full">${esc(badge)}</span>
-          ${rating ? `<div class="mt-4 inline-flex items-center gap-2 text-amber-400 text-sm font-semibold"><span>★★★★★</span><span class="text-slate-200">${esc(rating)}</span></div>` : ''}
-          <h1 class="mt-6 text-4xl md:text-6xl font-bold font-serif text-white tracking-tight leading-tight drop-shadow-lg">${esc(name)}</h1>
-          <p class="mt-5 text-lg md:text-xl text-slate-200 leading-relaxed max-w-2xl font-light">${esc(tagline)}</p>
-          <div class="mt-10 flex flex-wrap gap-4">
-            <span class="px-8 py-4 ${accentBg(accent)} text-white rounded-xl text-sm font-semibold shadow-lg">${esc(ctaPrimary)}</span>
-            <span class="px-8 py-4 border-2 border-white/80 text-white rounded-xl text-sm font-medium">${esc(ctaSecondary)}</span>
+          ${rating ? `<div class="mt-4 inline-flex flex-wrap items-center gap-2 text-amber-400 text-sm font-semibold"><span>★★★★★</span><span class="text-slate-200">${esc(rating)}</span></div>` : ''}
+          <h1 class="cua-hero-title mt-6 text-3xl sm:text-4xl md:text-6xl font-bold font-serif text-white tracking-tight leading-tight drop-shadow-lg break-words">${esc(name)}</h1>
+          <p class="mt-5 text-base sm:text-lg md:text-xl text-slate-200 leading-relaxed max-w-2xl font-light">${esc(tagline)}</p>
+          <div class="cua-cta-row mt-8 sm:mt-10 flex flex-wrap gap-3 sm:gap-4">
+            <span class="px-6 sm:px-8 py-3.5 sm:py-4 ${accentBg(accent)} text-white rounded-xl text-sm font-semibold shadow-lg text-center">${esc(ctaPrimary)}</span>
+            <span class="px-6 sm:px-8 py-3.5 sm:py-4 border-2 border-white/80 text-white rounded-xl text-sm font-medium text-center">${esc(ctaSecondary)}</span>
           </div>
         </div>
       </div>
@@ -1158,18 +1160,18 @@ function buildLocation(ctx: BuildCtx): TemplatePageSection {
   const phoneDigits = phone?.replace(/\D/g, '') ?? '';
   return {
     id: 'location', type: 'location', navLabelEs: 'Ubicación', navLabelEn: 'Location',
-    html: `<div class="bg-slate-50 border border-slate-200 rounded-[2rem] p-10 md:p-16">
-      <h2 class="text-4xl font-bold font-serif tracking-tight text-slate-900">${es ? 'Visítanos' : 'Visit us'}</h2>
-      <p class="mt-3 text-lg text-slate-600">${es ? `Te esperamos en ${name}, Puente de Vallecas.` : `We look forward to seeing you at ${name}, Puente de Vallecas.`}</p>
-      <div class="mt-10 grid md:grid-cols-2 gap-10">
-        <div class="space-y-6">
+    html: `<div class="bg-slate-50 border border-slate-200 rounded-[2rem] cua-section-pad p-6 sm:p-10 md:p-16">
+      <h2 class="text-3xl sm:text-4xl font-bold font-serif tracking-tight text-slate-900">${es ? 'Visítanos' : 'Visit us'}</h2>
+      <p class="mt-3 text-base sm:text-lg text-slate-600">${es ? `Te esperamos en ${name}, Puente de Vallecas.` : `We look forward to seeing you at ${name}, Puente de Vallecas.`}</p>
+      <div class="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 cua-grid-2col gap-8 sm:gap-10">
+        <div class="space-y-6 min-w-0">
           <div><div class="font-semibold text-slate-900">${es ? 'Dirección' : 'Address'}</div><p class="text-slate-600 mt-1">${esc(address)}</p></div>
           ${phone ? `<div><div class="font-semibold text-slate-900">${es ? 'Teléfono' : 'Phone'}</div><p class="text-slate-600 mt-1"><a href="tel:+34${phoneDigits}" class="text-indigo-600 font-medium">${esc(phone)}</a></p></div>` : ''}
           <div><div class="font-semibold text-slate-900">${es ? 'Horario' : 'Hours'}</div><p class="text-slate-600 mt-1">${esc(hours)}</p></div>
           ${info ? `<div><div class="font-semibold text-slate-900">${es ? 'Información' : 'Info'}</div><p class="text-slate-600 mt-1">${esc(info)}</p></div>` : ''}
         </div>
-        <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-md min-h-[280px]">
-          <iframe title="${es ? 'Mapa' : 'Map'}" src="https://maps.google.com/maps?q=${encodeURIComponent(address)}&amp;output=embed" class="w-full h-full min-h-[280px] border-0" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <div class="cua-map-wrap rounded-2xl overflow-hidden border border-slate-200 shadow-md min-h-[240px] sm:min-h-[280px] w-full">
+          <iframe title="${es ? 'Mapa' : 'Map'}" src="https://maps.google.com/maps?q=${encodeURIComponent(address)}&amp;output=embed" class="w-full h-full min-h-[240px] sm:min-h-[280px] border-0" loading="lazy" referrerpolicy="no-referrer"></iframe>
         </div>
       </div>
     </div>`,
@@ -1307,16 +1309,16 @@ function buildContact(ctx: BuildCtx): TemplatePageSection {
     : `Have a question about our ${businessType.toLowerCase()}? Write to us and we will reply as soon as possible.`;
   return {
     id: 'contact', type: 'contact', navLabelEs: 'Contacto', navLabelEn: 'Contact',
-    html: `<div class="bg-white border border-slate-200 rounded-[2rem] p-10 md:p-16 shadow-sm">
-      <h2 class="text-4xl font-bold font-serif tracking-tight text-slate-900">${es ? 'Contacto' : 'Contact'}</h2>
-      <p class="mt-4 text-lg text-slate-600">${esc(subtitle)}</p>
-      <div class="mt-10 grid md:grid-cols-2 gap-4 max-w-2xl">
+    html: `<div class="bg-white border border-slate-200 rounded-[2rem] cua-section-pad p-6 sm:p-10 md:p-16 shadow-sm">
+      <h2 class="text-3xl sm:text-4xl font-bold font-serif tracking-tight text-slate-900">${es ? 'Contacto' : 'Contact'}</h2>
+      <p class="mt-4 text-base sm:text-lg text-slate-600">${esc(subtitle)}</p>
+      <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 cua-contact-grid gap-4 max-w-2xl w-full">
         <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Nombre' : 'Name'}</div>
         <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-500">Email</div>
         <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Teléfono' : 'Phone'}</div>
         <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Asunto' : 'Subject'}</div>
-        <div class="md:col-span-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-500 h-28">${es ? 'Mensaje' : 'Message'}</div>
-        <div class="md:col-span-2 px-6 py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-base font-semibold text-center">${es ? 'Enviar mensaje' : 'Send message'}</div>
+        <div class="sm:col-span-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-500 h-28">${es ? 'Mensaje' : 'Message'}</div>
+        <div class="sm:col-span-2 px-6 py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-base font-semibold text-center">${es ? 'Enviar mensaje' : 'Send message'}</div>
       </div>
     </div>`,
   };
@@ -2019,6 +2021,10 @@ interface BuildCtx {
   accent: AccentColor;
 }
 
+function finalizeSiteSections(sections: TemplatePageSection[]): TemplatePageSection[] {
+  return sections.map((s) => ({ ...s, html: wrapSectionHtml(s.html) }));
+}
+
 export function buildCustomSite(
   intent: ParsedIntent,
   tpl: TemplateItem,
@@ -2047,39 +2053,39 @@ export function buildCustomSite(
   };
 
   if (profile?.variant === 'tattoo') {
-    return buildTattooSite(ctx, features);
+    return finalizeSiteSections(buildTattooSite(ctx, features));
   }
 
   if (profile?.variant === 'foodblog') {
-    return buildFoodBlogSite(ctx, features);
+    return finalizeSiteSections(buildFoodBlogSite(ctx, features));
   }
 
   if (profile?.variant === 'cafe') {
-    return buildCafeSite(ctx, features);
+    return finalizeSiteSections(buildCafeSite(ctx, features));
   }
 
   if (profile?.variant === 'beauty') {
-    return buildBeautySite(ctx, features);
+    return finalizeSiteSections(buildBeautySite(ctx, features));
   }
 
   if (profile?.variant === 'corporate') {
-    return buildCorporateSite(ctx, features);
+    return finalizeSiteSections(buildCorporateSite(ctx, features));
   }
 
   if (profile?.variant === 'renewable') {
-    return buildRenewableEnergySite(ctx, features);
+    return finalizeSiteSections(buildRenewableEnergySite(ctx, features));
   }
 
   if (profile?.variant === 'automotive') {
-    return buildAutomotiveSite(ctx, features);
+    return finalizeSiteSections(buildAutomotiveSite(ctx, features));
   }
 
   if (profile?.variant === 'luxury') {
-    return buildLuxurySite(ctx, features);
+    return finalizeSiteSections(buildLuxurySite(ctx, features));
   }
 
   if (profile?.variant === 'nonprofit') {
-    return buildNonprofitSite(ctx, features);
+    return finalizeSiteSections(buildNonprofitSite(ctx, features));
   }
 
   const sections: TemplatePageSection[] = [buildHero(ctx)];
@@ -2095,7 +2101,7 @@ export function buildCustomSite(
   if (features.legalFooter || features.social) sections.push(buildLegalFooter(ctx));
   if (features.whatsapp || features.scrollUp) sections.push(buildWidgets(ctx));
 
-  return sections;
+  return finalizeSiteSections(sections);
 }
 
 export function describeCreatedSections(features: SiteFeatures, lang: 'es' | 'en'): string {
@@ -2123,7 +2129,7 @@ export function isCorporatePreviewSite(sections: { html: string }[]): boolean {
   return /gestor|asesor|Asesoría|Ledger|fiscal|laboral|contable|blue-900|blue-950|#050810|cua-btn-gold|Solicitar consulta|Solicitar asesoramiento/i.test(blob);
 }
 
-function extractPreviewBusinessName(sections: { type: string; html: string }[]): string {
+export function extractPreviewBusinessName(sections: { type: string; html: string }[]): string {
   const hero = sections.find((s) => s.type === 'hero')?.html ?? '';
   const fromNav = hero.match(/font-serif[^>]*>([^<]+)/)?.[1]?.trim()
     ?? hero.match(/font-bold text-xl[^>]*>([^<]+)/)?.[1]?.trim()
@@ -2182,27 +2188,97 @@ export function rebuildCorporatePreviewSections(
 }
 
 export function applyVisualEnhancement(html: string, kind: 'elegante' | 'luminosa' | 'tipografia' | 'animacion' | 'hero'): string {
+  return applyStrongVisualEnhancement(html, kind);
+}
+
+const STUDIO_SUGGESTION_CSS = `<style>
+@keyframes cua-s-in{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes cua-s-glow{0%,100%{box-shadow:0 0 0 rgba(99,102,241,0)}50%{box-shadow:0 0 48px rgba(99,102,241,.25)}}
+.cua-s-reveal{animation:cua-s-in 1s cubic-bezier(.22,1,.36,1) both}
+.cua-s-hover{transition:transform .6s cubic-bezier(.22,1,.36,1),box-shadow .6s ease}
+.cua-s-hover:hover{transform:translateY(-4px);box-shadow:0 24px 48px rgba(15,23,42,.12)}
+</style>`;
+
+/** Transformaciones visibles para sugerencias del Studio (debe notarse al instante). */
+export function applyStrongVisualEnhancement(html: string, kind: 'elegante' | 'luminosa' | 'tipografia' | 'animacion' | 'hero'): string {
   let out = html;
+  const injectCss = !out.includes('cua-s-in');
+
   if (kind === 'elegante' || kind === 'tipografia') {
-    out = out.replace(/text-3xl/g, 'text-4xl').replace(/text-4xl md:text-6xl/g, 'text-5xl md:text-7xl')
-      .replace(/font-semibold/g, 'font-bold font-serif').replace(/rounded-\[2rem\]/g, 'rounded-[2.5rem]');
+    out = out
+      .replace(/text-3xl/g, 'text-4xl')
+      .replace(/text-4xl md:text-6xl/g, 'text-5xl md:text-7xl')
+      .replace(/text-5xl md:text-7xl/g, 'text-6xl md:text-[5.25rem]')
+      .replace(/font-semibold/g, 'font-bold font-serif tracking-tight')
+      .replace(/rounded-\[2rem\]/g, 'rounded-[3rem]')
+      .replace(/rounded-\[2\.5rem\]/g, 'rounded-[3rem]')
+      .replace(/rounded-2xl/g, 'rounded-3xl')
+      .replace(/border border-slate-200/g, 'border border-slate-200/90 shadow-2xl shadow-slate-300/30')
+      .replace(/bg-stone-50/g, 'bg-gradient-to-br from-white via-slate-50 to-indigo-50/30')
+      .replace(/bg-white(?![\/\w])/g, 'bg-gradient-to-br from-white to-slate-50/80')
+      .replace(/py-10 md:p-16/g, 'py-16 md:p-20')
+      .replace(/py-10/g, 'py-16')
+      .replace(/p-10 md:p-16/g, 'p-12 md:p-20')
+      .replace(/text-blue-900/g, 'text-indigo-950')
+      .replace(/bg-blue-800/g, 'bg-indigo-700')
+      .replace(/bg-blue-900/g, 'bg-slate-950');
+    if (!out.includes('cua-s-hover')) {
+      out = out.replace(/<div class="/g, '<div class="cua-s-hover ');
+    }
   }
+
   if (kind === 'luminosa') {
-    const isHero = /min-h-\[520px\]|min-h-\[560px\]|min-h-\[600px\]/.test(out) && out.includes('object-cover');
+    const isHero = /min-h-\[520px\]|min-h-\[560px\]|min-h-\[600px\]|min-h-\[640px\]/.test(out) && out.includes('object-cover');
     if (!isHero) {
       out = out
-        .replace(/bg-slate-900 text-white/g, 'bg-white border border-slate-200 text-slate-900')
-        .replace(/bg-slate-950 text-slate-400/g, 'bg-slate-50 border border-slate-200 text-slate-600')
+        .replace(/bg-slate-950/g, 'bg-white')
+        .replace(/bg-\[#050810\]/g, 'bg-slate-50')
+        .replace(/bg-\[#0a1628\]/g, 'bg-indigo-50/40')
+        .replace(/bg-slate-900 text-white/g, 'bg-white border-2 border-slate-100 text-slate-900 shadow-xl')
         .replace(/text-slate-300/g, 'text-slate-600')
-        .replace(/bg-white\/10/g, 'bg-slate-50 border border-slate-200');
+        .replace(/text-white(?![\/\w])/g, 'text-slate-900')
+        .replace(/bg-white\/10/g, 'bg-white border border-slate-200 shadow-sm');
     }
-    out = out.replace(/bg-slate-50 border border-slate-200 rounded-\[2rem\]/g, 'bg-white border border-slate-100 rounded-[2rem] shadow-sm');
+    out = out
+      .replace(/bg-stone-50/g, 'bg-white')
+      .replace(/border-slate-800/g, 'border-slate-200')
+      .replace(/shadow-sm/g, 'shadow-lg shadow-slate-200/60');
   }
-  if (kind === 'animacion') out = out.replace(/class="/g, 'class="transition-all duration-500 hover:scale-[1.01] ');
+
+  if (kind === 'animacion') {
+    if (!out.includes('cua-s-reveal')) {
+      out = out.replace(/<div class="/, '<div class="cua-s-reveal ');
+    }
+    out = out.replace(/class="/g, 'class="cua-s-hover transition-all duration-700 ');
+  }
+
   if (kind === 'hero') {
-    out = out.replace(/min-h-\[420px\]/g, 'min-h-[560px]').replace(/min-h-\[520px\]/g, 'min-h-[600px]')
-      .replace(/text-5xl md:text-7xl/g, 'text-6xl md:text-8xl')
-      .replace(/HERO MEJORADO|HERO ENHANCED/g, '').replace(/<div class="absolute top-4 right-4 bg-amber-400[^<]*<\/div>/g, '');
+    out = out
+      .replace(/min-h-\[420px\]/g, 'min-h-[620px]')
+      .replace(/min-h-\[480px\]/g, 'min-h-[640px]')
+      .replace(/min-h-\[520px\]/g, 'min-h-[680px]')
+      .replace(/min-h-\[560px\]/g, 'min-h-[720px]')
+      .replace(/min-h-\[580px\]/g, 'min-h-[720px]')
+      .replace(/min-h-\[600px\]/g, 'min-h-[740px]')
+      .replace(/text-4xl md:text-6xl/g, 'text-5xl md:text-8xl')
+      .replace(/text-5xl md:text-7xl/g, 'text-6xl md:text-[5.5rem]')
+      .replace(/py-16 md:py-24/g, 'py-24 md:py-32')
+      .replace(/py-20/g, 'py-28');
+    if (out.includes('object-cover') && !out.includes('cua-hero-overlay')) {
+      out = out.replace(
+        /(<div class="[^"]*relative[^"]*"[^>]*>)/,
+        '$1<div class="cua-hero-overlay absolute inset-0 bg-gradient-to-b from-indigo-950/75 via-slate-900/45 to-slate-950/85 pointer-events-none z-[1]"></div>'
+      );
+    }
+    if (!out.includes('scale-105') && out.includes('object-cover')) {
+      out = out.replace(/object-cover opacity-25/g, 'object-cover opacity-40 scale-105');
+      out = out.replace(/object-cover opacity-90/g, 'object-cover opacity-95 scale-105');
+    }
   }
+
+  if (injectCss && (kind === 'elegante' || kind === 'tipografia' || kind === 'animacion' || kind === 'hero')) {
+    out = STUDIO_SUGGESTION_CSS + out;
+  }
+
   return out.replace(/Laura Mendoza|Fundadora, Atelier|✓ Sección mejorada|✓ Section improved|✓ Cambio aplicado/g, '');
 }

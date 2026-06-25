@@ -1,16 +1,71 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
 import { beforeAfterI18n } from '../data/i18n/marketing';
 
 type DemoId = 'restaurant' | 'gestoria' | 'autonomo';
 
-const demos: Record<DemoId, { url: string; beforeEs: string; beforeEn: string }> = {
+const DEMO_WIDTH = 1440;
+const DEMO_HEIGHT = 900;
+
+const demos: Record<
+  DemoId,
+  { url: string; beforeEs: string; beforeEn: string; html?: { before: string; after: string } }
+> = {
   restaurant: { url: 'restaurante-elrincon.es', beforeEs: 'Restaurante', beforeEn: 'Restaurant' },
-  gestoria: { url: 'gestoria-martinez.es', beforeEs: 'Gestoría', beforeEn: 'Tax advisory' },
+  gestoria: {
+    url: 'verum-asesores.es',
+    beforeEs: 'Gestoría',
+    beforeEn: 'Tax advisory',
+    html: {
+      before: '/demos/modernizacion/gestoria-before.html',
+      after: '/demos/modernizacion/gestoria-after.html',
+    },
+  },
   autonomo: { url: 'studio-luna.es', beforeEs: 'Autónomo', beforeEn: 'Freelancer' },
 };
+
+function HtmlDemoPanel({ src, tag, align = 'left' }: { src: string; tag: string; align?: 'left' | 'right' }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.42);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      setScale(Math.min(w / DEMO_WIDTH, h / DEMO_HEIGHT));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden bg-[#050810]">
+      <iframe
+        src={src}
+        title={tag}
+        className="absolute top-0 left-0 border-0 pointer-events-none"
+        style={{
+          width: DEMO_WIDTH,
+          height: DEMO_HEIGHT,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        }}
+        scrolling="no"
+        tabIndex={-1}
+        loading="lazy"
+      />
+      <div className={`absolute top-3 ${align === 'right' ? 'right-3 bg-emerald-600' : 'left-3 bg-black/75'} text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider shadow-lg backdrop-blur-sm z-10`}>
+        {tag}
+      </div>
+    </div>
+  );
+}
 
 function BeforePanel({ tag, sector }: { tag: string; sector: string }) {
   return (
@@ -121,11 +176,32 @@ export default function BeforeAfterDemo() {
   const scenarios = t.scenarios;
   const current = scenarios[demo];
   const meta = demos[demo];
+  const usesHtml = Boolean(meta.html);
 
   const onMove = useCallback((clientX: number, rect: DOMRect) => {
     const pct = ((clientX - rect.left) / rect.width) * 100;
     setPosition(Math.min(92, Math.max(8, pct)));
   }, []);
+
+  const afterContent = usesHtml && meta.html ? (
+    <HtmlDemoPanel src={meta.html.after} tag={t.afterTag} align="right" />
+  ) : (
+    <AfterPanel
+      tag={t.afterTag}
+      title={current.afterTitle}
+      desc={current.afterDesc}
+      cta1={current.afterCta1}
+      cta2={current.afterCta2}
+      items={current.afterItems}
+      accent={current.accent}
+    />
+  );
+
+  const beforeContent = usesHtml && meta.html ? (
+    <HtmlDemoPanel src={meta.html.before} tag={t.beforeTag} />
+  ) : (
+    <BeforePanel tag={t.beforeTag} sector={lang === 'es' ? meta.beforeEs : meta.beforeEn} />
+  );
 
   return (
     <div className="rounded-3xl border border-slate-200 shadow-xl overflow-hidden bg-white">
@@ -165,23 +241,13 @@ export default function BeforeAfterDemo() {
         }}
         onPointerDown={(e) => onMove(e.clientX, e.currentTarget.getBoundingClientRect())}
       >
-        {/* After = fondo completo (visible a la derecha del corte) */}
-        <AfterPanel
-          tag={t.afterTag}
-          title={current.afterTitle}
-          desc={current.afterDesc}
-          cta1={current.afterCta1}
-          cta2={current.afterCta2}
-          items={current.afterItems}
-          accent={current.accent}
-        />
+        {afterContent}
 
-        {/* Before = capa superior recortada a la izquierda */}
         <div
           className="absolute inset-0 z-10 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
         >
-          <BeforePanel tag={t.beforeTag} sector={lang === 'es' ? meta.beforeEs : meta.beforeEn} />
+          {beforeContent}
         </div>
 
         <div
@@ -205,7 +271,11 @@ export default function BeforeAfterDemo() {
       </div>
 
       <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500">
-        {t.footer}
+        {usesHtml
+          ? lang === 'es'
+            ? 'Caso real: gestoría VERUM — arrastra para comparar la web original con el rediseño CREAUNA.'
+            : 'Real case: VERUM advisory — drag to compare the original site with the CREAUNA redesign.'
+          : t.footer}
       </div>
     </div>
   );

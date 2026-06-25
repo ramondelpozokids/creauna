@@ -118,7 +118,7 @@ export const guiaI18n = {
         id: 'medida', icon: Paintbrush, color: 'text-cyan-600 bg-cyan-50',
         title: '7. Web completamente a medida',
         paragraphs: [
-          'Para proyectos exclusivos sin plantilla: Web a Medida desde 2.900€ + IVA (precio cerrado). Incluye briefing, 2 propuestas de diseño, desarrollo, SEO, publicación y 3 meses de soporte.',
+          'Para proyectos exclusivos sin plantilla: Web a Medida 1.790€ + IVA (precio máximo web premium). Incluye briefing, 2 propuestas de diseño, desarrollo, SEO, publicación y 3 meses de soporte.',
           'Supervisado personalmente por Ramón del Pozo Rott. Proceso detallado en /web-a-medida — contacto en /contacto, respuesta en 24h.',
         ],
         link: { href: '/web-a-medida', label: 'Solicitar web a medida' },
@@ -245,7 +245,7 @@ export const guiaI18n = {
         id: 'medida', icon: Paintbrush, color: 'text-cyan-600 bg-cyan-50',
         title: '7. Fully custom website',
         paragraphs: [
-          'For exclusive projects without templates: Custom Web from €2,900 + VAT (fixed price). Includes briefing, 2 design proposals, development, SEO, launch and 3 months support.',
+          'For exclusive projects without templates: Custom Web €1,790 + VAT (premium web cap). Includes briefing, 2 design proposals, development, SEO, launch and 3 months support.',
           'Personally supervised by Ramón del Pozo Rott. Full process at /web-a-medida — contact at /contacto, reply within 24h.',
         ],
         link: { href: '/web-a-medida', label: 'Request custom web' },
