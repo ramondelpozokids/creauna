@@ -139,6 +139,32 @@ export const beforeAfterI18n = {
     afterItems: ['Carta de temporada', 'Chef premiado', 'Terraza privada'],
     footer: 'Arrastra el control para comparar la web antigua con el rediseño moderno',
     aria: 'Comparar web antigua y nueva',
+    scenarios: {
+      restaurant: {
+        afterTitle: 'Sabores que enamoran.',
+        afterDesc: 'Cocina de autor con producto local. Reserva tu mesa y vive una experiencia inolvidable.',
+        afterCta1: 'Reservar mesa',
+        afterCta2: 'Ver carta',
+        afterItems: ['Carta de temporada', 'Chef premiado', 'Terraza privada'],
+        accent: 'text-amber-300',
+      },
+      gestoria: {
+        afterTitle: 'Tu gestoría, clara y de confianza.',
+        afterDesc: 'Asesoría fiscal, laboral y contable con respuesta en 24h. Solicita cita online en un clic.',
+        afterCta1: 'Solicitar cita',
+        afterCta2: 'Ver servicios',
+        afterItems: ['Asesoría fiscal', 'Laboral y nóminas', 'Documentos seguros'],
+        accent: 'text-blue-300',
+      },
+      autonomo: {
+        afterTitle: 'Tu marca profesional, lista para vender.',
+        afterDesc: 'Portfolio, servicios y contacto en una web que transmite confianza desde el primer segundo.',
+        afterCta1: 'Pedir presupuesto',
+        afterCta2: 'Ver trabajos',
+        afterItems: ['Portfolio visual', 'Reservas online', 'WhatsApp directo'],
+        accent: 'text-violet-300',
+      },
+    },
   },
   en: {
     afterTag: 'AFTER — 2026',
@@ -150,6 +176,32 @@ export const beforeAfterI18n = {
     afterItems: ['Seasonal menu', 'Award-winning chef', 'Private terrace'],
     footer: 'Drag the slider to compare the old site with the modern redesign',
     aria: 'Compare old and new website',
+    scenarios: {
+      restaurant: {
+        afterTitle: 'Flavors that captivate.',
+        afterDesc: 'Author cuisine with local produce. Book your table and enjoy an unforgettable experience.',
+        afterCta1: 'Book a table',
+        afterCta2: 'View menu',
+        afterItems: ['Seasonal menu', 'Award-winning chef', 'Private terrace'],
+        accent: 'text-amber-300',
+      },
+      gestoria: {
+        afterTitle: 'Your advisory firm, clear and trusted.',
+        afterDesc: 'Tax, payroll and accounting advice with 24h response. Book online in one click.',
+        afterCta1: 'Book appointment',
+        afterCta2: 'View services',
+        afterItems: ['Tax advisory', 'Payroll & HR', 'Secure documents'],
+        accent: 'text-blue-300',
+      },
+      autonomo: {
+        afterTitle: 'Your professional brand, ready to sell.',
+        afterDesc: 'Portfolio, services and contact in a site that builds trust from the first second.',
+        afterCta1: 'Get a quote',
+        afterCta2: 'View work',
+        afterItems: ['Visual portfolio', 'Online booking', 'Direct WhatsApp'],
+        accent: 'text-violet-300',
+      },
+    },
   },
 } as const;
 

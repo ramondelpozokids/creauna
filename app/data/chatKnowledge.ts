@@ -34,7 +34,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pricing',
     keywords: ['precio', 'precios', 'plan', 'planes', 'cuanto cuesta', 'cuánto cuesta', 'tarifa', 'coste', 'costo', 'gratis', 'pago', 'suscripción', 'mensual', 'anual'],
-    answer: 'Tenemos 3 planes transparentes:\n\n• Gratis — 0€, 15 créditos/mes (0€ por cambio)\n• Pro — 19€/mes, 120 créditos/mes (~0,16€ por cambio)\n• Business — 49€/mes, 300 créditos/mes (~0,16€ por cambio)\n\nWeb a Medida aparte: 2.900€ + IVA. Todo el detalle en /precios',
+    answer: 'Planes al estilo Wix/Squarespace/Webflow:\n\n• Gratis — 0€, 1 sitio, 15 créditos IA/mes\n• Pro — desde 15€/mes (anual) o 19€/mes, 120 créditos, dominio propio\n• Business — desde 39€/mes (anual) o 49€/mes, sitios ilimitados, 300 créditos\n\nWeb a Medida aparte: 2.900€ + IVA. Comparativa completa en /precios',
   },
   {
     id: 'credits',
@@ -69,7 +69,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'modernization',
     keywords: ['modernizar', 'modernización', 'modernizacion', 'web antigua', 'web vieja', 'rescate', 'before after', 'antes después', 'antigua'],
-    answer: 'El servicio de Modernización transforma webs de 5+ años en diseños actuales. Envías tu URL, la reconstruimos con IA y te entregamos la nueva web. Planes desde 890€. Más info en /modernizacion',
+    answer: 'Modernización de webs antiguas (5+ años). Planes por perfil:\n\n• Particular — desde 690€\n• Autónomo — 890€ (Rescate Digital)\n• Empresa/PYME — 1.290€\n• Ya tengo web (Premium) — 1.790€\n\nAntes/Después interactivo en /modernizacion. Preview gratis en /studio',
   },
   {
     id: 'custom-web',
@@ -207,7 +207,7 @@ export const knowledgeBaseEn: KnowledgeEntry[] = [
   {
     id: 'modernization',
     keywords: ['modernize', 'modernization', 'old website', 'redesign', 'before after'],
-    answer: 'Modernization transforms old websites (5+ years) into modern sites. From €890. Includes before/after, legacy archive and 3 months of adjustments. See /modernizacion',
+    answer: 'Modernization for old sites (5+ years). Plans by profile:\n\n• Individual — from €690\n• Freelancer — €890 (Digital Rescue)\n• Business/SMB — €1,290\n• Already have a site (Premium) — €1,790\n\nInteractive Before/After at /modernizacion. Free preview at /studio',
   },
   {
     id: 'custom',

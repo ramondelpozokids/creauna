@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import { Suspense, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Send, Sparkles, RefreshCw, Download, Share2,
@@ -60,6 +60,7 @@ const translations = {
     welcomeDescribe: 'Perfecto. Cuéntame tu negocio: sector, estilo visual, secciones que necesitas (contacto, menú, reservas…) y crearé tu primera versión.',
     welcomeTemplate: (name: string) => `Plantilla «${name}» cargada. Navega la vista en tiempo real a la derecha y dime qué quieres mejorar.`,
     placeholder: 'Describe lo que quieres cambiar...',
+    placeholderDescribe: 'Ej: gestoría con contacto, mapa, sidebar y footer legal…',
     regenerate: 'Regenerar',
     share: 'Compartir',
     export: 'Exportar',
@@ -107,6 +108,7 @@ const translations = {
     welcomeDescribe: 'Great. Tell me about your business: industry, visual style, sections you need (contact, menu, booking…) and I will build your first version.',
     welcomeTemplate: (name: string) => `Template «${name}» loaded. Check the live preview on the right and tell me what to improve.`,
     placeholder: 'Describe what you want to change...',
+    placeholderDescribe: 'E.g. law firm with contact, map, sidebar and legal footer…',
     regenerate: 'Regenerate',
     share: 'Share',
     export: 'Export',
@@ -151,7 +153,7 @@ const translations = {
 function buildDescribePlaceholder(lang: Language) {
   return `<div class="border-2 border-dashed border-slate-200 rounded-[3rem] px-12 py-24 text-center text-slate-400">
   <p class="text-lg font-medium">${lang === 'es' ? 'Tu web aparecerá aquí' : 'Your site will appear here'}</p>
-  <p class="mt-2 text-sm">${lang === 'es' ? 'Describe tu proyecto en el chat ←' : 'Describe your project in the chat ←'}</p>
+  <p class="mt-2 text-sm">${lang === 'es' ? 'Describe tu proyecto en el panel de arriba ↑' : 'Describe your project in the panel above ↑'}</p>
 </div>`;
 }
 
@@ -219,6 +221,33 @@ function StudioContent() {
   const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
   const sectionRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const templateLoadedRef = useRef(false);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+
+  const composerHint = useMemo(() => {
+    const lastAi = [...messages].reverse().find((m) => m.role === 'ai');
+    if (lastAi) return lastAi.content;
+    if (studioPhase === 'onboarding') return t.welcomeOnboarding;
+    if (studioPhase === 'describe') return t.welcomeDescribe;
+    return t.welcome;
+  }, [messages, studioPhase, t.welcome, t.welcomeOnboarding, t.welcomeDescribe]);
+
+  const threadMessages = useMemo(() => {
+    const hasUser = messages.some((m) => m.role === 'user');
+    if (!hasUser && messages.length === 1 && messages[0]?.role === 'ai') return [];
+
+    const lastAiIndex = messages.reduce<number>((acc, m, i) => (m.role === 'ai' ? i : acc), -1);
+    if (hasUser && lastAiIndex >= 0) {
+      return messages.filter((_, i) => i !== lastAiIndex);
+    }
+    return messages;
+  }, [messages]);
+
+  const inputPlaceholder =
+    studioPhase === 'describe' ? t.placeholderDescribe : t.placeholder;
+
+  useEffect(() => {
+    chatScrollRef.current?.scrollTo({ top: chatScrollRef.current.scrollHeight, behavior: 'smooth' });
+  }, [threadMessages.length, isThinking]);
 
   useEffect(() => {
     setMounted(true);
@@ -729,8 +758,8 @@ function StudioContent() {
 
       <div className="flex flex-1 overflow-hidden">
         <div className="w-[min(340px,32vw)] flex flex-col border-r border-slate-200 bg-white shrink-0">
-          <div className="p-7 border-b border-slate-100">
-            <div className="flex items-center gap-3">
+          <div className="p-5 border-b border-slate-100 shrink-0">
+            <div className="flex items-center gap-3 mb-4">
               <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200">
                 <img src="/images/logo.png" alt="Studio" className="w-full h-full object-cover" />
               </div>
@@ -739,27 +768,72 @@ function StudioContent() {
                 <div className="text-xs text-slate-500">{t.subtitle}</div>
               </div>
             </div>
+
+            <div className="chat-bubble-ai text-[14px] leading-relaxed mb-3 max-h-28 overflow-y-auto">
+              {composerHint}
+            </div>
+
+            <div className="flex gap-2">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                placeholder={inputPlaceholder}
+                className="flex-1 bg-white border border-slate-200 focus:border-indigo-400 px-4 py-3 text-sm rounded-2xl placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              />
+              <button
+                onClick={sendMessage}
+                disabled={!input.trim() || isThinking}
+                className="w-11 h-11 shrink-0 bg-slate-900 rounded-2xl flex items-center justify-center text-white disabled:opacity-40 cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex justify-between mt-2 text-[10px] text-slate-400">
+              <span>
+                {unlimitedAccess
+                  ? `${t.unlimitedAccess} · Superadmin`
+                  : `${credits} ${t.creditsLeft} · ${t.creditHint}`}
+              </span>
+              <Link href="/guia" className="text-indigo-600 hover:underline">{lang === 'es' ? 'Ver guía' : 'View guide'}</Link>
+            </div>
+
+            <div className="mt-3 pt-3 border-t border-slate-100">
+              <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
+              <div className="flex flex-wrap gap-1.5 max-h-[88px] overflow-y-auto">
+                {t.quickPrompts.map((p, i) => (
+                  <button key={i} onClick={() => applyQuickPrompt(p)} disabled={isThinking} className="text-[11px] px-2.5 py-1 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-40 cursor-pointer">
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="flex-1 overflow-auto p-7 space-y-7 text-[15px] min-h-0">
+          <div ref={chatScrollRef} className="flex-1 overflow-auto px-5 py-4 space-y-4 text-[14px] min-h-0">
+            {threadMessages.length === 0 && !isThinking && (
+              <p className="text-xs text-slate-400 text-center py-2">
+                {lang === 'es' ? 'Tu conversación aparecerá aquí.' : 'Your conversation will appear here.'}
+              </p>
+            )}
             <AnimatePresence>
-              {messages.map((msg) => (
+              {threadMessages.map((msg) => (
                 <div key={msg.id} className={msg.role === 'user' ? 'flex justify-end' : ''}>
-                  <div className={msg.role === 'user' ? 'chat-bubble-user max-w-[83%]' : 'chat-bubble-ai max-w-[92%]'}>
+                  <div className={msg.role === 'user' ? 'chat-bubble-user max-w-[90%]' : 'chat-bubble-ai max-w-[95%]'}>
                     {msg.content}
                   </div>
                 </div>
               ))}
             </AnimatePresence>
             {isThinking && (
-              <div className="flex items-center gap-2 px-2 text-sm text-slate-400">
+              <div className="flex items-center gap-2 px-1 text-sm text-slate-400">
                 <Sparkles className="w-4 h-4 text-indigo-500 animate-pulse" />
                 <span>{t.thinking}</span>
               </div>
             )}
           </div>
 
-          <div className="px-7 py-4 border-t border-slate-100 shrink-0 bg-slate-50/80">
+          <div className="px-5 py-3 border-t border-slate-100 shrink-0 bg-slate-50/80">
             <div className="flex items-center gap-2 text-[10px] tracking-widest text-slate-400 mb-2">
               <History className="w-3 h-3" />
               {t.changes}
@@ -798,44 +872,6 @@ function StudioContent() {
                 </ul>
               </div>
             )}
-          </div>
-
-          <div className="px-7 pt-4 pb-3 border-t border-slate-100 shrink-0">
-            <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
-            <div className="flex flex-wrap gap-2">
-              {t.quickPrompts.map((p, i) => (
-                <button key={i} onClick={() => applyQuickPrompt(p)} disabled={isThinking} className="text-xs px-3 py-1.5 rounded-2xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-40 cursor-pointer">
-                  {p}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="p-7 border-t border-slate-100 bg-slate-50 shrink-0">
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder={t.placeholder}
-                className="flex-1 bg-white border border-slate-200 focus:border-slate-400 px-5 py-4 text-sm rounded-3xl placeholder:text-slate-400 focus:outline-none"
-              />
-              <button
-                onClick={sendMessage}
-                disabled={!input.trim() || isThinking}
-                className="w-[52px] h-[52px] bg-slate-900 rounded-3xl flex items-center justify-center text-white disabled:opacity-40 cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex justify-between mt-2 text-[10px] text-slate-400">
-              <span>
-                {unlimitedAccess
-                  ? `${t.unlimitedAccess} · Superadmin`
-                  : `${credits} ${t.creditsLeft} · ${t.creditHint}`}
-              </span>
-              <Link href="/guia" className="text-indigo-600 hover:underline">{lang === 'es' ? 'Ver guía' : 'View guide'}</Link>
-            </div>
           </div>
         </div>
 
