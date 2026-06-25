@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   const started = Date.now();
 
   try {
-    const creditStatus = await resolveCredits(session?.id ?? null, ip);
+    const creditStatus = await resolveCredits(session?.id ?? null, ip, session?.email);
     const unlimited = creditStatus.unlimited === true;
 
     if (!unlimited && creditStatus.credits <= 0) {
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
 
     const spent = unlimited
       ? { ok: true as const, credits: creditStatus.credits }
-      : await consumeCredit(session?.id ?? null, ip, 'studio_generate');
+      : await consumeCredit(session?.id ?? null, ip, 'studio_generate', session?.email);
     if (!spent.ok) {
       return NextResponse.json({ error: 'Sin créditos disponibles', credits: spent.credits }, { status: 402 });
     }
@@ -147,7 +147,7 @@ export async function POST(req: Request) {
     );
 
     if (!validationOk) {
-      await refundCredit(session?.id ?? null, ip, 'studio_refund_validation');
+      await refundCredit(session?.id ?? null, ip, 'studio_refund_validation', session?.email);
       await logProjectChangeAudit({
         projectId,
         userId: session?.id,
@@ -218,7 +218,7 @@ export async function POST(req: Request) {
         { status: 503 }
       );
     }
-    const credits = await refundCredit(session?.id ?? null, ip, 'studio_refund_error');
+    const credits = await refundCredit(session?.id ?? null, ip, 'studio_refund_error', session?.email);
     return NextResponse.json({ error: 'Error al generar el diseño', credits }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
 import { prisma } from './db';
 import { FREE_CREDITS, hashIp } from './auth/users';
-import { UNLIMITED_CREDITS } from './auth/admin';
+import { UNLIMITED_CREDITS, isAdminEmail } from './auth/admin';
 
 function isDbConfigured(): boolean {
   return Boolean(process.env.DATABASE_URL?.trim());
@@ -16,9 +16,16 @@ export interface CreditStatus {
   unlimited?: boolean;
 }
 
-async function isAdminUser(userId: string): Promise<boolean> {
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
-  return user?.role === 'admin';
+async function isAdminUser(userId: string, email?: string | null): Promise<boolean> {
+  if (isAdminEmail(email)) return true;
+  if (!isDbConfigured()) return false;
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, email: true } });
+  if (!user) return false;
+  return user.role === 'admin' || isAdminEmail(user.email);
+}
+
+function unlimitedStatus(userId?: string): CreditStatus {
+  return { credits: UNLIMITED_CREDITS, source: 'user', userId, unlimited: true };
 }
 
 export async function getCreditsForUser(userId: string): Promise<number> {
@@ -39,23 +46,42 @@ export async function getCreditsForGuest(ip: string): Promise<number> {
   return row.credits;
 }
 
-export async function resolveCredits(userId: string | null, ip: string): Promise<CreditStatus> {
+export async function resolveCredits(
+  userId: string | null,
+  ip: string,
+  email?: string | null
+): Promise<CreditStatus> {
+  if (isAdminEmail(email)) {
+    return unlimitedStatus(userId ?? undefined);
+  }
   if (!isDbConfigured() && !userId) {
     return { credits: await getCreditsForGuest(ip), source: 'guest' };
   }
   if (userId) {
-    if (await isAdminUser(userId)) {
-      return { credits: UNLIMITED_CREDITS, source: 'user', userId, unlimited: true };
+    if (await isAdminUser(userId, email)) {
+      return unlimitedStatus(userId);
+    }
+    if (!isDbConfigured()) {
+      return { credits: FREE_CREDITS, source: 'user', userId };
     }
     return { credits: await getCreditsForUser(userId), source: 'user', userId };
   }
   return { credits: await getCreditsForGuest(ip), source: 'guest' };
 }
 
-export async function consumeCredit(userId: string | null, ip: string, reason: string): Promise<{ ok: true; credits: number } | { ok: false; credits: number }> {
+export async function consumeCredit(
+  userId: string | null,
+  ip: string,
+  reason: string,
+  email?: string | null
+): Promise<{ ok: true; credits: number } | { ok: false; credits: number }> {
+  if (isAdminEmail(email) || (userId && (await isAdminUser(userId, email)))) {
+    return { ok: true, credits: UNLIMITED_CREDITS };
+  }
+
   if (userId) {
-    if (await isAdminUser(userId)) {
-      return { ok: true, credits: UNLIMITED_CREDITS };
+    if (!isDbConfigured()) {
+      return { ok: true, credits: FREE_CREDITS };
     }
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user || user.credits <= 0) {
@@ -95,10 +121,19 @@ export async function consumeCredit(userId: string | null, ip: string, reason: s
   return { ok: true, credits: updated.credits };
 }
 
-export async function refundCredit(userId: string | null, ip: string, reason: string): Promise<number> {
+export async function refundCredit(
+  userId: string | null,
+  ip: string,
+  reason: string,
+  email?: string | null
+): Promise<number> {
+  if (isAdminEmail(email) || (userId && (await isAdminUser(userId, email)))) {
+    return UNLIMITED_CREDITS;
+  }
+
   if (userId) {
-    if (await isAdminUser(userId)) {
-      return UNLIMITED_CREDITS;
+    if (!isDbConfigured()) {
+      return FREE_CREDITS;
     }
     const updated = await prisma.user.update({
       where: { id: userId },

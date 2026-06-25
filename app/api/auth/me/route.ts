@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '../../../lib/auth/session';
 import { getUserById } from '../../../lib/auth/users';
+import { isAdminEmail } from '../../../lib/auth/admin';
 
 export async function GET() {
   const session = await getSessionUser();
@@ -13,8 +14,11 @@ export async function GET() {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 
+  const unlimited = user.role === 'admin' || isAdminEmail(user.email);
+
   return NextResponse.json({
     authenticated: true,
+    unlimited,
     user: {
       id: user.id,
       email: user.email,

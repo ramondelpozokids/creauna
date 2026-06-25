@@ -265,6 +265,14 @@ function StudioContent() {
       setCredits(balance);
       setUnlimitedAccess(unlimited);
     });
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.unlimited === true || data?.user?.role === 'admin') {
+          setUnlimitedAccess(true);
+        }
+      })
+      .catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -438,9 +446,16 @@ function StudioContent() {
     return nextLog;
   };
 
-  const checkCredits = useCallback((): boolean => {
+  const ensureCredits = useCallback(async (): Promise<boolean> => {
     if (unlimitedAccess) return true;
-    if (getCredits() <= 0) {
+    const sync = await syncCreditsFromServer();
+    if (sync.unlimited) {
+      setUnlimitedAccess(true);
+      return true;
+    }
+    setCredits(sync.credits);
+    setCreditsCache(sync.credits);
+    if (sync.credits <= 0) {
       toast.error(t.noCredits);
       return false;
     }
@@ -608,7 +623,7 @@ function StudioContent() {
       toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
       return;
     }
-    if (!checkCredits()) return;
+    if (!(await ensureCredits())) return;
 
     const isInitialGeneration = studioPhase === 'describe';
     const impact = await previewImpact({
@@ -631,7 +646,7 @@ function StudioContent() {
       toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
       return;
     }
-    if (!checkCredits()) return;
+    if (!(await ensureCredits())) return;
     const impact = await previewImpact({
       prompt,
       action: 'change',
@@ -646,7 +661,7 @@ function StudioContent() {
 
   const changeStyle = async (newStyle: 'elegante' | 'minimal' | 'moderno') => {
     if (studioPhase === 'onboarding') return;
-    if (!checkCredits()) return;
+    if (!(await ensureCredits())) return;
     const impact = await previewImpact({ prompt: `estilo ${newStyle}`, action: 'style' });
     if (!(await confirmImpactIfNeeded(impact))) return;
     setStyle(newStyle);
@@ -670,7 +685,7 @@ function StudioContent() {
 
   const regenerate = async () => {
     if (studioPhase === 'onboarding') return;
-    if (!checkCredits()) return;
+    if (!(await ensureCredits())) return;
     const impact = await previewImpact({ prompt: 'regenerar', action: 'regenerate' });
     if (!(await confirmImpactIfNeeded(impact))) return;
     setIsThinking(true);
@@ -693,7 +708,7 @@ function StudioContent() {
 
   const improveSection = async (id: number) => {
     if (studioPhase === 'onboarding') return;
-    if (!checkCredits()) return;
+    if (!(await ensureCredits())) return;
     setSelectedSectionId(id);
     const impact = await previewImpact({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
     if (!(await confirmImpactIfNeeded(impact))) return;

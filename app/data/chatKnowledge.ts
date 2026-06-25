@@ -34,7 +34,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pricing',
     keywords: ['precio', 'precios', 'plan', 'planes', 'cuanto cuesta', 'cuánto cuesta', 'tarifa', 'coste', 'costo', 'gratis', 'pago', 'suscripción', 'mensual', 'anual'],
-    answer: 'Planes al estilo Wix/Squarespace/Webflow:\n\n• Gratis — 0€, 1 sitio, 15 créditos IA/mes\n• Pro — desde 15€/mes (anual) o 19€/mes, 120 créditos, dominio propio\n• Business — desde 39€/mes (anual) o 49€/mes, sitios ilimitados, 300 créditos\n\nWeb a Medida aparte: 2.900€ + IVA. Comparativa completa en /precios',
+    answer: 'Planes CREAUNA:\n\n• Gratis — 0€, 1 sitio, 15 créditos IA/mes\n• Pro — desde 15€/mes (anual) o 19€/mes, 120 créditos, dominio propio\n• Business — desde 39€/mes (anual) o 49€/mes, sitios ilimitados, 300 créditos\n\nWeb a Medida aparte: 2.900€ + IVA. Detalle en /precios',
   },
   {
     id: 'credits',
