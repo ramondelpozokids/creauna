@@ -551,6 +551,7 @@ function StudioContent() {
       businessName?: string;
       sectorId?: string;
       sectorLabel?: string;
+      diffSummary?: string;
     };
   };
 
@@ -569,7 +570,7 @@ function StudioContent() {
         prompt: currentInput,
         action: isInitialGeneration ? 'initial' : action,
         sectionId: sectionId ?? selectedSectionId ?? undefined,
-      }) as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; templateSlug?: string; businessName?: string; diffSummary?: string };
+      });
 
       setPreviewSections(data.previewSections);
       if (studioPhase === 'describe') setStudioPhase('active');
