@@ -78,20 +78,20 @@ export async function updateUserPassword(
   userId: string,
   currentPassword: string,
   newPassword: string
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<{ error: string | null }> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) return { ok: false as const, error: 'Usuario no encontrado' };
+  if (!user) return { error: 'Usuario no encontrado' };
 
   const valid = await bcrypt.compare(currentPassword, user.passwordHash);
-  if (!valid) return { ok: false as const, error: 'Contraseña actual incorrecta' };
+  if (!valid) return { error: 'Contraseña actual incorrecta' };
 
   if (newPassword.length < 8) {
-    return { ok: false as const, error: 'La nueva contraseña debe tener al menos 8 caracteres' };
+    return { error: 'La nueva contraseña debe tener al menos 8 caracteres' };
   }
 
   const passwordHash = await bcrypt.hash(newPassword, 12);
   await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
-  return { ok: true as const };
+  return { error: null };
 }
 
 export async function upsertAdminUser(

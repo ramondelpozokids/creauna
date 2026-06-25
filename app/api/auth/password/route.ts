@@ -18,9 +18,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Completa todos los campos' }, { status: 400 });
     }
 
-    const result = await updateUserPassword(session.id, currentPassword, newPassword);
-    if (!result.ok) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    const { error } = await updateUserPassword(session.id, currentPassword, newPassword);
+    if (error) {
+      return NextResponse.json({ error }, { status: 400 });
     }
     return NextResponse.json({ ok: true });
   } catch (error) {
