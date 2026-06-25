@@ -1,8 +1,22 @@
 import { NextResponse } from 'next/server';
-import { authenticateUser, createDemoUser, isDemoAuthEnabled } from '../../../lib/auth/users';
+import { authenticateUser, createDemoUser, isDemoAuthEnabled, upsertAdminUser } from '../../../lib/auth/users';
 import { setSessionCookie } from '../../../lib/auth/session';
 import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { isValidEmail, requireFields, sanitizeText } from '../../../lib/api/validate';
+import { isAdminEmail } from '../../../lib/auth/admin';
+
+function getAdminBootstrapPassword(): string | null {
+  return process.env.CREAUNA_ADMIN_PASSWORD?.trim() || null;
+}
+
+function isDbUnavailable(error: unknown): boolean {
+  const msg = error instanceof Error ? error.message : String(error);
+  return (
+    msg.includes('DATABASE_URL') ||
+    msg.includes('PrismaClientInitializationError') ||
+    msg.includes("Can't reach database")
+  );
+}
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -23,6 +37,13 @@ export async function POST(req: Request) {
     let user = await authenticateUser(email, password);
     let demo = false;
 
+    if (!user && isAdminEmail(email)) {
+      const bootstrapPassword = getAdminBootstrapPassword();
+      if (bootstrapPassword && password === bootstrapPassword) {
+        user = await upsertAdminUser(email, password);
+      }
+    }
+
     if (!user && isDemoAuthEnabled()) {
       user = await createDemoUser(email);
       demo = true;
@@ -41,6 +62,12 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('api/auth/login:', error);
+    if (isDbUnavailable(error)) {
+      return NextResponse.json(
+        { error: 'Base de datos no disponible. Configura DATABASE_URL en Vercel.' },
+        { status: 503 }
+      );
+    }
     return NextResponse.json({ error: 'Error al iniciar sesión' }, { status: 500 });
   }
 }
