@@ -75,7 +75,7 @@ export function resolveStudioSector(prompt: string, sectorId?: string | null): S
 export function buildSectorAgentPlaybook(sector: SectorEntry, lang: 'es' | 'en'): string {
   const label = lang === 'es' ? sector.labelEs : sector.labelEn;
   const group = lang === 'es' ? sector.groupEs : sector.groupEn;
-  const hint = lang === 'es' ? sector.promptHintEs : sector.promptHintEn;
+  const hint = lang === 'es' ? sector.promptHintEs : `Website for ${sector.labelEn}`;
   const sections =
     TEMPLATE_SECTIONS[sector.templateSlug]?.[lang] ??
     (lang === 'es'

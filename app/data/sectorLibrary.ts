@@ -98,7 +98,7 @@ export function toPublicSector(sector: SectorEntry, lang: 'es' | 'en'): SectorPu
     group: lang === 'es' ? sector.groupEs : sector.groupEn,
     templateSlug: sector.templateSlug,
     tier: sector.tier,
-    promptHint: lang === 'es' ? sector.promptHintEs : sector.promptHintEn,
+    promptHint: lang === 'es' ? sector.promptHintEs : `Website for ${sector.labelEn}`,
   };
 }
 
