@@ -7,7 +7,7 @@ import { beforeAfterI18n } from '../data/i18n/marketing';
 type DemoId = 'restaurant' | 'gestoria' | 'autonomo';
 
 const DEMO_WIDTH = 1440;
-const DEMO_HEIGHT = 900;
+const SCROLL_VIEW_HEIGHT = 720;
 
 const demos: Record<
   DemoId,
@@ -26,33 +26,68 @@ const demos: Record<
   autonomo: { url: 'studio-luna.es', beforeEs: 'Autónomo', beforeEn: 'Freelancer' },
 };
 
-function HtmlDemoPanel({ src, tag, align = 'left' }: { src: string; tag: string; align?: 'left' | 'right' }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.42);
+function prepareDemoIframe(doc: Document) {
+  const pre = doc.querySelector('.preloader') as HTMLElement | null;
+  if (pre) {
+    pre.classList.add('hidden');
+    pre.style.display = 'none';
+  }
+  doc.documentElement.style.overflow = 'hidden';
+  doc.body.style.overflow = 'hidden';
+}
+
+function measureDocHeight(doc: Document): number {
+  return Math.max(
+    doc.body.scrollHeight,
+    doc.documentElement.scrollHeight,
+    doc.body.offsetHeight,
+    900
+  );
+}
+
+function FullPageHtmlLayer({
+  src,
+  tag,
+  scale,
+  docHeight,
+  onHeight,
+}: {
+  src: string;
+  tag: string;
+  scale: number;
+  docHeight: number;
+  onHeight: (h: number) => void;
+}) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const update = () => {
-      const w = el.clientWidth;
-      const h = el.clientHeight;
-      setScale(Math.min(w / DEMO_WIDTH, h / DEMO_HEIGHT));
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const handleLoad = () => {
+      const doc = iframe.contentDocument;
+      if (!doc) return;
+      prepareDemoIframe(doc);
+      onHeight(measureDocHeight(doc));
     };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+
+    iframe.addEventListener('load', handleLoad);
+    return () => iframe.removeEventListener('load', handleLoad);
+  }, [src, onHeight]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden bg-[#050810]">
+    <div
+      className="absolute top-0 left-0 w-full"
+      style={{ height: docHeight * scale }}
+    >
       <iframe
+        ref={iframeRef}
         src={src}
         title={tag}
         className="absolute top-0 left-0 border-0 pointer-events-none"
         style={{
           width: DEMO_WIDTH,
-          height: DEMO_HEIGHT,
+          height: docHeight,
           transform: `scale(${scale})`,
           transformOrigin: 'top left',
         }}
@@ -60,8 +95,159 @@ function HtmlDemoPanel({ src, tag, align = 'left' }: { src: string; tag: string;
         tabIndex={-1}
         loading="lazy"
       />
-      <div className={`absolute top-3 ${align === 'right' ? 'right-3 bg-emerald-600' : 'left-3 bg-black/75'} text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider shadow-lg backdrop-blur-sm z-10`}>
-        {tag}
+    </div>
+  );
+}
+
+function HtmlFullPageCompare({
+  beforeSrc,
+  afterSrc,
+  beforeTag,
+  afterTag,
+  position,
+  onMove,
+  onPositionChange,
+  aria,
+}: {
+  beforeSrc: string;
+  afterSrc: string;
+  beforeTag: string;
+  afterTag: string;
+  position: number;
+  onMove: (clientX: number, rect: DOMRect) => void;
+  onPositionChange: (pct: number) => void;
+  aria: string;
+}) {
+  const outerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
+  const [scale, setScale] = useState(0.45);
+  const [beforeHeight, setBeforeHeight] = useState(3200);
+  const [afterHeight, setAfterHeight] = useState(3200);
+
+  const docHeight = Math.max(beforeHeight, afterHeight, 900);
+  const contentHeight = docHeight * scale;
+
+  useEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+    const update = () => {
+      const w = el.clientWidth;
+      setScale(Math.max(0.22, w / DEMO_WIDTH));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const onBeforeHeight = useCallback((h: number) => setBeforeHeight(h), []);
+  const onAfterHeight = useCallback((h: number) => setAfterHeight(h), []);
+
+  const handlePointerMove = useCallback(
+    (clientX: number) => {
+      const rect = outerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      onMove(clientX, rect);
+    },
+    [onMove]
+  );
+
+  useEffect(() => {
+    const onWindowPointerMove = (e: PointerEvent) => {
+      if (!draggingRef.current) return;
+      handlePointerMove(e.clientX);
+    };
+    const onWindowPointerUp = () => {
+      draggingRef.current = false;
+    };
+    window.addEventListener('pointermove', onWindowPointerMove);
+    window.addEventListener('pointerup', onWindowPointerUp);
+    return () => {
+      window.removeEventListener('pointermove', onWindowPointerMove);
+      window.removeEventListener('pointerup', onWindowPointerUp);
+    };
+  }, [handlePointerMove]);
+
+  return (
+    <div ref={outerRef} className="relative" style={{ height: SCROLL_VIEW_HEIGHT }}>
+      <div
+        ref={scrollRef}
+        className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-[#050810]"
+      >
+        <div className="relative w-full" style={{ height: contentHeight }}>
+          <FullPageHtmlLayer
+            src={afterSrc}
+            tag={afterTag}
+            scale={scale}
+            docHeight={docHeight}
+            onHeight={onAfterHeight}
+          />
+          <div
+            className="absolute inset-0 z-10 overflow-hidden"
+            style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
+          >
+            <FullPageHtmlLayer
+              src={beforeSrc}
+              tag={beforeTag}
+              scale={scale}
+              docHeight={docHeight}
+              onHeight={onBeforeHeight}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="absolute top-3 left-3 z-20 bg-black/75 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider shadow-lg backdrop-blur-sm pointer-events-none"
+      >
+        {beforeTag}
+      </div>
+      <div
+        className="absolute top-3 right-3 z-20 bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider shadow-lg pointer-events-none"
+      >
+        {afterTag}
+      </div>
+
+      <div
+        className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_12px_rgba(0,0,0,0.35)] z-20 pointer-events-none"
+        style={{ left: `${position}%` }}
+      >
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg border-2 border-indigo-500 flex items-center justify-center">
+          <span className="text-indigo-600 text-sm font-bold" aria-hidden>⟷</span>
+        </div>
+      </div>
+
+      <div
+        className="absolute top-0 bottom-0 z-30 w-10 -translate-x-1/2 cursor-ew-resize touch-none"
+        style={{ left: `${position}%` }}
+        onPointerDown={(e) => {
+          draggingRef.current = true;
+          e.currentTarget.setPointerCapture(e.pointerId);
+          handlePointerMove(e.clientX);
+        }}
+        onPointerMove={(e) => {
+          if (!draggingRef.current) return;
+          handlePointerMove(e.clientX);
+        }}
+        onPointerUp={(e) => {
+          draggingRef.current = false;
+          e.currentTarget.releasePointerCapture(e.pointerId);
+        }}
+      >
+        <input
+          type="range"
+          min={8}
+          max={92}
+          value={position}
+          onChange={(e) => onPositionChange(Number(e.target.value))}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize"
+          aria-label={aria}
+        />
+      </div>
+
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none bg-black/60 text-white text-[10px] px-3 py-1 rounded-full backdrop-blur-sm">
+        ↕ Desplázate para ver toda la página
       </div>
     </div>
   );
@@ -147,16 +333,6 @@ function AfterPanel({
                 <span className="text-xs font-medium">{item}</span>
               </div>
             ))}
-            <div className="grid grid-cols-3 gap-2 pt-2">
-              {['98', '100', 'A+'].map((stat, i) => (
-                <div key={stat} className="bg-white/5 rounded-xl p-3 text-center border border-white/10">
-                  <div className="text-lg font-bold text-white">{stat}</div>
-                  <div className="text-[9px] text-slate-400 uppercase tracking-wide">
-                    {i === 0 ? 'SEO' : i === 1 ? 'Mobile' : 'Speed'}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
@@ -182,26 +358,6 @@ export default function BeforeAfterDemo() {
     const pct = ((clientX - rect.left) / rect.width) * 100;
     setPosition(Math.min(92, Math.max(8, pct)));
   }, []);
-
-  const afterContent = usesHtml && meta.html ? (
-    <HtmlDemoPanel src={meta.html.after} tag={t.afterTag} align="right" />
-  ) : (
-    <AfterPanel
-      tag={t.afterTag}
-      title={current.afterTitle}
-      desc={current.afterDesc}
-      cta1={current.afterCta1}
-      cta2={current.afterCta2}
-      items={current.afterItems}
-      accent={current.accent}
-    />
-  );
-
-  const beforeContent = usesHtml && meta.html ? (
-    <HtmlDemoPanel src={meta.html.before} tag={t.beforeTag} />
-  ) : (
-    <BeforePanel tag={t.beforeTag} sector={lang === 'es' ? meta.beforeEs : meta.beforeEn} />
-  );
 
   return (
     <div className="rounded-3xl border border-slate-200 shadow-xl overflow-hidden bg-white">
@@ -233,48 +389,66 @@ export default function BeforeAfterDemo() {
         </div>
       </div>
 
-      <div
-        className="relative h-[480px] md:h-[540px] overflow-hidden select-none touch-none"
-        onPointerMove={(e) => {
-          if (e.buttons !== 1 && e.pointerType === 'mouse') return;
-          onMove(e.clientX, e.currentTarget.getBoundingClientRect());
-        }}
-        onPointerDown={(e) => onMove(e.clientX, e.currentTarget.getBoundingClientRect())}
-      >
-        {afterContent}
-
-        <div
-          className="absolute inset-0 z-10 overflow-hidden"
-          style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
-        >
-          {beforeContent}
-        </div>
-
-        <div
-          className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_12px_rgba(0,0,0,0.35)] z-20 pointer-events-none"
-          style={{ left: `${position}%` }}
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg border-2 border-indigo-500 flex items-center justify-center">
-            <span className="text-indigo-600 text-sm font-bold" aria-hidden>⟷</span>
-          </div>
-        </div>
-
-        <input
-          type="range"
-          min={8}
-          max={92}
-          value={position}
-          onChange={(e) => setPosition(Number(e.target.value))}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
-          aria-label={t.aria}
+      {usesHtml && meta.html ? (
+        <HtmlFullPageCompare
+          beforeSrc={meta.html.before}
+          afterSrc={meta.html.after}
+          beforeTag={t.beforeTag}
+          afterTag={t.afterTag}
+          position={position}
+          onMove={onMove}
+          onPositionChange={setPosition}
+          aria={t.aria}
         />
-      </div>
+      ) : (
+        <div
+          className="relative h-[480px] md:h-[540px] overflow-hidden select-none touch-none"
+          onPointerMove={(e) => {
+            if (e.buttons !== 1 && e.pointerType === 'mouse') return;
+            onMove(e.clientX, e.currentTarget.getBoundingClientRect());
+          }}
+          onPointerDown={(e) => onMove(e.clientX, e.currentTarget.getBoundingClientRect())}
+        >
+          <AfterPanel
+            tag={t.afterTag}
+            title={current.afterTitle}
+            desc={current.afterDesc}
+            cta1={current.afterCta1}
+            cta2={current.afterCta2}
+            items={current.afterItems}
+            accent={current.accent}
+          />
+          <div
+            className="absolute inset-0 z-10 overflow-hidden"
+            style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
+          >
+            <BeforePanel tag={t.beforeTag} sector={lang === 'es' ? meta.beforeEs : meta.beforeEn} />
+          </div>
+          <div
+            className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_12px_rgba(0,0,0,0.35)] z-20 pointer-events-none"
+            style={{ left: `${position}%` }}
+          >
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg border-2 border-indigo-500 flex items-center justify-center">
+              <span className="text-indigo-600 text-sm font-bold" aria-hidden>⟷</span>
+            </div>
+          </div>
+          <input
+            type="range"
+            min={8}
+            max={92}
+            value={position}
+            onChange={(e) => setPosition(Number(e.target.value))}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+            aria-label={t.aria}
+          />
+        </div>
+      )}
 
       <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500">
         {usesHtml
           ? lang === 'es'
-            ? 'Caso real: gestoría VERUM — arrastra para comparar la web original con el rediseño CREAUNA.'
-            : 'Real case: VERUM advisory — drag to compare the original site with the CREAUNA redesign.'
+            ? 'Caso real VERUM: arrastra ⟷ para comparar y desplázate ↕ para ver hero, servicios, AEAT, testimonios y contacto.'
+            : 'Real VERUM case: drag ⟷ to compare and scroll ↕ to see hero, services, tax forms, testimonials and contact.'
           : t.footer}
       </div>
     </div>
