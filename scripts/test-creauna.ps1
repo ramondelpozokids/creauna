@@ -47,9 +47,22 @@ Write-Host "mensaje:"
 Write-Host $r.message
 
 if ($r.source -eq "hybrid") {
-  Write-Host "`nRESULTADO: IA ACTIVA" -ForegroundColor Green
+  Write-Host "`nRESULTADO STUDIO: IA ACTIVA" -ForegroundColor Green
 } elseif ($r.previewSections.Count -gt 0) {
-  Write-Host "`nRESULTADO: Web generada SIN IA (solo reglas). Anade keys en .env.local" -ForegroundColor Yellow
+  Write-Host "`nRESULTADO STUDIO: Web generada SIN IA (solo reglas). Anade keys en .env.local" -ForegroundColor Yellow
 } else {
-  Write-Host "`nRESULTADO: ERROR en generacion" -ForegroundColor Red
+  Write-Host "`nRESULTADO STUDIO: ERROR en generacion" -ForegroundColor Red
+}
+
+Write-Host "`n=== 5. PING EN VIVO (/api/ai/ping) ===" -ForegroundColor Cyan
+try {
+  $ping = Invoke-RestMethod "http://localhost:3000/api/ai/ping" -TimeoutSec 120
+  Write-Host "OK: $($ping.summary.ok) | Errores: $($ping.summary.errors) | Sin key: $($ping.summary.missing)" -ForegroundColor Green
+  $ping.providers | ForEach-Object {
+    $color = if ($_.status -eq 'ok') { 'Green' } elseif ($_.status -eq 'missing') { 'Yellow' } else { 'Red' }
+    Write-Host "  $($_.label): $($_.status) $(if ($_.latencyMs) { "$($_.latencyMs)ms" } else { '' })" -ForegroundColor $color
+    if ($_.error) { Write-Host "    -> $($_.error)" -ForegroundColor Red }
+  }
+} catch {
+  Write-Host "Ping no disponible (401 sin admin/secret o servidor sin keys)." -ForegroundColor Yellow
 }

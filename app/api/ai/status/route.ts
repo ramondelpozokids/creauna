@@ -24,6 +24,10 @@ export async function GET() {
     },
     keys,
     configured: getConfiguredProviders(),
+    ping: {
+      endpoint: '/api/ai/ping',
+      note: 'Prueba real de cada API (latencia + errores). Requiere admin o AI_PING_SECRET.',
+    },
     arena: {
       available: false,
       note: 'LMSYS/Arena no ofrece API oficial con claves. No recomendado para producción.',

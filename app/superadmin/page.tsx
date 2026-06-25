@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../components/LanguageProvider';
 import { superadminI18n } from '../data/i18n/legal';
+import AiHealthPanel from '../components/AiHealthPanel';
 
 interface AuthUser {
   name: string;
@@ -93,6 +94,8 @@ export default function SuperAdmin() {
             </div>
           </div>
         </div>
+
+        <AiHealthPanel />
       </div>
     </div>
   );
