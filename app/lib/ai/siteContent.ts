@@ -473,10 +473,10 @@ const CONTENT_PRESETS: Record<string, ContentPreset> = {
     ],
   },
   ledger: {
-    taglineEs: 'Asesoría fiscal y contable para autónomos, pymes y empresas en crecimiento.',
-    taglineEn: 'Tax and accounting advisory for freelancers, SMEs, and growing companies.',
-    ctaPrimaryEs: 'Nuestros servicios', ctaPrimaryEn: 'Our services',
-    ctaSecondaryEs: 'Consulta gratuita', ctaSecondaryEn: 'Free consultation',
+    taglineEs: 'Gestoría y asesoría estratégica para empresas, autónomos y particulares que buscan crecer con seguridad.',
+    taglineEn: 'Strategic advisory for companies, freelancers and individuals who want to grow with confidence.',
+    ctaPrimaryEs: 'Solicitar asesoramiento', ctaPrimaryEn: 'Request advisory',
+    ctaSecondaryEs: 'Conocer nuestros servicios', ctaSecondaryEn: 'Explore our services',
     es: [
       { title: 'Contabilidad', desc: 'Llevamiento de libros, balances y cuentas anuales al día.' },
       { title: 'Fiscalidad', desc: 'Declaraciones trimestrales, IRPF, IVA y optimización tributaria legal.' },

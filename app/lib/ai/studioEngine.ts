@@ -2,7 +2,7 @@ import { chatCompletion } from './providers';
 import { generateInitialSite } from './siteGenerator';
 import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
 import { detectVariant } from './businessProfiles';
-import { applyVisualEnhancement } from './siteSections';
+import { applyVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
 import { validateSectionHtml } from '../studio/sectionValidator';
 
 export interface PreviewSection {
@@ -91,6 +91,27 @@ function applyStyleTransform(html: string, style: 'elegante' | 'minimal' | 'mode
     .replace(/rounded-\[2rem\]/g, 'rounded-3xl');
 }
 
+function corporateUpgradePrompt(lower: string): boolean {
+  return (
+    lower.includes('elegante') ||
+    lower.includes('refinad') ||
+    lower.includes('elegant') ||
+    lower.includes('premium') ||
+    lower.includes('hero') ||
+    lower.includes('impactante') ||
+    lower.includes('impactful') ||
+    lower.includes('cabecera') ||
+    lower.includes('animacion') ||
+    lower.includes('animaci') ||
+    lower.includes('animation') ||
+    lower.includes('modern') ||
+    lower.includes('lujo') ||
+    lower.includes('luxury') ||
+    lower.includes('ferrari') ||
+    lower.includes('cinemat')
+  );
+}
+
 async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
   const { prompt, lang, previewSections, action, sectionId, style } = input;
   const lower = prompt.toLowerCase();
@@ -168,6 +189,19 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       businessName: result.businessName,
       sectorId: result.sectorId,
       sectorLabel: result.sectorLabel,
+    };
+  }
+
+  if (isCorporatePreviewSite(previewSections) && corporateUpgradePrompt(lower)) {
+    const upgraded = rebuildCorporatePreviewSections(previewSections, lang);
+    return {
+      message: lang === 'es'
+        ? 'Motor Visual: sitio reconstruido con diseño premium — hero Madrid, servicios glassmorphism, carrusel, stats y footer con enlaces legales.'
+        : 'Visual engine: site rebuilt with premium design — Madrid hero, glassmorphism services, carousel, stats and legal footer links.',
+      previewSections: upgraded,
+      motorsUsed: ['visual', 'ux'],
+      source: 'rules',
+      changedSectionIds: upgraded.map((s) => s.id),
     };
   }
 

@@ -1,5 +1,7 @@
 import type { TemplateItem } from '../../data/templates';
-import type { ParsedIntent, SiteFeatures } from './intentAnalyzer';
+import type { SiteFeatures } from './intentAnalyzer';
+import { toStudioSections } from '../templatePages';
+import type { StudioPreviewSection } from '../templatePages';
 import type { ContentPreset } from './siteContent';
 import type { TemplatePageSection } from '../templatePages';
 import type { ServiceItem } from './siteContent';
@@ -27,9 +29,10 @@ const GALLERY_BY_CATEGORY: Record<string, string[]> = {
     'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
   ],
   corporate: [
+    'https://images.pexels.com/photos/672358/pexels-photo-672358.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
     'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
-    'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
-    'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+    'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+    'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
   ],
   tech: [
     'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
@@ -224,26 +227,57 @@ function buildCorporateLegalFooter(ctx: BuildCtx): TemplatePageSection {
   const year = new Date().getFullYear();
   const email = profile?.email ?? 'info@example.com';
   const address = profile ? (es ? profile.addressEs : profile.addressEn) : 'Madrid, España';
-  const blocks = es
+  const phone = profile?.phone ?? '';
+  const legalLinks = es
     ? [
-        { title: 'Aviso Legal', text: `${name} es titular de este sitio web. Los contenidos tienen carácter informativo y no sustituyen el asesoramiento profesional personalizado.` },
-        { title: 'Política de Privacidad', text: `Tratamos tus datos (nombre, email, teléfono y documentación adjunta) únicamente para gestionar consultas, prestación de servicios de asesoría y obligaciones legales. Responsable: ${name}. Contacto: ${email}. Puedes ejercer tus derechos de acceso, rectificación y supresión.` },
-        { title: 'Política de Cookies', text: 'Utilizamos cookies técnicas necesarias para el funcionamiento del sitio y cookies analíticas anonimizadas para mejorar la experiencia. Puedes configurar o rechazar las no esenciales desde el banner de cookies.' },
+        { href: '/legal', label: 'Aviso legal' },
+        { href: '/privacidad', label: 'Política de privacidad' },
+        { href: '/cookies', label: 'Política de cookies' },
+        { href: '/datos', label: 'Protección de datos' },
       ]
     : [
-        { title: 'Legal Notice', text: `${name} owns this website. Content is for information only and does not replace personalized professional advice.` },
-        { title: 'Privacy Policy', text: `We process your data (name, email, phone and attached documents) only to manage enquiries, advisory services and legal obligations. Controller: ${name}. Contact: ${email}.` },
-        { title: 'Cookie Policy', text: 'We use essential technical cookies and anonymized analytics cookies. You can configure or reject non-essential cookies from the cookie banner.' },
+        { href: '/legal', label: 'Legal notice' },
+        { href: '/privacidad', label: 'Privacy policy' },
+        { href: '/cookies', label: 'Cookie policy' },
+        { href: '/datos', label: 'Data protection' },
       ];
+  const navLinks = es
+    ? ['Inicio', 'Servicios', 'Nosotros', 'Galería', 'Contacto', 'Ubicación']
+    : ['Home', 'Services', 'About', 'Gallery', 'Contact', 'Location'];
   return {
     id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
-    html: `<div class="bg-blue-950 text-stone-400 rounded-[2rem] p-10 md:p-14">
-      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div><h3 class="text-white font-bold text-lg">${esc(name)}</h3><p class="mt-3 text-sm leading-relaxed">${esc(profile ? (es ? profile.aboutEs : profile.aboutEn).slice(0, 140) : '')}</p><p class="mt-2 text-xs">📍 ${esc(address)}</p></div>
-        <div><h4 class="text-emerald-400 text-xs font-bold tracking-widest uppercase">${es ? 'Navegación' : 'Navigation'}</h4><div class="mt-3 space-y-1 text-sm">${(es ? ['Inicio', 'Servicios', 'Nosotros', 'Contacto', 'Ubicación'] : ['Home', 'Services', 'About', 'Contact', 'Location']).map((l) => `<div>${l}</div>`).join('')}</div></div>
-        <div><h4 class="text-emerald-400 text-xs font-bold tracking-widest uppercase">${es ? 'Legal' : 'Legal'}</h4><div class="mt-3 space-y-3">${blocks.map((b) => `<div><div class="text-white text-sm font-medium">${esc(b.title)}</div><p class="mt-1 text-xs leading-relaxed">${esc(b.text)}</p></div>`).join('')}</div></div>
+    html: `<div class="bg-[#050810] text-slate-400 rounded-[2rem] p-10 md:p-16 border border-white/5">
+      <div class="grid md:grid-cols-4 gap-10 max-w-6xl mx-auto">
+        <div class="md:col-span-1">
+          <div class="font-serif text-xl text-white tracking-wide">${esc(name)}</div>
+          <p class="mt-4 text-xs leading-relaxed text-slate-500">${esc((profile ? (es ? profile.aboutEs : profile.aboutEn) : '').slice(0, 120))}</p>
+          <p class="mt-4 text-xs text-slate-500">📍 ${esc(address)}</p>
+          ${phone ? `<p class="mt-2 text-xs text-amber-500/90">${esc(phone)}</p>` : ''}
+        </div>
+        <div>
+          <h4 class="text-[10px] font-semibold tracking-[0.25em] uppercase text-amber-500/80 mb-4">${es ? 'Navegación' : 'Navigation'}</h4>
+          <ul class="space-y-2 text-sm text-slate-500">${navLinks.map((l) => `<li><a href="#" class="hover:text-white transition-colors">${l}</a></li>`).join('')}</ul>
+        </div>
+        <div>
+          <h4 class="text-[10px] font-semibold tracking-[0.25em] uppercase text-amber-500/80 mb-4">${es ? 'Contacto' : 'Contact'}</h4>
+          <ul class="space-y-2 text-xs text-slate-500">
+            ${email ? `<li><a href="mailto:${esc(email)}" class="hover:text-amber-400 transition-colors">${esc(email)}</a></li>` : ''}
+            <li>${es ? 'Madrid, España' : 'Madrid, Spain'}</li>
+          </ul>
+          <div class="mt-6 flex gap-3">
+            <span class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-slate-500 hover:border-amber-500/40 hover:text-amber-400 transition-colors cursor-pointer">in</span>
+            <span class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-slate-500 hover:border-amber-500/40 hover:text-amber-400 transition-colors cursor-pointer">𝕏</span>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-[10px] font-semibold tracking-[0.25em] uppercase text-amber-500/80 mb-4">${es ? 'Legal' : 'Legal'}</h4>
+          <ul class="space-y-2 text-sm">${legalLinks.map((l) => `<li><a href="${l.href}" class="text-slate-500 hover:text-white transition-colors">${l.label}</a></li>`).join('')}</ul>
+        </div>
       </div>
-      <div class="mt-8 pt-6 border-t border-blue-900 text-center text-xs">© ${year} ${esc(name)}. ${es ? 'Todos los derechos reservados.' : 'All rights reserved.'}</div>
+      <div class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] tracking-wider uppercase text-slate-600">
+        <span>© ${year} ${esc(name)}</span>
+        <span>${es ? 'Asesoría premium · Madrid' : 'Premium advisory · Madrid'}</span>
+      </div>
     </div>`,
   };
 }
@@ -510,109 +544,271 @@ function buildRenewableEnergySite(ctx: BuildCtx, features: SiteFeatures): Templa
   return [hero, stats, services, whyUs, process, gallerySec, reviewsSec, faq, ctaFinal, footer, widgets];
 }
 
-function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+const PREMIUM_GESTORIA_CSS = `<style>
+@keyframes cua-kenburns{0%{transform:scale(1.06) translateY(0)}100%{transform:scale(1.16) translateY(-1.5%)}}
+@keyframes cua-fade-up{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cua-scroll{0%{transform:translateX(0)}100%{transform:translateX(calc(-50% - 0.75rem))}}
+@keyframes cua-float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes cua-shimmer{0%,100%{opacity:.35}50%{opacity:.75}}
+.cua-hero-zoom{animation:cua-kenburns 24s ease-in-out infinite alternate}
+.cua-fade-up{animation:cua-fade-up 1.15s cubic-bezier(.22,1,.36,1) both}
+.cua-fade-d1{animation-delay:.18s}.cua-fade-d2{animation-delay:.36s}.cua-fade-d3{animation-delay:.54s}
+.cua-carousel-track{display:flex;gap:1.25rem;width:max-content;animation:cua-scroll 50s linear infinite}
+.cua-carousel-track:hover{animation-play-state:paused}
+.cua-glass{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08)}
+.cua-btn-gold{background:linear-gradient(135deg,#b8922a 0%,#e8c547 45%,#c9a227 100%);transition:box-shadow .4s,transform .3s}
+.cua-btn-gold:hover{box-shadow:0 0 32px rgba(201,162,39,.45);transform:translateY(-1px)}
+.cua-btn-ghost{border:1px solid rgba(255,255,255,.35);transition:background .3s,border-color .3s,transform .3s}
+.cua-btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(201,162,39,.55);transform:translateY(-1px)}
+.cua-particle{position:absolute;border-radius:50%;background:rgba(201,162,39,.25);animation:cua-float 6s ease-in-out infinite}
+.cua-reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+</style>`;
+
+function premiumGestoriaServices(es: boolean, images: string[]) {
+  const list = es
+    ? [
+        ['Asesoría fiscal', 'Planificación tributaria y cumplimiento normativo', '◆'],
+        ['Asesoría laboral', 'Nóminas, contratos y relaciones laborales', '◇'],
+        ['Contabilidad avanzada', 'Informes financieros y cuentas anuales', '◈'],
+        ['Gestión empresarial', 'Control de gestión y reporting ejecutivo', '◆'],
+        ['Creación de empresas', 'Constitución, estatutos y puesta en marcha', '◇'],
+        ['Consultoría estratégica', 'Crecimiento, financiación y decisiones clave', '◈'],
+      ]
+    : [
+        ['Tax advisory', 'Tax planning and regulatory compliance', '◆'],
+        ['Labor advisory', 'Payroll, contracts and labor relations', '◇'],
+        ['Advanced accounting', 'Financial reports and annual accounts', '◈'],
+        ['Business management', 'Management control and executive reporting', '◆'],
+        ['Company formation', 'Incorporation, bylaws and launch', '◇'],
+        ['Strategic consulting', 'Growth, financing and key decisions', '◈'],
+      ];
+  return list.map(([title, desc, icon], i) => ({
+    title, desc, icon, image: images[i % images.length] ?? images[0],
+  }));
+}
+
+function buildPremiumDocumentUpload(ctx: BuildCtx): TemplatePageSection {
+  const { lang, name } = ctx;
+  const es = lang === 'es';
+  return {
+    id: 'documents', type: 'contact', navLabelEs: 'Documentos', navLabelEn: 'Documents',
+    html: `<div class="bg-[#050810] rounded-[2rem] p-10 md:p-16 border border-white/5 max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 text-amber-400 text-[10px] tracking-[0.2em] uppercase">🔒 ${es ? 'Envío seguro' : 'Secure upload'}</span>
+        <h2 class="mt-6 text-3xl md:text-4xl font-serif font-light text-white">${es ? 'Documentación encriptada' : 'Encrypted documentation'}</h2>
+        <p class="mt-4 text-slate-400 text-sm max-w-xl mx-auto">${es ? `Transfiere nóminas, facturas o modelos fiscales a ${name} con cifrado extremo a extremo.` : `Transfer payroll, invoices or tax forms to ${name} with end-to-end encryption.`}</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div class="cua-glass rounded-2xl p-10 text-center border-dashed border-amber-500/20">
+          <div class="text-4xl opacity-60">📄</div>
+          <p class="mt-4 text-sm text-slate-400">${es ? 'Arrastra PDF, Excel o ZIP' : 'Drag PDF, Excel or ZIP'}</p>
+          <span class="mt-6 inline-block px-6 py-3 cua-btn-gold text-[#050810] text-xs font-bold tracking-wider uppercase rounded-lg cursor-pointer">${es ? 'Seleccionar archivos' : 'Select files'}</span>
+        </div>
+        <div class="space-y-4">
+          <div class="cua-glass rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Referencia / NIF' : 'Reference / Tax ID'}</div>
+          <div class="cua-glass rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Email de confirmación' : 'Confirmation email'}</div>
+          <div class="px-6 py-4 bg-emerald-700/80 hover:bg-emerald-600 text-white font-semibold text-center rounded-xl text-sm tracking-wide transition-colors cursor-pointer">${es ? 'Enviar con cifrado AES-256' : 'Send with AES-256 encryption'}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildPremiumGestoriaSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
   const { name, heroImage, tagline, profile, lang, ctaPrimary, ctaSecondary, images } = ctx;
   const es = lang === 'es';
   const phone = profile?.phone ?? '';
   const phoneDigits = phone.replace(/\D/g, '');
-  const items = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
   const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
   const aboutText = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
-  const vivid = features.vividColors;
-  const heroGrad = vivid
-    ? 'from-emerald-600 via-teal-600 to-violet-700'
-    : 'from-blue-900 via-blue-800 to-blue-600';
-  const accentBtn = vivid ? 'bg-emerald-500 text-white' : 'bg-amber-400 text-blue-900';
-  const ctaBtn = vivid ? 'bg-violet-600 text-white' : 'bg-white text-blue-900';
+  const heroHeadline = es ? 'Tu tranquilidad financiera empieza aquí' : 'Your financial peace of mind starts here';
+  const bank = IMAGE_BANK.corporate;
+  const galleryImgs = images.length >= 6 ? images : bank.gallery;
+  const services = premiumGestoriaServices(es, galleryImgs);
+  const navItems = es
+    ? ['Inicio', 'Servicios', 'Nosotros', 'Galería', 'Contacto', 'Ubicación']
+    : ['Home', 'Services', 'About', 'Gallery', 'Contact', 'Location'];
+  const officeImg = bank.office[0] ?? heroImage;
 
   const hero: TemplatePageSection = {
     id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
-    html: `<div class="overflow-hidden rounded-[2rem] shadow-xl border ${vivid ? 'border-emerald-200' : 'border-blue-100'}">
-      <div class="${vivid ? 'bg-violet-900' : 'bg-blue-900'} text-white text-sm px-6 py-2 flex flex-wrap justify-between gap-2">
+    html: `${PREMIUM_GESTORIA_CSS}
+    <div class="overflow-hidden rounded-[2rem] shadow-2xl border border-white/5 bg-[#050810]">
+      <div class="bg-[#050810]/95 backdrop-blur-md border-b border-white/5 text-slate-400 text-[11px] tracking-wider px-6 md:px-10 py-2.5 flex flex-wrap justify-between gap-2">
         <span>${es ? 'Asesoría integral · Fiscal · Laboral · Contable' : 'Full advisory · Tax · Labor · Accounting'}</span>
-        ${phone ? `<a href="tel:+34${phoneDigits}" class="font-semibold">📞 ${esc(phone)}</a>` : ''}
+        ${phone ? `<a href="tel:+34${phoneDigits}" class="text-amber-400/90 hover:text-amber-300 transition-colors font-medium">📞 ${esc(phone)}</a>` : ''}
       </div>
-      <nav class="bg-white flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-stone-100" aria-label="${es ? 'Navegación principal' : 'Main navigation'}">
-        <div class="font-bold text-xl ${vivid ? 'text-violet-900' : 'text-blue-900'}">${esc(name)}</div>
-        <div class="hidden lg:flex gap-8 text-xs tracking-wider uppercase text-stone-500 font-semibold">
-          ${(es ? ['Inicio', 'Servicios', 'Nosotros', 'Galería', 'Contacto', 'Ubicación'] : ['Home', 'Services', 'About', 'Gallery', 'Contact', 'Location']).map((n) => `<span>${n}</span>`).join('')}
+      <nav class="bg-[#050810]/80 backdrop-blur-xl flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-white/5" aria-label="${es ? 'Navegación principal' : 'Main navigation'}">
+        <div class="font-serif text-xl md:text-2xl text-white tracking-wide">${esc(name)}</div>
+        <div class="hidden lg:flex gap-10 text-[10px] tracking-[0.25em] uppercase text-slate-500 font-medium">
+          ${navItems.map((n) => `<span class="hover:text-amber-400 transition-colors cursor-pointer">${n}</span>`).join('')}
         </div>
-        <span class="px-4 py-2 ${vivid ? 'bg-emerald-600' : 'bg-blue-800'} text-white text-xs font-bold rounded-md">${esc(ctaPrimary)}</span>
+        <span class="px-5 py-2.5 cua-btn-gold text-[#050810] text-[10px] font-bold tracking-[0.15em] uppercase rounded-lg cursor-pointer">${esc(ctaPrimary)}</span>
       </nav>
-      <div class="relative bg-gradient-to-br ${heroGrad} text-white text-center px-6 py-16 md:py-24 min-h-[420px] md:min-h-[520px] flex items-center justify-center">
-        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover opacity-25" loading="lazy" referrerpolicy="no-referrer" />
-        <div class="relative z-10 max-w-3xl mx-auto">
-          <span class="inline-block px-4 py-1 ${accentBtn} text-xs font-bold rounded-full mb-6">${profile ? esc(es ? profile.badgeEs : profile.badgeEn) : (es ? 'ASESORÍA PROFESIONAL' : 'PROFESSIONAL ADVISORY')}</span>
-          <h1 class="text-4xl md:text-6xl font-bold font-serif tracking-tight">${esc(name)}</h1>
-          <p class="mt-6 text-lg text-white/90 max-w-2xl mx-auto">${esc(tagline)}</p>
-          <div class="mt-10 flex flex-wrap justify-center gap-4">
-            <span class="px-8 py-4 ${ctaBtn} rounded-md font-bold text-sm shadow-lg">${esc(ctaPrimary)}</span>
-            <span class="px-8 py-4 border-2 border-white/70 text-white rounded-md font-semibold text-sm">${esc(ctaSecondary)}</span>
+      <div class="relative min-h-[580px] md:min-h-[680px] flex items-center justify-center text-center overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+          <img src="${bank.skyline ?? heroImage}" alt="Madrid" class="absolute inset-0 w-full h-full object-cover cua-hero-zoom opacity-90" loading="eager" referrerpolicy="no-referrer" />
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050810]/70 via-[#0a1628]/75 to-[#050810]/95"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#050810]/40 via-transparent to-[#050810]/40"></div>
+        <span class="cua-particle w-1 h-1 top-[20%] left-[15%]" style="animation-delay:0s"></span>
+        <span class="cua-particle w-1.5 h-1.5 top-[35%] right-[20%]" style="animation-delay:1.2s"></span>
+        <span class="cua-particle w-1 h-1 bottom-[30%] left-[25%]" style="animation-delay:2.4s"></span>
+        <span class="cua-particle w-2 h-2 top-[15%] right-[35%] opacity-40" style="animation-delay:0.8s"></span>
+        <div class="relative z-10 px-6 py-20 max-w-4xl mx-auto">
+          <span class="cua-fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 text-[10px] tracking-[0.2em] uppercase mb-8">${profile ? esc(es ? profile.badgeEs : profile.badgeEn) : 'Madrid · Premium'}</span>
+          <h1 class="cua-fade-up cua-fade-d1 text-4xl md:text-6xl lg:text-7xl font-serif font-light text-white tracking-tight leading-[1.08]">${esc(heroHeadline)}</h1>
+          <p class="cua-fade-up cua-fade-d2 mt-8 text-base md:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed font-light">${esc(tagline)}</p>
+          <div class="cua-fade-up cua-fade-d3 mt-12 flex flex-wrap justify-center gap-4">
+            <span class="px-8 py-4 cua-btn-gold text-[#050810] rounded-lg font-bold text-xs tracking-[0.15em] uppercase cursor-pointer">${esc(ctaPrimary)}</span>
+            <span class="px-8 py-4 cua-btn-ghost text-white rounded-lg font-semibold text-xs tracking-[0.15em] uppercase cursor-pointer">${esc(ctaSecondary)}</span>
           </div>
+          <p class="mt-14 text-[9px] md:text-[10px] tracking-[0.35em] uppercase text-slate-600">${es ? 'Madrid · Confianza · Innovación · Exclusividad' : 'Madrid · Trust · Innovation · Exclusivity'}</p>
         </div>
       </div>
     </div>`,
   };
 
-  const services: TemplatePageSection = {
-    id: 'services', type: 'services', navLabelEs: 'Servicios', navLabelEn: 'Services',
-    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
-      ${sectionHead(es ? 'Nuestros Servicios' : 'Our Services', es ? 'Soluciones integrales para autónomos y PYMES' : 'Integrated solutions for freelancers and SMEs', 'bg-blue-800')}
-      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        ${items.map((item) => `<div class="bg-white rounded-xl p-8 shadow-sm border border-stone-100 hover:shadow-lg hover:-translate-y-1 transition-all">
-          <h3 class="font-bold text-blue-900 text-lg flex items-center gap-2">📋 ${esc(item.title)}</h3>
-          <p class="mt-2 text-sm text-stone-500">${esc(item.price ?? '')}</p>
-          <ul class="mt-4 space-y-2 text-sm text-stone-600">${(es ? ['Gestión completa', 'Asesor personal', 'Respuesta en 24h'] : ['Full management', 'Personal advisor', '24h response']).map((l) => `<li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-800 before:font-bold">${l}</li>`).join('')}</ul>
-          <span class="mt-6 inline-block text-blue-800 text-sm font-semibold">${esc(item.cta)} →</span>
+  const stats: TemplatePageSection = {
+    id: 'stats', type: 'about', navLabelEs: 'Confianza', navLabelEn: 'Trust',
+    html: `<div class="bg-[#0a1628] rounded-[2rem] p-12 md:p-20 border border-white/5">
+      <p class="text-center text-[10px] tracking-[0.35em] uppercase text-amber-500/70 mb-3">${es ? 'Por qué elegirnos' : 'Why choose us'}</p>
+      <h2 class="text-center text-3xl md:text-4xl font-serif font-light text-white mb-14">${es ? 'Números que representan confianza' : 'Numbers that represent trust'}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0 max-w-4xl mx-auto divide-y md:divide-y-0 md:divide-x divide-white/10">
+        ${[
+          { v: '+20', l: es ? 'Años de experiencia' : 'Years of experience' },
+          { v: '+500', l: es ? 'Clientes satisfechos' : 'Satisfied clients' },
+          { v: '+99%', l: es ? 'Tranquilidad empresarial' : 'Business peace of mind' },
+        ].map((s) => `<div class="py-10 md:py-6 px-8 text-center">
+          <div class="text-5xl md:text-6xl font-serif font-light text-amber-400 tracking-tight">${s.v}</div>
+          <div class="mt-3 text-[10px] tracking-[0.25em] uppercase text-slate-500">${s.l}</div>
         </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const servicesSec: TemplatePageSection = {
+    id: 'services', type: 'services', navLabelEs: 'Servicios', navLabelEn: 'Services',
+    html: `<div class="bg-[#050810] rounded-[2rem] p-12 md:p-20 border border-white/5">
+      <p class="text-[10px] tracking-[0.35em] uppercase text-amber-500/70 mb-3">${es ? 'Áreas de expertise' : 'Areas of expertise'}</p>
+      <h2 class="text-3xl md:text-5xl font-serif font-light text-white max-w-2xl">${es ? 'Servicios de asesoría premium' : 'Premium advisory services'}</h2>
+      <p class="mt-4 text-slate-400 max-w-xl text-sm leading-relaxed">${es ? 'Soluciones integrales con el rigor de una firma financiera internacional.' : 'Integrated solutions with the rigor of an international financial firm.'}</p>
+      <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        ${services.map((s, i) => `<article class="group cua-glass rounded-2xl p-8 hover:border-amber-500/25 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,.4)]" style="animation:cua-fade-up .8s ease both;animation-delay:${(i * 0.08).toFixed(2)}s">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-transparent border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg group-hover:scale-110 transition-transform duration-500">${s.icon}</div>
+          <h3 class="mt-6 font-serif text-lg text-white">${esc(s.title)}</h3>
+          <p class="mt-2 text-sm text-slate-500 leading-relaxed">${esc(s.desc)}</p>
+          <span class="mt-6 inline-block text-[10px] tracking-[0.2em] uppercase text-amber-500/80 group-hover:text-amber-400 transition-colors">${es ? 'Más información →' : 'Learn more →'}</span>
+        </article>`).join('')}
       </div>
     </div>`,
   };
 
   const about: TemplatePageSection = {
     id: 'about', type: 'about', navLabelEs: 'Nosotros', navLabelEn: 'About',
-    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
-      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto items-center">
+    html: `<div class="bg-white rounded-[2rem] p-12 md:p-20 border border-slate-100">
+      <div class="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto items-center">
         <div>
-          <h2 class="text-3xl font-bold text-blue-900">${es ? 'Sobre nosotros' : 'About us'}</h2>
-          <p class="mt-6 text-stone-600 leading-relaxed">${esc(aboutText ?? '')}</p>
-          <div class="mt-8 space-y-3">${(es ? ['Más de 30 años de experiencia', 'Especialistas en autónomos y PYMES', 'Trato cercano y profesional'] : ['Over 30 years of experience', 'Specialists in freelancers and SMEs', 'Professional and personal service']).map((f) => `<div class="flex items-center gap-2 text-sm text-stone-700"><span class="text-green-500">✅</span>${f}</div>`).join('')}</div>
+          <p class="text-[10px] tracking-[0.35em] uppercase text-slate-400 mb-4">${es ? 'Nuestra firma' : 'Our firm'}</p>
+          <h2 class="text-3xl md:text-4xl font-serif font-light text-[#050810]">${es ? 'Excelencia con trato personal' : 'Excellence with a personal touch'}</h2>
+          <p class="mt-6 text-slate-600 leading-relaxed text-sm md:text-base">${esc(aboutText ?? '')}</p>
+          <div class="mt-10 space-y-4">${(es ? ['Más de 20 años de trayectoria en Madrid', 'Especialistas en autónomos, PYMES y patrimonio', 'Respuesta garantizada en 24 horas'] : ['Over 20 years serving Madrid', 'Specialists in freelancers, SMEs and wealth', 'Guaranteed response within 24 hours']).map((f) => `<div class="flex items-start gap-3 text-sm text-slate-700"><span class="text-amber-600 mt-0.5">—</span>${f}</div>`).join('')}</div>
         </div>
-        <div class="rounded-xl overflow-hidden shadow-lg"><img src="${heroImage}" alt="" class="w-full aspect-[4/3] object-cover" referrerpolicy="no-referrer" /></div>
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] group">
+          <img src="${bank.team ?? heroImage}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.2s]" loading="lazy" referrerpolicy="no-referrer" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#050810]/60 to-transparent"></div>
+        </div>
       </div>
     </div>`,
   };
 
+  const officeSec: TemplatePageSection = {
+    id: 'office', type: 'gallery', navLabelEs: 'Oficina', navLabelEn: 'Office',
+    html: `<div class="relative rounded-[2rem] overflow-hidden min-h-[420px] md:min-h-[520px] border border-white/5">
+      <img src="${officeImg}" alt="${es ? 'Oficinas premium' : 'Premium offices'}" class="absolute inset-0 w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-[2s]" loading="lazy" referrerpolicy="no-referrer" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#050810]/90 via-[#050810]/50 to-transparent"></div>
+      <div class="relative z-10 p-12 md:p-20 max-w-xl">
+        <p class="text-[10px] tracking-[0.35em] uppercase text-amber-400/80 mb-4">${es ? 'Sede Madrid' : 'Madrid HQ'}</p>
+        <h2 class="text-3xl md:text-4xl font-serif font-light text-white leading-snug">${es ? 'Un espacio creado para tomar mejores decisiones.' : 'A space designed for better decisions.'}</h2>
+        <p class="mt-6 text-slate-400 text-sm leading-relaxed">${es ? 'Oficinas con cristalera, luz natural y vistas que inspiran claridad estratégica.' : 'Offices with glass façades, natural light and views that inspire strategic clarity.'}</p>
+      </div>
+    </div>`,
+  };
+
+  const carouselImgs = [...galleryImgs, ...galleryImgs];
+  const gallerySec: TemplatePageSection = {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
+    html: `<div class="bg-[#0a1628] rounded-[2rem] p-12 md:p-16 border border-white/5 overflow-hidden">
+      <div class="flex justify-between items-end mb-10 max-w-6xl mx-auto">
+        <div>
+          <p class="text-[10px] tracking-[0.35em] uppercase text-amber-500/70 mb-2">${es ? 'Nuestro entorno' : 'Our environment'}</p>
+          <h2 class="text-2xl md:text-3xl font-serif font-light text-white">${es ? 'Galería corporativa' : 'Corporate gallery'}</h2>
+        </div>
+        <div class="hidden md:flex gap-2">
+          <span class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-500 hover:border-amber-500/40 hover:text-amber-400 transition-colors cursor-pointer">←</span>
+          <span class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-500 hover:border-amber-500/40 hover:text-amber-400 transition-colors cursor-pointer">→</span>
+        </div>
+      </div>
+      <div class="overflow-hidden -mx-4 px-4">
+        <div class="cua-carousel-track">
+          ${carouselImgs.map((img, i) => `<div class="shrink-0 w-[280px] md:w-[360px] group">
+            <div class="relative rounded-2xl overflow-hidden aspect-[4/3] border border-white/5 shadow-xl transition-transform duration-500 group-hover:scale-[1.03] group-hover:-translate-y-1">
+              <img src="${img}" alt="${es ? 'Galería' : 'Gallery'} ${i + 1}" class="w-full h-full object-cover" loading="lazy" referrerpolicy="no-referrer" />
+              <div class="absolute inset-0 bg-gradient-to-t from-[#050810]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const reviewMeta = es
+    ? ['Directora, Pyme tecnológica', 'CEO, Grupo inmobiliario', 'Fundador, startup']
+    : ['Director, Tech SME', 'CEO, Real estate group', 'Founder, startup'];
   const reviewsSec: TemplatePageSection = {
-    id: 'reviews', type: 'reviews', navLabelEs: 'Reseñas', navLabelEn: 'Reviews',
-    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
-      ${sectionHead(es ? 'Opiniones de clientes' : 'Client reviews', profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '', 'bg-blue-800')}
-      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        ${reviews.map((r) => `<div class="bg-white rounded-xl p-8 shadow-sm">
-          <div class="text-amber-400">${'★'.repeat(r.stars)}</div>
-          <p class="mt-4 text-stone-600 italic text-sm leading-relaxed">"${esc(r.text)}"</p>
-          <div class="mt-6 font-bold text-blue-900">${esc(r.name)}</div>
-        </div>`).join('')}
+    id: 'reviews', type: 'reviews', navLabelEs: 'Testimonios', navLabelEn: 'Testimonials',
+    html: `<div class="bg-white rounded-[2rem] p-12 md:p-20 border border-slate-100">
+      <p class="text-center text-[10px] tracking-[0.35em] uppercase text-slate-400 mb-3">${profile ? esc(es ? profile.ratingLabelEs : profile.ratingLabelEn) : '4.9 · Google'}</p>
+      <h2 class="text-center text-3xl md:text-4xl font-serif font-light text-[#050810] mb-14">${es ? 'Lo que dicen nuestros clientes' : 'What our clients say'}</h2>
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        ${reviews.map((r, i) => {
+          const initials = r.name.replace(/[^A-ZÁÉÍÓÚ]/gi, '').slice(0, 2).toUpperCase() || 'CL';
+          return `<article class="relative p-8 md:p-10 border border-slate-100 rounded-2xl hover:shadow-lg transition-shadow duration-500 bg-slate-50/50">
+            <span class="absolute top-6 right-8 text-5xl font-serif text-amber-200/80 leading-none">"</span>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-[#050810] text-amber-400 flex items-center justify-center text-xs font-bold">${initials}</div>
+              <div>
+                <div class="font-semibold text-[#050810] text-sm">${esc(r.name)}</div>
+                <div class="text-[10px] tracking-wider uppercase text-slate-400 mt-0.5">${reviewMeta[i] ?? reviewMeta[0]}</div>
+              </div>
+            </div>
+            <p class="mt-6 text-slate-600 text-sm leading-relaxed italic">"${esc(r.text)}"</p>
+            <div class="mt-4 text-amber-500 text-xs">${'★'.repeat(r.stars)}</div>
+          </article>`;
+        }).join('')}
       </div>
     </div>`,
   };
 
   const contact: TemplatePageSection = {
     id: 'contact', type: 'contact', navLabelEs: 'Contacto', navLabelEn: 'Contact',
-    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100 max-w-5xl mx-auto">
-      <h2 class="text-3xl font-bold text-blue-900 text-center">${es ? 'Contacta con nosotros' : 'Contact us'}</h2>
-      <div class="mt-10 grid md:grid-cols-2 gap-8">
-        <div class="space-y-4">
-          <p class="text-stone-600">📍 ${esc(profile ? (es ? profile.addressEs : profile.addressEn) : '')}</p>
-          <p class="text-stone-600">🕐 ${esc(profile ? (es ? profile.hoursEs : profile.hoursEn) : '')}</p>
-          ${phone ? `<p class="text-blue-800 font-semibold">📞 ${esc(phone)}</p>` : ''}
-          ${profile?.email ? `<p class="text-blue-800">✉️ ${esc(profile.email)}</p>` : ''}
+    html: `<div class="bg-[#050810] rounded-[2rem] p-12 md:p-20 border border-white/5 max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12">
+        <div>
+          <p class="text-[10px] tracking-[0.35em] uppercase text-amber-500/70 mb-4">${es ? 'Contacto' : 'Contact'}</p>
+          <h2 class="text-3xl font-serif font-light text-white">${es ? 'Hablemos de tu próximo paso' : 'Let\'s talk about your next step'}</h2>
+          <div class="mt-8 space-y-4 text-sm text-slate-400">
+            <p>📍 ${esc(profile ? (es ? profile.addressEs : profile.addressEn) : '')}</p>
+            <p>🕐 ${esc(profile ? (es ? profile.hoursEs : profile.hoursEn) : '')}</p>
+            ${phone ? `<p class="text-amber-400 font-medium">📞 ${esc(phone)}</p>` : ''}
+            ${profile?.email ? `<p><a href="mailto:${esc(profile.email)}" class="text-amber-400/90 hover:text-amber-300">${esc(profile.email)}</a></p>` : ''}
+          </div>
         </div>
         <div class="space-y-4">
-          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Tu nombre' : 'Your name'}</div>
-          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Tu email' : 'Your email'}</div>
-          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400 h-24">${es ? 'Tu consulta...' : 'Your enquiry...'}</div>
-          <div class="px-6 py-4 bg-blue-800 text-white font-bold text-center rounded-md">${es ? 'Enviar consulta' : 'Send enquiry'}</div>
+          <div class="cua-glass rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Tu nombre' : 'Your name'}</div>
+          <div class="cua-glass rounded-xl px-4 py-3.5 text-sm text-slate-500">${es ? 'Tu email' : 'Your email'}</div>
+          <div class="cua-glass rounded-xl px-4 py-3.5 text-sm text-slate-500 h-28">${es ? 'Tu consulta...' : 'Your enquiry...'}</div>
+          <div class="px-6 py-4 cua-btn-gold text-[#050810] font-bold text-center rounded-xl text-xs tracking-[0.15em] uppercase cursor-pointer">${es ? 'Enviar consulta' : 'Send enquiry'}</div>
         </div>
       </div>
     </div>`,
@@ -620,29 +816,24 @@ function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePage
 
   const footer = buildCorporateLegalFooter(ctx);
 
-  const gallerySec: TemplatePageSection = {
-    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
-    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
-      ${sectionHead(es ? 'Nuestro despacho' : 'Our office', es ? 'Un entorno profesional y cercano para autónomos y empresas' : 'A professional, approachable environment for freelancers and businesses', vivid ? 'bg-violet-600' : 'bg-blue-800')}
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
-        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden aspect-[4/3] shadow-sm"><img src="${img}" alt="${esc(name)}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
-      </div>
-    </div>`,
-  };
-
   return [
     hero,
-    ...(features.sidebar ? [buildCorporateSidebar(ctx)] : []),
-    services,
+    stats,
+    servicesSec,
     about,
+    officeSec,
     ...(features.gallery ? [gallerySec] : []),
     ...(features.reviews ? [reviewsSec] : []),
     ...(features.location ? [buildLocation(ctx)] : []),
     ...(features.contact ? [contact] : []),
-    ...(features.documentUpload ? [buildDocumentUploadSection(ctx)] : []),
+    ...(features.documentUpload ? [buildPremiumDocumentUpload(ctx)] : []),
     ...(features.legalFooter || features.social ? [footer] : []),
-    premiumWidgets(ctx),
+    premiumWidgets(ctx, true),
   ];
+}
+
+function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  return buildPremiumGestoriaSite(ctx, features);
 }
 
 function buildAutomotiveSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
@@ -1925,6 +2116,69 @@ export function describeCreatedSections(features: SiteFeatures, lang: 'es' | 'en
   if (features.documentUpload) list.push(labels.documents);
   if (features.legalFooter || features.social) list.push(labels.footer);
   return list.join(', ');
+}
+
+export function isCorporatePreviewSite(sections: { html: string }[]): boolean {
+  const blob = sections.map((s) => s.html).join(' ');
+  return /gestor|asesor|Asesoría|Ledger|fiscal|laboral|contable|blue-900|blue-950|#050810|cua-btn-gold|Solicitar consulta|Solicitar asesoramiento/i.test(blob);
+}
+
+function extractPreviewBusinessName(sections: { type: string; html: string }[]): string {
+  const hero = sections.find((s) => s.type === 'hero')?.html ?? '';
+  const fromNav = hero.match(/font-serif[^>]*>([^<]+)/)?.[1]?.trim()
+    ?? hero.match(/font-bold text-xl[^>]*>([^<]+)/)?.[1]?.trim()
+    ?? hero.match(/font-bold[^>]*>([^<]+)/)?.[1]?.trim();
+  if (fromNav && fromNav.length < 80) return fromNav;
+  const fromH1 = hero.match(/<h1[^>]*>([^<]+)/)?.[1]?.trim();
+  if (fromH1 && !/tranquilidad|peace of mind/i.test(fromH1)) return fromH1;
+  return 'Ledger Asesores';
+}
+
+function inferCorporateFeaturesFromPreview(sections: { type: string; html: string }[]): SiteFeatures {
+  const blob = sections.map((s) => s.html).join(' ');
+  return {
+    menu: false,
+    services: true,
+    about: sections.some((s) => s.type === 'about'),
+    blog: false,
+    gallery: sections.some((s) => s.type === 'gallery'),
+    reviews: sections.some((s) => s.type === 'reviews'),
+    location: /Visítanos|Visit us|google\.com\/maps/i.test(blob),
+    contact: sections.some((s) => s.type === 'contact'),
+    reservation: false,
+    calendar: false,
+    legalFooter: sections.some((s) => s.type === 'footer'),
+    social: true,
+    whatsapp: true,
+    scrollUp: true,
+    sidebar: false,
+    documentUpload: /encriptada|encrypted|documentos/i.test(blob),
+    vividColors: false,
+  };
+}
+
+export function rebuildCorporatePreviewSections(
+  sections: { id: number; type: string; html: string }[],
+  lang: 'es' | 'en'
+): StudioPreviewSection[] {
+  const name = extractPreviewBusinessName(sections);
+  const profile = getBusinessProfile('corporate');
+  const features = inferCorporateFeaturesFromPreview(sections);
+  const ctx: BuildCtx = {
+    name,
+    businessType: lang === 'es' ? profile.typeEs : profile.typeEn,
+    tagline: lang === 'es' ? profile.taglineEs : profile.taglineEn,
+    badge: lang === 'es' ? profile.badgeEs : profile.badgeEn,
+    heroImage: profile.heroImage,
+    ctaPrimary: lang === 'es' ? profile.ctaPrimaryEs : profile.ctaPrimaryEn,
+    ctaSecondary: lang === 'es' ? profile.ctaSecondaryEs : profile.ctaSecondaryEn,
+    services: [],
+    images: profile.galleryImages,
+    lang,
+    profile,
+    accent: profile.accent,
+  };
+  return toStudioSections(buildPremiumGestoriaSite(ctx, features));
 }
 
 export function applyVisualEnhancement(html: string, kind: 'elegante' | 'luminosa' | 'tipografia' | 'animacion' | 'hero'): string {

@@ -403,26 +403,29 @@ export const BEAUTY_PROFILE: BusinessProfile = {
 };
 
 const CORPORATE_IMAGES = {
-  hero: 'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&fit=crop',
-  gal1: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  gal2: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
-  gal3: 'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+  hero: 'https://images.pexels.com/photos/672358/pexels-photo-672358.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop',
+  gal1: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal2: 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal3: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal4: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal5: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal6: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
 };
 
 export const CORPORATE_PROFILE: BusinessProfile = {
   variant: 'corporate',
   heroImage: CORPORATE_IMAGES.hero,
-  galleryImages: [CORPORATE_IMAGES.gal1, CORPORATE_IMAGES.gal2, CORPORATE_IMAGES.gal3],
-  taglineEs: 'Asesoría integral para autónomos y PYMES',
-  taglineEn: 'Full advisory for freelancers and SMEs',
+  galleryImages: [CORPORATE_IMAGES.gal1, CORPORATE_IMAGES.gal2, CORPORATE_IMAGES.gal3, CORPORATE_IMAGES.gal4, CORPORATE_IMAGES.gal5, CORPORATE_IMAGES.gal6],
+  taglineEs: 'Gestoría y asesoría estratégica para empresas, autónomos y particulares que buscan crecer con seguridad.',
+  taglineEn: 'Strategic advisory for companies, freelancers and individuals who want to grow with confidence.',
   typeEs: 'Asesoría Fiscal, Laboral y Contable',
   typeEn: 'Tax, Labor & Accounting Advisory',
-  badgeEs: 'Desde 1991 · Puente de Vallecas',
-  badgeEn: 'Since 1991 · Puente de Vallecas',
-  ctaPrimaryEs: 'Solicitar consulta',
-  ctaPrimaryEn: 'Request consultation',
-  ctaSecondaryEs: 'Nuestros servicios',
-  ctaSecondaryEn: 'Our services',
+  badgeEs: 'Madrid · Desde 1991',
+  badgeEn: 'Madrid · Since 1991',
+  ctaPrimaryEs: 'Solicitar asesoramiento',
+  ctaPrimaryEn: 'Request advisory',
+  ctaSecondaryEs: 'Conocer nuestros servicios',
+  ctaSecondaryEn: 'Explore our services',
   menuItems: {
     es: [
       { title: 'Asesoría Fiscal', price: 'Autónomos y empresas', image: CORPORATE_IMAGES.gal1, cta: 'Más información' },
