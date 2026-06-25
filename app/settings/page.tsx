@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../components/LanguageProvider';
 import { settingsI18n } from '../data/i18n/secondary';
@@ -11,16 +11,39 @@ export default function Settings() {
   const t = settingsI18n[lang];
 
   const [profile, setProfile] = useState({
-    name: lang === 'es' ? 'Ramón del Pozo' : 'Ramón del Pozo',
-    email: 'info@ramondelpozorott.es',
+    name: '',
+    email: '',
     company: 'CREAUNA',
   });
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  const [changingPassword, setChangingPassword] = useState(false);
 
   const [notifications, setNotifications] = useState({
     email: true,
     marketing: false,
     updates: true,
   });
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.user) {
+          setProfile((prev) => ({
+            ...prev,
+            name: data.user.name || prev.name,
+            email: data.user.email || prev.email,
+          }));
+        }
+      })
+      .catch(() => undefined);
+  }, []);
 
   const notifLabels = {
     email: { label: t.notifEmail, desc: t.notifEmailDesc },
@@ -30,6 +53,37 @@ export default function Settings() {
 
   const handleSave = () => {
     toast.success(t.saved);
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error(t.passwordMismatch);
+      return;
+    }
+    if (passwordForm.newPassword.length < 8) {
+      toast.error(t.passwordMin);
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const res = await fetch('/api/auth/password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error');
+      toast.success(t.passwordChanged);
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setChangingPassword(false);
+    }
   };
 
   return (
@@ -54,11 +108,60 @@ export default function Settings() {
               </div>
               <div className="md:col-span-2">
                 <label className="text-sm font-medium block mb-2">{t.email}</label>
-                <input type="email" value={profile.email} onChange={(e) => setProfile({ ...profile, email: e.target.value })} className="w-full border rounded-2xl px-4 py-3" />
+                <input type="email" value={profile.email} readOnly className="w-full border rounded-2xl px-4 py-3 bg-slate-50 text-slate-600" />
               </div>
             </div>
             <button onClick={handleSave} className="mt-8 px-8 py-3 bg-black text-white rounded-2xl font-medium">{t.saveProfile}</button>
           </div>
+
+          <form onSubmit={handlePasswordChange} className="bg-white border rounded-3xl p-8">
+            <h2 className="font-semibold text-xl mb-6">{t.security}</h2>
+            <div className="space-y-4 max-w-md">
+              <div>
+                <label className="text-sm font-medium block mb-2">{t.currentPassword}</label>
+                <input
+                  type="password"
+                  value={passwordForm.currentPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                  required
+                  autoComplete="current-password"
+                  className="w-full border rounded-2xl px-4 py-3"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium block mb-2">{t.newPassword}</label>
+                <input
+                  type="password"
+                  value={passwordForm.newPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                  className="w-full border rounded-2xl px-4 py-3"
+                />
+                <p className="text-xs text-slate-500 mt-1">{t.passwordMin}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium block mb-2">{t.confirmPassword}</label>
+                <input
+                  type="password"
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                  className="w-full border rounded-2xl px-4 py-3"
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={changingPassword}
+              className="mt-8 px-8 py-3 bg-indigo-600 text-white rounded-2xl font-medium disabled:opacity-50"
+            >
+              {t.changePassword}
+            </button>
+          </form>
 
           <div className="bg-white border rounded-3xl p-8">
             <h2 className="font-semibold text-xl mb-6">{t.notifications}</h2>
@@ -82,11 +185,10 @@ export default function Settings() {
             <h2 className="font-semibold text-xl mb-2">{t.billing}</h2>
             <p className="text-sm text-gray-600 mb-6">{t.billingText} <span className="font-medium text-blue-600">Pro</span></p>
             <div className="flex items-center gap-4">
-              <button className="px-6 py-2 border rounded-2xl text-sm font-medium">{t.manage}</button>
-              <button className="px-6 py-2 text-sm text-red-600 hover:bg-red-50 rounded-2xl">{t.cancel}</button>
+              <button type="button" className="px-6 py-2 border rounded-2xl text-sm font-medium">{t.manage}</button>
+              <button type="button" className="px-6 py-2 text-sm text-red-600 hover:bg-red-50 rounded-2xl">{t.cancel}</button>
             </div>
           </div>
-          <div className="text-xs text-gray-400 text-center">{t.demoNote}</div>
         </div>
       </div>
     </div>
