@@ -4,14 +4,23 @@ import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { sanitizeText } from '../../../lib/api/validate';
 import { getSessionUser } from '../../../lib/auth/session';
 import { consumeCredit, refundCredit, resolveCredits } from '../../../lib/credits';
+import { createProjectSnapshot } from '../../../lib/studio/snapshotService';
+import { studioFeatureEnabled, type StudioChatMessage } from '../../../lib/studio/contextTypes';
+import { hydrateStudioContext } from '../../../lib/studio/contextManager';
+import { validatePreviewSections } from '../../../lib/studio/sectionValidator';
+import { summarizeSectionDiff } from '../../../lib/studio/sectionDiff';
+import { logProjectChangeAudit } from '../../../lib/studio/auditService';
+import { canUseServerSections } from '../../../lib/studio/sectionSelector';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
   const limited = applyRateLimit(`studio:${ip}`, 40, 60_000);
   if (limited) return limited;
 
+  const session = await getSessionUser();
+  const started = Date.now();
+
   try {
-    const session = await getSessionUser();
     const creditStatus = await resolveCredits(session?.id ?? null, ip);
     const unlimited = creditStatus.unlimited === true;
 
@@ -22,24 +31,77 @@ export async function POST(req: Request) {
       );
     }
 
-    const spent = unlimited
-      ? { ok: true as const, credits: creditStatus.credits }
-      : await consumeCredit(session?.id ?? null, ip, 'studio_generate');
-    if (!spent.ok) {
-      return NextResponse.json({ error: 'Sin créditos disponibles', credits: spent.credits }, { status: 402 });
-    }
-
     const body = await req.json();
     const prompt = sanitizeText(body.prompt, 2000);
     const lang = body.lang === 'en' ? 'en' : 'es';
     const action = body.action || 'change';
     const style = body.style;
     const sectionId = typeof body.sectionId === 'number' ? body.sectionId : undefined;
-    const previewSections = Array.isArray(body.previewSections) ? body.previewSections : [];
+    const projectId = typeof body.projectId === 'string' ? body.projectId : undefined;
+    const changeLog = Array.isArray(body.changeLog) ? body.changeLog : [];
+    const useServerSections = body.useServerSections === true;
+    let previewSections = Array.isArray(body.previewSections) ? body.previewSections : [];
+    const messages: StudioChatMessage[] = Array.isArray(body.messages)
+      ? body.messages
+          .filter((m: { role?: string; content?: string }) => m?.content && (m.role === 'user' || m.role === 'ai'))
+          .map((m: { role: string; content: string }) => ({
+            role: m.role === 'user' ? ('user' as const) : ('ai' as const),
+            content: String(m.content).slice(0, 2000),
+          }))
+      : [];
 
     if (!prompt && action === 'change') {
-      await refundCredit(session?.id ?? null, ip, 'studio_refund_empty_prompt');
-      return NextResponse.json({ error: 'Prompt requerido', credits: spent.credits + 1 }, { status: 400 });
+      return NextResponse.json({ error: 'Prompt requerido' }, { status: 400 });
+    }
+
+    if (canUseServerSections(projectId, previewSections) && useServerSections) {
+      previewSections = [];
+    }
+
+    const context = await hydrateStudioContext({
+      userId: session?.id,
+      projectId,
+      clientSections: previewSections,
+      action,
+      sectionId,
+      messages,
+      lang,
+    });
+
+    previewSections = context.previewSections;
+    if (previewSections.length === 0) {
+      return NextResponse.json({ error: 'No hay secciones para editar' }, { status: 400 });
+    }
+
+    const effectiveSectionId = sectionId ?? context.focusSectionId;
+
+    let snapshotId: string | undefined;
+    if (
+      studioFeatureEnabled('snapshots') &&
+      session &&
+      projectId &&
+      previewSections.length > 0
+    ) {
+      try {
+        const snap = await createProjectSnapshot(session.id, projectId, {
+          sections: previewSections,
+          changeLog,
+          action,
+          prompt: prompt || undefined,
+          sectionId: effectiveSectionId,
+          label: prompt ? prompt.slice(0, 80) : action,
+        });
+        snapshotId = snap?.id;
+      } catch (snapErr) {
+        console.error('studio snapshot (non-fatal):', snapErr);
+      }
+    }
+
+    const spent = unlimited
+      ? { ok: true as const, credits: creditStatus.credits }
+      : await consumeCredit(session?.id ?? null, ip, 'studio_generate');
+    if (!spent.ok) {
+      return NextResponse.json({ error: 'Sin créditos disponibles', credits: spent.credits }, { status: 402 });
     }
 
     const result = await generateStudioChange({
@@ -48,18 +110,81 @@ export async function POST(req: Request) {
       previewSections,
       action,
       style,
-      sectionId,
+      sectionId: effectiveSectionId,
+      recentMessages: context.recentMessages,
+      sectionOutline: context.sectionOutline,
+    });
+
+    let validationOk = true;
+    let validationErrors: string[] = [];
+
+    if (studioFeatureEnabled('validation')) {
+      const validation = validatePreviewSections(result.previewSections, result.changedSectionIds);
+      validationOk = validation.ok;
+      validationErrors = validation.errors;
+    }
+
+    const diffSummary = summarizeSectionDiff(
+      previewSections,
+      result.previewSections,
+      result.changedSectionIds
+    );
+
+    if (!validationOk) {
+      await refundCredit(session?.id ?? null, ip, 'studio_refund_validation');
+      await logProjectChangeAudit({
+        projectId,
+        userId: session?.id,
+        ip,
+        action,
+        prompt,
+        sectionId: effectiveSectionId,
+        affectedSectionIds: result.changedSectionIds,
+        source: result.source,
+        motorsUsed: result.motorsUsed,
+        validationOk: false,
+        validationErrors,
+        diffSummary,
+        durationMs: Date.now() - started,
+        snapshotId,
+      });
+      return NextResponse.json(
+        {
+          error: lang === 'es' ? 'Validación fallida: cambio no aplicado' : 'Validation failed: change not applied',
+          validationErrors,
+          snapshotId,
+          credits: spent.credits + (unlimited ? 0 : 1),
+        },
+        { status: 422 }
+      );
+    }
+
+    await logProjectChangeAudit({
+      projectId,
+      userId: session?.id,
+      ip,
+      action,
+      prompt,
+      sectionId: effectiveSectionId,
+      affectedSectionIds: result.changedSectionIds,
+      source: result.source,
+      motorsUsed: result.motorsUsed,
+      validationOk: true,
+      validationErrors: [],
+      diffSummary,
+      durationMs: Date.now() - started,
+      snapshotId,
     });
 
     return NextResponse.json({
       ...result,
       credits: spent.credits,
       unlimited,
+      snapshotId,
+      diffSummary,
     });
   } catch (error) {
     console.error('api/studio/generate:', error);
-    const session = await getSessionUser();
-    const ip = getClientIp(req);
     const credits = await refundCredit(session?.id ?? null, ip, 'studio_refund_error');
     return NextResponse.json({ error: 'Error al generar el diseño', credits }, { status: 500 });
   }

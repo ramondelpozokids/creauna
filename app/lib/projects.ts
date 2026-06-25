@@ -12,6 +12,11 @@ export interface ChangeEntry {
   time: string;
 }
 
+export interface StudioMessage {
+  role: 'user' | 'ai';
+  content: string;
+}
+
 export interface ProjectData {
   id: string;
   name: string;
@@ -19,6 +24,7 @@ export interface ProjectData {
   lang: string;
   sections: ProjectSection[];
   changeLog: ChangeEntry[];
+  messages: StudioMessage[];
   status: string;
   updatedAt: string;
 }
@@ -54,6 +60,7 @@ export async function createProject(
     lang?: string;
     sections: ProjectSection[];
     changeLog?: ChangeEntry[];
+    messages?: StudioMessage[];
   }
 ): Promise<ProjectData> {
   const row = await prisma.project.create({
@@ -64,6 +71,7 @@ export async function createProject(
       lang: data.lang ?? 'es',
       sections: JSON.stringify(data.sections),
       changeLog: JSON.stringify(data.changeLog ?? []),
+      messages: JSON.stringify(data.messages ?? []),
     },
   });
   return toProjectData(row);
@@ -76,6 +84,7 @@ export async function updateProject(
     name: string;
     sections: ProjectSection[];
     changeLog: ChangeEntry[];
+    messages: StudioMessage[];
     status: string;
   }>
 ): Promise<ProjectData | null> {
@@ -88,6 +97,7 @@ export async function updateProject(
       name: data.name,
       sections: data.sections ? JSON.stringify(data.sections) : undefined,
       changeLog: data.changeLog ? JSON.stringify(data.changeLog) : undefined,
+      messages: data.messages ? JSON.stringify(data.messages) : undefined,
       status: data.status,
     },
   });
@@ -101,6 +111,7 @@ function toProjectData(row: {
   lang: string;
   sections: string;
   changeLog: string;
+  messages: string;
   status: string;
   updatedAt: Date;
 }): ProjectData {
@@ -111,6 +122,7 @@ function toProjectData(row: {
     lang: row.lang,
     sections: parseJson<ProjectSection[]>(row.sections, []),
     changeLog: parseJson<ChangeEntry[]>(row.changeLog, []),
+    messages: parseJson<StudioMessage[]>(row.messages, []),
     status: row.status,
     updatedAt: row.updatedAt.toISOString(),
   };

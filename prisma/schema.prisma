@@ -20,19 +20,65 @@ model User {
 }
 
 model Project {
-  id           String   @id @default(cuid())
+  id           String               @id @default(cuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String
   templateSlug String?
-  lang         String   @default("es")
+  lang         String               @default("es")
   sections     String
-  changeLog    String   @default("[]")
-  status       String   @default("draft")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  changeLog    String               @default("[]")
+  messages     String               @default("[]")
+  status       String               @default("draft")
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  snapshots    ProjectSnapshot[]
+  audits       ProjectChangeAudit[]
 
   @@index([userId])
+}
+
+model ProjectSnapshot {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId        String
+  versionNumber Int
+  sections      String
+  changeLog     String   @default("[]")
+  action        String
+  prompt        String?
+  sectionId     Int?
+  label         String?
+  createdAt     DateTime @default(now())
+
+  @@unique([projectId, versionNumber])
+  @@index([projectId])
+  @@index([userId])
+}
+
+model ProjectChangeAudit {
+  id                 String   @id @default(cuid())
+  projectId          String?
+  project            Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  userId             String?
+  ipHash             String?
+  action             String
+  prompt             String?
+  sectionId          Int?
+  affectedSectionIds String   @default("[]")
+  source             String
+  motorsUsed         String   @default("[]")
+  validationOk       Boolean  @default(true)
+  validationErrors   String   @default("[]")
+  diffSummary        String?
+  durationMs         Int?
+  snapshotId         String?
+  createdAt          DateTime @default(now())
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model CreditLog {

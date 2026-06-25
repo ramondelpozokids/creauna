@@ -35,6 +35,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
       name: body.name ? sanitizeText(body.name, 120) : undefined,
       sections: Array.isArray(body.sections) ? body.sections : undefined,
       changeLog: Array.isArray(body.changeLog) ? body.changeLog : undefined,
+      messages: Array.isArray(body.messages) ? body.messages : undefined,
       status: body.status ? sanitizeText(body.status, 40) : undefined,
     });
 

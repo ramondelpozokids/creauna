@@ -30,6 +30,7 @@ export async function POST(req: Request) {
     const lang = body.lang === 'en' ? 'en' : 'es';
     const sections = Array.isArray(body.sections) ? body.sections : [];
     const changeLog = Array.isArray(body.changeLog) ? body.changeLog : [];
+    const messages = Array.isArray(body.messages) ? body.messages : [];
 
     const project = await createProject(session.id, {
       name,
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
       lang,
       sections,
       changeLog,
+      messages,
     });
 
     return NextResponse.json({ project });

@@ -127,26 +127,18 @@ async function enhanceSection(
   const motor = SECTION_MOTOR[section.type] ?? 'code';
   const imageUrls = extractImageUrls(section.html);
 
-  const motorsToTry: MotorId[] = [motor, 'code', 'visual', 'copy'];
-  const seen = new Set<MotorId>();
+  const result = await chatCompletion(
+    [
+      { role: 'system', content: sectionSystemPrompt(brief, section.type, imageUrls) },
+      {
+        role: 'user',
+        content: `Tipo: ${section.type}\nHTML actual:\n${section.html.slice(0, 7000)}\n\nPetición del cliente:\n${brief.userPrompt.slice(0, 1500)}`,
+      },
+    ],
+    { maxTokens: section.type === 'hero' ? 6000 : 3200, motor, prompt: brief.userPrompt }
+  );
 
-  for (const tryMotor of motorsToTry) {
-    if (seen.has(tryMotor)) continue;
-    seen.add(tryMotor);
-
-    const result = await chatCompletion(
-      [
-        { role: 'system', content: sectionSystemPrompt(brief, section.type, imageUrls) },
-        {
-          role: 'user',
-          content: `Tipo: ${section.type}\nHTML actual:\n${section.html.slice(0, 7000)}\n\nPetición del cliente:\n${brief.userPrompt.slice(0, 1500)}`,
-        },
-      ],
-      { maxTokens: section.type === 'hero' ? 6000 : 3200, motor: tryMotor, prompt: brief.userPrompt }
-    );
-
-    if (!result.content || result.provider === 'rules') continue;
-
+  if (result.content && result.provider !== 'rules') {
     const parsed = parseAiJson(result.content);
     if (parsed?.html && parsed.html.length > 80 && parsed.html.includes('<')) {
       const motorUsed = providerToMotor(result.provider);
@@ -188,23 +180,15 @@ export async function enhanceSiteWithAgents(
   let anyChanged = false;
   let anyCalled = false;
 
-  const batches: TemplatePageSection[][] = [
-    targets.filter((s) => ['hero', 'gallery'].includes(s.type)),
-    targets.filter((s) => ['about', 'reviews'].includes(s.type)),
-    targets.filter((s) => ['menu', 'services', 'carta'].includes(s.type)),
-  ].filter((b) => b.length > 0);
-
-  for (const batch of batches) {
-    const results = await Promise.all(batch.map((s) => enhanceSection(s, brief)));
-    for (const r of results) {
-      byId.set(r.section.id, r.section);
-      if (r.motor) motorsUsed.add(r.motor);
-      if (r.provider && r.provider !== 'rules') {
-        providersUsed.add(r.provider);
-        anyCalled = true;
-      }
-      if (r.changed) anyChanged = true;
+  const results = await Promise.all(targets.map((s) => enhanceSection(s, brief)));
+  for (const r of results) {
+    byId.set(r.section.id, r.section);
+    if (r.motor) motorsUsed.add(r.motor);
+    if (r.provider && r.provider !== 'rules') {
+      providersUsed.add(r.provider);
+      anyCalled = true;
     }
+    if (r.changed) anyChanged = true;
   }
 
   return {

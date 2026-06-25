@@ -19,6 +19,8 @@ export interface StudioGenerateInput {
   style?: 'elegante' | 'minimal' | 'moderno';
   action?: StudioAction;
   sectionId?: number;
+  recentMessages?: { role: 'user' | 'ai'; content: string }[];
+  sectionOutline?: string;
 }
 
 export interface StudioGenerateResult {
@@ -276,6 +278,17 @@ async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerate
   const target = targetSection(input);
   if (!target) return null;
 
+  const chatBlock =
+    input.recentMessages && input.recentMessages.length > 0
+      ? `\nRecent conversation:\n${input.recentMessages
+          .slice(-6)
+          .map((m) => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content.slice(0, 300)}`)
+          .join('\n')}\n`
+      : '';
+  const outlineBlock = input.sectionOutline
+    ? `\nOther sections on page (do not rewrite): ${input.sectionOutline}\n`
+    : '';
+
   const aiResult = await chatCompletion(
     [
       {
@@ -290,7 +303,7 @@ Language for visible text: ${input.lang === 'es' ? 'Spanish' : 'English'}.`,
         content: `Section type: ${target.type}
 Current HTML:
 ${target.html.slice(0, 4000)}
-
+${outlineBlock}${chatBlock}
 User request: ${input.prompt}
 Action: ${input.action || 'change'}`,
       },

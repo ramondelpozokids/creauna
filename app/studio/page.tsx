@@ -36,6 +36,21 @@ interface ChangeEntry {
   time: string;
 }
 
+interface SnapshotRow {
+  id: string;
+  versionNumber: number;
+  label: string | null;
+  action: string;
+  createdAt: string;
+}
+
+interface StudioImpact {
+  scope: 'single' | 'multi' | 'full';
+  risk: 'low' | 'medium' | 'high';
+  reasonEs: string;
+  reasonEn: string;
+}
+
 const translations = {
   es: {
     title: 'CREAUNA Studio',
@@ -79,6 +94,10 @@ const translations = {
     selectSection: 'Selecciona una sección para editarla',
     sections: { hero: 'Inicio', menu: 'Menú', services: 'Servicios', about: 'Sobre nosotros', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', blog: 'Blog', reservation: 'Reservas', contact: 'Contacto', footer: 'Legal', widgets: 'Accesos', testimonial: 'Testimonios' },
     changeApplied: 'Cambio visible aplicado',
+    snapshots: 'Restaurar versión',
+    restore: 'Restaurar',
+    restored: 'Versión restaurada',
+    confirmContinue: '¿Continuar? (1 crédito)',
   },
   en: {
     title: 'CREAUNA Studio',
@@ -122,6 +141,10 @@ const translations = {
     selectSection: 'Select a section to edit it',
     sections: { hero: 'Home', menu: 'Menu', services: 'Services', about: 'About us', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', blog: 'Blog', reservation: 'Booking', contact: 'Contact', footer: 'Legal', widgets: 'Shortcuts', testimonial: 'Testimonials' },
     changeApplied: 'Visible change applied',
+    snapshots: 'Restore version',
+    restore: 'Restore',
+    restored: 'Version restored',
+    confirmContinue: 'Continue? (1 credit)',
   },
 };
 
@@ -190,6 +213,7 @@ function StudioContent() {
   const [mounted, setMounted] = useState(false);
   const [activeTemplateSlug, setActiveTemplateSlug] = useState<string | undefined>();
   const [changeLog, setChangeLog] = useState<ChangeEntry[]>([]);
+  const [snapshots, setSnapshots] = useState<SnapshotRow[]>([]);
   const [previewPulse, setPreviewPulse] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
   const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
@@ -217,15 +241,25 @@ function StudioContent() {
           setProjectName(data.project.name);
           setPreviewSections(data.project.sections);
           setChangeLog(data.project.changeLog ?? []);
+          if (Array.isArray(data.project.messages) && data.project.messages.length > 0) {
+            setMessages(
+              data.project.messages.map((m: { role: string; content: string }, i: number) => ({
+                id: i + 1,
+                role: m.role === 'user' ? 'user' : 'ai',
+                content: m.content,
+              }))
+            );
+          } else {
+            setMessages([
+              {
+                id: 1,
+                role: 'ai',
+                content: lang === 'es' ? `Proyecto «${data.project.name}» cargado.` : `Project «${data.project.name}» loaded.`,
+              },
+            ]);
+          }
           if (data.project.templateSlug) setActiveTemplateSlug(data.project.templateSlug);
           if (data.project.lang === 'en' || data.project.lang === 'es') setLangLocal(data.project.lang);
-          setMessages([
-            {
-              id: 1,
-              role: 'ai',
-              content: lang === 'es' ? `Proyecto «${data.project.name}» cargado.` : `Project «${data.project.name}» loaded.`,
-            },
-          ]);
         })
         .catch(() => undefined);
       return;
@@ -267,6 +301,66 @@ function StudioContent() {
     }
   }, [mounted, templateParam, projectParam, lang, studioPhase, t.welcomeOnboarding, t.welcomeDescribe, t.welcomeTemplate]);
 
+  const loadSnapshots = useCallback(() => {
+    if (!projectId) return;
+    fetch(`/api/projects/${projectId}/snapshots`)
+      .then((r) => r.json())
+      .then((data) => setSnapshots(data.snapshots ?? []))
+      .catch(() => undefined);
+  }, [projectId]);
+
+  useEffect(() => {
+    loadSnapshots();
+  }, [loadSnapshots, changeLog.length]);
+
+  const previewImpact = async (
+    payload: Record<string, unknown>
+  ): Promise<StudioImpact | null> => {
+    try {
+      const res = await fetch('/api/studio/preview-impact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lang,
+          previewSections: previewSections.map((s) => ({ id: s.id, type: s.type })),
+          ...payload,
+        }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.impact ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  const confirmImpactIfNeeded = async (impact: StudioImpact | null): Promise<boolean> => {
+    if (!impact || impact.risk === 'low') return true;
+    const reason = lang === 'es' ? impact.reasonEs : impact.reasonEn;
+    return window.confirm(`${reason}\n\n${t.confirmContinue}`);
+  };
+
+  const restoreSnapshot = async (snapshotId: string) => {
+    if (!projectId) return;
+    const ok = window.confirm(
+      lang === 'es' ? '¿Restaurar esta versión del diseño?' : 'Restore this design version?'
+    );
+    if (!ok) return;
+    try {
+      const res = await fetch(`/api/projects/${projectId}/snapshots/${snapshotId}/restore`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error');
+      setPreviewSections(data.sections);
+      setChangeLog(data.changeLog ?? []);
+      loadSnapshots();
+      toast.success(t.restored);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    }
+  };
+
   const handleChooseDescribe = () => {
     setStudioPhase('describe');
     setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
@@ -307,11 +401,15 @@ function StudioContent() {
   }, [unlimitedAccess]);
 
   const persistProject = useCallback(
-    async (sections: PreviewSection[], log: ChangeEntry[], name: string) => {
+    async (sections: PreviewSection[], log: ChangeEntry[], name: string, chatMessages?: Message[]) => {
       try {
         const me = await fetch('/api/auth/me');
         if (!me.ok) return;
-        const payload = { name, sections, changeLog: log, templateSlug: activeTemplateSlug, lang };
+        const msgs = (chatMessages ?? messages).map((m) => ({
+          role: m.role,
+          content: m.content,
+        }));
+        const payload = { name, sections, changeLog: log, messages: msgs, templateSlug: activeTemplateSlug, lang };
         if (projectId) {
           await fetch(`/api/projects/${projectId}`, {
             method: 'PATCH',
@@ -331,15 +429,20 @@ function StudioContent() {
         /* silent */
       }
     },
-    [projectId, activeTemplateSlug, lang]
+    [projectId, activeTemplateSlug, lang, messages]
   );
 
   const scheduleSave = useCallback(
-    (sections: PreviewSection[], log: ChangeEntry[], name: string) => {
+    (sections: PreviewSection[], log: ChangeEntry[], name: string, chatMessages?: Message[]) => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      saveTimerRef.current = setTimeout(() => persistProject(sections, log, name), 800);
+      saveTimerRef.current = setTimeout(() => persistProject(sections, log, name, chatMessages), 800);
     },
     [persistProject]
+  );
+
+  const chatPayload = useCallback(
+    () => messages.map((m) => ({ role: m.role, content: m.content })),
+    [messages]
   );
 
   const callStudioApi = async (payload: Record<string, unknown>) => {
@@ -349,6 +452,9 @@ function StudioContent() {
       body: JSON.stringify({
         lang,
         previewSections,
+        projectId,
+        changeLog,
+        messages: chatPayload(),
         ...payload,
       }),
     });
@@ -356,6 +462,13 @@ function StudioContent() {
     if (!res.ok) {
       if (res.status === 402) {
         setCredits(typeof data.credits === 'number' ? data.credits : 0);
+      }
+      if (res.status === 422 && data.snapshotId) {
+        throw new Error(
+          lang === 'es'
+            ? `${data.error}. Usa «Restaurar versión» en el historial.`
+            : `${data.error}. Use «Restore version» in history.`
+        );
       }
       throw new Error(data.error || 'Error en el Studio');
     }
@@ -379,13 +492,14 @@ function StudioContent() {
         prompt: currentInput,
         action: isInitialGeneration ? 'initial' : action,
         sectionId: sectionId ?? selectedSectionId ?? undefined,
-      });
-      setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'ai', content: data.message }]);
+      }) as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; templateSlug?: string; businessName?: string; diffSummary?: string };
+
       setPreviewSections(data.previewSections);
       if (studioPhase === 'describe') setStudioPhase('active');
       if (data.templateSlug) setActiveTemplateSlug(data.templateSlug);
       if (data.businessName) setProjectName(data.businessName);
       applyCreditFromResponse(data.credits);
+
       const summary = currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : '');
       addChange(summary);
       const nextLog = [
@@ -393,9 +507,19 @@ function StudioContent() {
         ...changeLog.slice(0, 9),
       ];
       setChangeLog(nextLog);
-      scheduleSave(data.previewSections, nextLog, projectName);
+
+      const aiMsg: Message = { id: Date.now() + 1, role: 'ai', content: data.message };
+      setMessages((prev) => {
+        const updated = [...prev, aiMsg];
+        scheduleSave(data.previewSections, nextLog, projectName, updated);
+        return updated;
+      });
+
+      loadSnapshots();
       flashSections(data.changedSectionIds ?? []);
-      toast.success(t.changeApplied, { description: t.creditUsed });
+      toast.success(t.changeApplied, {
+        description: data.diffSummary ? `${t.creditUsed} · ${data.diffSummary}` : t.creditUsed,
+      });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error al generar');
     } finally {
@@ -411,6 +535,14 @@ function StudioContent() {
     }
     if (!checkCredits()) return;
 
+    const isInitialGeneration = studioPhase === 'describe';
+    const impact = await previewImpact({
+      prompt: input.trim(),
+      action: isInitialGeneration ? 'initial' : 'change',
+      sectionId: selectedSectionId ?? undefined,
+    });
+    if (!(await confirmImpactIfNeeded(impact))) return;
+
     const userMsg: Message = { id: Date.now(), role: 'user', content: input.trim() };
     setMessages((prev) => [...prev, userMsg]);
     const currentInput = input.trim();
@@ -419,21 +551,29 @@ function StudioContent() {
     await processAIChange(currentInput);
   };
 
-  const applyQuickPrompt = (prompt: string) => {
+  const applyQuickPrompt = async (prompt: string) => {
     if (studioPhase === 'onboarding') {
       toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
       return;
     }
     if (!checkCredits()) return;
+    const impact = await previewImpact({
+      prompt,
+      action: 'change',
+      sectionId: selectedSectionId ?? undefined,
+    });
+    if (!(await confirmImpactIfNeeded(impact))) return;
     setMessages((prev) => [...prev, { id: Date.now(), role: 'user', content: prompt }]);
     setInput('');
     setIsThinking(true);
-    processAIChange(prompt);
+    await processAIChange(prompt);
   };
 
   const changeStyle = async (newStyle: 'elegante' | 'minimal' | 'moderno') => {
     if (studioPhase === 'onboarding') return;
     if (!checkCredits()) return;
+    const impact = await previewImpact({ prompt: `estilo ${newStyle}`, action: 'style' });
+    if (!(await confirmImpactIfNeeded(impact))) return;
     setStyle(newStyle);
     setIsThinking(true);
     try {
@@ -443,6 +583,7 @@ function StudioContent() {
       const summary = lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`;
       addChange(summary);
       scheduleSave(data.previewSections, changeLog, projectName);
+      loadSnapshots();
       flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
       toast.success(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`, { description: t.creditUsed });
     } catch (err) {
@@ -455,6 +596,8 @@ function StudioContent() {
   const regenerate = async () => {
     if (studioPhase === 'onboarding') return;
     if (!checkCredits()) return;
+    const impact = await previewImpact({ prompt: 'regenerar', action: 'regenerate' });
+    if (!(await confirmImpactIfNeeded(impact))) return;
     setIsThinking(true);
     try {
       const data = await callStudioApi({ prompt: 'regenerar', action: 'regenerate' });
@@ -463,6 +606,7 @@ function StudioContent() {
       const summary = lang === 'es' ? 'Regeneración completa' : 'Full regeneration';
       addChange(summary);
       scheduleSave(data.previewSections, changeLog, projectName);
+      loadSnapshots();
       flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
       toast.success(lang === 'es' ? 'Nuevas variaciones' : 'New variations', { description: t.creditUsed });
     } catch (err) {
@@ -624,6 +768,28 @@ function StudioContent() {
                   </li>
                 ))}
               </ul>
+            )}
+            {projectId && snapshots.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="text-[10px] tracking-widest text-slate-400 mb-1.5">{t.snapshots}</div>
+                <ul className="space-y-1 max-h-20 overflow-y-auto">
+                  {snapshots.slice(0, 5).map((snap) => (
+                    <li key={snap.id} className="flex items-center justify-between gap-2 text-xs">
+                      <span className="truncate text-slate-600">
+                        v{snap.versionNumber}
+                        {snap.label ? ` · ${snap.label}` : ''}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => restoreSnapshot(snap.id)}
+                        className="shrink-0 text-indigo-600 hover:underline cursor-pointer"
+                      >
+                        {t.restore}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
 
