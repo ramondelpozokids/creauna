@@ -72,42 +72,66 @@ function parseApiError(status: number, body: string): string {
 
 async function pingGemini(): Promise<Omit<ProviderPingResult, 'provider' | 'label' | 'bestFor' | 'motors'>> {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
-  const model = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
+  const primary = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
+  const models = [...new Set([primary, 'gemini-2.0-flash-lite', 'gemini-1.5-flash'])];
   if (!apiKey) {
-    return { configured: false, status: 'missing', model, latencyMs: null, sample: null, httpStatus: null, error: 'GEMINI_API_KEY no configurada' };
+    return { configured: false, status: 'missing', model: primary, latencyMs: null, sample: null, httpStatus: null, error: 'GEMINI_API_KEY no configurada' };
   }
 
   const started = Date.now();
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: 'Responde solo: OK' }] }],
-        generationConfig: { temperature: 0, maxOutputTokens: 8 },
-      }),
+  let lastError: { model: string; status: number; body: string } | null = null;
+
+  for (const model of models) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: 'Responde solo: OK' }] }],
+          generationConfig: { temperature: 0, maxOutputTokens: 8 },
+        }),
+      }
+    );
+    const body = await res.text();
+
+    if (res.ok) {
+      try {
+        const data = JSON.parse(body) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+        const sample = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+        return {
+          configured: true,
+          status: sample ? 'ok' : 'error',
+          model,
+          latencyMs: Date.now() - started,
+          sample,
+          httpStatus: res.status,
+          error: sample ? null : 'Respuesta vacía del modelo',
+        };
+      } catch {
+        return { configured: true, status: 'error', model, latencyMs: Date.now() - started, sample: null, httpStatus: res.status, error: 'JSON inválido en respuesta Gemini' };
+      }
     }
-  );
+
+    lastError = { model, status: res.status, body };
+    if (res.status !== 429 && res.status !== 404) break;
+  }
+
   const latencyMs = Date.now() - started;
-  const body = await res.text();
-
-  if (!res.ok) {
-    return { configured: true, status: 'error', model, latencyMs, sample: null, httpStatus: res.status, error: parseApiError(res.status, body) };
-  }
-
-  try {
-    const data = JSON.parse(body) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-    const sample = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
-    return { configured: true, status: sample ? 'ok' : 'error', model, latencyMs, sample, httpStatus: res.status, error: sample ? null : 'Respuesta vacía del modelo' };
-  } catch {
-    return { configured: true, status: 'error', model, latencyMs, sample: null, httpStatus: res.status, error: 'JSON inválido en respuesta Gemini' };
-  }
+  return {
+    configured: true,
+    status: 'error',
+    model: lastError?.model ?? primary,
+    latencyMs,
+    sample: null,
+    httpStatus: lastError?.status ?? null,
+    error: lastError ? parseApiError(lastError.status, lastError.body) : 'Error Gemini',
+  };
 }
 
 async function pingClaude(): Promise<Omit<ProviderPingResult, 'provider' | 'label' | 'bestFor' | 'motors'>> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
-  const model = process.env.CLAUDE_MODEL?.trim() || 'claude-sonnet-4-20250514';
+  const model = process.env.CLAUDE_MODEL?.trim() || 'claude-sonnet-4-6';
   if (!apiKey) {
     return { configured: false, status: 'missing', model, latencyMs: null, sample: null, httpStatus: null, error: 'ANTHROPIC_API_KEY no configurada' };
   }

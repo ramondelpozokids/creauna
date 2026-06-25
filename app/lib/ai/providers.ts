@@ -54,37 +54,47 @@ async function callGemini(messages: AiMessage[], maxTokens: number): Promise<str
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) return null;
 
-  const model = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
+  const primary = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
+  const models = [...new Set([primary, 'gemini-2.0-flash-lite', 'gemini-1.5-flash'])];
   const system = messages.find((m) => m.role === 'system')?.content || '';
   const userParts = messages.filter((m) => m.role !== 'system').map((m) => m.content).join('\n\n');
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: system ? { parts: [{ text: system }] } : undefined,
-        contents: [{ role: 'user', parts: [{ text: userParts }] }],
-        generationConfig: { temperature: 0.6, maxOutputTokens: maxTokens },
-      }),
-    }
-  );
+  for (const model of models) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: system ? { parts: [{ text: system }] } : undefined,
+          contents: [{ role: 'user', parts: [{ text: userParts }] }],
+          generationConfig: { temperature: 0.6, maxOutputTokens: maxTokens },
+        }),
+      }
+    );
 
-  if (!res.ok) {
-    console.error('gemini error:', res.status, await res.text());
+    if (res.ok) {
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+    }
+
+    const errText = await res.text();
+    if (res.status === 429 || res.status === 404) {
+      console.error(`gemini ${model} ${res.status}, fallback…`, errText.slice(0, 120));
+      continue;
+    }
+    console.error('gemini error:', res.status, errText);
     return null;
   }
 
-  const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+  return null;
 }
 
 async function callClaude(messages: AiMessage[], maxTokens: number): Promise<string | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) return null;
 
-  const model = process.env.CLAUDE_MODEL?.trim() || 'claude-sonnet-4-20250514';
+  const model = process.env.CLAUDE_MODEL?.trim() || 'claude-sonnet-4-6';
   const system = messages.find((m) => m.role === 'system')?.content;
   const chatMessages = messages
     .filter((m) => m.role !== 'system')
