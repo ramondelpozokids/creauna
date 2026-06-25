@@ -5,8 +5,8 @@
 $ErrorActionPreference = "Stop"
 Set-Location "$PSScriptRoot\.."
 
-Write-Host "`n=== 1. CLAVES API (.env.local) ===" -ForegroundColor Cyan
-node -e "require('dotenv').config({path:'.env.local'}); let okCount=0; ['GEMINI','ANTHROPIC','OPENAI','GROQ'].forEach(k=>{const v=process.env[k+'_API_KEY']||''; const ok=v.length>=20; if(ok) okCount++; console.log(k+': '+(ok?'OK ('+v.length+' chars)':'FALTA o invalida ('+v.length+' chars)'))}); process.exit(okCount>0?0:1)"
+Write-Host "`n=== 1. CLAVES API (.env.local) — 6 proveedores ===" -ForegroundColor Cyan
+node -e "require('dotenv').config({path:'.env.local'}); const keys=['GEMINI','ANTHROPIC','OPENAI','GROQ','MANUS','FAL']; let ok=0; keys.forEach(k=>{const envKey=k==='FAL'?'FAL_KEY':k+'_API_KEY'; const v=process.env[envKey]||''; const min=k==='FAL'?10:20; const good=v.length>=min; if(good) ok++; console.log(k+': '+(good?'OK ('+v.length+' chars)':'FALTA o invalida ('+v.length+' chars)'))}); process.exit(ok>=1?0:1)"
 if ($LASTEXITCODE -ne 0) {
   Write-Host "`nAVISO: Sin claves validas en local." -ForegroundColor Yellow
   Write-Host "  Copia desde Vercel -> Settings -> Environment Variables" -ForegroundColor Yellow
