@@ -57,6 +57,12 @@ export const IMAGE_BANK = {
     gallery: [sq(958545), sq(696218), sq(262978), sq(941861), sq(1267320), sq(6248864),
       sq(7049655), sq(1639562), sq(2964168), sq(5938421), sq(60616), sq(958545)],
   },
+  foodblog: {
+    hero: p(5938421),
+    posts: [p(6248864, 600, 750), p(262978, 600, 750), p(7049655, 600, 750)],
+    gallery: [sq(6248864), sq(262978), sq(7049655), sq(5938421), sq(696218), sq(1267320)],
+    newsletter: p(5938421, 1400, 600),
+  },
 } as const;
 
 export type ImageBankCategory = keyof typeof IMAGE_BANK;

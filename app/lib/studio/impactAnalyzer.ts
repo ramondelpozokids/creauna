@@ -1,4 +1,4 @@
-import { isCosmeticPrompt, isSiteBuildPrompt } from '../ai/intentAnalyzer';
+import { isCosmeticPrompt, shouldGenerateFullSite } from '../ai/intentAnalyzer';
 import type { ImpactInput, ImpactResult, ImpactRisk, ImpactScope, SectionMeta } from './contextTypes';
 
 function allSectionIds(sections: SectionMeta[]): number[] {
@@ -118,7 +118,7 @@ export function analyzeStudioImpact(input: ImpactInput): ImpactResult {
   let scope: ImpactScope = 'single';
   let affectedSectionIds: number[] = [];
 
-  if (action === 'initial' || (action === 'change' && isSiteBuildPrompt(prompt))) {
+  if (shouldGenerateFullSite(prompt, action, sections)) {
     scope = 'full';
     affectedSectionIds = allSectionIds(sections);
   } else if (action === 'regenerate' || action === 'style') {

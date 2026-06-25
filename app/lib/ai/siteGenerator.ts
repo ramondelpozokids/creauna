@@ -1,6 +1,6 @@
 import { getTemplateBySlug } from '../../data/templates';
 import { toStudioSections } from '../templatePages';
-import { analyzeIntent } from './intentAnalyzer';
+import { analyzeIntent, resolveTemplateSlug } from './intentAnalyzer';
 import { getContentPreset } from './siteContent';
 import { buildCustomSite, describeCreatedSections } from './siteSections';
 import { parseGoogleListing } from './googleListingParser';
@@ -21,7 +21,7 @@ export interface InitialSiteResult {
 export async function generateInitialSite(prompt: string, lang: 'es' | 'en'): Promise<InitialSiteResult> {
   const listing = parseGoogleListing(prompt);
   const intent = analyzeIntent(prompt, lang);
-  const tpl = getTemplateBySlug(intent.templateSlug) ?? getTemplateBySlug('iron-ink')!;
+  const tpl = getTemplateBySlug(resolveTemplateSlug(intent.templateSlug)) ?? getTemplateBySlug('iron-ink')!;
   const preset = getContentPreset(intent.templateSlug);
   const profile = getBusinessProfile(intent.variant, listing);
 

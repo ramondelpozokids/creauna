@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
 import StudioOnboarding from '../components/StudioOnboarding';
 import { useLanguage } from '../components/LanguageProvider';
-import { getCredits, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
+import { getCredits, setCredits as setCreditsCache, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
 import { buildTemplateSections, toStudioSections } from '../lib/templatePages';
 
@@ -366,17 +366,20 @@ function StudioContent() {
     setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
   };
 
-  const addChange = (summary: string) => {
-    setChangeLog((prev) => [
+  const addChange = (summary: string, prev?: ChangeEntry[]) => {
+    const base = prev ?? changeLog;
+    const nextLog: ChangeEntry[] = [
       {
         id: Date.now(),
         summary,
         time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
       },
-      ...prev.slice(0, 9),
-    ]);
+      ...base.slice(0, 9),
+    ];
+    setChangeLog(nextLog);
     setPreviewPulse(true);
     setTimeout(() => setPreviewPulse(false), 1200);
+    return nextLog;
   };
 
   const checkCredits = useCallback((): boolean => {
@@ -392,9 +395,11 @@ function StudioContent() {
     if (unlimitedAccess) return;
     if (typeof balance === 'number') {
       setCredits(balance);
+      setCreditsCache(balance);
     } else {
       syncCreditsFromServer().then(({ credits: c, unlimited }) => {
         setCredits(c);
+        setCreditsCache(c);
         setUnlimitedAccess(unlimited);
       });
     }
@@ -461,7 +466,9 @@ function StudioContent() {
     const data = await res.json();
     if (!res.ok) {
       if (res.status === 402) {
-        setCredits(typeof data.credits === 'number' ? data.credits : 0);
+        const bal = typeof data.credits === 'number' ? data.credits : 0;
+        setCredits(bal);
+        setCreditsCache(bal);
       }
       if (res.status === 422 && data.snapshotId) {
         throw new Error(
@@ -472,7 +479,10 @@ function StudioContent() {
       }
       throw new Error(data.error || 'Error en el Studio');
     }
-    if (typeof data.credits === 'number') setCredits(data.credits);
+    if (typeof data.credits === 'number') {
+      setCredits(data.credits);
+      setCreditsCache(data.credits);
+    }
     if (data.unlimited === true) setUnlimitedAccess(true);
     return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; unlimited?: boolean; templateSlug?: string; businessName?: string };
   };
@@ -501,12 +511,7 @@ function StudioContent() {
       applyCreditFromResponse(data.credits);
 
       const summary = currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : '');
-      addChange(summary);
-      const nextLog = [
-        { id: Date.now(), summary, time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) },
-        ...changeLog.slice(0, 9),
-      ];
-      setChangeLog(nextLog);
+      const nextLog = addChange(summary);
 
       const aiMsg: Message = { id: Date.now() + 1, role: 'ai', content: data.message };
       setMessages((prev) => {
@@ -581,8 +586,8 @@ function StudioContent() {
       setPreviewSections(data.previewSections);
       applyCreditFromResponse(data.credits);
       const summary = lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`;
-      addChange(summary);
-      scheduleSave(data.previewSections, changeLog, projectName);
+      const nextLog = addChange(summary);
+      scheduleSave(data.previewSections, nextLog, projectName);
       loadSnapshots();
       flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
       toast.success(lang === 'es' ? `Estilo: ${newStyle}` : `Style: ${newStyle}`, { description: t.creditUsed });
@@ -604,8 +609,8 @@ function StudioContent() {
       setPreviewSections(data.previewSections);
       applyCreditFromResponse(data.credits);
       const summary = lang === 'es' ? 'Regeneración completa' : 'Full regeneration';
-      addChange(summary);
-      scheduleSave(data.previewSections, changeLog, projectName);
+      const nextLog = addChange(summary);
+      scheduleSave(data.previewSections, nextLog, projectName);
       loadSnapshots();
       flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
       toast.success(lang === 'es' ? 'Nuevas variaciones' : 'New variations', { description: t.creditUsed });
@@ -620,14 +625,16 @@ function StudioContent() {
     if (studioPhase === 'onboarding') return;
     if (!checkCredits()) return;
     setSelectedSectionId(id);
+    const impact = await previewImpact({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
+    if (!(await confirmImpactIfNeeded(impact))) return;
     setIsThinking(true);
     try {
       const data = await callStudioApi({ prompt: 'mejorar sección', action: 'improve', sectionId: id });
       setPreviewSections(data.previewSections);
       applyCreditFromResponse(data.credits);
       const summary = lang === 'es' ? `Sección #${id} mejorada` : `Section #${id} improved`;
-      addChange(summary);
-      scheduleSave(data.previewSections, changeLog, projectName);
+      const nextLog = addChange(summary);
+      scheduleSave(data.previewSections, nextLog, projectName);
       flashSections(data.changedSectionIds ?? [id]);
       toast.success(lang === 'es' ? 'Sección mejorada' : 'Section improved', { description: t.creditUsed });
     } catch (err) {

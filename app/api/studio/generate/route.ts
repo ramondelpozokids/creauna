@@ -10,7 +10,19 @@ import { hydrateStudioContext } from '../../../lib/studio/contextManager';
 import { validatePreviewSections } from '../../../lib/studio/sectionValidator';
 import { summarizeSectionDiff } from '../../../lib/studio/sectionDiff';
 import { logProjectChangeAudit } from '../../../lib/studio/auditService';
+import { updateProject } from '../../../lib/projects';
 import { canUseServerSections } from '../../../lib/studio/sectionSelector';
+
+export const maxDuration = 300;
+
+function isDbUnavailable(error: unknown): boolean {
+  const msg = error instanceof Error ? error.message : String(error);
+  return (
+    msg.includes('DATABASE_URL') ||
+    msg.includes('PrismaClientInitializationError') ||
+    msg.includes("Can't reach database")
+  );
+}
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -176,6 +188,14 @@ export async function POST(req: Request) {
       snapshotId,
     });
 
+    if (session?.id && projectId && result.previewSections.length > 0) {
+      try {
+        await updateProject(session.id, projectId, { sections: result.previewSections });
+      } catch (persistErr) {
+        console.error('studio persist (non-fatal):', persistErr);
+      }
+    }
+
     return NextResponse.json({
       ...result,
       credits: spent.credits,
@@ -185,6 +205,15 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('api/studio/generate:', error);
+    if (isDbUnavailable(error)) {
+      return NextResponse.json(
+        {
+          error:
+            'Base de datos no disponible. Configura DATABASE_URL y ejecuta prisma db push en Vercel/local.',
+        },
+        { status: 503 }
+      );
+    }
     const credits = await refundCredit(session?.id ?? null, ip, 'studio_refund_error');
     return NextResponse.json({ error: 'Error al generar el diseño', credits }, { status: 500 });
   }

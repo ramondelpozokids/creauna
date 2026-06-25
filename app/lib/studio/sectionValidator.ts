@@ -7,22 +7,40 @@ const FORBIDDEN = [
   /<embed\b/i,
 ];
 
-/** Patrones permitidos en HTML generado por CREAUNA (mapas, scroll-up). */
-const ALLOWED_IFRAME = /<iframe[^>]*\ssrc="https:\/\/(?:maps\.google\.com|www\.google\.com\/maps)[^"]*"[^>]*>\s*<\/iframe>/gi;
-const ALLOWED_SCROLL_ONCLICK = /\bonclick="window\.scrollTo\(\{top:0,behavior:'smooth'\}\)"/gi;
+function stripGoogleMapIframes(html: string): string {
+  return html.replace(/<iframe[\s\S]*?(?:\/>|<\/iframe>)/gi, (tag) =>
+    isGoogleMapIframe(tag) ? '' : tag
+  );
+}
 
-function stripAllowedPatterns(html: string): string {
-  return html.replace(ALLOWED_IFRAME, '').replace(ALLOWED_SCROLL_ONCLICK, '');
+function isGoogleMapIframe(tag: string): boolean {
+  if (!/<iframe\b/i.test(tag)) return false;
+  const srcMatch = tag.match(/\ssrc\s*=\s*["']([^"']+)["']/i);
+  if (!srcMatch?.[1]) return false;
+  const src = srcMatch[1].toLowerCase();
+  return (
+    src.includes('maps.google.com') ||
+    src.includes('google.com/maps') ||
+    src.includes('maps.googleapis.com')
+  );
+}
+
+function isScrollToOnclick(handler: string): boolean {
+  const h = handler.trim();
+  return /^window\.scrollTo\s*\(/i.test(h) || /^scrollTo\s*\(/i.test(h);
 }
 
 function hasDisallowedInlineHandlers(html: string): boolean {
-  const stripped = html.replace(ALLOWED_SCROLL_ONCLICK, '');
+  for (const m of html.matchAll(/\bonclick\s*=\s*["']([^"']*)["']/gi)) {
+    if (!isScrollToOnclick(m[1])) return true;
+  }
+  const stripped = html.replace(/\bonclick\s*=\s*["'][^"']*["']/gi, '');
   return /\bon\w+\s*=/i.test(stripped);
 }
 
 function hasDisallowedIframe(html: string): boolean {
-  const withoutAllowed = html.replace(ALLOWED_IFRAME, '');
-  return /<iframe\b/i.test(withoutAllowed);
+  const iframes = html.match(/<iframe[\s\S]*?(?:\/>|<\/iframe>)/gi) ?? [];
+  return iframes.some((tag) => !isGoogleMapIframe(tag));
 }
 
 export interface SectionValidationResult {
@@ -34,7 +52,7 @@ export interface SectionValidationResult {
 
 export function validateSectionHtml(html: string, sectionId?: number, sectionType?: string): SectionValidationResult {
   const errors: string[] = [];
-  const cleaned = stripAllowedPatterns(html);
+  const cleaned = stripGoogleMapIframes(html);
 
   if (!html || html.trim().length < 20) {
     errors.push('HTML demasiado corto o vacío');

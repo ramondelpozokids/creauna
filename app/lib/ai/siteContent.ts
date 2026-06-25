@@ -120,6 +120,22 @@ const CONTENT_PRESETS: Record<string, ContentPreset> = {
       { title: 'Wine list', desc: 'Accessible selection of national reds, whites, and sparkling wines.' },
     ],
   },
+  stanton: {
+    taglineEs: 'Comida casera para la vida moderna — recetas sencillas que cualquiera puede hacer.',
+    taglineEn: 'Home cooking for modern life — simple recipes anyone can make.',
+    ctaPrimaryEs: 'Ver recetas', ctaPrimaryEn: 'View recipes',
+    ctaSecondaryEs: 'Suscribirse', ctaSecondaryEn: 'Subscribe',
+    es: [
+      { title: 'Recetas rápidas', desc: 'Platos listos en menos de 30 minutos con ingredientes de supermercado.' },
+      { title: 'Cocina de temporada', desc: 'Propuestas frescas según el mes y productos locales.' },
+      { title: 'Newsletter semanal', desc: 'Novedades, menús y consejos directos a tu correo.' },
+    ],
+    en: [
+      { title: 'Quick recipes', desc: 'Dishes ready in under 30 minutes with supermarket ingredients.' },
+      { title: 'Seasonal cooking', desc: 'Fresh ideas based on the month and local produce.' },
+      { title: 'Weekly newsletter', desc: 'Updates, menus and tips straight to your inbox.' },
+    ],
+  },
   sakura: {
     taglineEs: 'Cocina japonesa auténtica con pescado de primera calidad y ambiente zen.',
     taglineEn: 'Authentic Japanese cuisine with top-quality fish and a zen atmosphere.',

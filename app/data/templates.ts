@@ -119,6 +119,15 @@ export const templatesCatalog: TemplateItem[] = [
     image: u('1488477181946-6428a0291777'),
   },
 
+  {
+    id: 61, slug: 'stanton', categoryKey: 'gastronomy',
+    nameEs: 'Stanton', nameEn: 'Stanton',
+    categoryEs: 'Blog de Recetas', categoryEn: 'Recipe Blog',
+    descEs: 'Estilo Squarespace: hero split, publicaciones en grid, newsletter y tienda de recetas. Ideal para food blogs.',
+    descEn: 'Squarespace-style: split hero, post grid, newsletter and recipe shop. Perfect for food blogs.',
+    image: p(5938421),
+  },
+
   // ── SERVICIOS (12) ────────────────────────────────────────────
   {
     id: 13, slug: 'classic-cut', categoryKey: 'services',
@@ -534,7 +543,8 @@ export function getPublishedTemplates(): TemplateItem[] {
 }
 
 export function getTemplateBySlug(slug: string): TemplateItem | undefined {
-  return getPublishedTemplates().find((t) => t.slug === slug);
+  return templatesCatalog.find((t) => t.slug === slug)
+    ?? getPublishedTemplates().find((t) => t.slug === slug);
 }
 
 export const categoryCounts = {

@@ -5,6 +5,7 @@ import type { TemplatePageSection } from '../templatePages';
 import type { ServiceItem } from './siteContent';
 import { getBusinessProfile, type AccentColor, type BusinessProfile } from './businessProfiles';
 import type { ParsedGoogleListing } from './googleListingParser';
+import { IMAGE_BANK } from './imageBank';
 
 const GALLERY_BY_CATEGORY: Record<string, string[]> = {
   gastronomy: [
@@ -217,38 +218,128 @@ function buildBeautySite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSec
   ];
 }
 
+function buildCorporateLegalFooter(ctx: BuildCtx): TemplatePageSection {
+  const { name, lang, profile } = ctx;
+  const es = lang === 'es';
+  const year = new Date().getFullYear();
+  const email = profile?.email ?? 'info@example.com';
+  const address = profile ? (es ? profile.addressEs : profile.addressEn) : 'Madrid, España';
+  const blocks = es
+    ? [
+        { title: 'Aviso Legal', text: `${name} es titular de este sitio web. Los contenidos tienen carácter informativo y no sustituyen el asesoramiento profesional personalizado.` },
+        { title: 'Política de Privacidad', text: `Tratamos tus datos (nombre, email, teléfono y documentación adjunta) únicamente para gestionar consultas, prestación de servicios de asesoría y obligaciones legales. Responsable: ${name}. Contacto: ${email}. Puedes ejercer tus derechos de acceso, rectificación y supresión.` },
+        { title: 'Política de Cookies', text: 'Utilizamos cookies técnicas necesarias para el funcionamiento del sitio y cookies analíticas anonimizadas para mejorar la experiencia. Puedes configurar o rechazar las no esenciales desde el banner de cookies.' },
+      ]
+    : [
+        { title: 'Legal Notice', text: `${name} owns this website. Content is for information only and does not replace personalized professional advice.` },
+        { title: 'Privacy Policy', text: `We process your data (name, email, phone and attached documents) only to manage enquiries, advisory services and legal obligations. Controller: ${name}. Contact: ${email}.` },
+        { title: 'Cookie Policy', text: 'We use essential technical cookies and anonymized analytics cookies. You can configure or reject non-essential cookies from the cookie banner.' },
+      ];
+  return {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-blue-950 text-stone-400 rounded-[2rem] p-10 md:p-14">
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div><h3 class="text-white font-bold text-lg">${esc(name)}</h3><p class="mt-3 text-sm leading-relaxed">${esc(profile ? (es ? profile.aboutEs : profile.aboutEn).slice(0, 140) : '')}</p><p class="mt-2 text-xs">📍 ${esc(address)}</p></div>
+        <div><h4 class="text-emerald-400 text-xs font-bold tracking-widest uppercase">${es ? 'Navegación' : 'Navigation'}</h4><div class="mt-3 space-y-1 text-sm">${(es ? ['Inicio', 'Servicios', 'Nosotros', 'Contacto', 'Ubicación'] : ['Home', 'Services', 'About', 'Contact', 'Location']).map((l) => `<div>${l}</div>`).join('')}</div></div>
+        <div><h4 class="text-emerald-400 text-xs font-bold tracking-widest uppercase">${es ? 'Legal' : 'Legal'}</h4><div class="mt-3 space-y-3">${blocks.map((b) => `<div><div class="text-white text-sm font-medium">${esc(b.title)}</div><p class="mt-1 text-xs leading-relaxed">${esc(b.text)}</p></div>`).join('')}</div></div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-blue-900 text-center text-xs">© ${year} ${esc(name)}. ${es ? 'Todos los derechos reservados.' : 'All rights reserved.'}</div>
+    </div>`,
+  };
+}
+
+function buildDocumentUploadSection(ctx: BuildCtx): TemplatePageSection {
+  const { lang, name } = ctx;
+  const es = lang === 'es';
+  return {
+    id: 'documents', type: 'contact', navLabelEs: 'Documentos', navLabelEn: 'Documents',
+    html: `<div class="bg-gradient-to-br from-violet-50 to-emerald-50 rounded-[2rem] p-10 md:p-16 border border-violet-100 max-w-5xl mx-auto">
+      <div class="text-center mb-10">
+        <span class="inline-block px-3 py-1 bg-violet-600 text-white text-xs font-bold rounded-full">🔒 ${es ? 'Envío seguro' : 'Secure upload'}</span>
+        <h2 class="mt-4 text-3xl font-bold text-violet-900">${es ? 'Enviar documentación encriptada' : 'Send encrypted documents'}</h2>
+        <p class="mt-3 text-stone-600 max-w-xl mx-auto">${es ? `Transfiere nóminas, facturas o modelos fiscales a ${name} con cifrado extremo a extremo.` : `Transfer payroll, invoices or tax forms to ${name} with end-to-end encryption.`}</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div class="border-2 border-dashed border-violet-300 rounded-xl p-8 text-center bg-white/80">
+          <div class="text-4xl">📄</div>
+          <p class="mt-3 text-sm text-stone-600">${es ? 'Arrastra archivos PDF, Excel o ZIP' : 'Drag PDF, Excel or ZIP files'}</p>
+          <span class="mt-4 inline-block px-5 py-2 bg-violet-600 text-white text-sm font-bold rounded-lg">${es ? 'Seleccionar archivos' : 'Select files'}</span>
+        </div>
+        <div class="space-y-4">
+          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Referencia / NIF' : 'Reference / Tax ID'}</div>
+          <div class="border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Email de confirmación' : 'Confirmation email'}</div>
+          <div class="px-6 py-4 bg-emerald-600 text-white font-bold text-center rounded-lg">${es ? 'Enviar con cifrado AES-256' : 'Send with AES-256 encryption'}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildCorporateSidebar(ctx: BuildCtx): TemplatePageSection {
+  const { name, lang, profile } = ctx;
+  const es = lang === 'es';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const links = es
+    ? ['Inicio', 'Servicios', 'Nosotros', 'Galería', 'Contacto', 'Ubicación']
+    : ['Home', 'Services', 'About', 'Gallery', 'Contact', 'Location'];
+  return {
+    id: 'sidebar', type: 'about', navLabelEs: 'Menú lateral', navLabelEn: 'Sidebar',
+    html: `<div class="bg-white rounded-[2rem] border border-stone-100 shadow-sm p-6 md:p-8 max-w-5xl mx-auto">
+      <div class="flex flex-col md:flex-row gap-8">
+        <aside class="md:w-56 shrink-0 md:sticky md:top-4 self-start bg-gradient-to-b from-blue-900 to-violet-800 text-white rounded-xl p-6">
+          <div class="font-bold text-lg">${esc(name)}</div>
+          <nav class="mt-6 space-y-2 text-sm">${links.map((l) => `<div class="py-1.5 px-2 rounded hover:bg-white/10 cursor-pointer">${l}</div>`).join('')}</nav>
+          ${phone ? `<a href="tel:+34${phoneDigits}" class="mt-6 block text-emerald-300 text-sm font-semibold">📞 ${esc(phone)}</a>` : ''}
+          ${profile?.email ? `<div class="mt-2 text-blue-200 text-xs">${esc(profile.email)}</div>` : ''}
+        </aside>
+        <div class="flex-1 text-stone-600 text-sm leading-relaxed">
+          <h3 class="text-xl font-bold text-blue-900">${es ? 'Acceso rápido' : 'Quick access'}</h3>
+          <p class="mt-3">${es ? 'Desde el menú lateral puedes saltar a servicios, contacto, ubicación y envío seguro de documentos.' : 'Use the sidebar to jump to services, contact, location and secure document upload.'}</p>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
 function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
-  const { name, heroImage, tagline, profile, lang, ctaPrimary, ctaSecondary } = ctx;
+  const { name, heroImage, tagline, profile, lang, ctaPrimary, ctaSecondary, images } = ctx;
   const es = lang === 'es';
   const phone = profile?.phone ?? '';
   const phoneDigits = phone.replace(/\D/g, '');
   const items = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
   const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
   const aboutText = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
+  const vivid = features.vividColors;
+  const heroGrad = vivid
+    ? 'from-emerald-600 via-teal-600 to-violet-700'
+    : 'from-blue-900 via-blue-800 to-blue-600';
+  const accentBtn = vivid ? 'bg-emerald-500 text-white' : 'bg-amber-400 text-blue-900';
+  const ctaBtn = vivid ? 'bg-violet-600 text-white' : 'bg-white text-blue-900';
 
   const hero: TemplatePageSection = {
     id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
-    html: `<div class="overflow-hidden rounded-[2rem] shadow-xl border border-blue-100">
-      <div class="bg-blue-900 text-white text-sm px-6 py-2 flex flex-wrap justify-between gap-2">
-        <span>${es ? 'Asesoría integral desde 1991' : 'Full advisory since 1991'}</span>
+    html: `<div class="overflow-hidden rounded-[2rem] shadow-xl border ${vivid ? 'border-emerald-200' : 'border-blue-100'}">
+      <div class="${vivid ? 'bg-violet-900' : 'bg-blue-900'} text-white text-sm px-6 py-2 flex flex-wrap justify-between gap-2">
+        <span>${es ? 'Asesoría integral · Fiscal · Laboral · Contable' : 'Full advisory · Tax · Labor · Accounting'}</span>
         ${phone ? `<a href="tel:+34${phoneDigits}" class="font-semibold">📞 ${esc(phone)}</a>` : ''}
       </div>
-      <div class="bg-white flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-stone-100">
-        <div class="font-bold text-xl text-blue-900">${esc(name)}</div>
+      <nav class="bg-white flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-stone-100" aria-label="${es ? 'Navegación principal' : 'Main navigation'}">
+        <div class="font-bold text-xl ${vivid ? 'text-violet-900' : 'text-blue-900'}">${esc(name)}</div>
         <div class="hidden lg:flex gap-8 text-xs tracking-wider uppercase text-stone-500 font-semibold">
-          ${(es ? ['Inicio', 'Servicios', 'Nosotros', 'Reseñas', 'Contacto'] : ['Home', 'Services', 'About', 'Reviews', 'Contact']).map((n) => `<span>${n}</span>`).join('')}
+          ${(es ? ['Inicio', 'Servicios', 'Nosotros', 'Galería', 'Contacto', 'Ubicación'] : ['Home', 'Services', 'About', 'Gallery', 'Contact', 'Location']).map((n) => `<span>${n}</span>`).join('')}
         </div>
-        <span class="px-4 py-2 bg-blue-800 text-white text-xs font-bold rounded-md">${esc(ctaPrimary)}</span>
-      </div>
-      <div class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 text-white text-center px-6 py-16 md:py-20">
-        <img src="${heroImage}" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20" referrerpolicy="no-referrer" />
+        <span class="px-4 py-2 ${vivid ? 'bg-emerald-600' : 'bg-blue-800'} text-white text-xs font-bold rounded-md">${esc(ctaPrimary)}</span>
+      </nav>
+      <div class="relative bg-gradient-to-br ${heroGrad} text-white text-center px-6 py-16 md:py-24 min-h-[420px] md:min-h-[520px] flex items-center justify-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover opacity-25" loading="lazy" referrerpolicy="no-referrer" />
         <div class="relative z-10 max-w-3xl mx-auto">
-          <span class="inline-block px-4 py-1 bg-amber-400 text-blue-900 text-xs font-bold rounded-full mb-6">${profile ? esc(es ? profile.badgeEs : profile.badgeEn) : ''}</span>
-          <h1 class="text-4xl md:text-5xl font-bold tracking-tight">${esc(name)}</h1>
-          <p class="mt-6 text-lg text-blue-100 max-w-2xl mx-auto">${esc(tagline)}</p>
+          <span class="inline-block px-4 py-1 ${accentBtn} text-xs font-bold rounded-full mb-6">${profile ? esc(es ? profile.badgeEs : profile.badgeEn) : (es ? 'ASESORÍA PROFESIONAL' : 'PROFESSIONAL ADVISORY')}</span>
+          <h1 class="text-4xl md:text-6xl font-bold font-serif tracking-tight">${esc(name)}</h1>
+          <p class="mt-6 text-lg text-white/90 max-w-2xl mx-auto">${esc(tagline)}</p>
           <div class="mt-10 flex flex-wrap justify-center gap-4">
-            <span class="px-8 py-4 bg-white text-blue-900 rounded-md font-bold text-sm shadow-lg">${esc(ctaPrimary)}</span>
-            <span class="px-8 py-4 border-2 border-white/60 text-white rounded-md font-semibold text-sm">${esc(ctaSecondary)}</span>
+            <span class="px-8 py-4 ${ctaBtn} rounded-md font-bold text-sm shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-8 py-4 border-2 border-white/70 text-white rounded-md font-semibold text-sm">${esc(ctaSecondary)}</span>
           </div>
         </div>
       </div>
@@ -319,22 +410,28 @@ function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePage
     </div>`,
   };
 
-  const footer: TemplatePageSection = {
-    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
-    html: `<div class="bg-blue-950 text-stone-400 rounded-[2rem] p-10 md:p-14">
-      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div><h3 class="text-white font-bold">${esc(name)}</h3><p class="mt-3 text-sm">${esc(aboutText?.slice(0, 100) ?? '')}</p></div>
-        <div><h4 class="text-amber-400 text-xs font-bold tracking-widest uppercase">${es ? 'Servicios' : 'Services'}</h4><div class="mt-3 space-y-1 text-sm">${items.map((i) => `<div>${esc(i.title)}</div>`).join('')}</div></div>
-        <div><h4 class="text-amber-400 text-xs font-bold tracking-widest uppercase">Legal</h4><div class="mt-3 space-y-1 text-sm underline"><div>Aviso Legal</div><div>Política de Privacidad</div><div>Política de Cookies</div></div></div>
+  const footer = buildCorporateLegalFooter(ctx);
+
+  const gallerySec: TemplatePageSection = {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
+    html: `<div class="bg-stone-50 rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      ${sectionHead(es ? 'Nuestro despacho' : 'Our office', es ? 'Un entorno profesional y cercano para autónomos y empresas' : 'A professional, approachable environment for freelancers and businesses', vivid ? 'bg-violet-600' : 'bg-blue-800')}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
+        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden aspect-[4/3] shadow-sm"><img src="${img}" alt="${esc(name)}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
       </div>
-      <div class="mt-8 pt-6 border-t border-blue-900 text-center text-xs">© ${new Date().getFullYear()} ${esc(name)}</div>
     </div>`,
   };
 
   return [
-    hero, services, about,
+    hero,
+    ...(features.sidebar ? [buildCorporateSidebar(ctx)] : []),
+    services,
+    about,
+    ...(features.gallery ? [gallerySec] : []),
     ...(features.reviews ? [reviewsSec] : []),
+    ...(features.location ? [buildLocation(ctx)] : []),
     ...(features.contact ? [contact] : []),
+    ...(features.documentUpload ? [buildDocumentUploadSection(ctx)] : []),
     ...(features.legalFooter || features.social ? [footer] : []),
     premiumWidgets(ctx),
   ];
@@ -1188,6 +1285,117 @@ function buildCafeWidgets(ctx: BuildCtx): TemplatePageSection {
   return premiumWidgets(ctx);
 }
 
+const CORAL = 'text-[#d4715a]';
+const CORAL_BG = 'bg-[#d4715a]';
+
+function buildFoodBlogSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const { name, heroImage, tagline, profile, lang, images } = ctx;
+  const es = lang === 'es';
+  const posts = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
+  const badge = profile ? (es ? profile.badgeEs : profile.badgeEn) : '';
+  const aboutText = profile ? (es ? profile.aboutEs : profile.aboutEn) : tagline;
+  const newsletterImg = IMAGE_BANK.foodblog.newsletter;
+  const nav = es
+    ? ['Blog', 'Acerca de', 'Contacto', 'Tienda']
+    : ['Blog', 'About', 'Contact', 'Shop'];
+
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-[#f4f0eb] overflow-hidden rounded-[2rem] border border-stone-200/80">
+      <nav class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 bg-[#f4f0eb] border-b border-stone-200/60" aria-label="${es ? 'Navegación' : 'Navigation'}">
+        <div class="font-semibold text-lg text-stone-900 tracking-tight">${esc(name)}</div>
+        <div class="hidden md:flex items-center gap-8 text-sm text-stone-700">
+          ${nav.map((n, i) => `<span class="${i === 0 ? 'underline underline-offset-4' : ''}">${n}</span>`).join('')}
+        </div>
+        <div class="flex items-center gap-4 text-stone-600 text-xs">
+          <span>ig</span><span>yt</span><span>𝕏</span>
+          <span class="font-medium">🛒 0</span>
+        </div>
+      </nav>
+      <div class="grid md:grid-cols-2 min-h-[420px] md:min-h-[520px]">
+        <div class="relative min-h-[280px] md:min-h-full">
+          <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" loading="lazy" referrerpolicy="no-referrer" />
+        </div>
+        <div class="flex flex-col justify-center px-8 md:px-14 py-12 bg-[#f4f0eb]">
+          <p class="text-xs font-semibold tracking-[0.2em] uppercase ${CORAL}">${esc(badge)}</p>
+          <p class="mt-8 text-lg md:text-xl text-stone-800 leading-relaxed font-light">${esc(aboutText)}</p>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const blog: TemplatePageSection = {
+    id: 'blog', type: 'blog', navLabelEs: 'Blog', navLabelEn: 'Blog',
+    html: `<div class="bg-[#faf8f5] rounded-[2rem] p-10 md:p-16 border border-stone-100">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl md:text-4xl font-serif font-bold ${CORAL}">${es ? 'Publicaciones recientes' : 'Recent posts'}</h2>
+        <p class="mt-4 text-stone-500 text-sm leading-relaxed">${es ? 'Recetas sencillas, fotos reales y cocina casera para el día a día.' : 'Simple recipes, real photos and everyday home cooking.'}</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        ${posts.map((post) => `<article class="group">
+          <div class="overflow-hidden rounded-sm aspect-[4/5] bg-stone-100">
+            <img src="${post.image}" alt="${esc(post.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+          <time class="mt-5 block text-xs text-stone-400">${esc(post.price ?? '')}</time>
+          <h3 class="mt-2 text-lg font-serif font-semibold ${CORAL} leading-snug">${esc(post.title)}</h3>
+          <p class="mt-3 text-sm text-stone-500 leading-relaxed">${es ? 'Receta casera con ingredientes accesibles y pasos claros para cocinar en casa.' : 'Home recipe with accessible ingredients and clear steps.'}</p>
+          <span class="mt-4 inline-block text-sm font-medium ${CORAL}">${esc(post.cta)} →</span>
+        </article>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const newsletter: TemplatePageSection = {
+    id: 'about', type: 'about', navLabelEs: 'Newsletter', navLabelEn: 'Newsletter',
+    html: `<div class="relative overflow-hidden rounded-[2rem] min-h-[360px] flex items-center justify-center text-center text-white">
+      <img src="${newsletterImg}" alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" referrerpolicy="no-referrer" />
+      <div class="absolute inset-0 bg-stone-900/50"></div>
+      <div class="relative z-10 px-6 py-16 max-w-xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-serif font-bold">${es ? 'Recibe los detalles.' : 'Get the details.'}</h2>
+        <p class="mt-4 text-white/90 text-sm md:text-base">${es ? 'Regístrate con tu correo para recibir recetas y novedades.' : 'Sign up with your email for recipes and updates.'}</p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-0 max-w-md mx-auto">
+          <div class="flex-1 bg-white/95 text-stone-400 text-sm px-4 py-3 text-left">${es ? 'Correo electrónico' : 'Email address'}</div>
+          <span class="px-8 py-3 ${CORAL_BG} text-white text-sm font-bold tracking-wider uppercase shrink-0">${es ? 'Suscribirse' : 'Subscribe'}</span>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const footer: TemplatePageSection = {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-[#8b8178] text-white/80 rounded-[2rem] p-12 md:p-16 text-center">
+      <div class="flex justify-center gap-6 text-sm mb-8">
+        <span>Instagram</span><span>YouTube</span><span>Twitter</span>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-xs uppercase tracking-wider mb-8">
+        ${(es ? ['Aviso legal', 'Privacidad', 'Cookies'] : ['Legal', 'Privacy', 'Cookies']).map((l) => `<span>${l}</span>`).join('')}
+      </div>
+      <p class="text-xs text-white/60">© ${new Date().getFullYear()} ${esc(name)} · ${es ? 'Hecho con CREAUNA' : 'Made with CREAUNA'}</p>
+    </div>`,
+  };
+
+  const shop: TemplatePageSection = {
+    id: 'menu', type: 'menu', navLabelEs: 'Tienda', navLabelEn: 'Shop',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100 max-w-4xl mx-auto text-center">
+      <h2 class="text-2xl font-serif font-bold text-stone-900">${es ? 'Recetas de Stanton, Ed. 1' : 'Stanton Recipes, Ed. 1'}</h2>
+      <p class="mt-2 text-stone-500 text-sm">${es ? 'Libro de recetas · EUR 25' : 'Recipe book · EUR 25'}</p>
+      <div class="mt-8 mx-auto max-w-xs rounded-lg overflow-hidden shadow-lg">
+        <img src="${images[0] ?? heroImage}" alt="${es ? 'Libro de recetas' : 'Recipe book'}" class="w-full aspect-square object-cover" loading="lazy" referrerpolicy="no-referrer" />
+      </div>
+      <span class="mt-8 inline-block px-8 py-3 ${CORAL_BG} text-white text-sm font-bold tracking-wide uppercase">${es ? 'Comprar' : 'Buy now'}</span>
+    </div>`,
+  };
+
+  return [
+    hero,
+    blog,
+    newsletter,
+    shop,
+    footer,
+    premiumWidgets(ctx),
+  ];
+}
+
 function buildCafeSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
   return [
     buildCafeHero(ctx),
@@ -1443,6 +1651,10 @@ export function buildCustomSite(
     return buildTattooSite(ctx, features);
   }
 
+  if (profile?.variant === 'foodblog') {
+    return buildFoodBlogSite(ctx, features);
+  }
+
   if (profile?.variant === 'cafe') {
     return buildCafeSite(ctx, features);
   }
@@ -1485,16 +1697,20 @@ export function buildCustomSite(
 
 export function describeCreatedSections(features: SiteFeatures, lang: 'es' | 'en'): string {
   const labels = lang === 'es'
-    ? { hero: 'Inicio', menu: 'Menú', services: 'Servicios', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', about: 'Sobre nosotros', footer: 'Footer legal' }
-    : { hero: 'Home', menu: 'Menu', services: 'Services', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', about: 'About', footer: 'Legal footer' };
+    ? { hero: 'Inicio', menu: 'Menú', services: 'Servicios', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', about: 'Sobre nosotros', contact: 'Contacto', documents: 'Documentos seguros', sidebar: 'Sidebar', blog: 'Blog', footer: 'Footer legal' }
+    : { hero: 'Home', menu: 'Menu', services: 'Services', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', about: 'About', contact: 'Contact', documents: 'Secure documents', sidebar: 'Sidebar', blog: 'Blog', footer: 'Legal footer' };
 
   const list = [labels.hero];
+  if (features.sidebar) list.push(labels.sidebar);
   if (features.menu) list.push(labels.menu);
   else if (features.services) list.push(labels.services);
+  if (features.about) list.push(labels.about);
+  if (features.blog) list.push(labels.blog);
   if (features.gallery) list.push(labels.gallery);
   if (features.reviews) list.push(labels.reviews);
   if (features.location) list.push(labels.location);
-  if (features.about) list.push(labels.about);
+  if (features.contact) list.push(labels.contact);
+  if (features.documentUpload) list.push(labels.documents);
   if (features.legalFooter || features.social) list.push(labels.footer);
   return list.join(', ');
 }

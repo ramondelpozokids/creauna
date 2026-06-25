@@ -1,8 +1,9 @@
 import { chatCompletion } from './providers';
 import { generateInitialSite } from './siteGenerator';
-import { isSiteBuildPrompt, isCosmeticPrompt } from './intentAnalyzer';
+import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
 import { detectVariant } from './businessProfiles';
 import { applyVisualEnhancement } from './siteSections';
+import { validateSectionHtml } from '../studio/sectionValidator';
 
 export interface PreviewSection {
   id: number;
@@ -59,7 +60,8 @@ function enrichPromptFromSections(prompt: string, sections: PreviewSection[]): s
   const variantHint =
     variant === 'tattoo' ? 'tattoo piercing royal bang'
       : variant === 'cafe' ? 'rest art café restaurante terraza'
-        : variant === 'kebab' ? 'kebab döner vallecas'
+        : variant === 'foodblog' ? 'blog recetas comida casera stanton'
+          : variant === 'kebab' ? 'kebab döner vallecas'
           : '';
   const hints = [prompt, name, variantHint].filter(Boolean);
   return hints.join(' ');
@@ -137,7 +139,10 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
     };
   }
 
-  if (lower.includes('testimonio') || lower.includes('testimonial') || lower.includes('reseñ')) {
+  if (
+    (lower.includes('testimonio') || lower.includes('testimonial') || lower.includes('reseñ')) &&
+    !isExistingSiteSections(previewSections)
+  ) {
     const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
     return {
       message: lang === 'es' ? 'Bloque de reseñas añadido con opiniones reales.' : 'Reviews section added with real testimonials.',
@@ -241,7 +246,10 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
     };
   }
 
-  if (lower.includes('servicio') || lower.includes('service') || lower.includes('sección') || lower.includes('section')) {
+  if (
+    (lower.includes('servicio') || lower.includes('service') || lower.includes('sección') || lower.includes('section')) &&
+    !isExistingSiteSections(previewSections)
+  ) {
     const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
     return {
       message: lang === 'es' ? 'Secciones actualizadas con contenido real.' : 'Sections updated with real content.',
@@ -318,6 +326,8 @@ Action: ${input.action || 'change'}`,
     if (!match) return null;
     const parsed = JSON.parse(match[0]) as { message?: string; html?: string };
     if (!parsed.html || !parsed.message) return null;
+    const validation = validateSectionHtml(parsed.html, target.id, target.type);
+    if (!validation.ok) return null;
 
     const sections = patchSection(cloneSections(input.previewSections), target.id, parsed.html);
     return {
@@ -333,7 +343,7 @@ Action: ${input.action || 'change'}`,
 }
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
-  if (input.action === 'initial' || (input.action === 'change' && isSiteBuildPrompt(input.prompt))) {
+  if (shouldGenerateFullSite(input.prompt, input.action, input.previewSections)) {
     const result = await generateInitialSite(input.prompt, input.lang);
     return {
       message: result.message,
@@ -346,7 +356,7 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
     };
   }
 
-  if (input.action === 'change' && isCosmeticPrompt(input.prompt)) {
+  if (input.action === 'change' && (isCosmeticPrompt(input.prompt) || isSiteBuildPrompt(input.prompt))) {
     const ruleResult = await applyPromptRules(input);
     if (ruleResult) return ruleResult;
   }

@@ -10,6 +10,7 @@ import {
   type AiProvider,
 } from './providers';
 import { imageBriefForVariant } from './imageBank';
+import { validateSectionHtml } from '../studio/sectionValidator';
 
 export interface SiteBrief {
   businessName: string;
@@ -26,6 +27,7 @@ export interface SiteBrief {
 
 const VARIANT_DESIGN: Partial<Record<BusinessVariant, string>> = {
   cafe: 'Restaurante premium (Rest Art Café / Mesón La Colonia): header blanco, terracota/dorado, Playfair serif, rating Google, menú del día, barra info 3 columnas, WhatsApp.',
+  foodblog: 'Blog de recetas estilo Squarespace Stanton: fondo beige #f4f0eb, acento coral/salmón, hero split imagen+texto, grid 3 columnas de posts, newsletter full-width, footer taupe, tipografía serif limpia.',
   beauty: 'Salón luxury (Elite Beauty / Estilo de Belleza): cream #FDF8F3, rose gold, tarjetas servicio con foto, reserva split oscuro/blanco.',
   corporate: 'Asesoría (Campón Asesores): azul corporativo #004080, barra superior, grid servicios con bullets, reseñas, formulario contacto.',
   automotive: 'Concesionario (Motos Cortés/Yamaha): fondo #0a0a0a, acento rojo #e60012, tipografía uppercase bold, stats, taller/venta/recambios.',
@@ -50,7 +52,7 @@ const SECTION_MOTOR: Record<string, MotorId> = {
   footer: 'code',
 };
 
-const ENHANCE_TYPES = new Set(['hero', 'menu', 'services', 'carta', 'about', 'reviews', 'gallery']);
+const ENHANCE_TYPES = new Set(['hero', 'menu', 'services', 'carta', 'about', 'reviews', 'gallery', 'blog']);
 
 function providerToMotor(provider: string): string {
   for (const [motor, prov] of Object.entries(MOTOR_PROVIDER)) {
@@ -98,7 +100,24 @@ function extractImageUrls(html: string): string[] {
   return [...html.matchAll(/src="(https:\/\/[^"]+)"/g)].map((m) => m[1]);
 }
 
+function looksLikeWrongSector(html: string, brief: SiteBrief): boolean {
+  if (brief.variant !== 'corporate' && brief.variant !== 'nonprofit' && brief.variant !== 'foodblog') return false;
+  if (brief.variant === 'foodblog') {
+    return /kebab|d[öo]ner|degustaci|men[uú] del d[ií]a|reservar mesa|restaurante kebab/i.test(html);
+  }
+  return /kebab|d[öo]ner|degustaci|gourmet|chef|carta de vinos|restaurante kebab|alta cocina|men[uú] degustaci|sabores aut[eé]nticos/i.test(html);
+}
+
 function sectionSystemPrompt(brief: SiteBrief, sectionType: string, imageUrls: string[]): string {
+  const sectorLock =
+    brief.variant === 'corporate'
+      ? `\nSECTOR OBLIGATORIO: ${brief.businessType} (gestoría/asesoría fiscal, laboral y contable). PROHIBIDO cambiar a restaurante, kebab, gastronomía, menú degustación, vinos, chef o comida. Mantén el nombre «${brief.businessName}».`
+      : brief.variant === 'foodblog'
+        ? `\nSECTOR OBLIGATORIO: blog de recetas y comida casera (${brief.businessName}). Estilo beige + coral. PROHIBIDO convertir en restaurante con reservas, menú degustación o kebab. Mantén grid de publicaciones y newsletter.`
+        : brief.variant === 'kebab'
+        ? `\nSECTOR: restaurante kebab. No conviertas a asesoría ni despacho profesional.`
+        : '';
+
   return `Eres el motor de diseño de CREAUNA — agencia web premium en Madrid. Reescribes UNA sección para calidad de entrega real (€1.500–3.000), como las hace un desarrollador senior a mano.
 
 ESTILO: ${brief.designStyle}
@@ -106,12 +125,14 @@ Negocio: ${brief.businessName} · ${brief.businessType}
 Idioma visible: ${brief.lang === 'es' ? 'español' : 'inglés'}
 ${brief.phone ? `Teléfono: ${brief.phone}` : ''}
 ${brief.address ? `Dirección: ${brief.address}` : ''}
+${sectorLock}
 
 IMÁGENES (usa SOLO estas URLs https — no inventes rutas locales):
 ${imageUrls.length ? imageUrls.join('\n') : brief.imageBrief}
 
 REGLAS ESTRICTAS:
 - Solo clases Tailwind CSS (sin <style>, sin <script>, sin badges "HERO MEJORADO" ni "Servicio 1/2/3")
+- No uses onclick, onsubmit ni iframes (excepto mapas Google si es sección ubicación)
 - font-serif en títulos, padding generoso, rounded-[2rem], bordes sutiles
 - Cada <img> debe tener src="https://..." real, loading="lazy", referrerpolicy="no-referrer"
 - Contenido REAL del negocio, no lorem ipsum
@@ -141,6 +162,13 @@ async function enhanceSection(
   if (result.content && result.provider !== 'rules') {
     const parsed = parseAiJson(result.content);
     if (parsed?.html && parsed.html.length > 80 && parsed.html.includes('<')) {
+      if (looksLikeWrongSector(parsed.html, brief)) {
+        return { section, changed: false };
+      }
+      const validation = validateSectionHtml(parsed.html, undefined, section.type);
+      if (!validation.ok) {
+        return { section, changed: false };
+      }
       const motorUsed = providerToMotor(result.provider);
       return {
         section: { ...section, html: parsed.html },
@@ -180,15 +208,19 @@ export async function enhanceSiteWithAgents(
   let anyChanged = false;
   let anyCalled = false;
 
-  const results = await Promise.all(targets.map((s) => enhanceSection(s, brief)));
-  for (const r of results) {
-    byId.set(r.section.id, r.section);
-    if (r.motor) motorsUsed.add(r.motor);
-    if (r.provider && r.provider !== 'rules') {
-      providersUsed.add(r.provider);
-      anyCalled = true;
+  const BATCH = 2;
+  for (let i = 0; i < targets.length; i += BATCH) {
+    const batch = targets.slice(i, i + BATCH);
+    const results = await Promise.all(batch.map((s) => enhanceSection(s, brief)));
+    for (const r of results) {
+      byId.set(r.section.id, r.section);
+      if (r.motor) motorsUsed.add(r.motor);
+      if (r.provider && r.provider !== 'rules') {
+        providersUsed.add(r.provider);
+        anyCalled = true;
+      }
+      if (r.changed) anyChanged = true;
     }
-    if (r.changed) anyChanged = true;
   }
 
   return {

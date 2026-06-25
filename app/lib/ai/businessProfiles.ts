@@ -1,7 +1,7 @@
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 
-export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'default';
+export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'default';
 
 export type AccentColor = 'red' | 'indigo' | 'gold' | 'blue' | 'rose';
 
@@ -268,6 +268,68 @@ export const CAFE_PROFILE: BusinessProfile = {
   accent: 'indigo',
   instagram: '@restartcafe',
   email: 'info@restartcafe.com',
+};
+
+const FOOD_BLOG_IMAGES = {
+  hero: IMAGE_BANK.foodblog.hero,
+  p1: IMAGE_BANK.foodblog.posts[0],
+  p2: IMAGE_BANK.foodblog.posts[1],
+  p3: IMAGE_BANK.foodblog.posts[2],
+  gal1: IMAGE_BANK.foodblog.gallery[0],
+  gal2: IMAGE_BANK.foodblog.gallery[1],
+  gal3: IMAGE_BANK.foodblog.gallery[2],
+};
+
+export const FOOD_BLOG_PROFILE: BusinessProfile = {
+  variant: 'foodblog',
+  heroImage: FOOD_BLOG_IMAGES.hero,
+  galleryImages: [FOOD_BLOG_IMAGES.gal1, FOOD_BLOG_IMAGES.gal2, FOOD_BLOG_IMAGES.gal3, FOOD_BLOG_IMAGES.p1, FOOD_BLOG_IMAGES.p2, FOOD_BLOG_IMAGES.p3],
+  taglineEs: 'Comida casera para la vida moderna',
+  taglineEn: 'Home cooking for modern life',
+  typeEs: 'Blog de recetas',
+  typeEn: 'Recipe blog',
+  badgeEs: 'Comidas y recetas',
+  badgeEn: 'Meals & recipes',
+  ctaPrimaryEs: 'Ver recetas',
+  ctaPrimaryEn: 'View recipes',
+  ctaSecondaryEs: 'Suscribirse',
+  ctaSecondaryEn: 'Subscribe',
+  menuItems: {
+    es: [
+      { title: 'Salsa de coliflor asada y ajo', price: '29/6/19', image: FOOD_BLOG_IMAGES.p1, cta: 'Leer más' },
+      { title: 'Salmón asado con risotto de cebollín', price: '27/6/19', image: FOOD_BLOG_IMAGES.p2, cta: 'Leer más' },
+      { title: 'Pescado a la parrilla con verduras', price: '25/6/19', image: FOOD_BLOG_IMAGES.p3, cta: 'Leer más' },
+    ],
+    en: [
+      { title: 'Roasted cauliflower & garlic sauce', price: '6/29/19', image: FOOD_BLOG_IMAGES.p1, cta: 'Read more' },
+      { title: 'Pan-roasted salmon with chive risotto', price: '6/27/19', image: FOOD_BLOG_IMAGES.p2, cta: 'Read more' },
+      { title: 'Grilled fish with seasonal vegetables', price: '6/25/19', image: FOOD_BLOG_IMAGES.p3, cta: 'Read more' },
+    ],
+  },
+  reviews: {
+    es: [
+      { name: 'Laura M.', text: 'Recetas sencillas y deliciosas. Ideal para cocinar entre semana sin complicaciones.', stars: 5 },
+      { name: 'Carlos R.', text: 'Fotos preciosas y explicaciones claras. Mi blog de referencia de cocina casera.', stars: 5 },
+    ],
+    en: [
+      { name: 'Laura M.', text: 'Simple, delicious recipes. Perfect for weekday cooking without fuss.', stars: 5 },
+      { name: 'Carlos R.', text: 'Beautiful photos and clear steps. My go-to home cooking blog.', stars: 5 },
+    ],
+  },
+  addressEs: 'Madrid, España',
+  addressEn: 'Madrid, Spain',
+  hoursEs: 'Nuevas recetas cada semana',
+  hoursEn: 'New recipes every week',
+  infoEs: 'Recetas · Newsletter · Tienda',
+  infoEn: 'Recipes · Newsletter · Shop',
+  phone: '',
+  ratingLabelEs: 'Blog de cocina casera',
+  ratingLabelEn: 'Home cooking blog',
+  aboutEs: 'Con la gran practicidad de la vida moderna, muchos de nosotros solo podemos usar un microondas. Disfrutar una comida casera no es un lujo, ¡cualquiera puede hacerlo!',
+  aboutEn: 'With the practicality of modern life, many of us only have a microwave to hand. Enjoying a home-cooked meal is not a luxury — anyone can do it!',
+  accent: 'rose',
+  instagram: '@stantonrecipes',
+  email: 'hola@stantonrecipes.com',
 };
 
 const BEAUTY_IMAGES = {
@@ -593,8 +655,9 @@ export function detectVariant(prompt: string): BusinessVariant {
   if (/infosordos|lengua de signos|\blse\b|sordos|accesibilidad auditiva|comunicaci[oó]n sin barreras/i.test(prompt)) return 'nonprofit';
   if (/maison|fine dining|alta cocina|gourmet|la maison/i.test(prompt)) return 'luxury';
   if (/yamaha|motos?\s+cort|concesionario|motocicleta|motorcycle\s+dealer|taller\s+oficial/i.test(prompt)) return 'automotive';
-  if (/asesor|fiscal|contab|laboral|campon|despacho|bufete|abogad/i.test(prompt)) return 'corporate';
+  if (/gestor[ií]a|asesor[ií]a|asesor|fiscal|contab|laboral|campon|despacho|bufete|abogad/i.test(prompt)) return 'corporate';
   if (/peluquer|sal[oó]n\s+de\s+belleza|elite\s+beauty|estilo\s+de\s+belleza|hair\s+salon|manicur|uñas|barber[ií]a/i.test(prompt)) return 'beauty';
+  if (/recetas|blog de comida|blog gastron|food blog|comida casera|blog culin|publicaciones.*receta|stanton|libro de recetas/i.test(prompt)) return 'foodblog';
   if (/rest art|art caf[ée]|mes[oó]n|taberna|caf[ée]|restaurante|terraza|c[óo]ctel|brunch|tapas|comida\s+español/i.test(prompt)) return 'cafe';
   return 'default';
 }
@@ -632,7 +695,7 @@ function applyListingToProfile(base: BusinessProfile, listing: ParsedGoogleListi
       es: menuEs,
       en: menuEs.map((p) => ({ ...p, cta: base.variant === 'cafe' ? 'Book a table' : 'Book appointment' })),
     },
-    reviews: ['cafe', 'beauty', 'corporate', 'automotive', 'luxury', 'nonprofit'].includes(base.variant)
+    reviews: ['cafe', 'beauty', 'corporate', 'automotive', 'luxury', 'nonprofit', 'foodblog'].includes(base.variant)
       ? { es: base.reviews.es, en: base.reviews.en }
       : { es: listing.reviews, en: listing.reviews },
     badgeEs: listing.serviceOptions?.slice(0, 40) ?? base.badgeEs,
@@ -648,7 +711,8 @@ export function getBusinessProfile(
     variant === 'kebab' ? KEBAB_PROFILE
       : variant === 'tattoo' ? TATTOO_PROFILE
         : variant === 'cafe' ? CAFE_PROFILE
-          : variant === 'beauty' ? BEAUTY_PROFILE
+          : variant === 'foodblog' ? FOOD_BLOG_PROFILE
+            : variant === 'beauty' ? BEAUTY_PROFILE
             : variant === 'corporate' ? CORPORATE_PROFILE
               : variant === 'automotive' ? AUTOMOTIVE_PROFILE
                 : variant === 'luxury' ? LUXURY_PROFILE
