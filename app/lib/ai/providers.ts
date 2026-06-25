@@ -1,4 +1,4 @@
-export type AiProvider = 'gemini' | 'claude' | 'openai' | 'groq' | 'manus';
+export type AiProvider = 'gemini' | 'claude' | 'openai' | 'groq' | 'manus' | 'fal';
 export type MotorId = 'visual' | 'copy' | 'code' | 'ux';
 
 export interface AiMessage {
@@ -33,13 +33,15 @@ export function isProviderConfigured(provider: AiProvider): boolean {
       return (process.env.GROQ_API_KEY?.trim().length ?? 0) >= minLen;
     case 'manus':
       return (process.env.MANUS_API_KEY?.trim().length ?? 0) >= minLen;
+    case 'fal':
+      return (process.env.FAL_KEY?.trim().length ?? 0) >= 10;
     default:
       return false;
   }
 }
 
 export function getConfiguredProviders(): AiProvider[] {
-  return (['gemini', 'claude', 'openai', 'groq', 'manus'] as AiProvider[]).filter(isProviderConfigured);
+  return (['gemini', 'claude', 'openai', 'groq', 'manus', 'fal'] as AiProvider[]).filter(isProviderConfigured);
 }
 
 function pickMotorForPrompt(prompt: string): MotorId {
@@ -199,6 +201,8 @@ async function callProvider(
       return callGroq(messages, maxTokens);
     case 'manus':
       return null; // Manus es agente async — no para cambios instantáneos del Studio
+    case 'fal':
+      return null; // fal.ai — imágenes Editorial, no chat del Studio
     default:
       return null;
   }

@@ -22,6 +22,7 @@ type PingPayload = {
     allMotorsReady: boolean;
     working: string[];
     motorHealth: { motor: string; provider: string; ready: boolean; status: string }[];
+    editorial?: { provider: string; ready: boolean; status: string; balance: string | null };
   };
   providers: PingRow[];
   durationMs: number;
@@ -64,7 +65,7 @@ export default function AiHealthPanel() {
         <div>
           <div className="text-sm text-slate-500 uppercase tracking-wider">Director de IAs · ping en vivo</div>
           <p className="mt-2 text-sm text-slate-600">
-            Comprueba Gemini, Claude, OpenAI, Groq y Manus con una llamada real a cada API.
+            Comprueba Gemini, Claude, OpenAI, Groq, Manus y fal.ai (Editorial) con una llamada real a cada API.
           </p>
         </div>
         <button
@@ -89,7 +90,14 @@ export default function AiHealthPanel() {
             {data.summary.allMotorsReady ? (
               <span className="px-2 py-1 rounded-full bg-emerald-100 text-emerald-800">Motores Studio listos</span>
             ) : (
-              <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800">Algún motor sin proveedor OK</span>
+              <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800">Algún motor Studio sin OK</span>
+            )}
+            {data.summary.editorial?.ready ? (
+              <span className="px-2 py-1 rounded-full bg-violet-100 text-violet-800">
+                Editorial {data.summary.editorial.balance ? `· ${data.summary.editorial.balance}` : 'listo'}
+              </span>
+            ) : (
+              <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800">Editorial sin fal.ai</span>
             )}
           </div>
 

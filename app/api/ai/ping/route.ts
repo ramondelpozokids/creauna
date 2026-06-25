@@ -46,7 +46,7 @@ export async function GET(req: Request) {
     summary,
     providers,
     reuse: {
-      envVars: ['GEMINI_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'GROQ_API_KEY', 'MANUS_API_KEY', 'AI_PING_SECRET'],
+      envVars: ['GEMINI_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'GROQ_API_KEY', 'MANUS_API_KEY', 'FAL_KEY', 'AI_PING_SECRET'],
       endpoint: '/api/ai/ping',
       tip: 'Puedes copiar las mismas keys en CourtManager Pro, Editorial, Portfolio-Ramón y RDPR. Usa una key distinta por proyecto si quieres revocar sin afectar al resto.',
     },

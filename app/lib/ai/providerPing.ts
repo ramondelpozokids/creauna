@@ -41,9 +41,20 @@ export const PROVIDER_META: Record<
     label: 'Manus',
     bestFor: ['tareas async', 'investigación', 'multi-paso', 'informes largos'],
   },
+  fal: {
+    label: 'fal.ai',
+    bestFor: ['portadas con título (Ideogram 4)', 'interiores Flux', 'Editorial'],
+  },
 };
 
-const ALL_PROVIDERS: AiProvider[] = ['gemini', 'claude', 'openai', 'groq', 'manus'];
+const ALL_PROVIDERS: AiProvider[] = ['gemini', 'claude', 'openai', 'groq', 'manus', 'fal'];
+
+const FAL_EDITORIAL_MOTORS = ['editorial', 'portada', 'interiores'];
+
+function motorsForPingProvider(provider: AiProvider): string[] {
+  if (provider === 'fal') return FAL_EDITORIAL_MOTORS;
+  return motorsForProvider(provider);
+}
 
 function motorsForProvider(provider: AiProvider): string[] {
   return (Object.entries(MOTOR_PROVIDER) as [keyof typeof MOTOR_PROVIDER, AiProvider][])
@@ -240,6 +251,89 @@ async function pingGroq(): Promise<Omit<ProviderPingResult, 'provider' | 'label'
   }
 }
 
+async function pingFal(): Promise<Omit<ProviderPingResult, 'provider' | 'label' | 'bestFor' | 'motors'>> {
+  const apiKey = process.env.FAL_KEY?.trim();
+  const model = 'flux/schnell + ideogram-4';
+  if (!apiKey) {
+    return { configured: false, status: 'missing', model, latencyMs: null, sample: null, httpStatus: null, error: 'FAL_KEY no configurada' };
+  }
+
+  const authHeader = { Authorization: `Key ${apiKey}` };
+  const started = Date.now();
+
+  const billingRes = await fetch('https://api.fal.ai/v1/account/billing?expand=credits', {
+    headers: authHeader,
+  });
+  const billingBody = await billingRes.text();
+
+  if (billingRes.ok) {
+    try {
+      const data = JSON.parse(billingBody) as {
+        credits?: { current_balance?: number; currency?: string };
+      };
+      const balance = data.credits?.current_balance;
+      const currency = data.credits?.currency ?? 'USD';
+      const latencyMs = Date.now() - started;
+
+      if (typeof balance === 'number') {
+        if (balance <= 0) {
+          return {
+            configured: true,
+            status: 'error',
+            model,
+            latencyMs,
+            sample: `saldo: $0 ${currency}`,
+            httpStatus: billingRes.status,
+            error: 'Créditos fal.ai agotados',
+          };
+        }
+        const low = balance < 2;
+        return {
+          configured: true,
+          status: 'ok',
+          model,
+          latencyMs,
+          sample: low ? `saldo bajo: $${balance.toFixed(2)} ${currency}` : `saldo: $${balance.toFixed(2)} ${currency}`,
+          httpStatus: billingRes.status,
+          error: low ? 'Quedan pocos créditos — recarga en fal.ai/dashboard' : null,
+        };
+      }
+    } catch {
+      /* fallback abajo */
+    }
+  }
+
+  const modelsRes = await fetch('https://api.fal.ai/v1/models?limit=1', { headers: authHeader });
+  const latencyMs = Date.now() - started;
+  const modelsBody = await modelsRes.text();
+
+  if (modelsRes.ok) {
+    return {
+      configured: true,
+      status: 'ok',
+      model,
+      latencyMs,
+      sample: billingRes.status === 403
+        ? 'API OK · key Admin en fal.ai para ver saldo'
+        : 'API OK',
+      httpStatus: modelsRes.status,
+      error: billingRes.status === 403
+        ? 'Usa una key con scope Admin para monitorizar créditos en el ping'
+        : null,
+    };
+  }
+
+  return {
+    configured: true,
+    status: 'error',
+    model,
+    latencyMs,
+    sample: null,
+    httpStatus: modelsRes.status || billingRes.status,
+    error: parseApiError(modelsRes.status, modelsBody) || parseApiError(billingRes.status, billingBody),
+  };
+}
+
 async function pingManus(): Promise<Omit<ProviderPingResult, 'provider' | 'label' | 'bestFor' | 'motors'>> {
   const apiKey = process.env.MANUS_API_KEY?.trim();
   const model = 'manus-1.6';
@@ -289,7 +383,7 @@ async function pingOne(provider: AiProvider): Promise<ProviderPingResult> {
     provider,
     label: meta.label,
     bestFor: meta.bestFor,
-    motors: motorsForProvider(provider),
+    motors: motorsForPingProvider(provider),
   };
 
   try {
@@ -309,6 +403,9 @@ async function pingOne(provider: AiProvider): Promise<ProviderPingResult> {
         break;
       case 'manus':
         result = await pingManus();
+        break;
+      case 'fal':
+        result = await pingFal();
         break;
       default:
         result = {
@@ -356,6 +453,8 @@ export function summarizePingResults(results: ProviderPingResult[]) {
     };
   });
 
+  const fal = results.find((r) => r.provider === 'fal');
+
   return {
     total: results.length,
     ok: ok.length,
@@ -363,6 +462,12 @@ export function summarizePingResults(results: ProviderPingResult[]) {
     missing: missing.length,
     allMotorsReady: motorHealth.every((m) => m.ready),
     motorHealth,
+    editorial: {
+      provider: 'fal',
+      ready: fal?.status === 'ok',
+      status: fal?.status ?? 'missing',
+      balance: fal?.sample ?? null,
+    },
     working: ok.map((r) => r.provider),
     failing: errors.map((r) => ({ provider: r.provider, error: r.error })),
   };

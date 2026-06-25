@@ -1,9 +1,9 @@
 import { getConfiguredProviders, isProviderConfigured, MOTOR_PROVIDER } from '../../../lib/ai/providers';
 
-function keyStatus(name: string): 'ok' | 'missing' | 'invalid' {
+function keyStatus(name: string, minLen = 20): 'ok' | 'missing' | 'invalid' {
   const raw = process.env[name]?.trim() ?? '';
   if (!raw) return 'missing';
-  if (raw.length < 20 || raw.startsWith('your_') || raw === 'sk-xxxxx') return 'invalid';
+  if (raw.length < minLen || raw.startsWith('your_') || raw === 'sk-xxxxx') return 'invalid';
   return 'ok';
 }
 
@@ -13,6 +13,8 @@ export async function GET() {
     ANTHROPIC_API_KEY: keyStatus('ANTHROPIC_API_KEY'),
     OPENAI_API_KEY: keyStatus('OPENAI_API_KEY'),
     GROQ_API_KEY: keyStatus('GROQ_API_KEY'),
+    MANUS_API_KEY: keyStatus('MANUS_API_KEY'),
+    FAL_KEY: keyStatus('FAL_KEY', 10),
   };
 
   return Response.json({
@@ -35,6 +37,11 @@ export async function GET() {
     manus: {
       configured: isProviderConfigured('manus'),
       note: 'Manus es agente async para tareas complejas, no para preview instantáneo del Studio.',
+    },
+    editorial: {
+      provider: 'fal',
+      configured: isProviderConfigured('fal'),
+      note: 'fal.ai: Ideogram 4 (portadas) + Flux (interiores). Ping muestra saldo de créditos.',
     },
     composer: {
       note: 'Cursor Composer no tiene API pública. En CREAUNA el Motor de Código usa OpenAI (ChatGPT).',
