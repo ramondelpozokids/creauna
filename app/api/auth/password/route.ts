@@ -19,11 +19,10 @@ export async function POST(req: Request) {
     }
 
     const result = await updateUserPassword(session.id, currentPassword, newPassword);
-    if (!result.ok) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    if (result.ok) {
+      return NextResponse.json({ ok: true });
     }
-
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ error: result.error }, { status: 400 });
   } catch (error) {
     console.error('api/auth/password:', error);
     return NextResponse.json({ error: 'Error al cambiar la contraseña' }, { status: 500 });
