@@ -31,11 +31,10 @@ export default function BeforeAfterDemo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-px bg-slate-200">
         {/* Antes */}
         <div className="bg-white p-4 sm:p-5">
-          <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="mb-3">
             <span className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">
               {t.beforeTag}
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">index.html</span>
           </div>
           <a
             href={BEFORE_SRC}
@@ -60,17 +59,16 @@ export default function BeforeAfterDemo() {
             rel="noopener noreferrer"
             className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
           >
-            {isEs ? 'Ver index.html completo →' : 'Open full index.html →'}
+            {isEs ? 'Ver antes →' : 'View before →'}
           </a>
         </div>
 
         {/* Después */}
         <div className="bg-white p-4 sm:p-5">
-          <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="mb-3">
             <span className="bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">
               {t.afterTag}
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">index1.html</span>
           </div>
           <a
             href={AFTER_SRC}
@@ -95,7 +93,7 @@ export default function BeforeAfterDemo() {
             rel="noopener noreferrer"
             className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition-colors"
           >
-            {isEs ? 'Ver index1.html completo →' : 'Open full index1.html →'}
+            {isEs ? 'Ver después →' : 'View after →'}
           </a>
         </div>
       </div>
