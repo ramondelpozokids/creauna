@@ -472,6 +472,14 @@ export const templatesCatalog: TemplateItem[] = [
     image: u('1451187580459-43490279c0fa'),
   },
   {
+    id: 62, slug: 'volt', categoryKey: 'tech',
+    nameEs: 'Helios', nameEn: 'Helios',
+    categoryEs: 'Energías Renovables', categoryEn: 'Renewable Energy',
+    descEs: 'Diseño premium para empresas de solar, autoconsumo, baterías y movilidad eléctrica.',
+    descEn: 'Premium design for solar, self-consumption, battery and EV companies.',
+    image: p(9875446),
+  },
+  {
     id: 55, slug: 'appify', categoryKey: 'tech',
     nameEs: 'Appify', nameEn: 'Appify',
     categoryEs: 'Desarrollo Móvil', categoryEn: 'Mobile Development',

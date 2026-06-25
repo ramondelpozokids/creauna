@@ -1,7 +1,7 @@
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 
-export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'default';
+export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'renewable' | 'default';
 
 export type AccentColor = 'red' | 'indigo' | 'gold' | 'blue' | 'rose';
 
@@ -593,6 +593,78 @@ export const LUXURY_PROFILE: BusinessProfile = {
   email: 'reservas@lamaisondoree.com',
 };
 
+const RENEWABLE_IMAGES = {
+  hero: 'https://images.pexels.com/photos/9875446/pexels-photo-9875446.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&fit=crop',
+  gal1: 'https://images.pexels.com/photos/159397/solar-roof-power-159397.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal2: 'https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal3: 'https://images.pexels.com/photos/159243/solar-panel-array-power-sun-electricity-159243.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal4: 'https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal5: 'https://images.pexels.com/photos/3860202/pexels-photo-3860202.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal6: 'https://images.pexels.com/photos/356049/pexels-photo-356049.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  s1: 'https://images.pexels.com/photos/159397/solar-roof-power-159397.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+  s2: 'https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+  s3: 'https://images.pexels.com/photos/159243/solar-panel-array-power-sun-electricity-159243.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+  s4: 'https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+  s5: 'https://images.pexels.com/photos/3860202/pexels-photo-3860202.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+};
+
+export const RENEWABLE_PROFILE: BusinessProfile = {
+  variant: 'renewable',
+  heroImage: RENEWABLE_IMAGES.hero,
+  galleryImages: [RENEWABLE_IMAGES.gal1, RENEWABLE_IMAGES.gal2, RENEWABLE_IMAGES.gal3, RENEWABLE_IMAGES.gal4, RENEWABLE_IMAGES.gal5, RENEWABLE_IMAGES.gal6],
+  taglineEs: 'Impulsamos el futuro con energía limpia, ahorro y autonomía para hogares y empresas.',
+  taglineEn: 'Powering the future with clean energy, savings and independence for homes and businesses.',
+  typeEs: 'Energías Renovables & Solar',
+  typeEn: 'Renewable Energy & Solar',
+  badgeEs: 'Instalador certificado · Autoconsumo · EV',
+  badgeEn: 'Certified installer · Self-consumption · EV',
+  ctaPrimaryEs: 'Solicitar estudio gratuito',
+  ctaPrimaryEn: 'Request free assessment',
+  ctaSecondaryEs: 'Ver servicios',
+  ctaSecondaryEn: 'View services',
+  menuItems: {
+    es: [
+      { title: 'Energía Solar Fotovoltaica', price: 'Autoconsumo residencial y industrial', image: RENEWABLE_IMAGES.s1, cta: 'Más información' },
+      { title: 'Baterías y Almacenamiento', price: 'Independencia energética 24/7', image: RENEWABLE_IMAGES.s3, cta: 'Más información' },
+      { title: 'Puntos de Recarga EV', price: 'Wallbox y carga doméstica', image: RENEWABLE_IMAGES.s2, cta: 'Más información' },
+      { title: 'Eficiencia Energética', price: 'Auditorías y optimización', image: RENEWABLE_IMAGES.s4, cta: 'Más información' },
+      { title: 'Mantenimiento e Instalaciones', price: 'Monitorización y soporte técnico', image: RENEWABLE_IMAGES.s5, cta: 'Más información' },
+    ],
+    en: [
+      { title: 'Solar Photovoltaic Energy', price: 'Residential & industrial self-consumption', image: RENEWABLE_IMAGES.s1, cta: 'Learn more' },
+      { title: 'Batteries & Storage', price: '24/7 energy independence', image: RENEWABLE_IMAGES.s3, cta: 'Learn more' },
+      { title: 'EV Charging Points', price: 'Wallbox & home charging', image: RENEWABLE_IMAGES.s2, cta: 'Learn more' },
+      { title: 'Energy Efficiency', price: 'Audits & optimization', image: RENEWABLE_IMAGES.s4, cta: 'Learn more' },
+      { title: 'Maintenance & Installations', price: 'Monitoring & technical support', image: RENEWABLE_IMAGES.s5, cta: 'Learn more' },
+    ],
+  },
+  reviews: {
+    es: [
+      { name: 'Carlos M.', text: 'Instalación impecable en nuestra nave. Ahorro del 70% en la factura desde el primer mes.', stars: 5 },
+      { name: 'Laura P.', text: 'Estudio personalizado, tramitación de subvenciones incluida y equipo muy profesional.', stars: 5 },
+      { name: 'Grupo Industrial Vega', text: 'Proyecto de 120 kWp ejecutado en plazo. Monitorización y soporte técnico excelentes.', stars: 5 },
+    ],
+    en: [
+      { name: 'Carlos M.', text: 'Flawless installation at our warehouse. 70% bill savings from month one.', stars: 5 },
+      { name: 'Laura P.', text: 'Personalized study, subsidy paperwork included and very professional team.', stars: 5 },
+      { name: 'Vega Industrial Group', text: '120 kWp project delivered on time. Excellent monitoring and technical support.', stars: 5 },
+    ],
+  },
+  addressEs: 'Madrid y comunidad autónoma · Cobertura nacional',
+  addressEn: 'Madrid and region · National coverage',
+  hoursEs: 'Lunes – Viernes: 8:30 – 18:30 · Soporte técnico 24/7',
+  hoursEn: 'Mon – Fri: 8:30 AM – 6:30 PM · 24/7 technical support',
+  infoEs: 'Ingeniería propia · Instalación certificada · Financiación disponible',
+  infoEn: 'In-house engineering · Certified installation · Financing available',
+  phone: '910 00 00 00',
+  ratingLabelEs: '4,9 · 180 proyectos verificados',
+  ratingLabelEn: '4.9 · 180 verified projects',
+  aboutEs: 'Somos una empresa de ingeniería e instalación especializada en energía solar, almacenamiento y movilidad eléctrica. Diseñamos soluciones a medida para maximizar tu ahorro, independencia energética y sostenibilidad.',
+  aboutEn: 'We are an engineering and installation company specialized in solar energy, storage and electric mobility. We design tailored solutions to maximize your savings, energy independence and sustainability.',
+  accent: 'blue',
+  email: 'info@heliosenergia.es',
+};
+
 export const NONPROFIT_PROFILE: BusinessProfile = {
   variant: 'nonprofit',
   heroImage: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&fit=crop',
@@ -653,10 +725,19 @@ export function detectVariant(prompt: string): BusinessVariant {
   if (/tatuaje|tattoo|piercing|royal bang|gemas dentales|iron.?ink|tinta/i.test(prompt)) return 'tattoo';
   if (/kebab|d[öo]ner|doner|durum|falafel/i.test(prompt)) return 'kebab';
   if (/infosordos|lengua de signos|\blse\b|sordos|accesibilidad auditiva|comunicaci[oó]n sin barreras/i.test(prompt)) return 'nonprofit';
+  if (
+    /energ[ií]as?\s+renov|fotovolta|placas\s+solares|autoconsumo|energ[ií]a\s+solar|paneles\s+solares|bater[ií]as\s+solares|eficiencia\s+energ|wallbox|punto[s]?\s+de\s+recarga|cargador.*el[eé]ctric|veh[ií]culo\s+el[eé]ctric|ritest|bolet[ií]n\s+el[eé]ctric|instalaci[oó]n\s+fotovolta/i.test(
+      prompt
+    )
+  ) {
+    return 'renewable';
+  }
   if (/maison|fine dining|alta cocina|gourmet|la maison/i.test(prompt)) return 'luxury';
   if (/yamaha|motos?\s+cort|concesionario|motocicleta|motorcycle\s+dealer|taller\s+oficial/i.test(prompt)) return 'automotive';
-  if (/gestor[ií]a|asesor[ií]a|asesor|fiscal|contab|laboral|campon|despacho|bufete|abogad/i.test(prompt)) return 'corporate';
-  if (/peluquer|sal[oó]n\s+de\s+belleza|elite\s+beauty|estilo\s+de\s+belleza|hair\s+salon|manicur|uñas|barber[ií]a/i.test(prompt)) return 'beauty';
+  if (/abogad|law firm|notar[ií]a|jur[ií]dic|bufete/i.test(prompt)) return 'default';
+  if (/gestor[ií]a|asesor[ií]a|asesor|fiscal|contab|laboral|campon|despacho/i.test(prompt)) return 'corporate';
+  if (/barber[ií]a|barbershop|\bbarber\b|afeitad|grooming masculin/i.test(prompt)) return 'default';
+  if (/peluquer|sal[oó]n\s+de\s+belleza|elite\s+beauty|estilo\s+de\s+belleza|hair\s+salon|manicur|uñas/i.test(prompt)) return 'beauty';
   if (/recetas|blog de comida|blog gastron|food blog|comida casera|blog culin|publicaciones.*receta|stanton|libro de recetas/i.test(prompt)) return 'foodblog';
   if (/rest art|art caf[ée]|mes[oó]n|taberna|caf[ée]|restaurante|terraza|c[óo]ctel|brunch|tapas|comida\s+español/i.test(prompt)) return 'cafe';
   return 'default';
@@ -717,7 +798,8 @@ export function getBusinessProfile(
               : variant === 'automotive' ? AUTOMOTIVE_PROFILE
                 : variant === 'luxury' ? LUXURY_PROFILE
                   : variant === 'nonprofit' ? NONPROFIT_PROFILE
-                    : null;
+                    : variant === 'renewable' ? RENEWABLE_PROFILE
+                      : null;
   if (!base) return null;
   if (listing) return applyListingToProfile(base, listing);
   return base;

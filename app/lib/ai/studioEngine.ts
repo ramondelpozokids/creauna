@@ -20,6 +20,7 @@ export interface StudioGenerateInput {
   style?: 'elegante' | 'minimal' | 'moderno';
   action?: StudioAction;
   sectionId?: number;
+  sectorId?: string;
   recentMessages?: { role: 'user' | 'ai'; content: string }[];
   sectionOutline?: string;
 }
@@ -32,6 +33,8 @@ export interface StudioGenerateResult {
   changedSectionIds: number[];
   templateSlug?: string;
   businessName?: string;
+  sectorId?: string;
+  sectorLabel?: string;
 }
 
 function cloneSections(sections: PreviewSection[]): PreviewSection[] {
@@ -141,9 +144,20 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
 
   if (
     (lower.includes('testimonio') || lower.includes('testimonial') || lower.includes('reseñ')) &&
+    isExistingSiteSections(previewSections)
+  ) {
+    const reviewsSec = sections.find((s) => s.type === 'reviews');
+    if (reviewsSec) {
+      const aiResult = await applyAIChange({ ...input, previewSections: sections, sectionId: reviewsSec.id });
+      if (aiResult) return aiResult;
+    }
+  }
+
+  if (
+    (lower.includes('testimonio') || lower.includes('testimonial') || lower.includes('reseñ')) &&
     !isExistingSiteSections(previewSections)
   ) {
-    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
+    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang, input.sectorId);
     return {
       message: lang === 'es' ? 'Bloque de reseñas añadido con opiniones reales.' : 'Reviews section added with real testimonials.',
       previewSections: result.previewSections,
@@ -152,6 +166,8 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       changedSectionIds: result.changedSectionIds,
       templateSlug: result.templateSlug,
       businessName: result.businessName,
+      sectorId: result.sectorId,
+      sectorLabel: result.sectorLabel,
     };
   }
 
@@ -250,7 +266,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
     (lower.includes('servicio') || lower.includes('service') || lower.includes('sección') || lower.includes('section')) &&
     !isExistingSiteSections(previewSections)
   ) {
-    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang);
+    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang, input.sectorId);
     return {
       message: lang === 'es' ? 'Secciones actualizadas con contenido real.' : 'Sections updated with real content.',
       previewSections: result.previewSections,
@@ -259,6 +275,8 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       changedSectionIds: result.changedSectionIds,
       templateSlug: result.templateSlug,
       businessName: result.businessName,
+      sectorId: result.sectorId,
+      sectorLabel: result.sectorLabel,
     };
   }
 
@@ -344,7 +362,7 @@ Action: ${input.action || 'change'}`,
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
   if (shouldGenerateFullSite(input.prompt, input.action, input.previewSections)) {
-    const result = await generateInitialSite(input.prompt, input.lang);
+    const result = await generateInitialSite(input.prompt, input.lang, input.sectorId);
     return {
       message: result.message,
       previewSections: result.previewSections,
@@ -353,6 +371,8 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       changedSectionIds: result.changedSectionIds,
       templateSlug: result.templateSlug,
       businessName: result.businessName,
+      sectorId: result.sectorId,
+      sectorLabel: result.sectorLabel,
     };
   }
 

@@ -7,6 +7,7 @@ import { parseGoogleListing } from './googleListingParser';
 import { getBusinessProfile } from './businessProfiles';
 import { buildSiteBrief, enhanceSiteWithAgents } from './siteAiEnhancer';
 import type { PreviewSection } from './studioEngine';
+import { resolveStudioSector, buildSectorAgentPlaybook } from '../studio/sectorAgentPlaybook';
 
 export interface InitialSiteResult {
   message: string;
@@ -16,17 +17,40 @@ export interface InitialSiteResult {
   changedSectionIds: number[];
   motorsUsed?: string[];
   source: 'rules' | 'ai' | 'hybrid';
+  sectorId?: string;
+  sectorLabel?: string;
 }
 
-export async function generateInitialSite(prompt: string, lang: 'es' | 'en'): Promise<InitialSiteResult> {
+export async function generateInitialSite(
+  prompt: string,
+  lang: 'es' | 'en',
+  sectorId?: string | null
+): Promise<InitialSiteResult> {
   const listing = parseGoogleListing(prompt);
-  const intent = analyzeIntent(prompt, lang);
+  const sector = resolveStudioSector(prompt, sectorId);
+  let intent = analyzeIntent(prompt, lang);
+
+  if (sector) {
+    intent = {
+      ...intent,
+      templateSlug: sector.templateSlug,
+      businessType: lang === 'es' ? sector.labelEs : sector.labelEn,
+    };
+  }
+
   const tpl = getTemplateBySlug(resolveTemplateSlug(intent.templateSlug)) ?? getTemplateBySlug('iron-ink')!;
   const preset = getContentPreset(intent.templateSlug);
   const profile = getBusinessProfile(intent.variant, listing);
 
   const ruleSections = buildCustomSite(intent, tpl, preset, lang, listing);
-  const brief = buildSiteBrief(intent, profile, listing, lang, prompt);
+  const sectorMeta = sector
+    ? {
+        id: sector.id,
+        label: lang === 'es' ? sector.labelEs : sector.labelEn,
+        playbook: buildSectorAgentPlaybook(sector, lang),
+      }
+    : undefined;
+  const brief = buildSiteBrief(intent, profile, listing, lang, prompt, sectorMeta);
   const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason } = await enhanceSiteWithAgents(ruleSections, brief);
 
   const previewSections = toStudioSections(sections);
@@ -60,5 +84,7 @@ export async function generateInitialSite(prompt: string, lang: 'es' | 'en'): Pr
     changedSectionIds: previewSections.map((s) => s.id),
     motorsUsed: providersUsed.length ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
     source: providersUsed.length ? (aiEnhanced ? 'hybrid' : 'hybrid') : 'rules',
+    sectorId: sector?.id,
+    sectorLabel: sectorMeta?.label,
   };
 }

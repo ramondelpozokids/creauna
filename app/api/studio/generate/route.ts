@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { generateStudioChange } from '../../../lib/ai/studioEngine';
+import { shouldGenerateFullSite } from '../../../lib/ai/intentAnalyzer';
 import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { sanitizeText } from '../../../lib/api/validate';
 import { getSessionUser } from '../../../lib/auth/session';
@@ -81,7 +82,7 @@ export async function POST(req: Request) {
     });
 
     previewSections = context.previewSections;
-    if (previewSections.length === 0) {
+    if (previewSections.length === 0 && !shouldGenerateFullSite(prompt, action, previewSections)) {
       return NextResponse.json({ error: 'No hay secciones para editar' }, { status: 400 });
     }
 
@@ -116,6 +117,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Sin créditos disponibles', credits: spent.credits }, { status: 402 });
     }
 
+    const sectorId = typeof body.sectorId === 'string' ? body.sectorId.slice(0, 64) : undefined;
+
     const result = await generateStudioChange({
       prompt: prompt || 'regenerar',
       lang,
@@ -123,6 +126,7 @@ export async function POST(req: Request) {
       action,
       style,
       sectionId: effectiveSectionId,
+      sectorId,
       recentMessages: context.recentMessages,
       sectionOutline: context.sectionOutline,
     });

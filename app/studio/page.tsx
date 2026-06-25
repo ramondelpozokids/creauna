@@ -4,13 +4,14 @@ import { Suspense, useState, useEffect, useCallback, useRef, useMemo } from 'rea
 import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Send, Sparkles, RefreshCw, Download, Share2,
-  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye
+  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye, BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
 import StudioOnboarding from '../components/StudioOnboarding';
+import StudioSectorLibrary, { type SectorPublic } from '../components/StudioSectorLibrary';
 import { useLanguage } from '../components/LanguageProvider';
 import { getCredits, setCredits as setCreditsCache, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
@@ -218,10 +219,13 @@ function StudioContent() {
   const [snapshots, setSnapshots] = useState<SnapshotRow[]>([]);
   const [previewPulse, setPreviewPulse] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
+  const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
+  const [selectedSectorLabel, setSelectedSectorLabel] = useState<string | null>(null);
   const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
   const sectionRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const templateLoadedRef = useRef(false);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const inlineInputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const composerHint = useMemo(() => {
     const lastAi = [...messages].reverse().find((m) => m.role === 'ai');
@@ -248,6 +252,12 @@ function StudioContent() {
   useEffect(() => {
     chatScrollRef.current?.scrollTo({ top: chatScrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [threadMessages.length, isThinking]);
+
+  useEffect(() => {
+    if (studioPhase === 'describe' || studioPhase === 'active') {
+      inlineInputRef.current?.focus();
+    }
+  }, [studioPhase]);
 
   useEffect(() => {
     setMounted(true);
@@ -395,6 +405,23 @@ function StudioContent() {
     setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
   };
 
+  const handleChooseLibrary = () => {
+    setStudioPhase('describe');
+    setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
+  };
+
+  const handleSectorSelect = (sector: SectorPublic) => {
+    setSelectedSectorId(sector.id);
+    setSelectedSectorLabel(sector.label);
+    setActiveTemplateSlug(sector.templateSlug);
+    const hint = sector.promptHint ?? (lang === 'es' ? `Web para ${sector.label}` : `Website for ${sector.label}`);
+    setInput(hint);
+    toast.success(
+      lang === 'es' ? `Sector: ${sector.label}` : `Sector: ${sector.label}`,
+      { description: lang === 'es' ? 'Los agentes IA usarán este playbook' : 'AI agents will use this sector playbook' }
+    );
+  };
+
   const addChange = (summary: string, prev?: ChangeEntry[]) => {
     const base = prev ?? changeLog;
     const nextLog: ChangeEntry[] = [
@@ -489,6 +516,7 @@ function StudioContent() {
         projectId,
         changeLog,
         messages: chatPayload(),
+        sectorId: selectedSectorId ?? undefined,
         ...payload,
       }),
     });
@@ -513,7 +541,17 @@ function StudioContent() {
       setCreditsCache(data.credits);
     }
     if (data.unlimited === true) setUnlimitedAccess(true);
-    return data as { message: string; previewSections: PreviewSection[]; changedSectionIds?: number[]; credits?: number; unlimited?: boolean; templateSlug?: string; businessName?: string };
+    return data as {
+      message: string;
+      previewSections: PreviewSection[];
+      changedSectionIds?: number[];
+      credits?: number;
+      unlimited?: boolean;
+      templateSlug?: string;
+      businessName?: string;
+      sectorId?: string;
+      sectorLabel?: string;
+    };
   };
 
   const flashSections = (ids: number[]) => {
@@ -537,6 +575,8 @@ function StudioContent() {
       if (studioPhase === 'describe') setStudioPhase('active');
       if (data.templateSlug) setActiveTemplateSlug(data.templateSlug);
       if (data.businessName) setProjectName(data.businessName);
+      if (data.sectorId) setSelectedSectorId(data.sectorId);
+      if (data.sectorLabel) setSelectedSectorLabel(data.sectorLabel);
       applyCreditFromResponse(data.credits);
 
       const summary = currentInput.slice(0, 60) + (currentInput.length > 60 ? '…' : '');
@@ -718,6 +758,12 @@ function StudioContent() {
             onChange={(e) => setProjectName(e.target.value)}
             className="bg-transparent font-semibold tracking-tight text-xl focus:outline-none w-[200px] md:w-[260px]"
           />
+          {selectedSectorLabel && (
+            <span className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-semibold text-emerald-800">
+              <BookOpen className="w-3 h-3" />
+              {selectedSectorLabel}
+            </span>
+          )}
           {activeTemplateSlug && (
             <Link
               href={`/templates/preview/${activeTemplateSlug}`}
@@ -758,8 +804,9 @@ function StudioContent() {
 
       <div className="flex flex-1 overflow-hidden">
         <div className="w-[min(340px,32vw)] flex flex-col border-r border-slate-200 bg-white shrink-0">
-          <div className="p-5 border-b border-slate-100 shrink-0">
-            <div className="flex items-center gap-3 mb-4">
+          {/* Cabecera Studio */}
+          <div className="px-5 py-4 border-b border-slate-100 shrink-0">
+            <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-2xl overflow-hidden ring-1 ring-slate-200">
                 <img src="/images/logo.png" alt="Studio" className="w-full h-full object-cover" />
               </div>
@@ -768,110 +815,165 @@ function StudioContent() {
                 <div className="text-xs text-slate-500">{t.subtitle}</div>
               </div>
             </div>
-
-            <div className="chat-bubble-ai text-[14px] leading-relaxed mb-3 max-h-28 overflow-y-auto">
-              {composerHint}
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder={inputPlaceholder}
-                className="flex-1 bg-white border border-slate-200 focus:border-indigo-400 px-4 py-3 text-sm rounded-2xl placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-              />
-              <button
-                onClick={sendMessage}
-                disabled={!input.trim() || isThinking}
-                className="w-11 h-11 shrink-0 bg-slate-900 rounded-2xl flex items-center justify-center text-white disabled:opacity-40 cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex justify-between mt-2 text-[10px] text-slate-400">
-              <span>
-                {unlimitedAccess
-                  ? `${t.unlimitedAccess} · Superadmin`
-                  : `${credits} ${t.creditsLeft} · ${t.creditHint}`}
-              </span>
-              <Link href="/guia" className="text-indigo-600 hover:underline">{lang === 'es' ? 'Ver guía' : 'View guide'}</Link>
-            </div>
-
-            <div className="mt-3 pt-3 border-t border-slate-100">
-              <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
-              <div className="flex flex-wrap gap-1.5 max-h-[88px] overflow-y-auto">
-                {t.quickPrompts.map((p, i) => (
-                  <button key={i} onClick={() => applyQuickPrompt(p)} disabled={isThinking} className="text-[11px] px-2.5 py-1 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-40 cursor-pointer">
-                    {p}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
-          <div ref={chatScrollRef} className="flex-1 overflow-auto px-5 py-4 space-y-4 text-[14px] min-h-0">
-            {threadMessages.length === 0 && !isThinking && (
-              <p className="text-xs text-slate-400 text-center py-2">
-                {lang === 'es' ? 'Tu conversación aparecerá aquí.' : 'Your conversation will appear here.'}
-              </p>
-            )}
-            <AnimatePresence>
-              {threadMessages.map((msg) => (
-                <div key={msg.id} className={msg.role === 'user' ? 'flex justify-end' : ''}>
-                  <div className={msg.role === 'user' ? 'chat-bubble-user max-w-[90%]' : 'chat-bubble-ai max-w-[95%]'}>
-                    {msg.content}
-                  </div>
+          {/* SECCIÓN 1 · Conversación (IA + cliente) */}
+          <div className="shrink-0 border-b border-slate-200 bg-slate-50/80 px-5 py-4">
+            <p className="text-[10px] font-bold tracking-[0.2em] text-indigo-600 uppercase mb-3">
+              {lang === 'es' ? 'Conversación' : 'Conversation'}
+            </p>
+            {studioPhase === 'onboarding' ? (
+              <div className="rounded-2xl bg-white border border-slate-200 px-4 py-3.5 text-[14px] leading-relaxed text-slate-700">
+                {t.welcomeOnboarding}
+              </div>
+            ) : (
+              <div className="rounded-2xl bg-white border border-slate-200 px-4 py-3.5 shadow-sm">
+                <p className="text-[14px] leading-relaxed text-slate-700 whitespace-pre-wrap">{composerHint}</p>
+                <textarea
+                  ref={inlineInputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
+                  rows={studioPhase === 'describe' ? 5 : 3}
+                  placeholder={studioPhase === 'describe' ? '' : inputPlaceholder}
+                  disabled={isThinking}
+                  className="w-full mt-1 bg-transparent text-[14px] leading-relaxed text-slate-900 placeholder:text-slate-400 resize-none focus:outline-none min-h-[5.5rem] disabled:opacity-50"
+                />
+                <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-100">
+                  <span className="text-[10px] text-slate-400 leading-snug">
+                    {unlimitedAccess ? t.unlimitedAccess : `${credits} ${t.creditsLeft}`}
+                    <span className="hidden sm:inline">
+                      {' · '}
+                      {lang === 'es' ? 'Enter enviar · Shift+Enter nueva línea' : 'Enter send · Shift+Enter new line'}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={sendMessage}
+                    disabled={!input.trim() || isThinking}
+                    className="w-9 h-9 shrink-0 bg-slate-900 rounded-xl flex items-center justify-center text-white disabled:opacity-40 cursor-pointer"
+                    aria-label={lang === 'es' ? 'Enviar' : 'Send'}
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              ))}
-            </AnimatePresence>
+              </div>
+            )}
+          </div>
+
+          {/* SECCIÓN 2 · Resto (sugerencias, historial, cambios…) */}
+          <div ref={chatScrollRef} className="flex-1 overflow-auto px-5 py-4 min-h-0 flex flex-col gap-4 text-[14px] bg-white">
+            {studioPhase !== 'onboarding' && (
+              <div className="shrink-0">
+                <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {t.quickPrompts.map((p, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => applyQuickPrompt(p)}
+                      disabled={isThinking}
+                      className="text-[11px] px-2.5 py-1 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-40 cursor-pointer"
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+                {studioPhase === 'describe' && (
+                  <p className="mt-2 text-[10px] text-slate-400">
+                    {lang === 'es' ? 'O elige sector en la biblioteca (panel derecho) →' : 'Or pick a sector in the library (right panel) →'}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {threadMessages.length > 0 && (
+              <div className="shrink-0">
+                <div className="text-[10px] tracking-widest text-slate-400 mb-2">
+                  {lang === 'es' ? 'HISTORIAL' : 'HISTORY'}
+                </div>
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {threadMessages.map((msg) => (
+                      <div key={msg.id} className={msg.role === 'user' ? 'flex justify-end' : ''}>
+                        <div
+                          className={
+                            msg.role === 'user'
+                              ? 'max-w-[90%] rounded-2xl rounded-br-md bg-indigo-600 text-white px-4 py-3 text-[14px] leading-relaxed'
+                              : 'max-w-[95%] rounded-2xl rounded-bl-md bg-slate-100 text-slate-800 px-4 py-3 text-[14px] leading-relaxed'
+                          }
+                        >
+                          {msg.content}
+                        </div>
+                      </div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </div>
+            )}
+
             {isThinking && (
-              <div className="flex items-center gap-2 px-1 text-sm text-slate-400">
+              <div className="flex items-center gap-2 px-1 text-sm text-slate-400 shrink-0">
                 <Sparkles className="w-4 h-4 text-indigo-500 animate-pulse" />
                 <span>{t.thinking}</span>
               </div>
             )}
-          </div>
 
-          <div className="px-5 py-3 border-t border-slate-100 shrink-0 bg-slate-50/80">
-            <div className="flex items-center gap-2 text-[10px] tracking-widest text-slate-400 mb-2">
-              <History className="w-3 h-3" />
-              {t.changes}
-            </div>
-            {changeLog.length === 0 ? (
-              <p className="text-xs text-slate-400">{t.noChanges}</p>
-            ) : (
-              <ul className="space-y-1.5 max-h-24 overflow-y-auto">
-                {changeLog.map((entry) => (
-                  <li key={entry.id} className="text-xs text-slate-600 flex justify-between gap-2">
-                    <span className="truncate">{entry.summary}</span>
-                    <span className="text-slate-400 shrink-0">{entry.time}</span>
-                  </li>
-                ))}
-              </ul>
+            {studioPhase === 'onboarding' && (
+              <p className="text-xs text-slate-400 text-center py-4">
+                {lang === 'es' ? 'Elige plantilla o describe tu web en el panel derecho.' : 'Pick a template or describe your site in the right panel.'}
+              </p>
             )}
-            {projectId && snapshots.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-slate-100">
-                <div className="text-[10px] tracking-widest text-slate-400 mb-1.5">{t.snapshots}</div>
-                <ul className="space-y-1 max-h-20 overflow-y-auto">
-                  {snapshots.slice(0, 5).map((snap) => (
-                    <li key={snap.id} className="flex items-center justify-between gap-2 text-xs">
-                      <span className="truncate text-slate-600">
-                        v{snap.versionNumber}
-                        {snap.label ? ` · ${snap.label}` : ''}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => restoreSnapshot(snap.id)}
-                        className="shrink-0 text-indigo-600 hover:underline cursor-pointer"
-                      >
-                        {t.restore}
-                      </button>
+
+            <div className="mt-auto shrink-0 pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-2 text-[10px] tracking-widest text-slate-400 mb-2">
+                <History className="w-3 h-3" />
+                {t.changes}
+              </div>
+              {changeLog.length === 0 ? (
+                <p className="text-xs text-slate-400">{t.noChanges}</p>
+              ) : (
+                <ul className="space-y-1.5 max-h-24 overflow-y-auto">
+                  {changeLog.map((entry) => (
+                    <li key={entry.id} className="text-xs text-slate-600 flex justify-between gap-2">
+                      <span className="truncate">{entry.summary}</span>
+                      <span className="text-slate-400 shrink-0">{entry.time}</span>
                     </li>
                   ))}
                 </ul>
+              )}
+              {projectId && snapshots.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-slate-100">
+                  <div className="text-[10px] tracking-widest text-slate-400 mb-1.5">{t.snapshots}</div>
+                  <ul className="space-y-1 max-h-20 overflow-y-auto">
+                    {snapshots.slice(0, 5).map((snap) => (
+                      <li key={snap.id} className="flex items-center justify-between gap-2 text-xs">
+                        <span className="truncate text-slate-600">
+                          v{snap.versionNumber}
+                          {snap.label ? ` · ${snap.label}` : ''}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => restoreSnapshot(snap.id)}
+                          className="shrink-0 text-indigo-600 hover:underline cursor-pointer"
+                        >
+                          {t.restore}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="flex justify-between mt-3 text-[10px] text-slate-400">
+                <span>{t.creditHint}</span>
+                <Link href="/guia" className="text-indigo-600 hover:underline">{lang === 'es' ? 'Ver guía' : 'View guide'}</Link>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -930,7 +1032,13 @@ function StudioContent() {
               className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full ${viewMode === 'mobile' ? 'max-w-[380px] rounded-[3.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
             >
               {studioPhase === 'onboarding' ? (
-                <StudioOnboarding lang={lang} onChooseDescribe={handleChooseDescribe} />
+                <StudioOnboarding lang={lang} onChooseDescribe={handleChooseDescribe} onChooseLibrary={handleChooseLibrary} />
+              ) : studioPhase === 'describe' ? (
+                <StudioSectorLibrary
+                  lang={lang}
+                  selectedId={selectedSectorId}
+                  onSelect={handleSectorSelect}
+                />
               ) : (
               <div className="p-6 md:p-10 space-y-8 bg-white">
                 {previewSections.map((section) => (

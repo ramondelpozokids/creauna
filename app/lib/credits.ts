@@ -2,6 +2,13 @@ import { prisma } from './db';
 import { FREE_CREDITS, hashIp } from './auth/users';
 import { UNLIMITED_CREDITS } from './auth/admin';
 
+function isDbConfigured(): boolean {
+  return Boolean(process.env.DATABASE_URL?.trim());
+}
+
+/** Créditos guest en memoria cuando no hay Postgres (desarrollo local). */
+const devGuestCredits = new Map<string, number>();
+
 export interface CreditStatus {
   credits: number;
   source: 'user' | 'guest';
@@ -21,6 +28,9 @@ export async function getCreditsForUser(userId: string): Promise<number> {
 
 export async function getCreditsForGuest(ip: string): Promise<number> {
   const ipHash = hashIp(ip);
+  if (!isDbConfigured()) {
+    return devGuestCredits.get(ipHash) ?? FREE_CREDITS;
+  }
   const row = await prisma.guestUsage.findUnique({ where: { ipHash } });
   if (!row) {
     const created = await prisma.guestUsage.create({ data: { ipHash, credits: FREE_CREDITS } });
@@ -30,6 +40,9 @@ export async function getCreditsForGuest(ip: string): Promise<number> {
 }
 
 export async function resolveCredits(userId: string | null, ip: string): Promise<CreditStatus> {
+  if (!isDbConfigured() && !userId) {
+    return { credits: await getCreditsForGuest(ip), source: 'guest' };
+  }
   if (userId) {
     if (await isAdminUser(userId)) {
       return { credits: UNLIMITED_CREDITS, source: 'user', userId, unlimited: true };
@@ -59,6 +72,13 @@ export async function consumeCredit(userId: string | null, ip: string, reason: s
   }
 
   const ipHash = hashIp(ip);
+  if (!isDbConfigured()) {
+    const current = devGuestCredits.get(ipHash) ?? FREE_CREDITS;
+    if (current <= 0) return { ok: false, credits: 0 };
+    const next = current - 1;
+    devGuestCredits.set(ipHash, next);
+    return { ok: true, credits: next };
+  }
   const guest = await prisma.guestUsage.findUnique({ where: { ipHash } });
   const current = guest?.credits ?? FREE_CREDITS;
   if (current <= 0) {
@@ -88,6 +108,11 @@ export async function refundCredit(userId: string | null, ip: string, reason: st
     return updated.credits;
   }
   const ipHash = hashIp(ip);
+  if (!isDbConfigured()) {
+    const next = (devGuestCredits.get(ipHash) ?? FREE_CREDITS) + 1;
+    devGuestCredits.set(ipHash, next);
+    return next;
+  }
   const updated = await prisma.guestUsage.upsert({
     where: { ipHash },
     create: { ipHash, credits: FREE_CREDITS + 1 },

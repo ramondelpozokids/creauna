@@ -600,6 +600,74 @@ const CONTENT_PRESETS: Record<string, ContentPreset> = {
       { title: 'Monitoring', desc: 'Alerts, logs, and metrics to guarantee 99.9% uptime.' },
     ],
   },
+  volt: {
+    taglineEs: 'Impulsamos el futuro con energía limpia, ahorro y autonomía energética.',
+    taglineEn: 'Powering the future with clean energy, savings and energy independence.',
+    ctaPrimaryEs: 'Solicitar estudio gratuito', ctaPrimaryEn: 'Request free assessment',
+    ctaSecondaryEs: 'Ver servicios', ctaSecondaryEn: 'View services',
+    es: [
+      { title: 'Energía Solar Fotovoltaica', desc: 'Instalaciones de autoconsumo para viviendas, empresas y naves industriales.' },
+      { title: 'Baterías y Almacenamiento', desc: 'Almacena el excedente y maximiza tu independencia energética.' },
+      { title: 'Puntos de Recarga EV', desc: 'Cargadores Wallbox y soluciones para flotas y parkings.' },
+      { title: 'Eficiencia Energética', desc: 'Auditorías, optimización de consumo y certificaciones.' },
+      { title: 'Mantenimiento e Instalaciones', desc: 'Monitorización remota, revisiones y soporte técnico certificado.' },
+    ],
+    en: [
+      { title: 'Solar Photovoltaic Energy', desc: 'Self-consumption installations for homes, businesses and industrial sites.' },
+      { title: 'Batteries & Storage', desc: 'Store surplus energy and maximize your independence.' },
+      { title: 'EV Charging Points', desc: 'Wallbox chargers and solutions for fleets and parking.' },
+      { title: 'Energy Efficiency', desc: 'Audits, consumption optimization and certifications.' },
+      { title: 'Maintenance & Installations', desc: 'Remote monitoring, inspections and certified technical support.' },
+    ],
+  },
+  blueprint: {
+    taglineEs: 'Arquitectura contemporánea con visión espacial, funcionalidad y diseño atemporal.',
+    taglineEn: 'Contemporary architecture with spatial vision, function and timeless design.',
+    ctaPrimaryEs: 'Ver proyectos', ctaPrimaryEn: 'View projects',
+    ctaSecondaryEs: 'Consulta inicial', ctaSecondaryEn: 'Initial consultation',
+    es: [
+      { title: 'Arquitectura residencial', desc: 'Viviendas unifamiliares y reformas integrales con criterio estético y normativo.' },
+      { title: 'Proyectos comerciales', desc: 'Locales, oficinas y espacios de trabajo con identidad propia.' },
+      { title: 'Interiorismo', desc: 'Distribución, materiales y mobiliario para espacios habitables y premium.' },
+    ],
+    en: [
+      { title: 'Residential architecture', desc: 'Single-family homes and full renovations with aesthetic and regulatory rigor.' },
+      { title: 'Commercial projects', desc: 'Retail, offices and workspaces with a distinct identity.' },
+      { title: 'Interior design', desc: 'Layout, materials and furniture for premium living spaces.' },
+    ],
+  },
+  care: {
+    taglineEs: 'Atención sanitaria cercana, profesional y centrada en el bienestar del paciente.',
+    taglineEn: 'Close, professional healthcare focused on patient wellbeing.',
+    ctaPrimaryEs: 'Pedir cita', ctaPrimaryEn: 'Book appointment',
+    ctaSecondaryEs: 'Nuestros servicios', ctaSecondaryEn: 'Our services',
+    es: [
+      { title: 'Consulta y diagnóstico', desc: 'Primera visita, evaluación personalizada y plan de tratamiento.' },
+      { title: 'Tratamientos especializados', desc: 'Protocolos actualizados con tecnología y evidencia clínica.' },
+      { title: 'Seguimiento', desc: 'Control periódico, resultados medibles y atención continuada.' },
+    ],
+    en: [
+      { title: 'Consultation & diagnosis', desc: 'First visit, personalized assessment and treatment plan.' },
+      { title: 'Specialized treatments', desc: 'Up-to-date protocols with technology and clinical evidence.' },
+      { title: 'Follow-up', desc: 'Periodic check-ups, measurable results and ongoing care.' },
+    ],
+  },
+  haven: {
+    taglineEs: 'Escapadas rurales con encanto, naturaleza y hospitalidad de calidad.',
+    taglineEn: 'Rural getaways with charm, nature and quality hospitality.',
+    ctaPrimaryEs: 'Reservar estancia', ctaPrimaryEn: 'Book your stay',
+    ctaSecondaryEs: 'Ver alojamientos', ctaSecondaryEn: 'View accommodations',
+    es: [
+      { title: 'Habitaciones y suites', desc: 'Alojamiento acogedor con detalles cuidados y vistas al entorno.' },
+      { title: 'Experiencias locales', desc: 'Rutas, gastronomía y actividades en la naturaleza.' },
+      { title: 'Eventos íntimos', desc: 'Celebraciones pequeñas, retiros y estancias en grupo.' },
+    ],
+    en: [
+      { title: 'Rooms & suites', desc: 'Cozy accommodation with thoughtful details and scenic views.' },
+      { title: 'Local experiences', desc: 'Trails, gastronomy and outdoor activities.' },
+      { title: 'Intimate events', desc: 'Small celebrations, retreats and group stays.' },
+    ],
+  },
 };
 
 const DEFAULT_PRESET: ContentPreset = {

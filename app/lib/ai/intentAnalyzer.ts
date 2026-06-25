@@ -1,4 +1,5 @@
 import type { TemplateCategory } from '../../data/templates';
+import { matchSectorFromPrompt } from '../../data/sectorLibrary';
 import { detectVariant, type BusinessVariant } from './businessProfiles';
 import { isGoogleListingPrompt, parseGoogleListing } from './googleListingParser';
 
@@ -51,25 +52,28 @@ const INTENT_RULES: IntentRule[] = [
   { slug: 'sable', categoryKey: 'gastronomy', keywords: /bistro|brasserie|brunch/i, typeEs: 'Bistro & Gastronomía', typeEn: 'Bistro & Gastronomy', defaultNameEs: 'Bistro Sable', defaultNameEn: 'Sable Bistro' },
   { slug: 'vesper', categoryKey: 'gastronomy', keywords: /restaurante|resaurante|restaurant|gourmet|fine dining|alta cocina|comida|gastronom|men[uú]|carta|mesa|comedor|cocina/i, typeEs: 'Restaurante', typeEn: 'Restaurant', defaultNameEs: 'Restaurante Vesper', defaultNameEn: 'Vesper Restaurant' },
   { slug: 'classic-cut', categoryKey: 'services', keywords: /barber[ií]a|barber|barbershop|afeitad|grooming masculin/i, typeEs: 'Barbería Premium', typeEn: 'Premium Barbershop', defaultNameEs: 'Classic Cut', defaultNameEn: 'Classic Cut' },
-  { slug: 'lumen', categoryKey: 'services', keywords: /est[eé]tica|cl[ií]nica|dental|spa m[eé]dico|wellness|belleza/i, typeEs: 'Clínica de Estética', typeEn: 'Aesthetic Clinic', defaultNameEs: 'Clínica Lumen', defaultNameEn: 'Lumen Clinic' },
+  { slug: 'lumen', categoryKey: 'services', keywords: /est[eé]tica|cl[ií]nica(?! dental)|spa m[eé]dico|wellness|belleza|peluquer[ií]a|sal[oó]n de belleza|uñas|manicur/i, typeEs: 'Salón de Belleza', typeEn: 'Beauty Salon', defaultNameEs: 'Estilo Belleza', defaultNameEn: 'Style Beauty' },
   { slug: 'iron-ink', categoryKey: 'services', keywords: /tatuaje|tattoo|piercing|tinta|royal bang|gemas dentales/i, typeEs: 'Estudio de Tatuajes', typeEn: 'Tattoo Studio', defaultNameEs: 'Royal Bang Tattoo & Piercing Studio', defaultNameEn: 'Royal Bang Tattoo & Piercing Studio' },
   { slug: 'torque', categoryKey: 'services', keywords: /taller de motos|motorcycle|motocicleta|custom shop/i, typeEs: 'Taller de Motos', typeEn: 'Motorcycle Workshop', defaultNameEs: 'Torque Garage', defaultNameEn: 'Torque Garage' },
   { slug: 'pistons', categoryKey: 'services', keywords: /mec[aá]nic|taller mec|auto repair|automotriz|chapa|veh[ií]culo/i, typeEs: 'Taller Mecánico', typeEn: 'Auto Repair Shop', defaultNameEs: 'Pistons Auto', defaultNameEn: 'Pistons Auto' },
-  { slug: 'flow', categoryKey: 'services', keywords: /fontaner[ií]a|plumb|electric|reforma|reformas|construc/i, typeEs: 'Fontanería & Reformas', typeEn: 'Plumbing & Renovation', defaultNameEs: 'Flow Reformas', defaultNameEn: 'Flow Renovations' },
+  { slug: 'flow', categoryKey: 'services', keywords: /fontaner[ií]a|plumb|electricista|electric|reforma|reformas|construc|pintor|pintura|carpinter|dom[oó]tica/i, typeEs: 'Fontanería & Reformas', typeEn: 'Plumbing & Renovation', defaultNameEs: 'Flow Reformas', defaultNameEn: 'Flow Renovations' },
   { slug: 'sparkle', categoryKey: 'services', keywords: /limpieza|cleaning|mantenimiento dom/i, typeEs: 'Limpieza Profesional', typeEn: 'Professional Cleaning', defaultNameEs: 'Sparkle Clean', defaultNameEn: 'Sparkle Clean' },
   { slug: 'forge', categoryKey: 'services', keywords: /gimnasio|gym|fitness|crossfit|entrenamiento/i, typeEs: 'Gimnasio & Fitness', typeEn: 'Gym & Fitness', defaultNameEs: 'Forge Fitness', defaultNameEn: 'Forge Fitness' },
   { slug: 'zenith', categoryKey: 'services', keywords: /yoga|pilates|mindfulness|meditaci/i, typeEs: 'Estudio de Yoga', typeEn: 'Yoga Studio', defaultNameEs: 'Zenith Yoga', defaultNameEn: 'Zenith Yoga' },
   { slug: 'paw', categoryKey: 'services', keywords: /peluquer[ií]a canina|mascota|pet grooming|veterin/i, typeEs: 'Peluquería Canina', typeEn: 'Pet Grooming', defaultNameEs: 'Paw Grooming', defaultNameEn: 'Paw Grooming' },
   { slug: 'verde', categoryKey: 'services', keywords: /jardiner[ií]a|landscap|paisaj|vivero/i, typeEs: 'Jardinería & Paisajismo', typeEn: 'Landscaping', defaultNameEs: 'Verde Jardines', defaultNameEn: 'Verde Gardens' },
   { slug: 'lens', categoryKey: 'services', keywords: /fotograf|photograph|video|vide[oó]gra/i, typeEs: 'Estudio Fotográfico', typeEn: 'Photography Studio', defaultNameEs: 'Lens Studio', defaultNameEn: 'Lens Studio' },
-  { slug: 'retreat', categoryKey: 'luxury', keywords: /hotel|hostal|alojamiento|boutique hotel|hospedaje/i, typeEs: 'Hotel Boutique', typeEn: 'Boutique Hotel', defaultNameEs: 'Retreat Hotel', defaultNameEn: 'Retreat Hotel' },
-  { slug: 'serene', categoryKey: 'luxury', keywords: /spa|wellness de lujo|masaje/i, typeEs: 'Spa de Lujo', typeEn: 'Luxury Spa', defaultNameEs: 'Serene Spa', defaultNameEn: 'Serene Spa' },
+  { slug: 'retreat', categoryKey: 'luxury', keywords: /hotel|hostal|boutique hotel|hospedaje/i, typeEs: 'Hotel Boutique', typeEn: 'Boutique Hotel', defaultNameEs: 'Retreat Hotel', defaultNameEn: 'Retreat Hotel' },
+  { slug: 'haven', categoryKey: 'luxury', keywords: /casa rural|turismo rural|apartamento tur[ií]stic|camping|agencia de viajes|actividades tur[ií]stic|alquiler vacacional/i, typeEs: 'Alojamiento Turístico', typeEn: 'Tourism Lodging', defaultNameEs: 'Haven Rural', defaultNameEn: 'Haven Rural' },
+  { slug: 'serene', categoryKey: 'luxury', keywords: /\bspa\b|wellness de lujo|\bmasaje/i, typeEs: 'Spa de Lujo', typeEn: 'Luxury Spa', defaultNameEs: 'Serene Spa', defaultNameEn: 'Serene Spa' },
   { slug: 'atelier', categoryKey: 'luxury', keywords: /joyer[ií]a|jewelry|reloj|watch/i, typeEs: 'Joyería & Relojería', typeEn: 'Jewelry & Watches', defaultNameEs: 'Atelier Joyas', defaultNameEn: 'Atelier Jewelry' },
   { slug: 'maison', categoryKey: 'luxury', keywords: /moda boutique|fashion|ropa|tienda de ropa/i, typeEs: 'Moda Boutique', typeEn: 'Fashion Boutique', defaultNameEs: 'Maison Mode', defaultNameEn: 'Maison Mode' },
   { slug: 'vows', categoryKey: 'luxury', keywords: /boda|wedding|matrimonio|event planner/i, typeEs: 'Wedding Planner', typeEn: 'Wedding Planner', defaultNameEs: 'Vows Events', defaultNameEn: 'Vows Events' },
   { slug: 'nexus', categoryKey: 'corporate', keywords: /consultor[ií]a|consulting|b2b|asesor[ií]a empres/i, typeEs: 'Consultoría B2B', typeEn: 'B2B Consulting', defaultNameEs: 'Nexus Consulting', defaultNameEn: 'Nexus Consulting' },
   { slug: 'vanguard', categoryKey: 'corporate', keywords: /marketing|publicidad|agencia creativa|social media/i, typeEs: 'Agencia de Marketing', typeEn: 'Marketing Agency', defaultNameEs: 'Vanguard Agency', defaultNameEn: 'Vanguard Agency' },
-  { slug: 'habitat', categoryKey: 'corporate', keywords: /inmobiliaria|real estate|propiedad|vivienda/i, typeEs: 'Inmobiliaria', typeEn: 'Real Estate', defaultNameEs: 'Habitat Inmobiliaria', defaultNameEn: 'Habitat Real Estate' },
+  { slug: 'habitat', categoryKey: 'corporate', keywords: /inmobiliaria|real estate|propiedad|vivienda|promotora|gesti[oó]n patrimonial/i, typeEs: 'Inmobiliaria', typeEn: 'Real Estate', defaultNameEs: 'Habitat Inmobiliaria', defaultNameEn: 'Habitat Real Estate' },
+  { slug: 'blueprint', categoryKey: 'corporate', keywords: /arquitect|interiorismo|estudio de arquitect|urbanismo|proyecto arquitect|diseño de interiores/i, typeEs: 'Estudio de Arquitectura', typeEn: 'Architecture Studio', defaultNameEs: 'Blueprint Arquitectos', defaultNameEn: 'Blueprint Architects' },
+  { slug: 'care', categoryKey: 'corporate', keywords: /cl[ií]nica dental|odontolog|ortodon|fisioter|fisio|psicolog|nutrici|medicina est[eé]tica|[óo]ptic|farmacia|cl[ií]nica m[eé]d|rehabilitaci[oó]n/i, typeEs: 'Clínica de Salud', typeEn: 'Health Clinic', defaultNameEs: 'Care Salud', defaultNameEn: 'Care Health' },
   { slug: 'lex', categoryKey: 'corporate', keywords: /abogad|law firm|despacho de abog|bufete|notar[ií]a|jur[ií]dic/i, typeEs: 'Despacho de Abogados', typeEn: 'Law Firm', defaultNameEs: 'Lex Abogados', defaultNameEn: 'Lex Law Firm' },
   { slug: 'ledger', categoryKey: 'corporate', keywords: /gestor[ií]a|asesor[ií]a|fiscal|contabil|tax|finanzas corpor|laboral/i, typeEs: 'Asesoría Fiscal', typeEn: 'Tax Advisory', defaultNameEs: 'Ledger Asesores', defaultNameEn: 'Ledger Advisors' },
   { slug: 'shield', categoryKey: 'corporate', keywords: /seguro|insurance|corredur/i, typeEs: 'Seguros & Correduría', typeEn: 'Insurance Brokerage', defaultNameEs: 'Shield Seguros', defaultNameEn: 'Shield Insurance' },
@@ -79,6 +83,7 @@ const INTENT_RULES: IntentRule[] = [
   { slug: 'sentinel', categoryKey: 'tech', keywords: /cibersegur|cybersecurity|seguridad inform/i, typeEs: 'Ciberseguridad', typeEn: 'Cybersecurity', defaultNameEs: 'Sentinel Security', defaultNameEn: 'Sentinel Security' },
   { slug: 'codecraft', categoryKey: 'tech', keywords: /desarrollo web|dev agency|programaci|desarrollo de software/i, typeEs: 'Agencia de Desarrollo', typeEn: 'Development Agency', defaultNameEs: 'Codecraft Dev', defaultNameEn: 'Codecraft Dev' },
   { slug: 'cloudline', categoryKey: 'tech', keywords: /cloud|infraestructura|devops|hosting/i, typeEs: 'Infraestructura Cloud', typeEn: 'Cloud Infrastructure', defaultNameEs: 'Cloudline', defaultNameEn: 'Cloudline' },
+  { slug: 'volt', categoryKey: 'tech', keywords: /energ[ií]as?\s+renov|fotovolta|placas\s+solares|autoconsumo|energ[ií]a\s+solar|paneles\s+solares|bater[ií]as\s+solares|eficiencia\s+energ|wallbox|punto[s]?\s+de\s+recarga|cargador.*el[eé]ctric|ritest|bolet[ií]n\s+el[eé]ctric|instalaci[oó]n\s+fotovolta|comunidad\s+energ|aerotermia|instalador.*fotovolta/i, typeEs: 'Energías Renovables', typeEn: 'Renewable Energy', defaultNameEs: 'Helios Energía', defaultNameEn: 'Helios Energy' },
 ];
 
 const GENERIC_NAMES = /^(restaurante|resaurante|restaurant|cafeter[ií]a|caf[eé]|web|sitio|p[aá]gina|negocio|empresa|tienda|d[öo]ner kebab|kebab)$/i;
@@ -123,6 +128,7 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
   const mentioned = (re: RegExp) => re.test(lower);
   const navMenu = isNavMenuRequest(lower);
   const isGestoria = /gestor[ií]a|asesor[ií]a/i.test(lower);
+  const isRenewable = /energ[ií]as?\s+renov|fotovolta|placas\s+solares|autoconsumo|energ[ií]a\s+solar|ritest/i.test(lower);
   const isFoodBlog = /recetas|blog de comida|blog gastron|food blog|comida casera|stanton/i.test(lower);
   const menu =
     isFoodBlog ||
@@ -134,13 +140,13 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
 
   return {
     menu,
-    services: isGestoria || (!menu && (!hasList || mentioned(/servicio|servicos|service|asesor/i))),
-    about: isGestoria || mentioned(/sobre nosotros|about us|quienes somos|about/) || listing,
+    services: isGestoria || isRenewable || (!menu && (!hasList || mentioned(/servicio|servicos|service|asesor/i))),
+    about: isGestoria || isRenewable || mentioned(/sobre nosotros|about us|quienes somos|about/) || listing,
     blog: isFoodBlog || mentioned(/blog|noticias|art[ií]culo|news|publicaciones/i),
-    gallery: isGestoria || !hasList || mentioned(/galer[ií]a|gallery|im[aá]gen|foto|ver fotos/i) || listing,
-    reviews: isGestoria || mentioned(/reseñ|review|testimonio|opinion|opiniones/i) || listing,
-    location: isGestoria || mentioned(/ubicaci|location|mapa|direcci|llegar|sitio de ubicaci/i) || listing,
-    contact: isGestoria || mentioned(/contacto|contact|formulario/i) || listing,
+    gallery: isGestoria || isRenewable || !hasList || mentioned(/galer[ií]a|gallery|im[aá]gen|foto|ver fotos|proyecto/i) || listing,
+    reviews: isGestoria || isRenewable || mentioned(/reseñ|review|testimonio|opinion|opiniones/i) || listing,
+    location: isGestoria || isRenewable || mentioned(/ubicaci|location|mapa|direcci|llegar|sitio de ubicaci/i) || listing,
+    contact: isGestoria || isRenewable || mentioned(/contacto|contact|formulario|estudio\s+gratuito/i) || listing,
     reservation: mentioned(/reserva|reservar|mesa|booking|table|cita/i) || (listing && /tatuaje|tattoo|piercing|restaurante|caf[ée]|terraza/i.test(lower)),
     calendar: mentioned(/calendario|calendar|fecha|disponibilidad/),
     legalFooter: isGestoria || !hasList || mentioned(/legal|aviso|privacidad|cookies|t[ée]rminos|footer/) || listing,
@@ -156,12 +162,19 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
 export function isSiteBuildPrompt(prompt: string): boolean {
   if (isGoogleListingPrompt(prompt)) return true;
   const lower = prompt.toLowerCase();
-  if (/crea(r?)\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina)/i.test(lower)) return true;
-  if (/genera(r?)\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina)/i.test(lower)) return true;
-  if (/diseñ(a|ar)\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina)/i.test(lower)) return true;
-  if (/haz(me)?\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina)/i.test(lower)) return true;
-  if (/quiero.*(web|sitio|p[aá]gina)/i.test(lower)) return true;
-  if (/web\s+de\s+(gestor|asesor|restaur|barber|taller|sal[oó]n|negocio)/i.test(lower)) return true;
+  if (/crea(r?)\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina|blog)/i.test(lower)) return true;
+  if (/genera(r?)\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina|blog)/i.test(lower)) return true;
+  if (/diseñ(a|ar)\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina|blog)/i.test(lower)) return true;
+  if (/haz(me)?\s+(me\s+)?(una?\s+)?(web|sitio|p[aá]gina|blog)/i.test(lower)) return true;
+  if (/quiero.*(web|sitio|p[aá]gina|blog)/i.test(lower)) return true;
+  if (/vi(en)?\s+.*(web|p[aá]gina|squarespace|wix|plantilla)/i.test(lower)) return true;
+  if (/he\s+visto.*(web|p[aá]gina|despacho|negocio|restaurante|barber)/i.test(lower)) return true;
+  if (/me\s+gust[oó].*(web|p[aá]gina|estilo|diseño)/i.test(lower)) return true;
+  if (/(como|parecid[oa]|similar)\s+(a\s+)?(la\s+)?(web|p[aá]gina|de|un)/i.test(lower)) return true;
+  if (/estilo\s+(squarespace|wix|stanton|webflow|framer|ritest)/i.test(lower)) return true;
+  if (/squarespace|wix\.com|webflow\.io|ritest\.es/i.test(lower)) return true;
+  if (/inspirad.*en.*(ritest|web|referencia)/i.test(lower)) return true;
+  if (/web\s+de\s+(gestor|asesor|restaur|barber|taller|sal[oó]n|negocio|abogad|despacho)/i.test(lower)) return true;
   if (/(gestor[ií]a|asesor[ií]a).*(navbar|sidebar|footer|formulario|whatsapp)/i.test(lower)) return true;
   if (/que\s+(tenga|se\s+llame)|estilo.*(kebab|d[öo]ner|restaur|tatuaje|tattoo)/i.test(lower)) return true;
   if (/(inicio|men[uú]|galer[ií]a|reseñas|footer).*(inicio|men[uú]|galer[ií]a|reseñas)/i.test(lower)) return true;
@@ -222,6 +235,18 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
     }
   }
 
+  const sectorMatch = matchSectorFromPrompt(prompt);
+  if (sectorMatch) {
+    const sectorRule = INTENT_RULES.find((r) => r.slug === sectorMatch.templateSlug);
+    if (sectorRule) {
+      const boosted = scoreRule(sectorRule, normalized) + (sectorMatch.tier === 'priority' ? 20 : 5);
+      if (boosted > bestScore) {
+        bestScore = boosted;
+        bestRule = sectorRule;
+      }
+    }
+  }
+
   const profileRule =
     variant === 'kebab'
       ? INTENT_RULES.find((r) => r.slug === 'kebab')!
@@ -241,7 +266,9 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
                   ? INTENT_RULES.find((r) => r.slug === 'vesper')!
                   : variant === 'nonprofit'
                     ? INTENT_RULES.find((r) => r.slug === 'arc')!
-                    : bestRule;
+                    : variant === 'renewable'
+                      ? INTENT_RULES.find((r) => r.slug === 'volt')!
+                      : bestRule;
 
   const listing = parseGoogleListing(prompt);
   const businessName = listing?.businessName ?? extractBusinessName(prompt, profileRule, lang);
@@ -268,7 +295,9 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
                     ? (lang === 'es' ? 'Restaurante Gourmet' : 'Fine Dining Restaurant')
                     : variant === 'nonprofit'
                       ? (lang === 'es' ? 'Plataforma de Accesibilidad' : 'Accessibility Platform')
-                      : (lang === 'es' ? profileRule.typeEs : profileRule.typeEn),
+                      : variant === 'renewable'
+                        ? (lang === 'es' ? 'Energías Renovables & Solar' : 'Renewable Energy & Solar')
+                        : (lang === 'es' ? profileRule.typeEs : profileRule.typeEn),
     categoryKey: profileRule.categoryKey,
     features,
     variant,

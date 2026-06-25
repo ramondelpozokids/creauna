@@ -302,6 +302,214 @@ function buildCorporateSidebar(ctx: BuildCtx): TemplatePageSection {
   };
 }
 
+function buildRenewableEnergySite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  const { name, heroImage, tagline, profile, lang, ctaPrimary, ctaSecondary, images } = ctx;
+  const es = lang === 'es';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const items = profile ? (es ? profile.menuItems.es : profile.menuItems.en) : [];
+  const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
+  const aboutText = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
+  const gridBg = 'bg-[#f8faf9] bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:48px_48px]';
+
+  const hero: TemplatePageSection = {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="overflow-hidden rounded-[2rem] shadow-xl border border-slate-200">
+      <nav class="bg-slate-950/95 backdrop-blur flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-4 text-white" aria-label="${es ? 'Navegación' : 'Navigation'}">
+        <div class="font-bold text-xl tracking-tight">${esc(name)}</div>
+        <div class="hidden lg:flex gap-8 text-[11px] tracking-widest uppercase text-slate-300 font-medium">
+          ${(es ? ['Inicio', 'Servicios', 'Proyectos', 'Proceso', 'Contacto'] : ['Home', 'Services', 'Projects', 'Process', 'Contact']).map((n) => `<span>${n}</span>`).join('')}
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="hidden sm:inline-flex items-center gap-2 text-xs text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>24/7</span>
+          <span class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-lg">${esc(ctaPrimary)}</span>
+        </div>
+      </nav>
+      <div class="relative min-h-[520px] md:min-h-[600px] flex items-center justify-center text-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" loading="eager" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/70 to-slate-950/90"></div>
+        <div class="relative z-10 px-6 py-16 max-w-4xl mx-auto">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-semibold rounded-full mb-6">${es ? 'Energía limpia · Autoconsumo · EV' : 'Clean energy · Self-consumption · EV'}</span>
+          <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight">${es ? 'Impulsamos el futuro con energía limpia' : 'Powering the future with clean energy'}</h1>
+          <p class="mt-6 text-lg md:text-xl text-slate-200 max-w-2xl mx-auto leading-relaxed">${esc(tagline)}</p>
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <span class="px-8 py-4 bg-emerald-500 text-slate-950 rounded-lg font-bold text-sm shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-8 py-4 border-2 border-white/60 text-white rounded-lg font-semibold text-sm">${esc(ctaSecondary)}</span>
+          </div>
+          <p class="mt-8 text-[10px] md:text-xs tracking-[0.25em] uppercase text-slate-400">WALLBOX · TESLA · CERTIFICADO · DG INDUSTRIA · CAE</p>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const stats: TemplatePageSection = {
+    id: 'stats', type: 'about', navLabelEs: 'Confianza', navLabelEn: 'Trust',
+    html: `<div class="${gridBg} rounded-[2rem] p-10 md:p-14 border border-slate-200">
+      <p class="text-center text-xs tracking-[0.2em] uppercase text-emerald-600 font-semibold mb-3">${es ? 'Nuestro impacto' : 'Our impact'}</p>
+      <h2 class="text-center text-2xl md:text-3xl font-bold text-slate-900 mb-10">${es ? 'Resultados que hablan por sí solos' : 'Results that speak for themselves'}</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-0 max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        ${[
+          { v: '20+', l: es ? 'Años de experiencia' : 'Years of experience' },
+          { v: '180+', l: es ? 'Proyectos realizados' : 'Projects completed' },
+          { v: '12 MW', l: es ? 'Potencia instalada' : 'Installed capacity' },
+          { v: '4,9 ★', l: es ? 'Valoración clientes' : 'Client rating' },
+        ].map((s, i) => `<div class="p-6 md:p-8 text-center ${i < 3 ? 'border-r border-slate-100' : ''}">
+          <div class="text-3xl md:text-4xl font-bold text-emerald-600">${s.v}</div>
+          <div class="mt-2 text-[10px] md:text-xs uppercase tracking-wider text-slate-500 font-medium">${s.l}</div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const services: TemplatePageSection = {
+    id: 'services', type: 'services', navLabelEs: 'Servicios', navLabelEn: 'Services',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-slate-100 shadow-sm">
+      <p class="text-xs tracking-[0.2em] uppercase text-emerald-600 font-semibold mb-2">— ${es ? 'Áreas de actuación' : 'Areas of expertise'} —</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-900">${es ? 'Lo que resolvemos por ti' : 'What we solve for you'}</h2>
+      <p class="mt-3 text-slate-500 max-w-2xl">${es ? 'Soluciones integrales en solar, almacenamiento, movilidad eléctrica y eficiencia energética.' : 'Integrated solutions in solar, storage, electric mobility and energy efficiency.'}</p>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        ${items.map((item) => `<div class="group relative rounded-2xl overflow-hidden min-h-[220px] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
+          <img src="${item.image}" alt="${esc(item.title)}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
+          <div class="relative z-10 p-5 flex flex-col justify-end min-h-[220px]">
+            <h3 class="font-bold text-white text-sm leading-snug">${esc(item.title)}</h3>
+            <p class="mt-1 text-[11px] text-slate-300">${esc(item.price ?? '')}</p>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const whyUs: TemplatePageSection = {
+    id: 'why', type: 'about', navLabelEs: 'Ventajas', navLabelEn: 'Benefits',
+    html: `<div class="${gridBg} rounded-[2rem] p-10 md:p-16 border border-slate-200">
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto items-center">
+        <div class="rounded-2xl overflow-hidden shadow-lg"><img src="${images[0] ?? heroImage}" alt="" class="w-full aspect-[4/3] object-cover" loading="lazy" referrerpolicy="no-referrer" /></div>
+        <div>
+          <p class="text-xs tracking-[0.2em] uppercase text-emerald-600 font-semibold mb-2">— ${es ? 'Por qué elegirnos' : 'Why choose us'} —</p>
+          <h2 class="text-3xl font-bold text-slate-900">${es ? 'Los beneficios de colaborar con nosotros' : 'Benefits of working with us'}</h2>
+          <p class="mt-4 text-slate-600 leading-relaxed">${esc(aboutText ?? '')}</p>
+          <div class="mt-8 space-y-4">${(es ? ['Estudio personalizado sin compromiso', 'Ingeniería e instalación certificada', 'Financiación y gestión de subvenciones', 'Monitorización y soporte técnico 24/7'] : ['Free personalized assessment', 'Certified engineering & installation', 'Financing and subsidy management', 'Monitoring and 24/7 technical support']).map((f, i) => `<div class="flex gap-4"><span class="text-2xl font-bold text-emerald-600">0${i + 1}</span><span class="text-sm text-slate-700 pt-1">${f}</span></div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const processSteps = es
+    ? ['Estudio inicial', 'Propuesta personalizada', 'Instalación certificada', 'Puesta en marcha', 'Seguimiento y monitorización']
+    : ['Initial assessment', 'Custom proposal', 'Certified installation', 'Commissioning', 'Monitoring & follow-up'];
+  const process: TemplatePageSection = {
+    id: 'process', type: 'services', navLabelEs: 'Proceso', navLabelEn: 'Process',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-slate-100">
+      <h2 class="text-center text-3xl font-bold text-slate-900">${es ? 'Metodología de trabajo' : 'Our methodology'}</h2>
+      <div class="mt-4 mx-auto h-0.5 w-12 bg-emerald-500"></div>
+      <div class="mt-12 space-y-6 max-w-4xl mx-auto">
+        ${processSteps.map((step, i) => `<div class="flex flex-col md:flex-row gap-6 items-center bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-100 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}">
+          <div class="flex-1">
+            <p class="text-xs text-emerald-600 font-mono tracking-wider">— [ ${es ? 'PASO' : 'STEP'} ${String(i + 1).padStart(2, '0')} ] —</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">${step}</h3>
+            <ul class="mt-4 space-y-2 text-sm text-slate-600">${(es ? ['Análisis técnico y económico', 'Tramitación y permisos incluidos', 'Equipo certificado y asegurado'] : ['Technical and economic analysis', 'Permits and paperwork included', 'Certified and insured team']).map((b) => `<li class="flex gap-2"><span class="text-emerald-500">●</span>${b}</li>`).join('')}</ul>
+          </div>
+          <div class="w-full md:w-64 rounded-xl overflow-hidden shadow-md"><img src="${images[i % images.length] ?? heroImage}" alt="" class="w-full aspect-video object-cover" loading="lazy" referrerpolicy="no-referrer" /></div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const gallerySec: TemplatePageSection = {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Proyectos', navLabelEn: 'Projects',
+    html: `<div class="${gridBg} rounded-[2rem] p-10 md:p-16 border border-slate-200">
+      ${sectionHead(es ? 'Proyectos realizados' : 'Completed projects', es ? 'Viviendas, empresas, naves industriales y comunidades energéticas' : 'Homes, businesses, industrial sites and energy communities', 'bg-emerald-600')}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
+        ${images.slice(0, 6).map((img, i) => `<div class="group relative rounded-xl overflow-hidden aspect-[4/3] border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
+          <img src="${img}" alt="${es ? 'Proyecto' : 'Project'} ${i + 1}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" />
+          <div class="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/40 transition-colors duration-300 flex items-end p-4"><span class="text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">${es ? ['Vivienda unifamiliar', 'Nave industrial', 'Comunidad energética', 'Empresa', 'Autoconsumo', 'Instalación EV'][i] ?? 'Proyecto' : ['Single-family home', 'Industrial site', 'Energy community', 'Business', 'Self-consumption', 'EV install'][i] ?? 'Project'}</span></div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const reviewsSec: TemplatePageSection = {
+    id: 'reviews', type: 'reviews', navLabelEs: 'Testimonios', navLabelEn: 'Testimonials',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-slate-100">
+      <p class="text-center text-xs tracking-[0.2em] uppercase text-emerald-600 font-semibold mb-2">— ${es ? 'Testimonios' : 'Testimonials'} —</p>
+      <h2 class="text-center text-3xl font-bold text-slate-900 mb-10">${es ? 'Escucha qué opinan los clientes' : 'What our clients say'}</h2>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${reviews.map((r, i) => `<div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 relative">
+          <span class="absolute top-4 right-4 text-emerald-200 text-4xl font-serif">"</span>
+          <span class="text-[10px] text-slate-400 font-mono">0${i + 1}</span>
+          <p class="mt-4 text-slate-600 text-sm leading-relaxed italic">"${esc(r.text)}"</p>
+          <div class="mt-6 font-bold text-slate-900">${esc(r.name)}</div>
+          <div class="text-[10px] uppercase tracking-wider text-emerald-600 mt-1">${es ? 'Cliente verificado' : 'Verified client'}</div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const faqItems = es
+    ? [
+        ['¿Cuánto cuesta una instalación solar?', 'Depende de potencia y consumo. El estudio gratuito incluye amortización personalizada.'],
+        ['¿Hay subvenciones disponibles?', 'Gestionamos ayudas autonómicas, IBI bonificado y deducciones IRPF aplicables.'],
+        ['¿Cuánto puedo ahorrar?', 'En autoconsumo típico entre 50% y 80% de la factura según perfil de consumo.'],
+        ['¿Qué mantenimiento requiere?', 'Revisiones anuales y monitorización remota incluida en nuestros planes.'],
+        ['¿Cuánto tarda la instalación?', 'Entre 2 y 6 semanas según tamaño, desde la aprobación de la propuesta.'],
+      ]
+    : [
+        ['How much does a solar installation cost?', 'Depends on power and consumption. Free assessment includes personalized payback.'],
+        ['Are subsidies available?', 'We manage regional grants, property tax bonuses and applicable tax deductions.'],
+        ['How much can I save?', 'Typical self-consumption saves 50–80% on bills depending on usage profile.'],
+        ['What maintenance is required?', 'Annual inspections and remote monitoring included in our plans.'],
+        ['How long does installation take?', '2–6 weeks depending on size, from proposal approval.'],
+      ];
+  const faq: TemplatePageSection = {
+    id: 'faq', type: 'contact', navLabelEs: 'FAQ', navLabelEn: 'FAQ',
+    html: `<div class="${gridBg} rounded-[2rem] p-10 md:p-16 border border-slate-200 max-w-5xl mx-auto">
+      <p class="text-xs tracking-[0.2em] uppercase text-emerald-600 font-semibold mb-2">— ${es ? 'Dudas habituales' : 'Common questions'} —</p>
+      <h2 class="text-3xl font-bold text-slate-900 mb-8">${es ? 'Preguntas frecuentes' : 'FAQ'}</h2>
+      <div class="space-y-0 divide-y divide-slate-200 bg-white rounded-2xl border border-slate-200 px-6">
+        ${faqItems.map(([q, a]) => `<details class="group py-5"><summary class="flex justify-between items-center cursor-pointer font-semibold text-slate-900 list-none">${esc(q)}<span class="text-emerald-500 ml-4 group-open:rotate-180 transition-transform">▼</span></summary><p class="mt-3 text-sm text-slate-600 leading-relaxed pr-8">${esc(a)}</p></details>`).join('')}
+      </div>
+    </div>`,
+  };
+
+  const ctaFinal: TemplatePageSection = {
+    id: 'cta', type: 'contact', navLabelEs: 'Contacto', navLabelEn: 'Contact',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-slate-100 shadow-lg max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-xs tracking-[0.2em] uppercase text-emerald-600 font-semibold mb-2">— ${es ? 'Contacto' : 'Contact'} —</p>
+          <h2 class="text-3xl font-bold text-slate-900">${es ? 'Solicita tu estudio gratuito' : 'Request your free assessment'}</h2>
+          <p class="mt-4 text-slate-600">${es ? 'Sin compromiso. Respuesta en menos de 24 horas con propuesta personalizada.' : 'No obligation. Response within 24 hours with a tailored proposal.'}</p>
+          ${phone ? `<p class="mt-4 text-emerald-700 font-semibold">📞 ${esc(phone)}</p>` : ''}
+        </div>
+        <div class="space-y-3">
+          <div class="border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-400">${es ? 'Tu nombre' : 'Your name'}</div>
+          <div class="border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-400">${es ? 'Email o teléfono' : 'Email or phone'}</div>
+          <div class="border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-400 h-20">${es ? 'Cuéntanos tu proyecto...' : 'Tell us about your project...'}</div>
+          <div class="px-6 py-4 bg-emerald-500 text-slate-950 font-bold text-center rounded-lg">${esc(ctaPrimary)}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+
+  const footer: TemplatePageSection = {
+    id: 'footer', type: 'footer', navLabelEs: 'Legal', navLabelEn: 'Legal',
+    html: `<div class="bg-slate-950 text-slate-300 rounded-[2rem] p-10 md:p-14">
+      <div class="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto text-sm">
+        <div><div class="font-bold text-white text-lg">${esc(name)}</div><p class="mt-3 text-slate-400 text-xs leading-relaxed">${es ? 'Ingeniería e instalación de energías renovables.' : 'Renewable energy engineering and installation.'}</p></div>
+        <div><h4 class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">${es ? 'Servicios' : 'Services'}</h4><ul class="space-y-2 text-xs text-slate-400">${items.slice(0, 4).map((it) => `<li>${esc(it.title)}</li>`).join('')}</ul></div>
+        <div><h4 class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">${es ? 'Contacto' : 'Contact'}</h4><p class="text-xs text-slate-400">${esc(profile ? (es ? profile.addressEs : profile.addressEn) : '')}</p>${profile?.email ? `<p class="mt-2 text-xs">${esc(profile.email)}</p>` : ''}</div>
+        <div><h4 class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">${es ? 'Legal' : 'Legal'}</h4><ul class="space-y-2 text-xs text-slate-400"><li>${es ? 'Aviso legal' : 'Legal notice'}</li><li>${es ? 'Política de privacidad' : 'Privacy policy'}</li><li>${es ? 'Política de cookies' : 'Cookie policy'}</li></ul></div>
+      </div>
+      <p class="mt-10 text-center text-[10px] text-slate-500 uppercase tracking-wider">© ${new Date().getFullYear()} ${esc(name)} · ${es ? 'Energías renovables' : 'Renewable energy'}</p>
+    </div>`,
+  };
+
+  const widgets = premiumWidgets(ctx, true);
+
+  return [hero, stats, services, whyUs, process, gallerySec, reviewsSec, faq, ctaFinal, footer, widgets];
+}
+
 function buildCorporateSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
   const { name, heroImage, tagline, profile, lang, ctaPrimary, ctaSecondary, images } = ctx;
   const es = lang === 'es';
@@ -1667,6 +1875,10 @@ export function buildCustomSite(
     return buildCorporateSite(ctx, features);
   }
 
+  if (profile?.variant === 'renewable') {
+    return buildRenewableEnergySite(ctx, features);
+  }
+
   if (profile?.variant === 'automotive') {
     return buildAutomotiveSite(ctx, features);
   }
@@ -1697,8 +1909,8 @@ export function buildCustomSite(
 
 export function describeCreatedSections(features: SiteFeatures, lang: 'es' | 'en'): string {
   const labels = lang === 'es'
-    ? { hero: 'Inicio', menu: 'Menú', services: 'Servicios', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', about: 'Sobre nosotros', contact: 'Contacto', documents: 'Documentos seguros', sidebar: 'Sidebar', blog: 'Blog', footer: 'Footer legal' }
-    : { hero: 'Home', menu: 'Menu', services: 'Services', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', about: 'About', contact: 'Contact', documents: 'Secure documents', sidebar: 'Sidebar', blog: 'Blog', footer: 'Legal footer' };
+    ? { hero: 'Inicio', menu: 'Menú', services: 'Servicios', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', about: 'Sobre nosotros', contact: 'Contacto', documents: 'Documentos seguros', sidebar: 'Sidebar', blog: 'Blog', footer: 'Footer legal', process: 'Proceso', faq: 'FAQ' }
+    : { hero: 'Home', menu: 'Menu', services: 'Services', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', about: 'About', contact: 'Contact', documents: 'Secure documents', sidebar: 'Sidebar', blog: 'Blog', footer: 'Legal footer', process: 'Process', faq: 'FAQ' };
 
   const list = [labels.hero];
   if (features.sidebar) list.push(labels.sidebar);

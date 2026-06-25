@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LayoutGrid, Sparkles, PenLine } from 'lucide-react';
+import { LayoutGrid, Sparkles, PenLine, BookOpen } from 'lucide-react';
 
 type Lang = 'es' | 'en';
 
@@ -16,6 +16,9 @@ const copy = {
     describeTitle: 'Describir mi web',
     describeDesc: 'Cuéntanos tu negocio, estilo y objetivo. Crearemos una base personalizada.',
     describeCta: 'Empezar con descripción',
+    libraryTitle: 'Biblioteca de sectores',
+    libraryDesc: '15 sectores prioritarios + catálogo completo. Los agentes IA actúan según el sector elegido.',
+    libraryCta: 'Elegir sector',
     hint: 'Puedes cambiar de plantilla en cualquier momento desde /templates',
   },
   en: {
@@ -28,6 +31,9 @@ const copy = {
     describeTitle: 'Describe my website',
     describeDesc: 'Tell us about your business, style and goals. We will build a custom base.',
     describeCta: 'Start with a description',
+    libraryTitle: 'Sector library',
+    libraryDesc: '15 priority sectors + full catalog. AI agents follow the chosen sector playbook.',
+    libraryCta: 'Pick a sector',
     hint: 'You can switch templates anytime from /templates',
   },
 } as const;
@@ -35,9 +41,10 @@ const copy = {
 type Props = {
   lang: Lang;
   onChooseDescribe: () => void;
+  onChooseLibrary: () => void;
 };
 
-export default function StudioOnboarding({ lang, onChooseDescribe }: Props) {
+export default function StudioOnboarding({ lang, onChooseDescribe, onChooseLibrary }: Props) {
   const t = copy[lang];
 
   return (
@@ -46,7 +53,7 @@ export default function StudioOnboarding({ lang, onChooseDescribe }: Props) {
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 max-w-lg">{t.title}</h2>
       <p className="mt-4 text-slate-600 max-w-md leading-relaxed">{t.subtitle}</p>
 
-      <div className="grid md:grid-cols-2 gap-4 mt-10 w-full max-w-2xl text-left">
+      <div className="grid md:grid-cols-3 gap-4 mt-10 w-full max-w-4xl text-left">
         <Link
           href="/templates"
           className="group rounded-3xl border-2 border-slate-200 bg-white p-6 hover:border-indigo-400 hover:shadow-lg transition-all"
@@ -70,6 +77,19 @@ export default function StudioOnboarding({ lang, onChooseDescribe }: Props) {
           <h3 className="font-semibold text-lg text-slate-900">{t.describeTitle}</h3>
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.describeDesc}</p>
           <span className="inline-block mt-4 text-sm font-semibold text-slate-900 group-hover:underline">{t.describeCta} →</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onChooseLibrary}
+          className="group rounded-3xl border-2 border-indigo-200 bg-indigo-50/50 p-6 hover:border-indigo-500 hover:shadow-lg transition-all text-left cursor-pointer"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-4">
+            <BookOpen className="w-6 h-6" />
+          </div>
+          <h3 className="font-semibold text-lg text-slate-900">{t.libraryTitle}</h3>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.libraryDesc}</p>
+          <span className="inline-block mt-4 text-sm font-semibold text-indigo-600 group-hover:underline">{t.libraryCta} →</span>
         </button>
       </div>
 

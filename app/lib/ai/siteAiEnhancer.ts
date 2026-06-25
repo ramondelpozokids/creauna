@@ -23,6 +23,9 @@ export interface SiteBrief {
   designStyle: string;
   userPrompt: string;
   imageBrief: string;
+  sectorId?: string;
+  sectorLabel?: string;
+  sectorPlaybook?: string;
 }
 
 const VARIANT_DESIGN: Partial<Record<BusinessVariant, string>> = {
@@ -35,6 +38,7 @@ const VARIANT_DESIGN: Partial<Record<BusinessVariant, string>> = {
   kebab: 'Kebab premium urbano: fotos apetitosas, carta real, ambiente Vallecas.',
   luxury: 'Fine dining (La Maison Dorée): negro #1a1a1a + oro #c8a97e, script decorativo, cinematográfico, alta cocina.',
   nonprofit: 'ONG/accesibilidad (InfoSordos): azul #0a3bf6, misión clara, inclusivo, recursos LSE, subtítulos.',
+  renewable: 'Empresa energías renovables premium (referencia ritest.es): hero oscuro con parque solar, verde energético #16a34a, azul tech #0f172a, grid sutil, stats confianza, tarjetas servicios fotovoltaica/baterías/EV, proceso 5 pasos, proyectos reales, FAQ acordeón, footer corporativo. PROHIBIDO spa, masajes, hotel, piscina, belleza, restaurante.',
   default: 'Web de agencia premium: Playfair + sans, mucho aire, sombras suaves, rounded-[2rem]. Cero placeholders genéricos.',
 };
 
@@ -66,12 +70,13 @@ export function buildSiteBrief(
   profile: BusinessProfile | null,
   listing: ParsedGoogleListing | null,
   lang: 'es' | 'en',
-  userPrompt: string
+  userPrompt: string,
+  sectorMeta?: { id: string; label: string; playbook: string }
 ): SiteBrief {
   const designStyle = VARIANT_DESIGN[intent.variant] ?? VARIANT_DESIGN.default!;
   return {
     businessName: listing?.businessName ?? intent.businessName,
-    businessType: intent.businessType,
+    businessType: sectorMeta?.label ?? intent.businessType,
     variant: intent.variant,
     lang,
     tagline: profile ? (lang === 'es' ? profile.taglineEs : profile.taglineEn) : undefined,
@@ -80,6 +85,9 @@ export function buildSiteBrief(
     designStyle,
     userPrompt,
     imageBrief: imageBriefForVariant(intent.variant),
+    sectorId: sectorMeta?.id,
+    sectorLabel: sectorMeta?.label,
+    sectorPlaybook: sectorMeta?.playbook,
   };
 }
 
@@ -101,6 +109,9 @@ function extractImageUrls(html: string): string[] {
 }
 
 function looksLikeWrongSector(html: string, brief: SiteBrief): boolean {
+  if (brief.variant === 'renewable') {
+    return /\bspa\b|masaje|sauna|wellness|hotel|piscina|balayage|sal[oó]n de belleza|trattoria|kebab|gourmet|chef|men[uú] degustaci|restaurante kebab/i.test(html);
+  }
   if (brief.variant !== 'corporate' && brief.variant !== 'nonprofit' && brief.variant !== 'foodblog') return false;
   if (brief.variant === 'foodblog') {
     return /kebab|d[öo]ner|degustaci|men[uú] del d[ií]a|reservar mesa|restaurante kebab/i.test(html);
@@ -110,7 +121,9 @@ function looksLikeWrongSector(html: string, brief: SiteBrief): boolean {
 
 function sectionSystemPrompt(brief: SiteBrief, sectionType: string, imageUrls: string[]): string {
   const sectorLock =
-    brief.variant === 'corporate'
+    brief.variant === 'renewable'
+      ? `\nSECTOR OBLIGATORIO: ${brief.businessType} (energías renovables, solar fotovoltaica, autoconsumo, baterías, cargadores EV). Mantén el nombre «${brief.businessName}». PROHIBIDO spa, masajes, hotel, piscina, belleza, restaurante, comida. Usa SOLO imágenes de placas solares, instalaciones técnicas y vehículos eléctricos de la lista.`
+      : brief.variant === 'corporate'
       ? `\nSECTOR OBLIGATORIO: ${brief.businessType} (gestoría/asesoría fiscal, laboral y contable). PROHIBIDO cambiar a restaurante, kebab, gastronomía, menú degustación, vinos, chef o comida. Mantén el nombre «${brief.businessName}».`
       : brief.variant === 'foodblog'
         ? `\nSECTOR OBLIGATORIO: blog de recetas y comida casera (${brief.businessName}). Estilo beige + coral. PROHIBIDO convertir en restaurante con reservas, menú degustación o kebab. Mantén grid de publicaciones y newsletter.`
@@ -130,6 +143,7 @@ ${sectorLock}
 IMÁGENES (usa SOLO estas URLs https — no inventes rutas locales):
 ${imageUrls.length ? imageUrls.join('\n') : brief.imageBrief}
 
+${brief.sectorPlaybook ? `\n${brief.sectorPlaybook}\n` : ''}
 REGLAS ESTRICTAS:
 - Solo clases Tailwind CSS (sin <style>, sin <script>, sin badges "HERO MEJORADO" ni "Servicio 1/2/3")
 - No uses onclick, onsubmit ni iframes (excepto mapas Google si es sección ubicación)
