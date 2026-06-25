@@ -1,5 +1,5 @@
 import type { TemplateItem } from '../../data/templates';
-import type { SiteFeatures } from './intentAnalyzer';
+import type { ParsedIntent, SiteFeatures } from './intentAnalyzer';
 import { toStudioSections } from '../templatePages';
 import type { StudioPreviewSection } from '../templatePages';
 import type { ContentPreset } from './siteContent';
@@ -564,7 +564,7 @@ const PREMIUM_GESTORIA_CSS = `<style>
 .cua-reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
 </style>`;
 
-function premiumGestoriaServices(es: boolean, images: string[]) {
+function premiumGestoriaServices(es: boolean, images: readonly string[]) {
   const list = es
     ? [
         ['Asesoría fiscal', 'Planificación tributaria y cumplimiento normativo', '◆'],
@@ -623,7 +623,7 @@ function buildPremiumGestoriaSite(ctx: BuildCtx, features: SiteFeatures): Templa
   const aboutText = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
   const heroHeadline = es ? 'Tu tranquilidad financiera empieza aquí' : 'Your financial peace of mind starts here';
   const bank = IMAGE_BANK.corporate;
-  const galleryImgs = images.length >= 6 ? images : bank.gallery;
+  const galleryImgs: readonly string[] = images.length >= 6 ? images : bank.gallery;
   const services = premiumGestoriaServices(es, galleryImgs);
   const navItems = es
     ? ['Inicio', 'Servicios', 'Nosotros', 'Galería', 'Contacto', 'Ubicación']
