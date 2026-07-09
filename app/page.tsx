@@ -8,119 +8,125 @@ import { motion } from 'framer-motion';
 
 const translations = {
   es: {
-    heroTag: "Tecnología avanzada • Diseño de estudio de alto nivel",
-    heroTitle: "Webs que enamoran. Diseño que deja huella.",
-    heroSubtitle: "Creamos páginas web espectaculares con tecnología de vanguardia. Rápidas, modernas y tan bonitas que tus clientes se quedarán mirando.",
-    ctaStudio: "Abrir Studio Gratis",
-    ctaTemplates: "Ver plantillas",
-    heroFooter: "Sin tarjeta • En español • Resultados en minutos",
-    trustBar: {
-      usedBy: "Usado por más de",
-      prof: "profesionales",
-      rating: "valoración media",
-      ref: "Web de referencia en diseño con IA"
-    },
+    heroTag: "Elegancia • Rapidez • Calidad",
+    heroTitle: "Convierte una idea en una web profesional en minutos.",
+    heroSubtitle:
+      "CREAUNA coordina un equipo de inteligencia artificial especializado en diseño, desarrollo, contenido y optimización para crear webs de nivel agencia desde una simple conversación.",
+    ctaStudio: "Crear mi web gratis",
+    ctaDemo: "Ver una demostración",
+    heroFooter: "Sin tarjeta • En español • Listo para publicar",
     diff: {
-      tag: "DIFERENCIA REAL",
-      title: "No hacemos webs funcionales. Hacemos webs espectaculares.",
-      subtitle: "Si nos dedicamos a crear páginas web de alto nivel, nuestra propia web tiene que demostrarlo.",
-      card1Title: "Diseño de estudio",
-      card1Desc: "Cada detalle está pensado. Colores, tipografía, composición y micro-interacciones de nivel agencia.",
-      card2Title: "Velocidad real",
-      card2Desc: "Olvídate de meses de desarrollo. Crea, refina y publica en minutos con tecnología avanzada.",
-      card3Title: "Resultado que impacta",
-      card3Desc: "Webs que generan confianza, conversión y que la gente recuerda. Eso es lo que entregamos."
+      tag: "POR QUÉ CREAUNA",
+      title: "Transformamos ideas en negocios digitales.",
+      subtitle:
+        "Escribe tu idea y obtén una web profesional lista para publicar. Sin meses de espera ni procesos opacos.",
+      card1Title: "Diseño profesional",
+      card1Desc:
+        "Tipografía, composición y detalle cuidados. Una presencia digital que transmite confianza desde el primer vistazo.",
+      card2Title: "Listo en minutos",
+      card2Desc:
+        "Crea, refina y publica sin ciclos de desarrollo interminables. Tu negocio digital, operativo cuando lo necesitas.",
+      card3Title: "Resultados que importan",
+      card3Desc:
+        "Más confianza, mejor conversión y una web que representa tu marca con claridad. Eso es lo que buscamos.",
     },
     aiTeam: {
-      tag: "TECNOLOGÍA REVOLUCIONARIA",
-      title: "Un equipo de inteligencia artificial de élite",
-      desc: "Nuestra plataforma orquesta múltiples motores de inteligencia artificial en tiempo real bajo la supervisión creativa de Ramón del Pozo Rott. Cada motor está especializado en su campo para lograr un acabado perfecto.",
-      feature1: "Diseño visual e iluminación profesional",
-      feature2: "Redacción y copy comercial persuasivo",
-      feature3: "Código limpio y animaciones fluidas",
-      feature4: "UX y optimización de conversión"
+      tag: "CÓMO LO HACEMOS",
+      title: "Una plataforma que coordina especialistas por ti",
+      desc: "CREAUNA no es una agencia: es una plataforma de IA que orquesta agentes especializados en diseño, contenido, código y optimización. Cada uno aporta lo suyo; tú obtienes un resultado completo y coherente.",
+      feature1: "Diseño visual y estructura profesional",
+      feature2: "Contenido y copy orientado a conversión",
+      feature3: "Código limpio y rendimiento real",
+      feature4: "UX pensada para tu negocio",
     },
     templatesSection: {
-      title: "Plantillas espectaculares",
-      subtitle: "Elige una y conviértela en tu marca en minutos.",
+      catalogTag: "CATÁLOGO SELECCIONADO",
+      title: "Plantillas profesionales",
+      subtitle: "Elige un punto de partida y conviértelo en tu negocio digital en minutos.",
       viewMore: "Ver catálogo completo →",
       atelierCat: "Joyería & Lujo",
       vesperCat: "Arquitectura & Diseño",
-      sableCat: "Restaurantes & Gastronomía"
+      sableCat: "Restaurantes & Gastronomía",
     },
     future: {
-      tag: "EL FUTURO YA ESTÁ AQUÍ",
-      title: "El fin del desarrollo web tradicional",
-      desc: "Ya no necesitas esperar meses ni pagar presupuestos desorbitados. Con CREAUNA, el proceso se simplifica al extremo conservando el estándar de calidad de las mejores agencias del mundo."
+      tag: "MÁS SIMPLE, MÁS CLARO",
+      title: "Tu web profesional, sin la complejidad de siempre",
+      desc: "Olvídate de presupuestos opacos y plazos interminables. CREAUNA simplifica el camino: de la idea a una web lista para publicar, con calidad y criterio en cada paso.",
+      processLink: "Descubre cómo funciona el proceso en 3 pasos",
     },
     founder: {
       tag: "UNA VISIÓN PERSONAL",
-      quote: "“El mejor diseño ya no tiene por qué costar meses ni fortunas. Ahora está al alcance de quienes lo valoran de verdad.”",
-      role: "Fundador & Director Creativo de CREAUNA"
+      supervisedBy: "Supervisado por Ramón del Pozo Rott",
+      quote:
+        "“Una buena presencia digital ya no debería costar meses ni fortunas. Ahora cualquiera con una idea clara puede tenerla online con calidad real.”",
+      creativeSupervisor: "Supervisor Creativo de CREAUNA",
     },
     ctaSection: {
-      title: "Si tu web representa tu marca, que sea espectacular.",
-      button: "Crear mi web ahora",
-      signature: "Supervisado por Ramón del Pozo Rott"
-    }
+      title: "Tu idea merece estar online. Empieza hoy.",
+      button: "Crear mi web gratis",
+      signature: "Supervisado por Ramón del Pozo Rott",
+    },
   },
   en: {
-    heroTag: "Advanced Technology • Studio-grade Design",
-    heroTitle: "Websites that captivate. Design that lasts.",
-    heroSubtitle: "We create spectacular websites with cutting-edge technology. Fast, modern, and so beautiful your customers won't look away.",
-    ctaStudio: "Open Studio for Free",
-    ctaTemplates: "Browse Templates",
-    heroFooter: "No card required • Bilingually synchronized • Live in minutes",
-    trustBar: {
-      usedBy: "Trusted by more than",
-      prof: "professionals",
-      rating: "average rating",
-      ref: "Leading AI web design platform"
-    },
+    heroTag: "Elegance • Speed • Quality",
+    heroTitle: "Turn an idea into a professional website in minutes.",
+    heroSubtitle:
+      "CREAUNA coordinates a specialized AI team for design, development, content, and optimization—to build agency-grade websites from a simple conversation.",
+    ctaStudio: "Create my website free",
+    ctaDemo: "Watch a demo",
+    heroFooter: "No card required • English & Spanish • Ready to publish",
     diff: {
-      tag: "REAL DIFFERENCE",
-      title: "We don't build functional websites. We build spectacular ones.",
-      subtitle: "If we dedicate ourselves to creating high-end websites, our own site has to prove it.",
-      card1Title: "Studio-Grade Design",
-      card1Desc: "Every detail is polished. Colors, typography, composition, and agency-level micro-interactions.",
-      card2Title: "Real Speed",
-      card2Desc: "Forget months of development. Create, refine, and launch in minutes using advanced technology.",
-      card3Title: "Impactful Results",
-      card3Desc: "Websites that build trust, drive conversion, and leave a lasting impression. That's our promise."
+      tag: "WHY CREAUNA",
+      title: "We turn ideas into digital businesses.",
+      subtitle:
+        "Describe your idea and get a professional website ready to publish. No months of waiting, no opaque processes.",
+      card1Title: "Professional design",
+      card1Desc:
+        "Typography, layout, and thoughtful detail. A digital presence that builds trust from the first glance.",
+      card2Title: "Ready in minutes",
+      card2Desc:
+        "Create, refine, and publish without endless development cycles. Your digital business, live when you need it.",
+      card3Title: "Results that matter",
+      card3Desc:
+        "More trust, better conversion, and a site that represents your brand clearly. That is what we aim for.",
     },
     aiTeam: {
-      tag: "REVOLUTIONARY TECH",
-      title: "An elite artificial intelligence team",
-      desc: "Our platform orchestrates multiple AI engines in real-time under the creative supervision of Ramón del Pozo Rott. Each engine specializes in its domain to deliver absolute perfection.",
-      feature1: "Professional visual design and lighting",
-      feature2: "Persuasive copywriting and commercial content",
-      feature3: "Clean code and fluid animations",
-      feature4: "UX and conversion rate optimization"
+      tag: "HOW IT WORKS",
+      title: "A platform that coordinates specialists for you",
+      desc: "CREAUNA is not an agency: it is an AI platform that orchestrates specialized agents for design, content, code, and optimization. Each contributes its strength; you get a complete, coherent result.",
+      feature1: "Visual design and professional structure",
+      feature2: "Content and conversion-focused copy",
+      feature3: "Clean code and real performance",
+      feature4: "UX built around your business",
     },
     templatesSection: {
-      title: "Spectacular Templates",
-      subtitle: "Pick one and transform it into your brand in minutes.",
-      viewMore: "View entire catalog →",
+      catalogTag: "SELECTED CATALOG",
+      title: "Professional templates",
+      subtitle: "Pick a starting point and turn it into your digital business in minutes.",
+      viewMore: "View full catalog →",
       atelierCat: "Jewelry & Luxury",
       vesperCat: "Architecture & Design",
-      sableCat: "Gastronomy & Restaurants"
+      sableCat: "Gastronomy & Restaurants",
     },
     future: {
-      tag: "THE FUTURE IS NOW",
-      title: "The end of traditional web coding",
-      desc: "No more waiting for months or paying astronomical budgets. With CREAUNA, the process is streamlined to its core while maintaining the quality standards of global agencies."
+      tag: "SIMPLER, CLEARER",
+      title: "Your professional website, without the usual complexity",
+      desc: "Forget opaque quotes and endless timelines. CREAUNA shortens the path: from idea to a publish-ready site, with quality and judgment at every step.",
+      processLink: "See how the 3-step process works",
     },
     founder: {
       tag: "A PERSONAL VISION",
-      quote: "“Great design doesn't have to take months or cost fortunes anymore. It is now within reach of those who truly value it.”",
-      role: "Founder & Creative Director of CREAUNA"
+      supervisedBy: "Supervised by Ramón del Pozo Rott",
+      quote:
+        "“A strong digital presence should not take months or cost a fortune. Anyone with a clear idea can now be online with real quality.”",
+      creativeSupervisor: "Creative Supervisor at CREAUNA",
     },
     ctaSection: {
-      title: "If your website represents your brand, make it spectacular.",
-      button: "Create my website now",
-      signature: "Supervised by Ramón del Pozo Rott"
-    }
-  }
+      title: "Your idea deserves to be online. Start today.",
+      button: "Create my website free",
+      signature: "Supervised by Ramón del Pozo Rott",
+    },
+  },
 };
 
 export default function CreaunaLanding() {
@@ -205,10 +211,10 @@ export default function CreaunaLanding() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link 
-              href="/templates" 
+              href="/como-funciona" 
               className="w-full md:w-auto px-10 py-4 rounded-2xl border border-white/30 hover:bg-white/10 text-base font-medium transition text-center"
             >
-              {t.ctaTemplates}
+              {t.ctaDemo}
             </Link>
           </motion.div>
           
@@ -225,22 +231,6 @@ export default function CreaunaLanding() {
         {/* Diagonal cut design */}
         <div className="absolute bottom-0 left-0 right-0 h-16 bg-slate-50/50 clip-path-diagonal" />
       </section>
-
-      {/* Trust bar */}
-      <div className="border-b border-slate-200 bg-white py-6 shadow-sm">
-        <div className="container flex flex-col md:flex-row justify-center items-center gap-x-12 gap-y-3 text-sm text-slate-500 font-medium text-center">
-          <div>
-            {t.trustBar.usedBy} <span className="font-bold text-slate-900">12.800+</span> {t.trustBar.prof}
-          </div>
-          <div className="hidden md:block w-1.5 h-1.5 bg-slate-200 rounded-full" />
-          <div className="flex items-center gap-1 justify-center">
-            <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-            <span className="font-bold text-slate-900">4.98/5</span> {t.trustBar.rating}
-          </div>
-          <div className="hidden md:block w-1.5 h-1.5 bg-slate-200 rounded-full" />
-          <div>{t.trustBar.ref}</div>
-        </div>
-      </div>
 
       {/* Why we're different - Card Deck */}
       <section className="container py-24">
@@ -323,7 +313,7 @@ export default function CreaunaLanding() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
           <div>
             <div className="text-xs font-bold tracking-[3px] text-indigo-600 uppercase mb-2">
-              CATÁLOGO SELECCIONADO
+              {t.templatesSection.catalogTag}
             </div>
             <h2 className="text-4xl font-bold tracking-tight text-slate-950">{t.templatesSection.title}</h2>
             <p className="text-slate-600 mt-2">{t.templatesSection.subtitle}</p>
@@ -390,7 +380,7 @@ export default function CreaunaLanding() {
                   href="/como-funciona" 
                   className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-semibold transition"
                 >
-                  {lang === 'es' ? 'Descubre cómo funciona el proceso en 3 pasos' : 'Discover how the process works in 3 steps'}
+                  {t.future.processLink}
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -422,7 +412,7 @@ export default function CreaunaLanding() {
             </div>
           </div>
           <div className="text-xs tracking-[3px] font-bold text-slate-500 uppercase">
-            Supervisado por Ramón del Pozo Rott
+            {t.founder.supervisedBy}
           </div>
           <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-slate-800 leading-snug italic">
             {t.founder.quote}
@@ -433,7 +423,7 @@ export default function CreaunaLanding() {
             </div>
             <div className="text-xs text-slate-500 font-medium mt-1 flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-indigo-600" />
-              Supervisor Creativo de CREAUNA
+              {t.founder.creativeSupervisor}
             </div>
           </div>
         </div>
