@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa del Sitio | Royal Bang Tattoo & Piercing Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --negro: #0a0a0a;
+            --negro-oscuro: #050505;
+            --rojo: #dc2626;
+            --blanco: #ffffff;
+            --gris: #1a1a1a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--negro);
+            color: var(--blanco);
+            line-height: 1.8;
+        }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+        header {
+            background: var(--negro-oscuro);
+            border-bottom: 2px solid var(--rojo);
+            padding: 1rem 5%;
+        }
+        nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Oswald', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--blanco); text-decoration: none; }
+        .logo span { color: var(--rojo); }
+        .back-link { color: var(--blanco); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
+        .back-link:hover { color: var(--rojo); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 4rem 5%; }
+        h1 { font-size: 2.5rem; margin-bottom: 2rem; color: var(--rojo); }
+        h2 { font-size: 1.8rem; margin: 2rem 0 1rem; color: var(--blanco); border-left: 4px solid var(--rojo); padding-left: 1rem; }
+        ul { list-style: none; margin: 1rem 0; }
+        li { margin: 0.5rem 0; }
+        a { color: #ccc; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        a:hover { color: var(--rojo); }
+        .sitemap-section { margin-bottom: 2rem; }
+        footer {
+            background: var(--negro-oscuro);
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--gris);
+            margin-top: 4rem;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">ROYAL <span>BANG</span></a>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1>MAPA DEL SITIO</h1>
+        
+        <div class="sitemap-section">
+            <h2>Páginas Principales</h2>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="index.html#nosotros"><i class="fas fa-info-circle"></i> Sobre Nosotros</a></li>
+                <li><a href="index.html#servicios"><i class="fas fa-list"></i> Servicios</a></li>
+                <li><a href="index.html#galeria"><i class="fas fa-images"></i> Galería de Trabajos</a></li>
+                <li><a href="index.html#reservas"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+                <li><a href="index.html#contacto"><i class="fas fa-envelope"></i> Contacto</a></li>
+            </ul>
+        </div>
+
+        <div class="sitemap-section">
+            <h2>Información Legal</h2>
+            <ul>
+                <li><a href="aviso-legal.html"><i class="fas fa-file-contract"></i> Aviso Legal</a></li>
+                <li><a href="politica-privacidad.html"><i class="fas fa-user-shield"></i> Política de Privacidad</a></li>
+                <li><a href="politica-cookies.html"><i class="fas fa-cookie-bite"></i> Política de Cookies</a></li>
+                <li><a href="politica-proteccion-datos.html"><i class="fas fa-lock"></i> Protección de Datos</a></li>
+                <li><a href="mapa-sitio.html"><i class="fas fa-sitemap"></i> Mapa del Sitio</a></li>
+            </ul>
+        </div>
+
+        <div class="sitemap-section">
+            <h2>Servicios</h2>
+            <ul>
+                <li><a href="index.html#servicios"><i class="fas fa-paint-brush"></i> Tatuajes Personalizados</a></li>
+                <li><a href="index.html#servicios"><i class="fas fa-ring"></i> Piercings</a></li>
+                <li><a href="index.html#servicios"><i class="fas fa-redo"></i> Coberturas y Retoques</a></li>
+                <li><a href="index.html#servicios"><i class="fas fa-tooth"></i> Gemas Dentales</a></li>
+                <li><a href="index.html#servicios"><i class="fas fa-dragon"></i> Estilos Especiales</a></li>
+            </ul>
+        </div>
+
+        <div class="sitemap-section">
+            <h2>Contacto</h2>
+            <ul>
+                <li><a href="https://wa.me/34722545442" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp: 722 54 54 42</a></li>
+                <li><a href="https://instagram.com/royalbang_tattoo" target="_blank"><i class="fab fa-instagram"></i> Instagram: @royalbang_tattoo</a></li>
+                <li><a href="mailto:info@royalbangtattoo.com"><i class="fas fa-envelope"></i> Email: info@royalbangtattoo.com</a></li>
+                <li><a href="index.html#contacto"><i class="fas fa-map-marker-alt"></i> Dirección: C. Alto del León, 8, Local 1, Madrid</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Royal Bang Tattoo & Piercing Studio. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

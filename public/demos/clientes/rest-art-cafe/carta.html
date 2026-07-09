@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Carta | Rest Art Café</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{serif:['Playfair Display','serif'],sans:['Lato','sans-serif']}}}}</script>
+</head>
+<body class="min-h-screen bg-[#fdfbf7] pb-32 font-sans">
+<div class="bg-stone-900 text-white p-6 sticky top-0 z-30 shadow-lg">
+  <div class="max-w-2xl mx-auto flex justify-between items-center">
+    <a href="index.html" class="text-amber-500 hover:text-white transition font-serif text-xl">← Volver</a>
+    <div class="text-right"><h1 class="font-serif text-2xl font-bold">La Carta</h1><span id="mesa-badge" class="hidden text-xs text-amber-500 font-mono bg-amber-900/30 px-2 py-1 rounded"></span></div>
+  </div>
+</div>
+<div class="bg-white border-b border-stone-200 sticky top-[88px] z-20 overflow-x-auto shadow-sm">
+  <div id="cats" class="max-w-2xl mx-auto flex p-4 gap-3 min-w-max"></div>
+</div>
+<div id="items" class="max-w-2xl mx-auto p-6 space-y-6"></div>
+<div id="cart-bar" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-40 p-4">
+  <div class="max-w-2xl mx-auto">
+    <h3 class="font-serif font-bold text-lg mb-4 text-stone-900">Tu Pedido (<span id="cart-count">0</span>)</h3>
+    <div id="cart-list" class="max-h-40 overflow-y-auto mb-4 space-y-2"></div>
+    <button id="send-order" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-serif font-bold py-4 rounded-sm text-lg">Enviar pedido por WhatsApp</button>
+  </div>
+</div>
+<script>
+const MENU=[{id:1,category:'patatas',name:'Sartén de Huevos camperos',desc:'Con jamón ibérico',price:13.5},{id:2,category:'patatas',name:'Patatas Bravas',desc:'Salsa especial',price:7.5},{id:3,category:'carnes',name:'Medallones de solomillo',desc:'Queso cheddar',price:12.8},{id:4,category:'carnes',name:'Lomo madurado',desc:'350gr aprox',price:25.5},{id:5,category:'vinos',name:'Carramimbre',desc:'D.O. Ribera del Duero',price:3.5},{id:6,category:'cervezas',name:'Ámbar Especial',desc:'Copa',price:3.2}];
+const params=new URLSearchParams(location.search);const mesa=params.get('mesa');let active='all',cart=[];
+if(mesa){const b=document.getElementById('mesa-badge');b.textContent='MESA '+mesa;b.classList.remove('hidden');}
+const cats=['all','patatas','carnes','vinos','cervezas'];
+const catEl=document.getElementById('cats');
+cats.forEach(c=>{const btn=document.createElement('button');btn.textContent=c;btn.className='px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all '+(c===active?'bg-stone-900 text-white shadow-lg':'bg-stone-100 text-stone-500');btn.onclick=()=>{active=c;render();};btn.dataset.cat=c;catEl.appendChild(btn);});
+function render(){catEl.querySelectorAll('button').forEach(b=>{b.className='px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all '+(b.dataset.cat===active?'bg-stone-900 text-white shadow-lg':'bg-stone-100 text-stone-500');});const list=active==='all'?MENU:MENU.filter(i=>i.category===active);document.getElementById('items').innerHTML=list.map(i=>'<div class="bg-white p-6 rounded-sm shadow-sm border border-stone-100 flex justify-between items-start"><div><h3 class="font-serif font-bold text-lg text-stone-900">'+i.name+'</h3><p class="text-stone-500 text-sm mt-1">'+i.desc+'</p><span class="text-amber-700 font-bold mt-2 block">'+i.price.toFixed(2)+' €</span></div><button data-id="'+i.id+'" class="add-btn bg-stone-100 hover:bg-amber-700 hover:text-white text-stone-900 w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold">+</button></div>').join('');document.querySelectorAll('.add-btn').forEach(b=>b.onclick=()=>{const item=MENU.find(x=>x.id==+b.dataset.id);cart.push(item);updateCart();});}
+function updateCart(){const bar=document.getElementById('cart-bar');if(!cart.length){bar.classList.add('hidden');return;}bar.classList.remove('hidden');document.getElementById('cart-count').textContent=cart.length;document.getElementById('cart-list').innerHTML=cart.map((item,i)=>'<div class="flex justify-between text-sm border-b border-stone-100 pb-2"><span>'+item.name+'</span><button data-i="'+i+'" class="remove text-red-500">✕</button></div>').join('');document.querySelectorAll('.remove').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.i,1);updateCart();});}
+document.getElementById('send-order').onclick=()=>{if(!cart.length)return;let msg='Hola Rest Art Café 👋\n';if(mesa)msg+='📍 Mesa '+mesa+'\n\n';msg+='*Mi Pedido:*\n';cart.forEach((item,i)=>msg+=(i+1)+'. '+item.name+' ('+item.price+'€)\n');const total=cart.reduce((s,i)=>s+i.price,0);msg+='\n💰 *Total: '+total.toFixed(2)+'€*';window.open('https://wa.me/34910712322?text='+encodeURIComponent(msg),'_blank');};
+render();
+</script>
+</body></html>

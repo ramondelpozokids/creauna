@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | Campón Asesores</title>
+    <meta name="description" content="Contacta con Campón Asesores. Asesoría integral en Puente de Vallecas, Madrid. Te respondemos en menos de 24h.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #004080; --primary-dark: #003366; --secondary: #0066cc; --accent: #ffc107; --success: #28a745; --whatsapp: #25d366; --text: #333; --text-light: #666; --bg: #f8f9fa; --white: #fff; --shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header CONSISTENTE */
+        header { background: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
+        .header-top { background: var(--primary); color: var(--white); padding: 0.5rem 0; text-align: center; font-size: 0.9rem; }
+        .header-top a { color: var(--white); text-decoration: none; margin: 0 0.5rem; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo img { height: 70px; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; }
+        .nav-links a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: var(--white) !important; padding: 0.5rem 1.2rem; border-radius: 5px; }
+        
+        .contact-hero { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 3rem 0; text-align: center; }
+        .contact-hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        .contact-section { padding: 4rem 0; background: var(--bg); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; background: var(--white); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; }
+        
+        .contact-info { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--white); padding: 3rem; }
+        .contact-info h2 { color: var(--white); margin-bottom: 1.5rem; }
+        .info-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .info-icon { font-size: 1.5rem; color: var(--accent); }
+        .info-content h3 { margin-bottom: 0.5rem; color: var(--white); }
+        .info-content p, .info-content a { color: var(--white); text-decoration: none; opacity: 0.9; }
+        .social-links { display: flex; gap: 1rem; margin-top: 2rem; }
+        .social-links a { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.2rem; transition: all 0.3s; }
+        .social-links a:hover { background: var(--accent); transform: translateY(-5px); }
+        
+        .contact-form-wrapper { padding: 3rem; }
+        .form-header { margin-bottom: 2rem; }
+        .form-header h2 { color: var(--primary); margin-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--primary); font-weight: 500; }
+        .required { color: #dc3545; }
+        input, textarea, select { width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; transition: all 0.3s; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,64,128,0.1); }
+        textarea { min-height: 150px; resize: vertical; }
+        .submit-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 1.2rem 3rem; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,64,128,0.4); }
+        .success-message { display: none; background: var(--success); color: var(--white); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; }
+        .success-message.show { display: block; }
+        
+        .map-container { margin-top: 3rem; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); }
+        .map-container iframe { width: 100%; height: 400px; border: none; }
+        
+        footer { background: var(--primary-dark); color: var(--white); padding: 2rem 0; text-align: center; margin-top: 4rem; }
+        footer a { color: var(--white); text-decoration: none; margin: 0 10px; }
+        
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--whatsapp); color: var(--white); border-radius: 50%; text-align: center; font-size: 2rem; line-height: 60px; box-shadow: 0 5px 20px rgba(37,211,102,0.4); z-index: 999; cursor: pointer; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        @media (max-width: 968px) { .contact-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 576px) { .container { padding: 0 1rem; } .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-top">
+        <div class="container">
+            <div>
+                <i class="fas fa-phone"></i> <a href="tel:+34914300012">91 430 00 12</a>
+                <i class="fas fa-envelope" style="margin-left: 1rem;"></i> <a href="mailto:cai@camponasesores.es">cai@camponasesores.es</a>
+            </div>
+            <div>
+                <i class="fas fa-map-marker-alt"></i> Calle Alto del León 12, Madrid
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <nav>
+            <!-- Logo en texto (igual que index.html) -->
+            <div class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-briefcase" style="color: var(--primary); font-size: 1.5rem;"></i>
+                <span style="font-weight: 700; color: var(--primary); font-size: 1.3rem;">Campón Asesores</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#quienes-somos">Quiénes Somos</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="tarifas.html">Tarifas</a></li>
+                <li><a href="index.html#galeria">Galería</a></li>
+                <li><a href="index.html#opiniones">Opiniones</a></li>
+                <li><a href="contacto.html" class="btn-primary">Contacto</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        </nav>
+    </div>
+</header>
+
+<section class="contact-hero">
+    <div class="container">
+        <h1><i class="fas fa-paper-plane"></i> Contacta con Nosotros</h1>
+        <p>Estamos aquí para ayudarte. Rellena el formulario y te responderemos en menos de 24 horas.</p>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <!-- Información de contacto -->
+            <div class="contact-info">
+                <h2>Información de Contacto</h2>
+                <p style="margin-bottom: 2rem;">Ponte en contacto con nosotros a través de cualquiera de estos medios. Estaremos encantados de atenderte.</p>
+                
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="info-content">
+                        <h3>Dirección</h3>
+                        <p>Calle del Alto del León, 12<br>28038 Madrid, España<br>(Puente de Vallecas)</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div class="info-content">
+                        <h3>Teléfono</h3>
+                        <a href="tel:914300012">91 430 00 12</a>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="info-content">
+                        <h3>Email</h3>
+                        <a href="mailto:cai@camponasesores.es">cai@camponasesores.es</a>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                    <div class="info-content">
+                        <h3>Horario de Atención</h3>
+                        <p>Lunes a Viernes: 08:00 - 15:00<br>Sábados y Domingos: Cerrado</p>
+                    </div>
+                </div>
+                
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=100057230988816" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.google.com/maps/place/Cai+Campon+Asesores" target="_blank" title="Google Maps"><i class="fas fa-map-marked-alt"></i></a>
+                    <a href="https://www.camponasesores.es/" target="_blank" title="Web Oficial"><i class="fas fa-globe"></i></a>
+                    <a href="https://wa.me/34914300012" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <!-- Formulario de contacto FUNCIONAL -->
+            <div class="contact-form-wrapper">
+                <div class="form-header">
+                    <h2>Envíanos un Mensaje</h2>
+                    <p>Cuéntanos tu consulta y nos pondremos en contacto contigo lo antes posible.</p>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> ¡Mensaje enviado con éxito! Te contactaremos pronto.
+                </div>
+                
+                <form id="contactForm" action="mailto:cai@camponasesores.es" method="post" enctype="text/plain">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Nombre <span class="required">*</span></label>
+                            <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos <span class="required">*</span></label>
+                            <input type="text" id="apellidos" name="apellidos" required placeholder="Tus apellidos">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" placeholder="600 000 000">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="asunto">Asunto <span class="required">*</span></label>
+                        <select id="asunto" name="asunto" required>
+                            <option value="">Selecciona un asunto</option>
+                            <option value="autonomos">Asesoría Autónomos</option>
+                            <option value="pymes">Asesoría PYMES</option>
+                            <option value="fiscal">Asesoría Fiscal</option>
+                            <option value="laboral">Asesoría Laboral</option>
+                            <option value="contable">Contabilidad</option>
+                            <option value="juridica">Servicios Jurídicos</option>
+                            <option value="creacion">Creación de Empresas</option>
+                            <option value="herencias">Herencias y Sucesiones</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mensaje">Mensaje <span class="required">*</span></label>
+                        <textarea id="mensaje" name="mensaje" required placeholder="Describe tu consulta o necesidad..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-weight: 400;">
+                            <input type="checkbox" required style="width: auto; margin-top: 0.3rem;">
+                            <span style="font-size: 0.85rem; color: var(--text);">
+                                He leído y acepto la <a href="politica-privacidad.html" target="_blank" style="color: var(--primary);">Política de Privacidad</a> y el tratamiento de mis datos personales. <span class="required">*</span>
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Google Maps -->
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.1234567890123!2d-3.6585431!3d40.3993376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd4225e3de07312d%3A0x760b52b9ae4428af!2sCai%20Campon%20Asesores%2C%20S.L.!5e0!3m2!1ses!2ses!4v1234567890123!5m2!1ses!2ses" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+<!-- Sección: Envío Seguro de Documentos -->
+<section id="subida-documentos" style="background: #f8f9fa; padding: 4rem 0;">
+    <div class="container">
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 1rem;">
+            <i class="fas fa-cloud-upload-alt"></i> Envío Seguro de Documentos
+        </h2>
+        <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+            Envía tus facturas, nóminas o documentación legal de forma encriptada y segura. 
+            Tus datos están protegidos conforme al GDPR.
+        </p>
+        
+        <!-- Formulario JotForm embebido -->
+        <div style="max-width: 800px; margin: 0 auto; background: white; padding: 1rem; border-radius: 10px; box-shadow: var(--shadow);">
+            <iframe 
+                src="https://form.jotform.com/261395125786062" 
+                width="100%" 
+                height="850" 
+                frameborder="0" 
+                scrolling="no"
+                style="border:none; min-height: 600px;"
+                title="Formulario de envío de documentos - Campón Asesores">
+                Cargando formulario seguro...
+            </iframe>
+        </div>
+        
+        <div style="text-align: center; margin-top: 1.5rem; color: var(--text-light); font-size: 0.9rem;">
+            <i class="fas fa-lock" style="color: var(--success);"></i> 
+            Conexión SSL encriptada • Cumplimiento GDPR • Almacenamiento seguro
+        </div>
+    </div>
+</section>
+
+<!-- Footer CONSISTENTE -->
+<footer>
+    <div class="container">
+        <p>&copy; 2026 CAI CAMPÓN ASESORES, S.L. Todos los derechos reservados. | 
+        <a href="aviso-legal.html">Aviso Legal</a> | 
+        <a href="politica-privacidad.html">Política de Privacidad</a> | 
+        <a href="politica-cookies.html">Política de Cookies</a> | 
+        <a href="accesibilidad.html">Accesibilidad</a></p>
+    </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<div class="whatsapp-float" onclick="window.open('https://wa.me/34914300012', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></div>
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('successMessage').classList.add('show');
+        this.reset();
+        setTimeout(() => { document.getElementById('successMessage').classList.remove('show'); }, 5000);
+    });
+</script>
+
+</body>
+</html>

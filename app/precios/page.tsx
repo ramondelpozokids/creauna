@@ -6,19 +6,18 @@ import Navbar from '../components/Navbar';
 import ModernizationPricing from '../components/ModernizationPricing';
 import { useLanguage } from '../components/LanguageProvider';
 import {
-  Check, X, ChevronDown, HelpCircle, Sparkles, ShieldCheck, Coins,
-  Globe, Zap, Users, Building2, Palette,
+  Check, X, Sparkles, Coins, Globe, Zap, Users, Building2, Palette,
+  MessageCircle, HelpCircle, ArrowRight,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 type BillingCycle = 'monthly' | 'yearly';
 
 const translations = {
   es: {
     badge: 'PRECIOS CREAUNA',
-    title: 'Elige tu plan. Publica tu web.',
+    title: 'Planes claros. Tu web, cuando quieras.',
     subtitle:
-      'Plan Free para probar, Pro para tu negocio y Business para equipos. Studio IA incluido en todos.',
+      'CREAUNA es una plataforma de IA — no una agencia. Empieza gratis, escala con créditos de Studio incluidos y sin permanencia.',
     monthly: 'Mensual',
     yearly: 'Anual',
     yearlySave: '−20%',
@@ -26,15 +25,7 @@ const translations = {
     perMonth: '/mes',
     forever: 'para siempre',
     mostPopular: 'MÁS ELEGIDO',
-    trialNote: '14 días de prueba · Sin permanencia · Cancela cuando quieras',
-    allPlansTitle: 'Todos los planes incluyen',
-    allPlansItems: [
-      '60 plantillas premium por sector',
-      'Studio con vista previa en tiempo real',
-      'SSL y hosting en creauna.app',
-      'Sin permanencia ni penalización',
-      'Supervisión creativa CREAUNA',
-    ],
+    trialNote: '14 días de prueba en Pro · Sin permanencia · Cancela cuando quieras',
     useCaseTitle: '¿Qué plan necesitas?',
     useCases: [
       { icon: Palette, label: 'Probar o portfolio', plan: 'Gratis' },
@@ -104,20 +95,19 @@ const translations = {
     customWebIncludes:
       'Briefing, 2 propuestas, desarrollo, SEO, publicación y 3 meses de soporte supervisados por Ramón del Pozo Rott.',
     customWebLink: 'Ver proceso completo',
-    faqTitle: 'Preguntas frecuentes',
-    customNote: '¿Necesitas una web 100% exclusiva, sin plantilla?',
-    customLink: 'Web a Medida desde 1.790€',
-    designedBy: 'SUPERVISADO POR',
-    founderTitle: 'Supervisor Creativo de CREAUNA',
+    helpTitle: '¿Tienes más preguntas?',
+    helpSubtitle: 'Consulta la FAQ completa o escríbenos — respondemos en menos de 24h.',
+    helpFaq: 'Ver preguntas frecuentes',
+    helpContact: 'Contactar',
     resultsLabel: 'RESULTADOS REALES',
     resultsTitle: 'Webs con nivel de estudio, no de plantilla genérica.',
     resultsSubtitle: 'Diseño premium, IA bajo control humano y entrega lista para publicar.',
   },
   en: {
     badge: 'CREAUNA PRICING',
-    title: 'Pick your plan. Launch your site.',
+    title: 'Clear plans. Your site, on your terms.',
     subtitle:
-      'Free to try, Pro for your business, Business for teams. AI Studio included on every plan.',
+      'CREAUNA is an AI platform — not an agency. Start free, scale with included Studio credits and no lock-in.',
     monthly: 'Monthly',
     yearly: 'Yearly',
     yearlySave: '−20%',
@@ -125,15 +115,7 @@ const translations = {
     perMonth: '/mo',
     forever: 'forever',
     mostPopular: 'MOST POPULAR',
-    trialNote: '14-day trial · No lock-in · Cancel anytime',
-    allPlansTitle: 'All plans include',
-    allPlansItems: [
-      '60 premium templates by industry',
-      'Studio with live preview',
-      'SSL and hosting on creauna.app',
-      'No lock-in or cancellation fees',
-      'CREAUNA creative supervision',
-    ],
+    trialNote: '14-day Pro trial · No lock-in · Cancel anytime',
     useCaseTitle: 'Which plan do you need?',
     useCases: [
       { icon: Palette, label: 'Try or portfolio', plan: 'Free' },
@@ -203,11 +185,10 @@ const translations = {
     customWebIncludes:
       'Briefing, 2 proposals, development, SEO, launch and 3 months of supervised support by Ramón del Pozo Rott.',
     customWebLink: 'See full process',
-    faqTitle: 'Frequently asked questions',
-    customNote: 'Need a 100% exclusive site, no template?',
-    customLink: 'Custom Web from €1,790',
-    designedBy: 'SUPERVISED BY',
-    founderTitle: 'Creative Supervisor of CREAUNA',
+    helpTitle: 'Still have questions?',
+    helpSubtitle: 'Browse the full FAQ or get in touch — we reply within 24 hours.',
+    helpFaq: 'View FAQ',
+    helpContact: 'Contact us',
     resultsLabel: 'REAL RESULTS',
     resultsTitle: 'Studio-grade websites, not generic templates.',
     resultsSubtitle: 'Premium design, AI under human oversight, ready to publish.',
@@ -319,77 +300,6 @@ const plans = [
     ],
   },
 ];
-
-const faqs = [
-  {
-    q: '¿En qué se diferencia CREAUNA?',
-    qEn: 'What makes CREAUNA different?',
-    a: 'CREAUNA incluye un Studio con IA: describes cambios en lenguaje natural y ves el resultado al instante. Cada cambio consume 1 crédito incluido en tu plan.',
-    aEn: 'CREAUNA includes an AI Studio: describe changes in plain language and see results instantly. Each change uses 1 credit included in your plan.',
-  },
-  {
-    q: '¿Puedo empezar gratis?',
-    qEn: 'Can I start for free?',
-    a: 'Sí. El plan Gratis no pide tarjeta: 1 sitio, subdominio creauna.app y 15 créditos de edición al mes. Cuando quieras dominio propio y más créditos, subes a Pro.',
-    aEn: 'Yes. The Free plan needs no card: 1 site, creauna.app subdomain and 15 editing credits per month. When you want your own domain and more credits, upgrade to Pro.',
-  },
-  {
-    q: '¿Cuánto cuesta cada cambio con IA?',
-    qEn: 'How much does each AI change cost?',
-    a: '1 crédito = 1 cambio. Gratis: 0€ (15/mes). Pro: ~0,16€ (19€ ÷ 120). Business: ~0,16€ (49€ ÷ 300). Ves el saldo antes de confirmar en el Studio.',
-    aEn: '1 credit = 1 change. Free: €0 (15/mo). Pro: ~€0.16 (€19 ÷ 120). Business: ~€0.16 (€49 ÷ 300). You see your balance before confirming in Studio.',
-  },
-  {
-    q: '¿Hay prueba gratis en planes de pago?',
-    qEn: 'Is there a free trial on paid plans?',
-    a: 'Pro incluye 14 días de prueba sin compromiso. Puedes cancelar antes de que se cobre el primer mes.',
-    aEn: 'Pro includes a 14-day no-commitment trial. Cancel before the first charge if it is not for you.',
-  },
-  {
-    q: '¿Puedo exportar y llevarme la web?',
-    qEn: 'Can I export and take my site elsewhere?',
-    a: 'Sí, en Pro y Business exportas HTML/CSS/JS limpio y lo alojas donde quieras. Sin penalización.',
-    aEn: 'Yes, on Pro and Business you export clean HTML/CSS/JS and host it anywhere. No penalty.',
-  },
-  {
-    q: '¿Qué es la Web a Medida (1.790€)?',
-    qEn: 'What is Custom Web (€1,790)?',
-    a: 'Servicio aparte para proyectos exclusivos: diseño a medida, copy, desarrollo, SEO y 3 meses de soporte. Detalle en /web-a-medida',
-    aEn: 'Separate service for exclusive projects: bespoke design, copy, development, SEO and 3 months support. Details at /web-a-medida',
-  },
-];
-
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm transition-all duration-300 hover:border-slate-300">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
-      >
-        <span className="font-semibold text-lg text-slate-900 pr-4">{question}</span>
-        <ChevronDown
-          className={`w-5 h-5 text-slate-500 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-slate-900' : ''}`}
-        />
-      </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-          >
-            <div className="px-6 pb-6 pt-1 text-slate-600 leading-relaxed border-t border-slate-50">
-              {answer}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 export default function Precios() {
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('yearly');
@@ -522,21 +432,6 @@ export default function Precios() {
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* All plans include */}
-      <div className="bg-white border-y border-slate-200 py-10">
-        <div className="container max-w-4xl text-center">
-          <p className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-4">{t.allPlansTitle}</p>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {t.allPlansItems.map((item) => (
-              <span key={item} className="inline-flex items-center gap-1.5 text-sm text-slate-700">
-                <Check className="w-4 h-4 text-emerald-600" />
-                {item}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -691,42 +586,27 @@ export default function Precios() {
         </div>
       </div>
 
-      {/* FAQ */}
+      {/* Help — FAQ & contact */}
       <div className="container py-16 max-w-3xl">
-        <div className="text-center mb-10">
-          <HelpCircle className="w-9 h-9 text-indigo-600 mx-auto mb-2" />
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-950">{t.faqTitle}</h2>
-        </div>
-        <div className="space-y-3">
-          {faqs.map((faq, i) => (
-            <FaqItem
-              key={i}
-              question={lang === 'es' ? faq.q : faq.qEn}
-              answer={lang === 'es' ? faq.a : faq.aEn}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="border-t border-slate-200 bg-white py-10 text-center text-sm text-slate-600">
-        <div className="container flex flex-col md:flex-row items-center justify-center gap-3">
-          <span>{t.customNote}</span>
-          <Link href="/web-a-medida" className="underline font-semibold text-indigo-600 hover:text-indigo-800">
-            {t.customLink}
-          </Link>
-        </div>
-      </div>
-
-      <div className="bg-[#f8f7f4] border-t border-slate-200 py-14">
-        <div className="container flex flex-col items-center text-center">
-          <div className="w-14 h-14 rounded-full overflow-hidden ring-4 ring-white shadow-lg mb-3">
-            <img src="/creador.webp" alt="Ramón del Pozo Rott" className="w-full h-full object-cover" />
-          </div>
-          <div className="text-[10px] tracking-[3px] text-slate-500 uppercase font-semibold">{t.designedBy}</div>
-          <div className="font-semibold text-sm text-slate-700 mt-1">Ramón del Pozo Rott</div>
-          <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-            {t.founderTitle}
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-10 text-center shadow-sm">
+          <HelpCircle className="w-9 h-9 text-indigo-600 mx-auto mb-3" />
+          <h2 className="text-2xl font-bold tracking-tight text-slate-950">{t.helpTitle}</h2>
+          <p className="mt-2 text-slate-600 text-sm">{t.helpSubtitle}</p>
+          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <Link
+              href="/faq"
+              className="btn-gradient px-8 py-3.5 rounded-2xl text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-md"
+            >
+              {t.helpFaq}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/contacto"
+              className="px-8 py-3.5 rounded-2xl text-sm font-semibold border border-slate-200 bg-slate-50 hover:bg-white inline-flex items-center justify-center gap-2 transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" />
+              {t.helpContact}
+            </Link>
           </div>
         </div>
       </div>

@@ -1,0 +1,1070 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Royal Bang Tattoo & Piercing Studio en Puente de Vallecas, Madrid. Tatuajes profesionales y piercings. Reserva tu cita.">
+    <meta name="keywords" content="tatuajes, piercings, Madrid, Vallecas, tattoo studio">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Royal Bang Tattoo & Piercing Studio | Puente de Vallecas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --negro: #0a0a0a;
+            --negro-oscuro: #050505;
+            --rojo: #dc2626;
+            --rojo-oscuro: #b91c1c;
+            --blanco: #ffffff;
+            --gris: #1a1a1a;
+            --gris-claro: #2a2a2a;
+            --header-h: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { 
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--header-h);
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--negro);
+            color: var(--blanco);
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(to bottom, var(--negro-oscuro), var(--negro));
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--rojo);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+            height: var(--header-h);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: var(--blanco);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .logo span { color: var(--rojo); }
+        .logo i { color: var(--rojo); }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: var(--rojo); }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--blanco);
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        /* ===== HERO CON TU IMAGEN fachada.webp ===== */
+        .hero {
+            margin-top: var(--header-h);
+            /* Altura robusta para todos los dispositivos incluyendo iOS Safari */
+            min-height: calc(100vh - var(--header-h));
+            min-height: calc(100dvh - var(--header-h));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--negro);
+        }
+
+        /* Imagen de fondo en pseudo-elemento para control total en móvil */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('fachada.webp');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            /* En móvil usamos top para no cortar la parte importante */
+            z-index: 0;
+        }
+
+        /* Overlay oscuro — más ligero para que se vea bien la fachada */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.45) 0%,
+                rgba(0,0,0,0.55) 50%,
+                rgba(0,0,0,0.75) 100%
+            );
+            z-index: 1;
+        }
+
+        /* En móvil: mostrar la imagen completa sin recortes laterales */
+        @media (max-width: 768px) {
+            .hero::before {
+                background-size: 100% auto;
+                background-position: center top;
+            }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            /* Necesario para que el contenido quede encima del overlay ::after */
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.2rem, 8vw, 5rem);
+            line-height: 1;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            margin: 0;
+        }
+
+        .hero-content h1 span { color: var(--rojo); }
+
+        .hero-content p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: #ddd;
+            max-width: 600px;
+            margin: 0;
+        }
+
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .rating i { color: #fbbf24; font-size: clamp(0.9rem, 2vw, 1.2rem); }
+        .rating span { 
+            font-size: clamp(0.9rem, 2vw, 1.1rem); 
+            font-weight: 600; 
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
+            background: var(--rojo);
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid var(--rojo);
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            white-space: nowrap;
+            min-height: 48px;
+            border-radius: 0;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--rojo);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--blanco);
+        }
+
+        .btn-outline:hover {
+            background: var(--blanco);
+            color: var(--negro);
+        }
+
+        /* ===== SECTIONS ===== */
+        section { 
+            padding: clamp(3rem, 8vw, 5rem) 5%; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            width: 100%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin: 0 auto 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            max-width: 50%;
+            height: 3px;
+            background: var(--rojo);
+        }
+
+        /* ===== ABOUT ===== */
+        .about { background: var(--gris); }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(2rem, 5vw, 4rem);
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            color: #ccc;
+        }
+
+        .about-image {
+            height: 400px;
+            max-height: 60vh;
+            border: 3px solid var(--rojo);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .about-image:hover img { transform: scale(1.05); }
+
+        /* ===== SERVICES ===== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--gris);
+            padding: 2rem;
+            border: 1px solid var(--gris-claro);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-card:hover::before { left: 100%; }
+        .service-card:hover {
+            border-color: var(--rojo);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+        }
+
+        .service-card i {
+            font-size: 2.5rem;
+            color: var(--rojo);
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .service-card p { color: #aaa; font-size: 0.95rem; }
+
+        /* ===== GALLERY ===== */
+        .gallery { background: var(--gris); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--rojo);
+            transform: scale(1.03);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 1rem;
+            color: var(--blanco);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .overlay { opacity: 1; }
+
+        /* ===== BOOKING ===== */
+        .booking { background: linear-gradient(to bottom, var(--negro), var(--gris)); }
+
+        .booking-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--gris);
+            padding: clamp(1.5rem, 4vw, 3rem);
+            border: 2px solid var(--rojo);
+            border-radius: 12px;
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--negro);
+            border: 1px solid var(--gris-claro);
+            color: var(--blanco);
+            font-family: 'Roboto', sans-serif;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--rojo);
+        }
+
+        /* ===== CONTACT ===== */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-card {
+            background: var(--gris);
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--gris-claro);
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+
+        .contact-card:hover {
+            border-color: var(--rojo);
+            transform: translateY(-5px);
+        }
+
+        .contact-card i {
+            font-size: 2rem;
+            color: var(--rojo);
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 { margin-bottom: 0.5rem; }
+        .contact-card p, .contact-card a { color: #ccc; word-break: break-word; }
+        .contact-card a:hover { color: var(--rojo); }
+
+        .map-container {
+            background: var(--gris);
+            height: 400px;
+            max-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gris-claro);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(100%) invert(92%) contrast(83%);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--negro-oscuro);
+            padding: 3rem 5% 1rem;
+            border-top: 2px solid var(--rojo);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--rojo);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 0.5rem; }
+        .footer-section a { color: #aaa; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--rojo); }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--gris);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            border: 1px solid var(--gris-claro);
+            color: var(--blanco);
+        }
+
+        .social-links a:hover {
+            background: var(--rojo);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gris);
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom a { color: #888; margin: 0 0.5rem; }
+        .footer-bottom a:hover { color: var(--rojo); }
+
+        /* ===== SCROLL TOP & WHATSAPP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--rojo);
+            color: var(--blanco);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .scroll-top.visible { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--rojo-oscuro); transform: translateY(-3px); }
+
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #25d366;
+            color: var(--blanco);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 999;
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-btn:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6); }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================ */
+        /* ===== RESPONSIVE - A PRUEBA DE FALLOS ====== */
+        /* ============================================ */
+
+        @media (max-width: 768px) {
+            :root { --header-h: 60px; }
+            
+            .mobile-menu { display: block; }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: var(--header-h);
+                left: 0;
+                right: 0;
+                background: var(--negro-oscuro);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-bottom: 2px solid var(--rojo);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                max-height: calc(100vh - var(--header-h));
+                overflow-y: auto;
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                animation: slideDown 0.3s ease;
+            }
+            
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* HERO MÓVIL */
+            .hero {
+                min-height: calc(100dvh - var(--header-h));
+                padding: 2rem 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(2rem, 10vw, 3rem);
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            /* BOTONES APILADOS */
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+            }
+
+            .about-content { grid-template-columns: 1fr; }
+            
+            .about-image {
+                height: 300px;
+                order: -1;
+            }
+
+            .scroll-top {
+                bottom: 100px;
+                left: 20px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .whatsapp-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            section { padding: 3rem 4%; }
+            
+            .hero-content h1 {
+                font-size: clamp(2rem, 10vw, 2.8rem);
+            }
+            
+            .service-card { padding: 1.5rem; }
+            .service-card i { font-size: 2rem; }
+            
+            .contact-card { padding: 1.5rem; }
+            
+            .footer-content { gap: 2rem; }
+        }
+
+        @media (max-width: 360px) {
+            .logo { font-size: 1.2rem; }
+            .logo i { font-size: 1rem; }
+            
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { font-size: 0.95rem; }
+            
+            .btn { 
+                font-size: 0.75rem; 
+                letter-spacing: 1px;
+                padding: 0.8rem 1.2rem;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                min-height: auto;
+                padding: 2rem 1rem;
+            }
+            
+            .hero-content h1 { font-size: 2rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <nav>
+            <a href="#inicio" class="logo">
+                <i class="fas fa-crown"></i>
+                ROYAL <span>BANG</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#galeria">Galería</a></li>
+                <li><a href="#reservas">Reservas</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú">
+                <i class="fas fa-bars" id="menuIcon"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- ===== HERO CON TU fachada.webp ===== -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>ROYAL <span>BANG</span></h1>
+            <div class="rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <span>5.0 (162 opiniones)</span>
+            </div>
+            <p>Tatuajes y Piercings Profesionales en Puente de Vallecas</p>
+            <div class="hero-buttons">
+                <a href="#reservas" class="btn">Reservar Cita</a>
+                <a href="https://wa.me/34665249070" class="btn btn-outline" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="about" id="nosotros">
+        <h2 class="section-title">Sobre Nosotros</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>En <strong>Royal Bang Tattoo & Piercing Studio</strong> somos artistas apasionados por el arte corporal. Ubicados en el corazón de Puente de Vallecas, Madrid, ofrecemos un servicio profesional, higiénico y personalizado.</p>
+                <p>Contamos con años de experiencia en el mundo del tatuaje y los piercings, especializándonos en todo tipo de estilos: desde tatuajes tradicionales hasta fotorrealismo, puntillismo, mandalas, y mucho más.</p>
+                <p>Tu seguridad y satisfacción son nuestra prioridad. Utilizamos material esterilizado de un solo uso y seguimos los más estrictos protocolos de higiene.</p>
+                <a href="#contacto" class="btn">Conócenos</a>
+            </div>
+            <div class="about-image">
+                <img src="studio.webp" alt="Estudio Royal Bang Tattoo" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section id="servicios">
+        <h2 class="section-title">Nuestros Servicios</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-paint-brush"></i>
+                <h3>Tatuajes Personalizados</h3>
+                <p>Diseños únicos adaptados a tus gustos. Desde tatuajes a color hasta negro opaco, líneas finas y fotorrealismo 3D.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-ring"></i>
+                <h3>Piercings</h3>
+                <p>Piercings en oreja, nariz, ceja, industriales y más. Material de alta calidad y colocación profesional.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-redo"></i>
+                <h3>Coberturas y Retoques</h3>
+                <p>Rediseñamos y cubrimos tatuajes antiguos. También realizamos retoques para mantener tu tatuaje perfecto.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-tooth"></i>
+                <h3>Gemas Dentales</h3>
+                <p>Brillantes y gemas para dientes. Un toque especial y discreto para tu sonrisa.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-dragon"></i>
+                <h3>Estilos Especiales</h3>
+                <p>Especialistas en tatuajes maoríes, tradicionales asiáticos, mandalas, puntillismo y mangas completas.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Cuidados Posteriores</h3>
+                <p>Te asesoramos sobre los mejores cuidados para que tu tatuaje o piercing luzca perfecto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== GALLERY - IMÁGENES LOCALES ===== -->
+    <section class="gallery" id="galeria">
+        <h2 class="section-title">Galería de Trabajos</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="tigre.webp" alt="Tatuaje tigre" loading="lazy">
+                <div class="overlay">Tigre</div>
+            </div>
+            <div class="gallery-item">
+                <img src="mono.webp" alt="Tatuaje mono" loading="lazy">
+                <div class="overlay">Mono</div>
+            </div>
+            <div class="gallery-item">
+                <img src="angeles.webp" alt="Tatuaje ángeles" loading="lazy">
+                <div class="overlay">Ángeles</div>
+            </div>
+            <div class="gallery-item">
+                <img src="whisky.webp" alt="Tatuaje whisky" loading="lazy">
+                <div class="overlay"></div>
+            </div>
+            <div class="gallery-item">
+                <img src="tatuadora.webp" alt="Artista tatuando" loading="lazy">
+                <div class="overlay">Estudio</div>
+            </div>
+            <div class="gallery-item">
+                <img src="sala.webp" alt="Sala del estudio" loading="lazy">
+                <div class="overlay"></div>
+            </div>
+            <div class="gallery-item">
+                <img src="studio.webp" alt="Interior del estudio" loading="lazy">
+                <div class="overlay"></div>
+            </div>
+            <div class="gallery-item">
+                <img src="fachada.webp" alt="Fachada Royal Bang" loading="lazy">
+                <div class="overlay">Vallecas</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BOOKING ===== -->
+    <section class="booking" id="reservas">
+        <h2 class="section-title">Reserva tu Cita</h2>
+        <form class="booking-form" onsubmit="event.preventDefault(); alert('✅ Gracias por tu reserva. Te contactaremos en 24h para confirmar.');">
+            <div class="form-group">
+                <label for="nombre">Nombre Completo *</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" autocomplete="name">
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono *</label>
+                <input type="tel" id="telefono" name="telefono" required placeholder="6XX XXX XXX" autocomplete="tel">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="servicio">Tipo de Servicio *</label>
+                <select id="servicio" name="servicio" required>
+                    <option value="">Selecciona un servicio</option>
+                    <option value="tatuaje">Tatuaje</option>
+                    <option value="piercing">Piercing</option>
+                    <option value="retoque">Retoque</option>
+                    <option value="cobertura">Cobertura</option>
+                    <option value="gema-dental">Gema Dental</option>
+                    <option value="consulta">Consulta</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fecha">Fecha Preferida *</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+            <div class="form-group">
+                <label for="mensaje">Descripción de tu Idea</label>
+                <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos tu idea, tamaño aproximado, zona del cuerpo..."></textarea>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">📅 Solicitar Reserva</button>
+        </form>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contacto">
+        <h2 class="section-title">Contacto y Ubicación</h2>
+        <div class="contact-info">
+            <div class="contact-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Dirección</h3>
+                <p>C. Alto del León, 8, Local 1<br>Puente de Vallecas<br>28038 Madrid</p>
+            </div>
+            <div class="contact-card">
+                <i class="fas fa-phone"></i>
+                <h3>Teléfono</h3>
+                <p><a href="tel:665249070">665 249 070</a></p>
+            </div>
+            <div class="contact-card">
+                <i class="fas fa-clock"></i>
+                <h3>Horario</h3>
+                <p>Lunes a Sábado<br>17:00 - 21:00<br>Domingos: Cerrado</p>
+            </div>
+            <div class="contact-card">
+                <i class="fab fa-instagram"></i>
+                <h3>Instagram</h3>
+                <p><a href="https://instagram.com/royalbang_tattoo" target="_blank" rel="noopener">@royalbang_tattoo</a></p>
+            </div>
+        </div>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.8!2d-3.648!3d40.398!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd4228f5bbdbdf3b%3A0x6a7a6e8f9e0e0e0e!2sC.%20Alto%20del%20Le%C3%B3n%2C%208%2C%2028038%20Madrid!5e0!3m2!1ses!2ses!4v1700000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación Royal Bang"></iframe>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Royal Bang</h3>
+                <p>Estudio profesional de tatuajes y piercings en Madrid. Arte, calidad e higiene garantizada.</p>
+                <div class="social-links">
+                    <a href="https://instagram.com/royalbang_tattoo" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/34665249070" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="mailto:info@royalbangtattoo.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#galeria">Galería</a></li>
+                    <li><a href="#reservas">Reservas</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="aviso-legal.html">Aviso Legal</a></li>
+                    <li><a href="politica-privacidad.html">Política de Privacidad</a></li>
+                    <li><a href="politica-cookies.html">Política de Cookies</a></li>
+                    <li><a href="politica-proteccion-datos.html">Protección de Datos</a></li>
+                    <li><a href="mapa-sitio.html">Mapa del Sitio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt" style="margin-right:0.5rem;color:var(--rojo)"></i> C. Alto del León, 8</li>
+                    <li><i class="fas fa-phone" style="margin-right:0.5rem;color:var(--rojo)"></i> <a href="tel:665249070">665 249 070</a></li>
+                    <li><i class="fas fa-envelope" style="margin-right:0.5rem;color:var(--rojo)"></i> info@royalbangtattoo.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Royal Bang Tattoo & Piercing Studio. Todos los derechos reservados.</p>
+            <p style="margin-top:0.5rem">
+                <a href="aviso-legal.html">Aviso Legal</a> | 
+                <a href="politica-privacidad.html">Privacidad</a> | 
+                <a href="politica-cookies.html">Cookies</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/34665249070" class="whatsapp-btn" target="_blank" rel="noopener" title="Contactar por WhatsApp" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // Scroll to top visibility
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.querySelector('.scroll-top');
+            scrollTop.classList.toggle('visible', window.pageYOffset > 300);
+        }, { passive: true });
+
+        // Min date for booking
+        const dateInput = document.getElementById('fecha');
+        if(dateInput) {
+            dateInput.min = new Date().toISOString().split('T')[0];
+        }
+
+        // Menú móvil con botón X
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenu.addEventListener('click', () => {
+            const isActive = navLinks.classList.toggle('active');
+            menuIcon.classList.toggle('fa-bars', !isActive);
+            menuIcon.classList.toggle('fa-times', isActive);
+            mobileMenu.setAttribute('aria-label', isActive ? 'Cerrar menú' : 'Abrir menú');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuIcon.classList.add('fa-bars');
+                menuIcon.classList.remove('fa-times');
+            });
+        });
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !mobileMenu.contains(e.target)) {
+                navLinks.classList.remove('active');
+                menuIcon.classList.add('fa-bars');
+                menuIcon.classList.remove('fa-times');
+            }
+        });
+    </script>
+</body>
+</html>

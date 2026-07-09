@@ -20,6 +20,8 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.pricing': 'Precios',
     'nav.custom': 'Web a Medida',
     'nav.modernize': 'Modernización',
+    'nav.faq': 'FAQ',
+    'nav.contact': 'Contacto',
     'nav.studio': 'Abrir Studio',
     'nav.login': 'Iniciar sesión',
 
@@ -40,6 +42,8 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.pricing': 'Pricing',
     'nav.custom': 'Custom Web',
     'nav.modernize': 'Modernization',
+    'nav.faq': 'FAQ',
+    'nav.contact': 'Contact',
     'nav.studio': 'Open Studio',
     'nav.login': 'Log in',
 

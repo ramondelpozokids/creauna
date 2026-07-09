@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | Campón Asesores</title>
+    <meta name="description" content="Servicios de asesoría fiscal, laboral, contable y jurídica en Madrid. Más de 20 años de experiencia.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #004080;
+            --primary-dark: #003366;
+            --secondary: #0066cc;
+            --accent: #ffc107;
+            --text: #333;
+            --bg: #f8f9fa;
+            --white: #fff;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Consistente */
+        header { background: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
+        .header-top { background: var(--primary); color: var(--white); padding: 0.5rem 0; text-align: center; font-size: 0.9rem; }
+        .header-top a { color: var(--white); text-decoration: none; margin: 0 0.5rem; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo img { height: 70px; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; }
+        .nav-links a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: var(--white) !important; padding: 0.5rem 1.2rem; border-radius: 5px; }
+        
+        .hero { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 3rem 0; text-align: center; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        /* Servicios Grid */
+        .services-section { padding: 4rem 0; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .service-card { 
+            background: var(--white); 
+            padding: 2rem; 
+            border-radius: 10px; 
+            box-shadow: var(--shadow); 
+            border-top: 5px solid var(--primary); 
+            transition: transform 0.3s; 
+        }
+        .service-card:hover { transform: translateY(-5px); }
+        .service-card h3 { color: var(--primary); font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        .service-card ul { list-style: none; }
+        .service-card li { padding: 0.5rem 0; border-bottom: 1px solid #eee; position: relative; padding-left: 20px; }
+        .service-card li:before { content: "✓"; color: var(--secondary); position: absolute; left: 0; font-weight: bold; }
+        .service-card li:last-child { border-bottom: none; }
+        
+        /* Footer Consistente */
+        footer { background: var(--primary-dark); color: var(--white); padding: 2rem 0; text-align: center; margin-top: 2rem; }
+        footer a { color: var(--white); text-decoration: none; margin: 0 10px; }
+        footer a:hover { color: var(--accent); }
+        
+        /* WhatsApp Float */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: #25d366; color: var(--white); border-radius: 50%; text-align: center; font-size: 2rem; line-height: 60px; box-shadow: 0 5px 20px rgba(37,211,102,0.4); z-index: 999; }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* Menú simplificado para móvil */
+            .hero h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-top">
+        <div class="container">
+            <div>
+                <i class="fas fa-phone"></i> <a href="tel:+34914300012">91 430 00 12</a>
+                <i class="fas fa-envelope" style="margin-left: 1rem;"></i> <a href="mailto:cai@camponasesores.es">cai@camponasesores.es</a>
+            </div>
+            <div>
+                <i class="fas fa-map-marker-alt"></i> Calle Alto del León 12, Madrid
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <nav>
+            <!-- Logo en texto (igual que index.html) -->
+            <div class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-briefcase" style="color: var(--primary); font-size: 1.5rem;"></i>
+                <span style="font-weight: 700; color: var(--primary); font-size: 1.3rem;">Campón Asesores</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#quienes-somos">Quiénes Somos</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="tarifas.html">Tarifas</a></li>
+                <li><a href="index.html#galeria">Galería</a></li>
+                <li><a href="index.html#opiniones">Opiniones</a></li>
+                <li><a href="contacto.html" class="btn-primary">Contacto</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1><i class="fas fa-briefcase"></i> Nuestros Servicios</h1>
+        <p>Asesoramiento integral para empresas, autónomos y particulares</p>
+    </div>
+</section>
+
+<!-- Servicios Content -->
+<section class="services-section">
+    <div class="container">
+        <div class="services-grid">
+            
+            <!-- Fiscal -->
+            <div class="service-card">
+                <h3><i class="fas fa-calculator"></i> Fiscal</h3>
+                <ul>
+                    <li>Tratamiento de recursos</li>
+                    <li>Asesoramiento de impuestos vigentes</li>
+                    <li>Renta y patrimonio</li>
+                    <li>Tramitación de impresos varios y documentación</li>
+                    <li>Sociedades y autónomos</li>
+                    <li>IVA, IGIC</li>
+                    <li>Inspectores de los tributos</li>
+                    <li>Módulos</li>
+                    <li>Asesoramiento y tramitación de inscripción de empresas a la Seguridad Social</li>
+                </ul>
+            </div>
+
+            <!-- Asesoramiento / Contable -->
+            <div class="service-card">
+                <h3><i class="fas fa-chart-line"></i> Asesoramiento y Contabilidad</h3>
+                <ul>
+                    <li>Información contable</li>
+                    <li>Diagnóstico y valoración de empresas</li>
+                    <li>Rentabilidad de inversiones</li>
+                    <li>Gestión de adquisición y venta de negocios</li>
+                    <li>Estudio de alternativas de financiación y excedentes</li>
+                    <li>Control y optimización de la gestión de tesorería</li>
+                    <li>Apoyo en gestiones bancarias</li>
+                </ul>
+            </div>
+
+            <!-- Laboral -->
+            <div class="service-card">
+                <h3><i class="fas fa-users"></i> Laboral</h3>
+                <ul>
+                    <li>Estudio y confección de contratos de trabajo y altas en SS</li>
+                    <li>Asesoramiento en requerimientos, recursos e inspecciones laborales</li>
+                    <li>Confección del recibo oficial de Salarios (ROS) o nómina</li>
+                    <li>Boletín de cotizaciones del régimen general (TC)</li>
+                    <li>Liquidaciones de retenciones y resumen anual IRPF</li>
+                    <li>Certificados de IRPF y de situación familiar</li>
+                </ul>
+            </div>
+
+            <!-- Jurídicos -->
+            <div class="service-card">
+                <h3><i class="fas fa-balance-scale"></i> Jurídicos</h3>
+                <ul>
+                    <li>Reclamaciones económicas y procedimientos ejecutivos</li>
+                    <li>Accidentes y sanciones de tráfico por alcoholemia</li>
+                    <li>Arrendamientos urbanos (Juicio de desahucio)</li>
+                    <li>Incapacidad, tutelas y declaración de fallecimiento</li>
+                    <li>Derecho sucesorio y Propiedad horizontal</li>
+                    <li>Derecho matrimonial: separaciones y divorcios</li>
+                    <li>Servicio de conciliaciones individuales</li>
+                </ul>
+            </div>
+
+            <!-- Creación de Empresas -->
+            <div class="service-card">
+                <h3><i class="fas fa-building"></i> Creación de Empresas</h3>
+                <ul>
+                    <li>Constitución oficial y puesta al día de empresas</li>
+                    <li>Registro de dominios en internet</li>
+                    <li>Planes de prevención de riesgos laborales</li>
+                    <li>Servicios de notaría</li>
+                    <li>Inscripción en el Registro Mercantil</li>
+                    <li>Gestión de tasas Comunidad de Madrid</li>
+                </ul>
+            </div>
+
+            <!-- Herencias -->
+            <div class="service-card">
+                <h3><i class="fas fa-home"></i> Herencias</h3>
+                <ul>
+                    <li>Sucesiones y testamentaria</li>
+                    <li>Adjudicación herencia</li>
+                    <li>Derecho hereditario</li>
+                    <li>Declaración de herederos</li>
+                </ul>
+            </div>
+
+            <!-- Marketing -->
+            <div class="service-card">
+                <h3><i class="fas fa-bullhorn"></i> Marketing y Viabilidad</h3>
+                <ul>
+                    <li>Estudio de viabilidad</li>
+                    <li>Política de precios</li>
+                    <li>Creación de empresas</li>
+                    <li>Relaciones públicas</li>
+                    <li>Marketing relacional</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2026 CAI CAMPÓN ASESORES, S.L. | 
+        <a href="aviso-legal.html">Aviso Legal</a> | 
+        <a href="politica-privacidad.html">Privacidad</a> | 
+        <a href="politica-cookies.html">Cookies</a> | 
+        <a href="accesibilidad.html">Accesibilidad</a></p>
+    </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/34914300012" class="whatsapp-float" target="_blank" title="Chatea por WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+</body>
+</html>

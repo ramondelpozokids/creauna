@@ -91,6 +91,12 @@ export default function Navbar({ variant = 'landing' }: { variant?: 'landing' | 
           <Link href="/modernizacion" className="hover:text-slate-950 transition-colors">
             {t('nav.modernize')}
           </Link>
+          <Link href="/faq" className="hover:text-slate-950 transition-colors">
+            {t('nav.faq')}
+          </Link>
+          <Link href="/contacto" className="hover:text-slate-950 transition-colors">
+            {t('nav.contact')}
+          </Link>
         </div>
 
         {/* Action Buttons */}
@@ -181,6 +187,20 @@ export default function Navbar({ variant = 'landing' }: { variant?: 'landing' | 
                 className="py-2 border-b border-slate-50 hover:text-slate-950 flex justify-between items-center"
               >
                 {t('nav.modernize')} <ArrowRight className="w-4 h-4 opacity-50" />
+              </Link>
+              <Link 
+                href="/faq" 
+                onClick={() => setIsMenuOpen(false)}
+                className="py-2 border-b border-slate-50 hover:text-slate-950 flex justify-between items-center"
+              >
+                {t('nav.faq')} <ArrowRight className="w-4 h-4 opacity-50" />
+              </Link>
+              <Link 
+                href="/contacto" 
+                onClick={() => setIsMenuOpen(false)}
+                className="py-2 border-b border-slate-50 hover:text-slate-950 flex justify-between items-center"
+              >
+                {t('nav.contact')} <ArrowRight className="w-4 h-4 opacity-50" />
               </Link>
               
               <div className="flex flex-col gap-3 pt-4">

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../components/LanguageProvider';
 import { comoFuncionaI18n } from '../data/i18n/marketing';
-import { Sparkles, ArrowUpRight } from 'lucide-react';
+import { Sparkles, ArrowUpRight, Play } from 'lucide-react';
 
 export default function ComoFunciona() {
   const { lang } = useLanguage();
@@ -24,6 +24,13 @@ export default function ComoFunciona() {
             {t.title}
           </h1>
           <p className="mt-5 text-lg md:text-xl text-slate-600 max-w-xl mx-auto">{t.subtitle}</p>
+          <Link
+            href="/demo"
+            className="mt-8 inline-flex items-center gap-2 btn-gradient px-8 py-3.5 rounded-2xl text-sm font-semibold shadow-md"
+          >
+            <Play className="w-4 h-4" />
+            {lang === 'es' ? 'Ver demo interactiva' : 'Watch interactive demo'}
+          </Link>
         </div>
       </div>
 

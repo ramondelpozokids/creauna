@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<style>
+    /* Forzar visibilidad del H1 y eliminar botones heredados */
+    #inicio .hero-buttons, 
+    .hero-buttons, 
+    #inicio .btn, 
+    .hero .btn { 
+        display: none !important; 
+    }
+    #inicio h1 { 
+        color: #ffffff !important; 
+        visibility: visible !important; 
+        opacity: 1 !important; 
+    }
+    #inicio h1 span { 
+        color: #ffffff !important; 
+        visibility: visible !important; 
+        opacity: 1 !important; 
+    }
+</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campón Asesores | Asesoría Integral en Puente de Vallecas, Madrid</title>
+    <meta name="description" content="Asesoría Fiscal, Laboral y Contable en Madrid. Expertos en autónomos y PYMES desde 1991. Calle Alto del León 12.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #004080; --primary-dark: #003366; --secondary: #0066cc; --accent: #ffc107; --success: #28a745; --whatsapp: #25d366; --text: #333; --text-light: #666; --bg: #f8f9fa; --white: #ffffff; --shadow: 0 10px 40px rgba(0,0,0,0.1); --shadow-lg: 0 20px 60px rgba(0,0,0,0.15); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); overflow-x: hidden; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        header { background: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
+        .header-top { background: var(--primary); color: var(--white); padding: 0.5rem 0; font-size: 0.9rem; }
+        .header-top .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .header-top a { color: var(--white); text-decoration: none; margin: 0 0.5rem; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo img { height: 70px; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: var(--white) !important; padding: 0.5rem 1.2rem; border-radius: 5px; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--white); padding: 3rem 0; text-align: center; animation: fadeInUp 0.8s ease; }
+        .hero-logo { max-width: 450px; margin: 0 auto 1.5rem; display: block; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem; opacity: 0.95; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 0.8rem 2rem; text-decoration: none; border-radius: 5px; font-weight: bold; transition: all 0.3s; }
+        .btn-white { background: var(--white); color: var(--primary); }
+        .btn-white:hover { background: var(--bg); transform: translateY(-2px); }
+        .btn-outline { border: 2px solid var(--white); color: var(--white); }
+        .btn-outline:hover { background: var(--white); color: var(--primary); }
+        
+        section { padding: 4rem 0; }
+        section:nth-child(even) { background: var(--bg); }
+        h2 { font-size: 2.2rem; color: var(--primary); margin-bottom: 2rem; text-align: center; }
+        h3 { color: var(--primary); margin-bottom: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin: 2rem 0; }
+        .about-text p { margin-bottom: 1rem; text-align: justify; }
+        .about-img { text-align: center; }
+        .about-img img { max-width: 100%; border-radius: 10px; box-shadow: var(--shadow); }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; }
+        .feature { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .feature:before { content: "✅"; margin-right: 0.5rem; }
+        
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .service-card { background: var(--white); padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); transition: transform 0.3s; }
+        .service-card:hover { transform: translateY(-5px); }
+        .service-card h3 { color: var(--primary); font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
+        .service-card ul { list-style: none; margin-top: 1rem; }
+        .service-card li { padding: 0.4rem 0; padding-left: 1.5rem; position: relative; }
+        .service-card li:before { content: "•"; color: var(--primary); font-weight: bold; position: absolute; left: 0; }
+        
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .gallery-item { position: relative; overflow: hidden; border-radius: 10px; box-shadow: var(--shadow); }
+        .gallery-item img { width: 100%; height: 280px; object-fit: cover; transition: transform 0.3s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .review-card { background: var(--white); padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); }
+        .review-card .stars { color: var(--accent); font-size: 1.2rem; margin-bottom: 1rem; }
+        .review-card .date { color: var(--text-light); font-size: 0.9rem; margin: 1rem 0; }
+        .review-card .author { font-weight: bold; color: var(--primary); }
+        
+        footer { background: var(--primary-dark); color: var(--white); padding: 3rem 0 1rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h3 { color: var(--accent); margin-bottom: 1rem; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: rgba(255,255,255,0.8); text-decoration: none; line-height: 2; }
+        .footer-section a:hover { color: var(--white); }
+        .social-buttons { display: flex; gap: 1rem; margin-top: 1rem; }
+        .social-btn { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.3rem; transition: transform 0.3s; }
+        .social-btn:hover { transform: translateY(-5px); }
+        .facebook { background: #1877f2; }
+        .google { background: #db4437; }
+        .web { background: var(--secondary); }
+        .whatsapp-btn { background: var(--whatsapp); }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--whatsapp); color: var(--white); border-radius: 50%; text-align: center; font-size: 2rem; line-height: 60px; box-shadow: 0 5px 20px rgba(37,211,102,0.4); z-index: 999; cursor: pointer; animation: pulse 2s infinite; transition: all 0.3s; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        
+        .chatbot-container { position: fixed; bottom: 100px; right: 30px; width: 380px; max-width: calc(100vw - 60px); background: var(--white); border-radius: 20px; box-shadow: var(--shadow-lg); z-index: 998; display: none; flex-direction: column; overflow: hidden; animation: slideIn 0.3s ease; }
+        .chatbot-container.active { display: flex; }
+        .chatbot-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+        .chatbot-header-info { display: flex; align-items: center; gap: 1rem; }
+        .chatbot-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .chatbot-title h3 { font-size: 1.2rem; margin-bottom: 0.2rem; color: var(--white); }
+        .chatbot-status { font-size: 0.85rem; opacity: 0.9; display: flex; align-items: center; gap: 0.5rem; }
+        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+        .chatbot-close { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; }
+        .chatbot-messages { height: 350px; overflow-y: auto; padding: 1.5rem; background: var(--bg); }
+        .message { margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.5rem; animation: fadeInUp 0.3s ease; }
+        .message.bot { flex-direction: row; }
+        .message.user { flex-direction: row-reverse; }
+        .message-avatar { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+        .message.bot .message-avatar { background: var(--primary); color: var(--white); }
+        .message.user .message-avatar { background: var(--secondary); color: var(--white); }
+        .message-content { max-width: 75%; padding: 0.8rem 1rem; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; }
+        .message.bot .message-content { background: var(--white); color: var(--text); border-bottom-left-radius: 5px; }
+        .message.user .message-content { background: var(--primary); color: var(--white); border-bottom-right-radius: 5px; }
+        .quick-replies { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .quick-reply-btn { background: var(--white); border: 2px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; }
+        .quick-reply-btn:hover { background: var(--primary); color: var(--white); }
+        .chatbot-input { padding: 1rem; background: var(--white); border-top: 1px solid #e0e0e0; display: flex; gap: 0.5rem; }
+        .chatbot-input input { flex: 1; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 25px; }
+        .chatbot-input input:focus { outline: none; border-color: var(--primary); }
+        .chatbot-send { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); color: var(--white); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .chatbot-send:hover { background: var(--secondary); transform: scale(1.1); }
+        .typing-indicator { display: none; padding: 0.8rem 1rem; background: var(--white); border-radius: 15px; border-bottom-left-radius: 5px; width: fit-content; margin-bottom: 1rem; }
+        .typing-indicator.show { display: block; }
+        .typing-indicator span { height: 8px; width: 8px; background: var(--text-light); border-radius: 50%; display: inline-block; margin: 0 2px; animation: typing 1.4s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
+        
+        .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: var(--white); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; z-index: 9999; }
+        .cookie-banner button { padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 0.5rem; }
+        .btn-accept { background: var(--success); color: var(--white); }
+        .btn-reject { background: #dc3545; color: var(--white); }
+        .btn-config { background: #6c757d; color: var(--white); }
+        
+        @media (max-width: 968px) {
+            .about-content { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+        }
+        @media (max-width: 576px) {
+            .container { padding: 0 1rem; }
+            .hero { padding: 2rem 0; }
+            .hero h1 { font-size: 1.5rem; }
+            .whatsapp-float { width: 50px; height: 50px; font-size: 1.5rem; line-height: 50px; bottom: 20px; right: 20px; }
+            .chatbot-container { width: calc(100vw - 40px); right: 20px; bottom: 80px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-top">
+        <div class="container">
+            <div>
+                <i class="fas fa-phone"></i> <a href="tel:+34914300012">91 430 00 12</a>
+                <i class="fas fa-envelope" style="margin-left: 1rem;"></i> <a href="mailto:cai@camponasesores.es">cai@camponasesores.es</a>
+            </div>
+            <div>
+                <i class="fas fa-map-marker-alt"></i> Calle Alto del León 12, Madrid
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <nav>
+            <!-- Logo en TEXTO en lugar de imagen -->
+            <div class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-briefcase" style="color: var(--primary); font-size: 1.5rem;"></i>
+                <span style="font-weight: 700; color: var(--primary); font-size: 1.3rem;">Campón Asesores</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#quienes-somos">Quiénes Somos</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="tarifas.html">Tarifas</a></li>
+                <li><a href="index.html#galeria">Galería</a></li>
+                <li><a href="index.html#opiniones">Opiniones</a></li>
+                <li><a href="contacto.html" class="btn-primary">Contacto</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section - H1 visible + sin botones -->
+<section id="inicio" style="background: linear-gradient(135deg, #004080 0%, #0066cc 100%); color: #ffffff; padding: 4rem 0; text-align: center;">
+    <div class="container">
+        <!-- H1 visible con colores forzados -->
+        <h1 style="font-size: 2.3rem; line-height: 1.35; margin: 0 auto 1rem; max-width: 950px; color: #ffffff !important; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            Asesoría laboral en Puente de Vallecas, Madrid.
+            <span style="font-size: 1.45rem; font-weight: 400; display: block; margin-top: 0.6rem; color: #ffffff !important; opacity: 0.95;">
+                Servicio de consultoría, asesoría y gestión de autónomos y sociedades
+            </span>
+        </h1>
+        <!-- ✅ Botones ELIMINADOS completamente -->
+    </div>
+</section>
+
+<!-- Quiénes Somos -->
+<section id="quienes-somos">
+    <div class="container">
+        <h2>Sobre Nosotros</h2>
+        <div style="background: #f8f9fa; padding: 2rem; border-radius: 10px; border-left: 5px solid var(--primary); margin-bottom: 3rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.6rem;">Campón Asesores Integrales, S.L.</h3>
+            <p style="margin-bottom: 1rem; text-align: justify;">Campón Asesores integrales, S.L. en Puente de Vallecas, es una compañía de profesionales con amplia formación y trayectoria empresarial en las áreas fiscal, laboral, contable, jurídica, mercantil, financiera y de marketing, que ofrece un servicio completo de consultoría, asesoramiento y gestión a las empresas y entidades de todos los sectores y dimensiones.</p>
+            <p style="margin-bottom: 1rem; text-align: justify;">Nuestra labor se extiende desde la creación de la idea empresarial y el inicio de la actividad comercial, hasta la expansión y consolidación del negocio ya existente.</p>
+            <p style="text-align: justify;">Campón Asesores integrales, S.L en Puente de Vallecas se distingue entre las empresas de su sector por el alto grado de fiabilidad que ofrece, por los principios de satisfacción y confidencialidad y por la comodidad, ya comprobada, de las que disfrutan los clientes existentes, además de ofrecer unos precios muy competitivos.</p>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Javier Campón - Socio Fundador</h3>
+                <p>Javier Campón, uno de sus socios fundadores, Diplomado en Relaciones Laborales por la Universidad Complutense de Madrid, y con una amplia formación complementaria en todas las ramas del asesoramiento y consultoría empresarial, te da la bienvenida a Campón Asesores Integrales, S.L., que es una compañía de profesionales con una dilatada experiencia en el sector del asesoramiento integral a todo tipo de entidades empresariales.</p>
+                <p>Con una experiencia de más de 20 años en el sector, Campón Asesores quiere ser tu asesoría de la empresa, tu compañera de viaje en el desarrollo de tu negocio, tu apoyo incondicional y tu ayuda permanente, con un servicio "disponible" para tu empresa, siempre con un profesional como interlocutor, en cada área, para ayudarte a resolver todos tus problemas y optimizar tus decisiones empresariales.</p>
+                <p>En aras de ser una compañía puntera en su sector, Campón Asesores está a la vanguardia en tecnología con los mejores medios técnicos y ofrece una seguridad plena a sus clientes, disponiendo de un seguro de Responsabilidad Civil Profesional que cubre cualquier posible incidencia. Así mismo, es miembro de la Asociación de Asesores de Empresa en Internet.</p>
+            </div>
+            <div class="about-img">
+                <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600&h=700&fit=crop" alt="Javier Campón - Socio Fundador de Campón Asesores">
+            </div>
+        </div>
+        <div style="text-align: center; margin: 3rem 0;">
+            <img src="https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop" alt="Fachada de Campón Asesores en Calle Alto del León 12, Puente de Vallecas" style="max-width: 100%; border-radius: 10px; box-shadow: var(--shadow);">
+            <p style="margin-top: 1rem; color: var(--text-light);"><em>Calle Alto del León 12, 28038 Madrid (Puente de Vallecas)</em></p>
+        </div>
+        <div class="features">
+            <div class="feature">Preparación de impuestos y declaraciones</div>
+            <div class="feature">Gestión contable completa</div>
+            <div class="feature">Creación y constitución de sociedades</div>
+            <div class="feature">Trámites con organismos públicos y privados</div>
+            <div class="feature">Precios competitivos y servicio cercano</div>
+            <div class="feature">Más de 20 años de experiencia</div>
+        </div>
+    </div>
+</section>
+
+<!-- Servicios -->
+<section id="servicios">
+    <div class="container">
+        <h2>Nuestros Servicios</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3><i class="fas fa-calculator"></i> Fiscal</h3>
+                <ul>
+                    <li>Tratamiento de recursos</li>
+                    <li>Asesoramiento de impuestos vigentes</li>
+                    <li>Renta y patrimonio</li>
+                    <li>Tramitación de impresos varios y documentación</li>
+                    <li>Sociedades y autónomos</li>
+                    <li>IVA, IGIC</li>
+                    <li>Inspectores de los tributos</li>
+                    <li>Módulos</li>
+                    <li>Asesoramiento e inscripción en Seguridad Social</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-chart-line"></i> Asesoramiento</h3>
+                <ul>
+                    <li>Información contable</li>
+                    <li>Diagnóstico y valoración de empresas</li>
+                    <li>Rentabilidad de inversiones</li>
+                    <li>Gestión de adquisición y venta de negocios</li>
+                    <li>Estudio de alternativas de financiación</li>
+                    <li>Control y optimización de tesorería</li>
+                    <li>Apoyo en gestiones bancarias</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-bullhorn"></i> Marketing</h3>
+                <ul>
+                    <li>Estudio de viabilidad</li>
+                    <li>Política de precios</li>
+                    <li>Creación de empresas</li>
+                    <li>Relaciones públicas</li>
+                    <li>Marketing relacional</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-users"></i> Laboral</h3>
+                <ul>
+                    <li>Contratos de trabajo y altas en SS</li>
+                    <li>Asesoramiento en inspecciones laborales</li>
+                    <li>Confección de nóminas (ROS) y TC</li>
+                    <li>Liquidaciones IRPF y resumen anual</li>
+                    <li>Certificados de IRPF y situación familiar</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-building"></i> Creación de Empresas</h3>
+                <ul>
+                    <li>Constitución oficial</li>
+                    <li>Registro de dominios</li>
+                    <li>Planes de prevención de riesgos</li>
+                    <li>Actualización de empresas</li>
+                    <li>Servicios de notaría</li>
+                    <li>Inscripción en Registro Mercantil</li>
+                    <li>Tasas Comunidad de Madrid</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-home"></i> Herencias</h3>
+                <ul>
+                    <li>Sucesiones</li>
+                    <li>Testamentaria</li>
+                    <li>Adjudicación herencia</li>
+                    <li>Derecho hereditario</li>
+                    <li>Declaración de herederos</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-balance-scale"></i> Jurídicos</h3>
+                <ul>
+                    <li>Reclamaciones económicas</li>
+                    <li>Procedimientos ejecutivos</li>
+                    <li>Accidentes y sanciones de tráfico</li>
+                    <li>Arrendamientos urbanos - Desahucios</li>
+                    <li>Incapacidad, tutelas</li>
+                    <li>Derecho sucesorio y matrimonial</li>
+                    <li>Separaciones y divorcios</li>
+                    <li>Servicio conciliaciones individuales</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Galería -->
+<section id="galeria">
+    <div class="container">
+        <h2>Galería de Instalaciones</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="area-trabajo.jpg" alt="Área de trabajo de Campón Asesores"></div>
+            <div class="gallery-item"><img src="sala-reuniones.jpg" alt="Sala de reuniones"></div>
+            <div class="gallery-item"><img src="recepcion.jpg" alt="Recepción de Campón Asesores"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Opiniones -->
+<section id="opiniones">
+    <div class="container">
+        <h2>Opiniones de Clientes</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"De los mejores gestores que he tenido para la empresa. Me resuelve todo en el mismo día y cualquier duda que tengo en el momento. Son muy competentes y se ocupan de todo en el momento."</p>
+                <div class="date">06/07/2021</div>
+                <div class="author">Elia González</div>
+            </div>
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"Estupenda atención y asesoramiento, cercana, clara y atenta, no tienes que preocuparte de nada, ellos te permiten despreocuparte de la burocracia y centrarte en tu negocio, autónomo, etc... Muy recomendable, y Mercedes una crack!"</p>
+                <div class="date">19/05/2018</div>
+                <div class="author">MARKO A. MAC</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="https://www.google.com/maps/place/Cai+Campon+Asesores" target="_blank" class="btn btn-primary"><i class="fab fa-google"></i> Escribir opinión en Google</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>Campón Asesores</h3>
+                <p>Asesoría integral para autónomos y pymes en Madrid. Más de 20 años de experiencia.</p>
+                <p style="margin-top: 1rem;"><strong>CAI CAMPÓN ASESORES, S.L.</strong><br>NIF: B87452009<br>Calle Alto del León 12<br>28038 Madrid</p>
+            </div>
+            <div class="footer-section">
+                <h3>Servicios</h3>
+                <ul>
+                    <li><a href="servicios.html">Asesoría Fiscal</a></li>
+                    <li><a href="servicios.html">Asesoría Laboral</a></li>
+                    <li><a href="servicios.html">Contabilidad</a></li>
+                    <li><a href="servicios.html">Creación de Empresas</a></li>
+                    <li><a href="servicios.html">Servicios Jurídicos</a></li>
+                    <li><a href="servicios.html">Herencias</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="aviso-legal.html">Aviso Legal</a></li>
+                    <li><a href="politica-privacidad.html">Política de Privacidad</a></li>
+                    <li><a href="politica-cookies.html">Política de Cookies</a></li>
+                    <li><a href="accesibilidad.html">Accesibilidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-buttons">
+                    <a href="https://www.facebook.com/profile.php?id=100057230988816" target="_blank" class="social-btn facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.google.com/maps/place/Cai+Campon+Asesores" target="_blank" class="social-btn google" title="Google Maps"><i class="fas fa-map-marked-alt"></i></a>
+                    <a href="https://www.camponasesores.es/" target="_blank" class="social-btn web" title="Web Oficial"><i class="fas fa-globe"></i></a>
+                    <a href="https://wa.me/34914300012" target="_blank" class="social-btn whatsapp-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CAI CAMPÓN ASESORES, S.L. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<div class="whatsapp-float" onclick="openWhatsApp()" title="Chatea con nosotros por WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</div>
+
+<!-- Chatbot -->
+<div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header">
+        <div class="chatbot-header-info">
+            <div class="chatbot-avatar"><i class="fas fa-robot"></i></div>
+            <div class="chatbot-title">
+                <h3>Asistente Virtual</h3>
+                <div class="chatbot-status"><span class="status-dot"></span> En línea</div>
+            </div>
+        </div>
+        <button class="chatbot-close" onclick="toggleChatbot()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chatbot-messages" id="chatbotMessages">
+        <div class="message bot">
+            <div class="message-avatar"><i class="fas fa-robot"></i></div>
+            <div class="message-content">
+                ¡Hola! 👋 Soy el asistente de Campón Asesores. ¿En qué puedo ayudarte?
+                <div class="quick-replies">
+                    <button class="quick-reply-btn" onclick="sendQuickReply('Quiero información sobre asesoría para autónomos')">Autónomos</button>
+                    <button class="quick-reply-btn" onclick="sendQuickReply('Quiero crear una empresa')">Crear empresa</button>
+                    <button class="quick-reply-btn" onclick="sendQuickReply('Necesito asesoría fiscal')">Asesoría fiscal</button>
+                    <button class="quick-reply-btn" onclick="sendQuickReply('Hablar con un asesor')">Hablar con asesor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
+        <button class="chatbot-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- Cookie Banner -->
+<div class="cookie-banner" id="cookieBanner">
+    <p>🍪 Usamos cookies para mejorar tu experiencia. <a href="politica-cookies.html" style="color: #4da6ff;">Más información</a></p>
+    <div>
+        <button class="btn-reject" onclick="rejectCookies()">Rechazar</button>
+        <button class="btn-config" onclick="configCookies()">Configurar</button>
+        <button class="btn-accept" onclick="acceptCookies()">Aceptar</button>
+    </div>
+</div>
+
+<script>
+    function toggleMenu() { const nav = document.querySelector('.nav-links'); nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex'; }
+    function openWhatsApp() { window.open('https://wa.me/34914300012?text=Hola, me pongo en contacto desde la web de Campón Asesores', '_blank'); }
+    function toggleChatbot() { document.getElementById('chatbotContainer').classList.toggle('active'); }
+    function handleKeyPress(event) { if (event.key === 'Enter') sendMessage(); }
+    function sendMessage() { const input = document.getElementById('chatbotInput'); const message = input.value.trim(); if (message) { addMessage(message, 'user'); input.value = ''; document.getElementById('typingIndicator').classList.add('show'); setTimeout(() => { document.getElementById('typingIndicator').classList.remove('show'); const response = getBotResponse(message); addMessage(response.text, 'bot', response.quickReplies); }, 1000); } }
+    function sendQuickReply(text) { addMessage(text, 'user'); document.getElementById('typingIndicator').classList.add('show'); setTimeout(() => { document.getElementById('typingIndicator').classList.remove('show'); const response = getBotResponse(text); addMessage(response.text, 'bot', response.quickReplies); }, 1000); }
+    function addMessage(text, sender, quickReplies = []) { const container = document.getElementById('chatbotMessages'); const msgDiv = document.createElement('div'); msgDiv.className = `message ${sender}`; msgDiv.innerHTML = `<div class="message-avatar"><i class="fas fa-${sender === 'bot' ? 'robot' : 'user'}"></i></div><div class="message-content">${text}</div>`; if (quickReplies.length > 0) { const repliesDiv = document.createElement('div'); repliesDiv.className = 'quick-replies'; quickReplies.forEach(reply => { const btn = document.createElement('button'); btn.className = 'quick-reply-btn'; btn.textContent = reply; btn.onclick = () => sendQuickReply(reply); repliesDiv.appendChild(btn); }); msgDiv.querySelector('.message-content').appendChild(repliesDiv); } container.appendChild(msgDiv); container.scrollTop = container.scrollHeight; }
+    function getBotResponse(message) { const lower = message.toLowerCase(); if (lower.includes('autónomo') || lower.includes('autonomo')) return { text: 'Ofrecemos asesoría completa para autónomos desde 50€/mes. Incluye declaraciones trimestrales, IRPF, altas/bajas. ¿Quieres más info?', quickReplies: ['Sí', 'Contratar', 'Volver'] }; if (lower.includes('empresa') || lower.includes('crear')) return { text: 'Te ayudamos a constituir tu sociedad en 48-72h. Trámites registrales, alta en Hacienda y SS. ¿Qué tipo?', quickReplies: ['S.L.', 'Autónomo', 'Más info'] }; if (lower.includes('fiscal')) return { text: 'Asesoría fiscal: IVA, IRPF, Sociedades, planificación fiscal. ¿Tienes consulta específica?', quickReplies: ['IVA', 'Renta', 'Sociedades'] }; if (lower.includes('precio') || lower.includes('tarifa')) return { text: 'Autónomos desde 50€/mes, PYMES desde 150€/mes. ¿Qué tipo de negocio tienes?', quickReplies: ['Autónomo', 'PYME'] }; if (lower.includes('horario')) return { text: 'Lunes a Viernes de 08:00 a 15:00. También por WhatsApp.', quickReplies: ['Llamar', 'Email'] }; if (lower.includes('asesor') || lower.includes('hablar')) return { text: 'Llámanos al 91 430 00 12 o déjanos tu email y te contactamos en 24h.', quickReplies: ['Llamar', 'Email', 'WhatsApp'] }; return { text: 'Gracias por tu mensaje. ¿Eres autónomo o tienes empresa?', quickReplies: ['Autónomo', 'Empresa', 'Crear empresa'] }; }
+    function acceptCookies() { localStorage.setItem('cookies', 'accepted'); document.getElementById('cookieBanner').style.display = 'none'; }
+    function rejectCookies() { localStorage.setItem('cookies', 'rejected'); document.getElementById('cookieBanner').style.display = 'none'; }
+    function configCookies() { alert('Panel de configuración de cookies'); }
+    if (localStorage.getItem('cookies')) document.getElementById('cookieBanner').style.display = 'none';
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { e.preventDefault(); const target = document.querySelector(this.getAttribute('href')); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); });
+</script>
+</body>
+</html>

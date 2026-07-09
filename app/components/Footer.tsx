@@ -76,6 +76,7 @@ export default function Footer() {
               <Link href="/blog" className="footer-link block hover:text-white">{t.blog}</Link>
               <Link href="/about" className="footer-link block hover:text-white">{t.about}</Link>
               <Link href="/contacto" className="footer-link block hover:text-white">{t.contactLink}</Link>
+              <Link href="/faq" className="footer-link block hover:text-white">{t.faq}</Link>
             </div>
           </div>
 

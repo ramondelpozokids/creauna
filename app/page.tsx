@@ -52,7 +52,7 @@ const translations = {
       tag: "MÁS SIMPLE, MÁS CLARO",
       title: "Tu web profesional, sin la complejidad de siempre",
       desc: "Olvídate de presupuestos opacos y plazos interminables. CREAUNA simplifica el camino: de la idea a una web lista para publicar, con calidad y criterio en cada paso.",
-      processLink: "Descubre cómo funciona el proceso en 3 pasos",
+      processLink: "Ver demo interactiva en 3 pasos",
     },
     founder: {
       tag: "UNA VISIÓN PERSONAL",
@@ -112,7 +112,7 @@ const translations = {
       tag: "SIMPLER, CLEARER",
       title: "Your professional website, without the usual complexity",
       desc: "Forget opaque quotes and endless timelines. CREAUNA shortens the path: from idea to a publish-ready site, with quality and judgment at every step.",
-      processLink: "See how the 3-step process works",
+      processLink: "Watch the interactive 3-step demo",
     },
     founder: {
       tag: "A PERSONAL VISION",
@@ -211,7 +211,7 @@ export default function CreaunaLanding() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link 
-              href="/como-funciona" 
+              href="/demo" 
               className="w-full md:w-auto px-10 py-4 rounded-2xl border border-white/30 hover:bg-white/10 text-base font-medium transition text-center"
             >
               {t.ctaDemo}
@@ -377,7 +377,7 @@ export default function CreaunaLanding() {
               
               <div className="mt-8">
                 <Link 
-                  href="/como-funciona" 
+                  href="/demo" 
                   className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-semibold transition"
                 >
                   {t.future.processLink}

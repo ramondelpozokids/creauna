@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rest Art Café | Restaurante con Terraza en Vallecas</title>
+<meta name="description" content="Rest Art Café — restaurante con terraza en Puente de Vallecas. Menú del día, carta digital y reservas.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{serif:['Playfair Display','serif'],sans:['Lato','sans-serif']}}}}</script>
+<style>@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}.animate-fade-in-up{animation:fadeInUp 1s ease-out forwards}</style>
+</head>
+<body class="min-h-screen bg-[#fdfbf7] text-stone-800 font-sans scroll-smooth selection:bg-amber-200">
+<header class="bg-white/95 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center max-w-6xl">
+    <a href="#inicio" class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wide">Rest <span class="text-amber-700">Art</span> Café</a>
+    <nav class="hidden lg:flex space-x-6 text-sm font-medium uppercase tracking-wider text-stone-600">
+      <a href="#inicio" class="hover:text-amber-700 py-2">Inicio</a>
+      <a href="#menu-diario" class="hover:text-amber-700 py-2">Menú</a>
+      <a href="#carta" class="hover:text-amber-700 py-2">Carta</a>
+      <a href="#reservas" class="hover:text-amber-700 py-2">Reservas</a>
+      <a href="#galeria" class="hover:text-amber-700 py-2">Galería</a>
+      <a href="#ubicacion" class="hover:text-amber-700 py-2">Ubicación</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="https://wa.me/34910712322" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold hover:bg-green-700 shadow-md">WhatsApp</a>
+      <a href="tel:+34910712322" class="hidden md:flex items-center gap-2 text-stone-700 font-bold hover:text-amber-700">📞 910 71 23 22</a>
+    </div>
+  </div>
+</header>
+
+<section id="inicio" class="relative h-[85vh] w-full overflow-hidden">
+  <img src="img/hero-fachada.webp" alt="Terraza Rest Art Café" class="absolute inset-0 w-full h-full object-cover brightness-[0.65]">
+  <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4">
+    <div class="mb-6 animate-fade-in-up">
+      <span class="text-amber-400 text-lg font-serif italic tracking-widest block mb-2">Restaurante &amp; Terraza</span>
+      <h1 class="text-5xl md:text-7xl font-serif font-bold mb-4 drop-shadow-xl">Rest Art Café</h1>
+      <div class="flex items-center justify-center gap-2 text-yellow-400 text-lg mb-6 bg-black/30 px-4 py-2 rounded-full backdrop-blur-sm">★★★★★ <span class="text-white text-base font-normal ml-2">4.3 (819 reseñas verificadas)</span></div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+      <a href="#reservas" class="bg-amber-700 hover:bg-amber-800 text-white px-10 py-4 rounded-sm font-serif font-bold text-lg shadow-xl border border-amber-600">Reservar Mesa</a>
+      <a href="#carta" class="bg-white hover:bg-stone-100 text-stone-900 px-10 py-4 rounded-sm font-serif font-bold text-lg shadow-xl">Ver Carta</a>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 bg-white border-b border-stone-100">
+  <div class="container mx-auto px-4 max-w-6xl grid md:grid-cols-3 gap-8 text-center md:divide-x divide-stone-200">
+    <div class="p-6"><h3 class="font-serif font-bold text-amber-800 mb-3 text-xl">Ubicación</h3><p class="text-stone-600">C. de Sierra Toledana, 4<br>28038 Madrid, Vallecas</p><a href="#ubicacion" class="text-amber-700 font-bold text-sm mt-2 inline-block hover:underline">Cómo llegar →</a></div>
+    <div class="p-6"><h3 class="font-serif font-bold text-amber-800 mb-3 text-xl">Horario</h3><p class="text-stone-600">Lunes, Miércoles - Domingo: 13:00 - 00:00<br>Viernes - Sábado hasta las 01:00</p></div>
+    <div class="p-6"><h3 class="font-serif font-bold text-amber-800 mb-3 text-xl">Servicios</h3><p class="text-stone-600">✅ Terraza con jardines<br>✅ Accesible PMR ✅ Para llevar</p></div>
+  </div>
+</section>
+
+<section id="menu-diario" class="py-24 container mx-auto px-4 max-w-6xl">
+  <div class="text-center mb-16">
+    <span class="text-amber-700 font-serif italic text-lg">Lunes a Viernes</span>
+    <h2 class="text-5xl font-serif font-bold text-stone-900 mt-2 mb-6">Menú del Día</h2>
+    <p class="text-stone-600 max-w-2xl mx-auto text-lg">Disfruta de nuestra cocina casera al mejor precio. Incluye pan, postre o café.</p>
+    <div class="mt-8 inline-block bg-white border-2 border-amber-700 text-amber-900 px-8 py-3 rounded-sm font-serif font-bold text-2xl shadow-sm">12,50 €</div>
+  </div>
+  <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+    <div class="bg-white p-8 rounded-sm shadow-lg border-t-4 border-amber-700"><h3 class="text-2xl font-serif font-bold mb-6 border-b border-stone-100 pb-4">🥗 Primeros Platos</h3><ul class="space-y-4 text-stone-700 font-medium"><li>Alubias blancas con matanza asturiana</li><li>Tallarines con langostinos y verduritas</li><li>Calabacín relleno de picada de ternera gratinado</li><li>Ensalada mixta</li></ul></div>
+    <div class="bg-white p-8 rounded-sm shadow-lg border-t-4 border-amber-700 md:-translate-y-4"><h3 class="text-2xl font-serif font-bold mb-6 border-b border-stone-100 pb-4">🥩 Segundos Platos</h3><ul class="space-y-4 text-stone-700 font-medium"><li>Entraña de ternera a la plancha</li><li>Pechuga de pollo crispy</li><li>Lomo de salmón a la plancha</li></ul></div>
+    <div class="bg-white p-8 rounded-sm shadow-lg border-t-4 border-amber-700"><h3 class="text-2xl font-serif font-bold mb-6 border-b border-stone-100 pb-4">🍮 Postres</h3><ul class="space-y-4 text-stone-700 font-medium"><li>Flan casero</li><li>Natillas</li><li>Fruta del tiempo</li><li>Café o infusión</li></ul></div>
+  </div>
+</section>
+
+<section class="bg-stone-900 text-white py-20 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image:url('img/hero-fachada.webp')"></div>
+  <div class="container mx-auto px-4 text-center relative z-10 max-w-6xl">
+    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">¿Estás en una de nuestras mesas?</h2>
+    <p class="mb-10 text-stone-300 text-lg">Selecciona tu número para acceder al menú digital</p>
+    <div class="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto"><a href="carta.html?mesa=1" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">1</a>
+            <a href="carta.html?mesa=2" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">2</a>
+            <a href="carta.html?mesa=3" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">3</a>
+            <a href="carta.html?mesa=4" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">4</a>
+            <a href="carta.html?mesa=5" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">5</a>
+            <a href="carta.html?mesa=6" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">6</a>
+            <a href="carta.html?mesa=7" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">7</a>
+            <a href="carta.html?mesa=8" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">8</a>
+            <a href="carta.html?mesa=9" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">9</a>
+            <a href="carta.html?mesa=10" class="w-12 h-12 flex items-center justify-center bg-amber-700 hover:bg-amber-600 rounded-sm font-serif font-bold text-xl transition-all duration-300 border border-amber-500">10</a></div>
+    <div class="mt-8"><a href="carta.html" class="text-amber-400 hover:text-amber-300 underline font-medium text-lg">Ver carta completa sin asignar mesa →</a></div>
+  </div>
+</section>
+
+<section id="carta" class="py-24 container mx-auto px-4 max-w-6xl bg-white">
+  <div class="text-center mb-16"><h2 class="text-4xl font-serif font-bold text-stone-900 mb-4">Nuestra Carta</h2><p class="text-stone-600 text-lg">Una selección de nuestros platos más populares</p></div>
+  <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+    <div class="space-y-6"><h3 class="text-2xl font-bold text-amber-700 border-b-2 border-amber-200 pb-2 font-serif">🥩 Carnes</h3>
+      <div class="flex justify-between items-start"><div><h4 class="font-bold text-lg">Medallones de solomillo</h4><p class="text-stone-500 text-sm mt-1">Queso cheddar, cebolla caramelizada, crema de P.X.</p></div><span class="font-bold text-amber-700 text-lg ml-4">12,80€</span></div>
+      <div class="flex justify-between items-start"><div><h4 class="font-bold text-lg">Lomo madurado de vaca</h4><p class="text-stone-500 text-sm mt-1">A la plancha (350 gr. apx.)</p></div><span class="font-bold text-amber-700 text-lg ml-4">25,50€</span></div>
+    </div>
+    <div class="space-y-6"><h3 class="text-2xl font-bold text-amber-700 border-b-2 border-amber-200 pb-2 font-serif">🍟 De Patatas</h3>
+      <div class="flex justify-between items-start"><div><h4 class="font-bold text-lg">Sartén de Huevos camperos</h4><p class="text-stone-500 text-sm mt-1">Con jamón ibérico</p></div><span class="font-bold text-amber-700 text-lg ml-4">13,50€</span></div>
+      <div class="flex justify-between items-start"><div><h4 class="font-bold text-lg">Patatas Bravas</h4><p class="text-stone-500 text-sm mt-1">Nuestra salsa especial</p></div><span class="font-bold text-amber-700 text-lg ml-4">7,50€</span></div>
+    </div>
+  </div>
+  <div class="text-center mt-12"><a href="carta.html" class="inline-block border-2 border-amber-700 text-amber-700 hover:bg-amber-700 hover:text-white px-8 py-3 rounded-sm font-bold transition font-serif">Ver Carta Completa</a></div>
+</section>
+
+<section id="galeria" class="py-24 bg-[#fdfbf7]">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="text-center mb-16"><h2 class="text-4xl font-serif font-bold text-stone-900 mb-4">Galería</h2><p class="text-stone-600 text-lg">Descubre nuestro espacio, nuestra terraza y nuestros platos</p></div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto"><div class="relative aspect-square group overflow-hidden rounded-sm shadow-md"><img src="img/galeria-1.webp" alt="Galería 1" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"></div>
+            <div class="relative aspect-square group overflow-hidden rounded-sm shadow-md"><img src="img/galeria-2.webp" alt="Galería 2" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"></div>
+            <div class="relative aspect-square group overflow-hidden rounded-sm shadow-md"><img src="img/galeria-3.webp" alt="Galería 3" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"></div>
+            <div class="relative aspect-square group overflow-hidden rounded-sm shadow-md"><img src="img/galeria-4.webp" alt="Galería 4" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"></div>
+            <div class="relative aspect-square group overflow-hidden rounded-sm shadow-md"><img src="img/galeria-5.webp" alt="Galería 5" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"></div>
+            <div class="relative aspect-square group overflow-hidden rounded-sm shadow-md"><img src="img/galeria-6.webp" alt="Galería 6" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"></div></div>
+    <div class="text-center mt-10"><a href="https://www.instagram.com/restartcafe/" target="_blank" rel="noopener" class="text-amber-700 font-bold hover:text-amber-900 font-serif">📷 Ver más fotos en Instagram</a></div>
+  </div>
+</section>
+
+<section id="resenas" class="py-24 bg-white">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="text-center mb-16"><h2 class="text-4xl font-serif font-bold text-stone-900 mb-4">Reseñas</h2><p class="text-stone-600 text-lg">Lo que dicen nuestros clientes</p><div class="flex items-center justify-center gap-2 text-yellow-500 text-xl mt-4">★★★★★ <span class="text-stone-700 text-base font-normal ml-2">4.3 (819 reseñas verificadas)</span></div></div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-[#fdfbf7] p-8 rounded-sm shadow-md border-l-4 border-amber-700"><div class="flex items-center gap-4 mb-4"><div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center font-bold text-amber-800">AC</div><div><h4 class="font-bold">Andrea Cayetano</h4><p class="text-xs text-stone-500">Local Guide · 119 reseñas</p></div></div><div class="text-yellow-500 text-sm mb-3">★★★★★</div><p class="text-stone-700 italic">"Bar-restaurante con un interior pequeñito pero acogedor y una gran terraza rodeada de jardines. El servicio es atento y la comida casera."</p></div>
+      <div class="bg-[#fdfbf7] p-8 rounded-sm shadow-md border-l-4 border-amber-700"><div class="flex items-center gap-4 mb-4"><div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center font-bold text-amber-800">MG</div><div><h4 class="font-bold">Miguel B.</h4><p class="text-xs text-stone-500">Local Guide · 443 reseñas</p></div></div><div class="text-yellow-500 text-sm mb-3">★★★★★</div><p class="text-stone-700 italic">"La terraza es una maravilla, se está súper a gusto. La comida estuvo todo bastante buena. Muy recomendable."</p></div>
+      <div class="bg-[#fdfbf7] p-8 rounded-sm shadow-md border-l-4 border-amber-700"><div class="flex items-center gap-4 mb-4"><div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center font-bold text-amber-800">PA</div><div><h4 class="font-bold">Pedro Aguado</h4><p class="text-xs text-stone-500">Local Guide · 152 reseñas</p></div></div><div class="text-yellow-500 text-sm mb-3">★★★★★</div><p class="text-stone-700 italic">"Muy agradable y buen servicio. Tienen una terraza bastante grande al aire libre. Muy recomendable."</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="reservas" class="py-24 bg-[#fdfbf7]">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="bg-white rounded-sm shadow-2xl overflow-hidden flex flex-col md:flex-row">
+      <div class="md:w-1/2 p-10 md:p-16 flex flex-col justify-center bg-stone-900 text-white">
+        <h2 class="text-4xl font-serif font-bold mb-6">Reserva tu Mesa</h2>
+        <p class="text-stone-300 mb-8 text-lg">Reserva ahora y asegura tu lugar. Confirmación inmediata.</p>
+        <div class="space-y-4 mb-8 text-stone-200"><div>✅ Confirmación inmediata</div><div>✅ Cancelación gratuita hasta 2h antes</div><div>✅ Mejor precio garantizado</div></div>
+        <div class="bg-stone-800 p-6 rounded-sm border border-stone-700"><p class="text-sm text-stone-400 mb-2 uppercase">O reserva por teléfono:</p><a href="tel:+34910712322" class="text-3xl font-serif font-bold text-amber-500">📞 910 71 23 22</a></div>
+      </div>
+      <div class="md:w-1/2 p-10 md:p-16 bg-white">
+        <form id="form-reservas" class="space-y-6">
+          <div><label class="block text-xs font-bold uppercase text-stone-500 mb-2">Fecha</label><input type="date" id="fecha" required class="w-full bg-stone-50 border border-stone-300 rounded-sm p-4 outline-none"></div>
+          <div class="grid grid-cols-2 gap-6">
+            <div><label class="block text-xs font-bold uppercase text-stone-500 mb-2">Hora</label><select id="hora" required class="w-full bg-stone-50 border border-stone-300 rounded-sm p-4"><option value="">Seleccionar</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option></select></div>
+            <div><label class="block text-xs font-bold uppercase text-stone-500 mb-2">Personas</label><select id="personas" required class="w-full bg-stone-50 border border-stone-300 rounded-sm p-4"><option value="">Seleccionar</option><option value="2">2 personas</option><option value="3">3 personas</option><option value="4">4 personas</option><option value="5+">5+ personas</option></select></div>
+          </div>
+          <div><label class="block text-xs font-bold uppercase text-stone-500 mb-2">Teléfono</label><input type="tel" id="telefono" required placeholder="+34 600 000 000" class="w-full bg-stone-50 border border-stone-300 rounded-sm p-4"></div>
+          <button type="submit" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-serif font-bold py-4 rounded-sm text-lg shadow-lg">Confirmar Reserva</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ubicacion" class="py-24 bg-white border-t border-stone-100">
+  <div class="container mx-auto px-4 max-w-6xl grid md:grid-cols-2 gap-16 items-start">
+    <div>
+      <h2 class="text-4xl font-serif font-bold text-stone-900 mb-8">Ubicación</h2>
+      <div class="bg-[#fdfbf7] p-8 rounded-sm mb-8 border border-stone-200"><h3 class="font-bold text-xl mb-2 font-serif">📍 Dirección</h3><p class="text-stone-600 text-lg mb-4">C. de Sierra Toledana, 4<br>Puente de Vallecas, 28038 Madrid</p><a href="https://maps.google.com/?q=C.+de+Sierra+Toledana,+4,+Madrid" target="_blank" class="text-amber-700 font-bold hover:underline">Abrir en Google Maps →</a></div>
+      <h3 class="font-bold text-xl mb-4 font-serif">🚇 Cómo llegar</h3>
+      <ul class="space-y-2 text-stone-600 mb-8"><li><strong>Metro:</strong> Puente de Vallecas (Línea 1)</li><li><strong>Bus:</strong> Líneas de EMT cercanas</li></ul>
+      <div class="w-full h-64 bg-stone-200 rounded-sm overflow-hidden shadow-md"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3038.666!2d-3.65!3d40.39!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd4228f8c8c8c8c9%3A0x123!2sC.%20de%20Sierra%20Toledana%2C%204%2C%2028038%20Madrid!5e0!3m2!1ses!2ses!4v1!5m2!1ses!2ses" width="100%" height="100%" style="border:0" loading="lazy" title="Mapa"></iframe></div>
+    </div>
+    <div>
+      <h2 class="text-4xl font-serif font-bold text-stone-900 mb-8">Contacto</h2>
+      <div class="space-y-6">
+        <div class="flex gap-4"><span class="text-2xl">📞</span><div><h4 class="font-bold">Teléfono</h4><a href="tel:+34910712322" class="text-amber-700 text-lg">910 71 23 22</a></div></div>
+        <div class="flex gap-4"><span class="text-2xl">💬</span><div><h4 class="font-bold">WhatsApp</h4><a href="https://wa.me/34910712322" target="_blank" class="text-amber-700 text-lg">Enviar mensaje</a></div></div>
+        <div class="flex gap-4"><span class="text-2xl">✉️</span><div><h4 class="font-bold">Email</h4><a href="mailto:info@restartcafe.com" class="text-amber-700 text-lg">info@restartcafe.com</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-stone-900 text-stone-400 py-16 border-t border-stone-800">
+  <div class="container mx-auto px-4 max-w-6xl grid md:grid-cols-4 gap-12 text-sm">
+    <div class="col-span-1 md:col-span-2"><h4 class="text-white font-serif font-bold text-2xl mb-4">Rest Art Café</h4><p class="mb-6 max-w-xs">Donde la tradición culinaria se encuentra con la innovación en un ambiente acogedor en Vallecas.</p></div>
+    <div><h4 class="text-white font-bold text-lg mb-4 uppercase">Explorar</h4><ul class="space-y-2"><li><a href="#inicio" class="hover:text-amber-500">Inicio</a></li><li><a href="#menu-diario" class="hover:text-amber-500">Menú del Día</a></li><li><a href="#carta" class="hover:text-amber-500">Carta</a></li><li><a href="#reservas" class="hover:text-amber-500">Reservas</a></li><li><a href="#galeria" class="hover:text-amber-500">Galería</a></li><li><a href="#ubicacion" class="hover:text-amber-500">Ubicación</a></li></ul></div>
+    <div><h4 class="text-white font-bold text-lg mb-4 uppercase">Legal</h4><ul class="space-y-2"><li><a href="#" class="hover:text-amber-500">Aviso Legal</a></li><li><a href="#" class="hover:text-amber-500">Privacidad</a></li><li><a href="#" class="hover:text-amber-500">Cookies</a></li></ul></div>
+  </div>
+  <div class="container mx-auto px-4 mt-12 pt-8 border-t border-stone-800 text-center text-xs text-stone-600"><p>© 2026 Rest Art Café. Todos los derechos reservados.</p></div>
+</footer>
+<script>
+document.getElementById('form-reservas').addEventListener('submit',function(e){e.preventDefault();const f=document.getElementById('fecha').value,h=document.getElementById('hora').value,p=document.getElementById('personas').value,t=document.getElementById('telefono').value;if(!f||!h||!p||!t){alert('Completa todos los campos');return;}const m='Hola Rest Art Café, quiero reservar mesa:%0A📅 '+f+'%0A🕒 '+h+'%0A '+p+'%0A📞 '+t;window.open('https://wa.me/34910712322?text='+m,'_blank');});
+document.getElementById('fecha').min=new Date().toISOString().split('T')[0];
+</script>
+</body></html>

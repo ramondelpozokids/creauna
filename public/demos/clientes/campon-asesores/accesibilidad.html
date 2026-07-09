@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Accesibilidad | Campón Asesores</title>
+    <meta name="description" content="Declaración de accesibilidad de Campón Asesores. Compromiso con la accesibilidad web conforme a UNE-EN 301 549:2022 y WCAG 2.1 AA.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #004080; --primary-dark: #003366; --secondary: #0066cc; --accent: #ffc107; --text: #333; --bg: #f8f9fa; --white: #fff; --shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        
+        header { background: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
+        .header-top { background: var(--primary); color: var(--white); padding: 0.5rem 0; text-align: center; font-size: 0.9rem; }
+        .header-top a { color: var(--white); text-decoration: none; margin: 0 0.5rem; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo img { height: 70px; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: var(--white) !important; padding: 0.5rem 1.2rem; border-radius: 5px; }
+        
+        .page-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 3rem 0; text-align: center; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .page-header p { opacity: 0.95; font-size: 1.1rem; }
+        
+        .legal-content { background: var(--white); padding: 3rem; margin: 2rem auto; border-radius: 10px; box-shadow: var(--shadow); }
+        .legal-content h2 { color: var(--primary); margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent); font-size: 1.8rem; }
+        .legal-content h3 { color: var(--primary-dark); margin: 1.5rem 0 0.5rem; font-size: 1.3rem; }
+        .legal-content h4 { color: var(--primary); margin: 1rem 0 0.5rem; font-size: 1.1rem; }
+        .legal-content p { margin-bottom: 1rem; text-align: justify; }
+        .legal-content ul { margin: 1rem 0 1rem 2rem; }
+        .legal-content li { margin-bottom: 0.5rem; }
+        
+        .highlight-box { background: var(--bg); padding: 1.5rem; border-left: 4px solid var(--primary); margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .highlight-box h3 { margin-top: 0; color: var(--primary); }
+        
+        .compliance-list { background: var(--bg); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+        .compliance-list h4 { color: var(--primary); margin-bottom: 1rem; }
+        .compliance-list ul { list-style: none; margin-left: 0; columns: 2; column-gap: 2rem; }
+        .compliance-list li { padding: 0.3rem 0; padding-left: 1.5rem; position: relative; }
+        .compliance-list li:before { content: "✓"; color: var(--success); font-weight: bold; position: absolute; left: 0; }
+        
+        .non-compliance { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+        .non-compliance h4 { color: #856404; margin-bottom: 1rem; }
+        .non-compliance ul { margin-left: 1.5rem; }
+        .non-compliance li { margin-bottom: 0.8rem; }
+        
+        .contact-box { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 2rem; border-radius: 10px; margin: 2rem 0; text-align: center; }
+        .contact-box h3 { color: var(--white); margin-bottom: 1rem; }
+        .contact-box a { color: var(--accent); font-weight: bold; text-decoration: none; }
+        .contact-box a:hover { text-decoration: underline; }
+        
+        footer { background: var(--primary-dark); color: var(--white); padding: 2rem 0; text-align: center; margin-top: 3rem; }
+        footer a { color: var(--white); text-decoration: none; margin: 0 10px; }
+        footer a:hover { color: var(--accent); }
+        
+        @media (max-width: 768px) {
+            .legal-content { padding: 2rem 1.5rem; }
+            .page-header h1 { font-size: 2rem; }
+            .compliance-list ul { columns: 1; }
+        }
+        
+        /* Skip link for accessibility */
+        .skip-link { position: absolute; top: -40px; left: 0; background: var(--primary); color: white; padding: 8px; z-index: 100; transition: top 0.3s; }
+        .skip-link:focus { top: 0; }
+    </style>
+</head>
+<body>
+
+<!-- Skip link for keyboard navigation -->
+<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+<header>
+    <div class="header-top">
+        <div class="container">
+            <i class="fas fa-phone"></i> <a href="tel:914300012">91 430 00 12</a>
+            <i class="fas fa-envelope" style="margin-left: 1rem;"></i> <a href="mailto:cai@camponasesores.es">cai@camponasesores.es</a>
+        </div>
+    </div>
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <img src="logo-campon.png" alt="Campón Asesores">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="tarifas.html">Tarifas</a></li>
+                <li><a href="contacto.html" class="btn-primary">Contacto</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-universal-access"></i> Política de Accesibilidad</h1>
+        <p>Compromiso con la accesibilidad web conforme a UNE-EN 301 549:2022 y WCAG 2.1 AA</p>
+    </div>
+</section>
+
+<div class="container" id="main-content">
+    <div class="legal-content">
+        
+        <section>
+            <h2>1. Declaración de accesibilidad</h2>
+            <p>Esta web se ha comprometido a hacer accesible contenido de conformidad con el criterio de accesibilidad del Programa Kit Digital, conforme a los anexos de la norma <strong>UNE-EN 301 549:2022</strong>.</p>
+        </section>
+
+        <section>
+            <h2>2. Situación de cumplimiento</h2>
+            <p>Las tecnologías web en las que se basa la conformidad de la accesibilidad del presente sitio son:</p>
+            <ul>
+                <li>HTML5</li>
+                <li>CSS</li>
+                <li>WAI-ARIA</li>
+                <li>DOM</li>
+                <li>Otras tecnologías de la plataforma Duda (<a href="https://www.duda.co/" target="_blank">https://www.duda.co/</a>)</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <h3><i class="fas fa-info-circle"></i> Estado de conformidad</h3>
+                <p style="margin-bottom: 0;"><strong>Este sitio web es PARCIALMENTE CONFORME</strong> con la norma UNE-EN 301 549:2022.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>3. Aspectos con los que es conforme</h2>
+            <p>Los siguientes requisitos de accesibilidad se cumplen en este sitio web:</p>
+            
+            <div class="compliance-list">
+                <h4><i class="fas fa-check-circle"></i> Requisitos cumplidos (Nivel A y AA)</h4>
+                <ul>
+                    <li>5.2 Activación de características de accesibilidad</li>
+                    <li>9.1.3.3 Características sensoriales</li>
+                    <li>9.1.3.4 Orientación</li>
+                    <li>9.1.4.1 Uso del Color</li>
+                    <li>9.1.4.3 Contraste (mínimo)</li>
+                    <li>9.1.4.4 Cambio de tamaño del texto</li>
+                    <li>9.1.4.10 Reajuste del texto</li>
+                    <li>9.1.4.11 Contraste no textual</li>
+                    <li>9.1.4.12 Espaciado del texto</li>
+                    <li>9.1.4.13 Contenido señalado con el puntero</li>
+                    <li>9.2.1.1 Teclado</li>
+                    <li>9.2.1.2 Sin trampas para el foco del teclado</li>
+                    <li>9.2.1.4 Atajos del teclado</li>
+                    <li>9.2.3.1 Umbral de tres destellos o menos</li>
+                    <li>9.2.4.1 Evitar bloques</li>
+                    <li>9.2.4.2 Titulado de páginas</li>
+                    <li>9.2.4.3 Orden del foco</li>
+                    <li>9.2.4.5 Múltiples vías</li>
+                    <li>9.2.4.7 Foco visible</li>
+                    <li>9.2.5.1 Gestos con el puntero</li>
+                    <li>9.2.5.3 Inclusión de la etiqueta en el nombre</li>
+                    <li>9.2.5.4 Activación mediante movimiento</li>
+                    <li>9.3.1.1 Idioma de la página</li>
+                    <li>9.3.2.1 Al recibir el foco</li>
+                    <li>9.3.2.2 Al recibir entradas</li>
+                    <li>9.3.2.3 Navegación coherente</li>
+                    <li>9.3.2.4 Identificación coherente</li>
+                    <li>9.3.3.1 Identificación de errores</li>
+                    <li>9.3.3.2 Etiquetas o instrucciones</li>
+                    <li>9.3.3.3 Sugerencias ante errores</li>
+                    <li>9.4.1.2 Nombre, función, valor</li>
+                    <li>9.4.1.3 Mensajes de estado</li>
+                    <li>9.6 Requisitos de conformidad WCAG</li>
+                    <li>11.7 Preferencias de usuario</li>
+                    <li>11.8.1 Tecnología de gestión de contenidos</li>
+                    <li>11.8.2 Creación de contenidos accesibles</li>
+                    <li>11.8.3 Preservación de información de accesibilidad</li>
+                    <li>11.8.4 Servicio de reparación</li>
+                    <li>11.8.5 Plantillas</li>
+                    <li>12.1.1 Características de accesibilidad y compatibilidad</li>
+                    <li>12.1.2 Documentación accesible</li>
+                    <li>12.2.3 Comunicación efectiva</li>
+                    <li>12.2.4 Documentación accesible</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. Contenido no accesible</h2>
+            <p>El siguiente contenido no es accesible por los motivos indicados:</p>
+            
+            <div class="non-compliance">
+                <h4><i class="fas fa-exclamation-triangle"></i> Aspectos en proceso de mejora</h4>
+                <ul>
+                    <li><strong>9.1.1.1 Contenido no textual:</strong> No todo el contenido no textual dispone de alternativa textual equivalente. Excepciones aplicables: controles con nombre descriptivo, contenido multimedia con identificación descriptiva, pruebas que no serían válidas en texto, contenido sensorial con identificación descriptiva, CAPTCHA con alternativas para diferentes percepciones, y contenido decorativo ignorado por ayudas técnicas.</li>
+                    <li><strong>9.1.3.1 Información y relaciones:</strong> En algunas secciones, la estructura semántica puede no ser completamente interpretada por todas las ayudas técnicas.</li>
+                    <li><strong>9.2.4.4 Propósito de los enlaces (en contexto):</strong> Algunos enlaces pueden requerir contexto adicional para comprender su propósito completo.</li>
+                    <li><strong>9.2.4.6 Encabezados y etiquetas:</strong> Ciertos encabezados y etiquetas podrían describir con mayor precisión su tema o propósito.</li>
+                    <li><strong>9.4.1.1 Procesamiento:</strong> En contenidos implementados con lenguajes de marcas, algunos elementos pueden no cumplir completamente con las especificaciones de anidación o unicidad de ID.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Preparación de la presente declaración</h2>
+            <p>La presente declaración fue preparada el <strong>1 de enero de 2023</strong>.</p>
+            <p>El método empleado para preparar la declaración ha sido la empresa tercera <strong>QDQ MEDIA SAU</strong>, la cual certifica que el presente sitio web corresponde sustancialmente a la interpretación de la guía informativa proporcionada por las pautas <strong>WCAG 2.1 AA</strong>.</p>
+            <p>En este esfuerzo continuo en la eliminación de barreras, seguiremos mejorando este sitio hasta alcanzar una accesibilidad y usabilidad óptimas para todos los usuarios.</p>
+            
+            <div class="highlight-box">
+                <p style="margin-bottom: 0;"><strong>Última revisión de la declaración:</strong> 1 de enero de 2023</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>6. Observaciones y datos de contacto</h2>
+            <p>Si encuentra barreras de acceso o problemas con alguna página o función de este sitio web que pueda suponer un obstáculo para los visitantes que quieran acceder a él, puede ponerse en contacto en cualquier momento:</p>
+            
+            <div class="contact-box">
+                <h3><i class="fas fa-headset"></i> ¿Necesitas ayuda?</h3>
+                <p style="margin-bottom: 1rem;">Estamos comprometidos con la accesibilidad. Si encuentras dificultades para navegar por nuestra web, contáctanos y te ayudaremos.</p>
+                <p style="margin-bottom: 0;">
+                    <i class="fas fa-envelope"></i> <a href="mailto:cai@camponasesores.es">cai@camponasesores.es</a><br>
+                    <i class="fas fa-phone"></i> <a href="tel:914300012" style="color: var(--accent);">91 430 00 12</a><br>
+                    <i class="fas fa-map-marker-alt"></i> Calle Alto del León 12, 28038 Madrid
+                </p>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2026 CAI CAMPÓN ASESORES, S.L. Todos los derechos reservados. | 
+        <a href="aviso-legal.html">Aviso Legal</a> | 
+        <a href="politica-privacidad.html">Política de Privacidad</a> | 
+        <a href="politica-cookies.html">Política de Cookies</a> | 
+        <a href="accesibilidad.html" style="color: var(--accent);">Accesibilidad</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mejora de accesibilidad: foco visible en elementos interactivos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Añadir atributos ARIA a enlaces externos
+        document.querySelectorAll('a[target="_blank"]').forEach(link => {
+            if (!link.getAttribute('aria-label')) {
+                link.setAttribute('aria-label', link.textContent + ' (abre en nueva ventana)');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
