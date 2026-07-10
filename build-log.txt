@@ -1,0 +1,94 @@
+﻿node.exe : npm warn Unknown env config "devdir". This will stop working in the next major version of npm. See `npm 
+help npmrc` for supported config options.
+En C:\nvm4w\nodejs\npm.ps1: 16 Carácter: 5
++     & "$basedir/node$exe"  "$basedir/node_modules/npm/bin/npm-cli.js" ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...config options.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+> creauna@0.1.0 build
+> prisma generate && next build
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+
+Ô£ö Generated Prisma Client (v5.22.0) to .\node_modules\@prisma\client in 129ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+
+Ôû▓ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local, .env
+
+ÔÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 7.7s
+  Running TypeScript ...
+  Finished TypeScript in 9.6s ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/43) ...
+  Generating static pages using 5 workers (10/43) 
+  Generating static pages using 5 workers (21/43) 
+  Generating static pages using 5 workers (32/43) 
+Ô£ô Generating static pages using 5 workers (43/43) in 1682ms
+  Finalizing page optimization ...
+
+Route (app)
+Ôöî Ôùï /
+Ôö£ Ôùï /_not-found
+Ôö£ Ôùï /about
+Ôö£ ãÆ /api/ai/status
+Ôö£ ãÆ /api/auth/login
+Ôö£ ãÆ /api/auth/logout
+Ôö£ ãÆ /api/auth/me
+Ôö£ ãÆ /api/auth/register
+Ôö£ ãÆ /api/chat
+Ôö£ ãÆ /api/contact
+Ôö£ ãÆ /api/contact/status
+Ôö£ ãÆ /api/credits
+Ôö£ ãÆ /api/projects
+Ôö£ ãÆ /api/projects/[id]
+Ôö£ ãÆ /api/projects/[id]/audits
+Ôö£ ãÆ /api/projects/[id]/snapshots
+Ôö£ ãÆ /api/projects/[id]/snapshots/[snapshotId]/restore
+Ôö£ ãÆ /api/stripe/checkout
+Ôö£ ãÆ /api/stripe/status
+Ôö£ ãÆ /api/stripe/webhook
+Ôö£ ãÆ /api/studio/delivery
+Ôö£ ãÆ /api/studio/export
+Ôö£ ãÆ /api/studio/generate
+Ôö£ ãÆ /api/studio/preview-impact
+Ôö£ Ôùï /blog
+Ôö£ Ôùï /como-funciona
+Ôö£ Ôùï /contacto
+Ôö£ Ôùï /cookies
+Ôö£ Ôùï /dashboard
+Ôö£ Ôùï /datos
+Ôö£ ãÆ /editor/[id]
+Ôö£ Ôùï /equipo-ias
+Ôö£ Ôùï /guia
+Ôö£ Ôùï /legal
+Ôö£ Ôùï /login
+Ôö£ Ôùï /mapa
+Ôö£ Ôùï /modernizacion
+Ôö£ Ôùï /precios
+Ôö£ ãÆ /preview/[id]
+Ôö£ Ôùï /privacidad
+Ôö£ Ôùï /settings
+Ôö£ Ôùï /signup
+Ôö£ Ôùï /sitemap.xml
+Ôö£ Ôùï /studio
+Ôö£ Ôùï /superadmin
+Ôö£ Ôùï /templates
+Ôö£ ãÆ /templates/preview/[slug]
+Ôöö Ôùï /web-a-medida
+
+
+ãÆ Proxy (Middleware)
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+
