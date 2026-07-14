@@ -187,6 +187,118 @@ export function resolveTemplateSlug(ruleSlug: string): string {
   return ruleSlug;
 }
 
+const FULL_SITE_FEATURES: SiteFeatures = {
+  menu: false,
+  services: false,
+  about: false,
+  blog: false,
+  gallery: true,
+  reviews: true,
+  location: true,
+  contact: true,
+  reservation: false,
+  calendar: false,
+  legalFooter: true,
+  social: true,
+  whatsapp: true,
+  scrollUp: true,
+  sidebar: false,
+  documentUpload: false,
+  vividColors: false,
+};
+
+const TEMPLATE_VARIANT: Partial<Record<string, BusinessVariant>> = {
+  'iron-ink': 'tattoo',
+  ledger: 'corporate',
+  lex: 'corporate',
+  shield: 'corporate',
+  nexus: 'corporate',
+  vanguard: 'corporate',
+  habitat: 'corporate',
+  blueprint: 'corporate',
+  care: 'corporate',
+  volt: 'renewable',
+  lumen: 'beauty',
+  'classic-cut': 'beauty',
+  stanton: 'foodblog',
+  mokka: 'cafe',
+  sable: 'cafe',
+  vesper: 'luxury',
+  torque: 'automotive',
+  pistons: 'automotive',
+  retreat: 'luxury',
+  serene: 'luxury',
+  atelier: 'luxury',
+  maison: 'luxury',
+  vows: 'luxury',
+  essence: 'luxury',
+  chronicle: 'luxury',
+  arc: 'nonprofit',
+  kebab: 'kebab',
+};
+
+function findIntentRuleForTemplate(slug: string): IntentRule {
+  const resolved = resolveTemplateSlug(slug);
+  return (
+    INTENT_RULES.find((r) => r.slug === resolved) ??
+    INTENT_RULES.find((r) => r.slug === slug) ??
+    INTENT_RULES.find((r) => r.slug === 'vesper')!
+  );
+}
+
+function defaultFeaturesForTemplateCategory(category: TemplateCategory, slug: string): SiteFeatures {
+  const base = { ...FULL_SITE_FEATURES };
+
+  switch (category) {
+    case 'gastronomy':
+      return { ...base, menu: true, about: true, reservation: true };
+    case 'services':
+      return {
+        ...base,
+        services: true,
+        about: true,
+        reservation: ['iron-ink', 'classic-cut', 'lumen', 'forge', 'zenith', 'paw', 'lens'].includes(slug),
+      };
+    case 'luxury':
+      return { ...base, services: true, about: true, reservation: true };
+    case 'corporate':
+      return {
+        ...base,
+        services: true,
+        about: true,
+        documentUpload: slug === 'ledger',
+      };
+    case 'tech':
+      return { ...base, services: true, about: true, gallery: slug !== 'arc' };
+    default:
+      return { ...base, services: true, about: true };
+  }
+}
+
+function variantForTemplateSlug(slug: string, rule: IntentRule): BusinessVariant {
+  const resolved = resolveTemplateSlug(slug);
+  if (TEMPLATE_VARIANT[resolved]) return TEMPLATE_VARIANT[resolved]!;
+  if (TEMPLATE_VARIANT[slug]) return TEMPLATE_VARIANT[slug]!;
+  return detectVariant(`${rule.typeEs} ${rule.typeEn} ${slug}`);
+}
+
+/** Intent completo al cargar una plantilla del catálogo en Studio (mismo motor que «describir web»). */
+export function buildIntentFromTemplateSlug(templateSlug: string, lang: 'es' | 'en'): ParsedIntent {
+  const slug = resolveTemplateSlug(templateSlug);
+  const rule = findIntentRuleForTemplate(slug);
+  const features = defaultFeaturesForTemplateCategory(rule.categoryKey, slug);
+  const variant = variantForTemplateSlug(slug, rule);
+
+  return {
+    templateSlug: slug,
+    businessName: lang === 'es' ? rule.defaultNameEs : rule.defaultNameEn,
+    businessType: lang === 'es' ? rule.typeEs : rule.typeEn,
+    categoryKey: rule.categoryKey,
+    features,
+    variant,
+  };
+}
+
 export function isExistingSiteSections(sections: { type: string; html?: string }[]): boolean {
   if (sections.length <= 1) return false;
   const substantive = sections.filter(

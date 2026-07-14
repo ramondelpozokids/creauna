@@ -15,7 +15,7 @@ import StudioSectionPreview from '../components/StudioSectionPreview';
 import { useLanguage } from '../components/LanguageProvider';
 import { getCredits, setCredits as setCreditsCache, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
-import { buildTemplateSections, toStudioSections } from '../lib/templatePages';
+import { loadCatalogTemplate } from '../lib/studio/loadCatalogTemplate';
 
 type Language = 'es' | 'en';
 
@@ -314,24 +314,43 @@ function StudioContent() {
       if (tpl) {
         templateLoadedRef.current = true;
         setStudioPhase('active');
-        const sections = toStudioSections(buildTemplateSections(tpl, lang));
-        setPreviewSections(sections);
-        setProjectName(lang === 'es' ? tpl.nameEs : tpl.nameEn);
-        setActiveTemplateSlug(tpl.slug);
-        setMessages([
-          {
-            id: 1,
-            role: 'ai',
-            content: t.welcomeTemplate(lang === 'es' ? tpl.nameEs : tpl.nameEn),
-          },
-        ]);
-        setChangeLog([
-          {
-            id: Date.now(),
-            summary: lang === 'es' ? `Plantilla ${tpl.nameEs} cargada` : `Template ${tpl.nameEn} loaded`,
-            time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
-          },
-        ]);
+        try {
+          const loaded = loadCatalogTemplate(tpl.slug, lang);
+          setPreviewSections(loaded.previewSections);
+          setProjectName(loaded.businessName);
+          setActiveTemplateSlug(loaded.template.slug);
+          setMessages([
+            {
+              id: 1,
+              role: 'ai',
+              content:
+                lang === 'es'
+                  ? `Plantilla «${tpl.nameEs}» cargada con: ${loaded.sectionsSummary}. Navega la vista en tiempo real y dime qué quieres mejorar.`
+                  : `Template «${tpl.nameEn}» loaded with: ${loaded.sectionsSummary}. Browse the live preview and tell me what to improve.`,
+            },
+          ]);
+          setChangeLog([
+            {
+              id: Date.now(),
+              summary:
+                lang === 'es'
+                  ? `Plantilla ${tpl.nameEs} — web completa generada`
+                  : `Template ${tpl.nameEn} — full site generated`,
+              time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
+            },
+          ]);
+        } catch {
+          setMessages([
+            {
+              id: 1,
+              role: 'ai',
+              content: t.welcomeTemplate(lang === 'es' ? tpl.nameEs : tpl.nameEn),
+            },
+          ]);
+        }
         return;
       }
     }
