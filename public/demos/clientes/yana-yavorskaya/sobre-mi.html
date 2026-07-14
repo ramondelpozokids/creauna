@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Biografía y filosofía de Yana Yavorskaya, pintora contemporánea afincada en Madrid. Trayectoria artística, estudio y visión creativa.">
+  <link rel="canonical" href="https://yanayavorskaya.com/sobre-mi">
+  <meta property="og:title" content="Sobre mí — Yana Yavorskaya">
+  <meta property="og:description" content="Conoce a Yana Yavorskaya: biografía, filosofía artística y estudio en Madrid.">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://yanayavorskaya.com/sobre-mi">
+  <meta property="og:image" content="https://yanayavorskaya.com/assets/obras/yana-portrait.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Sobre mí — Yana Yavorskaya</title>
+  <link rel="stylesheet" href="css/museum.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <script src="js/i18n-content.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>setTimeout(function(){MuseoI18n.init();},50);</script>
+  <style>
+    .bio-page { padding: 8rem 0 4rem; min-height: 100vh; }
+    .bio-hero { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl); align-items: center; margin-bottom: var(--spacing-xl); }
+    .bio-hero__image { aspect-ratio: 3/4; overflow: hidden; }
+    .bio-hero__image img { width: 100%; height: 100%; object-fit: cover; }
+    .bio-hero__text h1 { margin-bottom: 1rem; }
+    .bio-hero__text .lead { font-family: var(--serif); font-size: 1.3rem; font-style: italic; color: var(--accent); margin-bottom: 1.5rem; line-height: 1.5; }
+    .bio-section { margin-top: var(--spacing-xl); max-width: 750px; }
+    .bio-section h2 { margin-bottom: 1.2rem; }
+    .bio-section p { font-size: 1rem; line-height: 2; color: var(--text-secondary); margin-bottom: 1.2rem; }
+    .bio-section blockquote { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--accent); border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; line-height: 1.6; }
+    .bio-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: var(--spacing-xl) 0; }
+    .bio-gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .back-link { display: inline-block; margin-bottom: 3rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); }
+    .back-link:hover { color: var(--accent); }
+    @media(max-width:768px){
+      .bio-hero { grid-template-columns: 1fr; }
+      .bio-split, .bio-row { grid-template-columns: 1fr !important; }
+      .bio-page h1 { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+    }
+  </style>
+  <meta name="vercel-toolbar" content="false">
+</head>
+<body>
+<nav class="nav" role="navigation">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="assets/logo.png" alt="Yana Yavorskaya" class="nav__brand-logo" width="48" height="45">
+      Yana Yavorskaya
+    </a>
+    <button class="nav__toggle" aria-label="Menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links">
+      <li><a href="index.html#colecciones" data-i18n="nav.colecciones">Colecciones</a></li>
+      <li><a href="index.html#estudio" data-i18n="nav.estudio">Estudio</a></li>
+      <li><a href="index.html#exposiciones" data-i18n="nav.exposiciones">Exposiciones</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="nav.obras">Obras</a></li>
+      <li><a href="noticias.html" data-i18n="nav.noticias">Noticias</a></li>
+      <li><a href="sobre-mi.html" data-i18n="nav.bio">Bio</a></li>
+      <li><a href="index.html#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      <!-- SELECTOR DE IDIOMAS -->
+      <li class="nav__item-lang" id="nav-item-lang-container" style="display: flex; align-items: center; margin: 0 0.4rem;">
+        <div id="lang-switcher" class="lang-switcher"></div>
+      </li>
+      <!-- BOTÓN WHATSAPP -->
+      <li style="display: flex; align-items: center;"><a href="https://wa.me/34600889977?text=Hola%20Yana%20Yavorskaya" target="_blank" rel="noopener" class="nav__wa-clean" title="WhatsApp directo con Yana"><span style="color:#25D366;">🟢</span> <span data-i18n="nav.wa">+34 600 88 99 77</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container container-wide bio-page">
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+
+  <header style="margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem;">
+    <span style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-tertiary);display:block;margin-bottom:0.5rem;" data-i18n="bio.headerLabel">Estudio & Biografía</span>
+    <h1 style="font-family:var(--serif);font-size:3.5rem;font-weight:300;margin-bottom:1rem;">Yana Yavorskaya</h1>
+    <p style="font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--text-secondary);max-width:750px;" data-i18n="bio.quote">«Pintar es un acto de escucha interior en el que la materia, el silencio y el tiempo construyen un puente sensible con quien contempla la obra.»</p>
+  </header>
+
+  <div class="bio-split" style="display:grid;grid-template-columns:minmax(280px,1fr) 1.5fr;gap:3rem;align-items:start;margin-bottom:4rem;">
+    <div>
+      <img src="assets/obras/yana-portrait.jpg" alt="Yana Yavorskaya en su estudio de Madrid" style="width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(100%) contrast(105%);box-shadow:var(--shadow-md);">
+      <div style="margin-top:0.5rem;font-size:0.7rem;text-align:center;color:var(--text-tertiary);font-family:var(--sans);letter-spacing:0.05em;">Yana Yavorskaya — Estudio de Madrid, 2026</div>
+    </div>
+    <div style="font-family:var(--serif);font-size:1.2rem;color:var(--text-secondary);line-height:1.85;">
+      <h2 style="font-size:2rem;font-weight:400;color:var(--text);margin-bottom:1.5rem;border-left:2px solid var(--accent);padding-left:1rem;" data-i18n="bio.intro.title">Mi camino a través del arte</h2>
+      <p style="font-size:1.35rem;color:var(--text);margin-bottom:1.2rem;line-height:1.7;" data-i18n="bio.intro.p1">Pintar nunca ha sido solo una forma de crear imágenes. Para mí, siempre ha sido una manera de expresar emociones, de encontrar calma en los momentos difíciles y de transformar experiencias en color.</p>
+      <p style="margin-bottom:1.2rem;" data-i18n="bio.intro.p2">Cada obra nace de una historia, de un instante vivido o de una emoción que merece permanecer. Trabajo con paciencia, dejando que cada pincelada encuentre su lugar, porque creo que el arte auténtico no se puede acelerar.</p>
+      <p style="margin-bottom:1.2rem;" data-i18n="bio.intro.p3">A lo largo de los años he descubierto que una pintura puede hacer mucho más que decorar una pared. Puede despertar recuerdos, transmitir serenidad o crear una conexión especial con quien la contempla. Esa es la verdadera razón por la que sigo pintando.</p>
+      <p style="margin-bottom:1.2rem;" data-i18n="bio.intro.p4">Mi inspiración proviene de la naturaleza, de las personas y de la belleza que a menudo pasa desapercibida en la vida cotidiana. Intento capturar esos pequeños detalles que nos invitan a detenernos unos segundos y mirar el mundo con otros ojos.</p>
+      <p style="margin-bottom:1.2rem;" data-i18n="bio.intro.p5">Cada cuadro que comparto lleva una parte de mí. Espero que, al contemplarlo, también encuentre un lugar en tu historia y despierte una emoción única, porque el arte cobra vida cuando alguien se identifica con él.</p>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding-top:4rem;display:flex;flex-direction:column;gap:3.5rem;">
+    <section class="bio-row" style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:baseline;">
+      <div>
+        <span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);display:block;margin-bottom:0.3rem;">01 — Los comienzos</span>
+        <h3 style="font-family:var(--serif);font-size:1.8rem;font-weight:400;" data-i18n="bio.s1.title">Los primeros trazos</h3>
+      </div>
+      <div style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;">
+        <p style="margin-bottom:1rem;" data-i18n="bio.s1.text">Mis primeros recuerdos están impregnados del olor a trementina y cera de abejas en la antigua casa familiar. Antes de aprender las reglas formales de la perspectiva en los talleres, ya entendía que el color era un lenguaje paralelo y mucho más honesto que las palabras para describir el mundo interior.</p>
+        <p>Aquel juego de infancia se convirtió con los años en una necesidad vital insustituible. Empecé dibujando al carbón las sombras de los árboles de invierno proyectadas sobre los muros blancos; pronto descubrí en el óleo y el lino el vehículo capaz de detener el vértigo del tiempo y otorgarle un cobijo duradero a nuestras vivencias.</p>
+      </div>
+    </section>
+
+    <section class="bio-row" style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:baseline;">
+      <div>
+        <span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);display:block;margin-bottom:0.3rem;">02 — Filosofía & Sentido</span>
+        <h3 style="font-family:var(--serif);font-size:1.8rem;font-weight:400;" data-i18n="bio.s2.title">Qué significa el arte para ella</h3>
+      </div>
+      <div style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;">
+        <p style="margin-bottom:1rem;" data-i18n="bio.s2.text">Para mí, el arte contemporáneo es ante todo una disciplina de honestidad y resistencia frente a la fugacidad del mundo hiperconectado. No busco el aplauso fácil ni el impacto visual efímero; concibo el cuadro como una zona de silencio recuperado.</p>
+        <p>Cuando alguien adquiere una de mis obras para instalarla en su hogar o en su despacho, no se lleva un objeto estático; adquiere una atmósfera viviente que dialoga día tras día con la luz cambiante del sol y con el estado emocional de quien la habita.</p>
+      </div>
+    </section>
+
+    <section class="bio-row" style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:baseline;">
+      <div>
+        <span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);display:block;margin-bottom:0.3rem;">03 — Referentes & Mirada</span>
+        <h3 style="font-family:var(--serif);font-size:1.8rem;font-weight:400;" data-i18n="bio.s3.title">Cuáles son sus influencias</h3>
+      </div>
+      <div style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;">
+        <p style="margin-bottom:1rem;" data-i18n="bio.s3.text">Me nutro constantemente del diálogo entre la austeridad plástica del informalismo europeo y la delicadeza geométrica del minimalismo moderno. Maestros como Giorgio Morandi me enseñaron la santidad de los tonos apagados y las geometrías silenciosas; Antoni Tàpies y Eduardo Chillida me inculcaron la devoción por la materia rústica y la gravedad del gesto; y la pintura de Mark Rothko me demostró que una superficie cromática puede ser una experiencia espiritual inmersiva.</p>
+        <p>Más allá de la historia del arte, mi mayor maestra sigue siendo la propia naturaleza en sus transiciones estacionales: las nieblas matinales de Castilla, las auroras invernales en la costa y el asfalto mojado de Madrid bajo los faroles de la medianoche.</p>
+      </div>
+    </section>
+
+    <section class="bio-row" style="display:grid;grid-template-columns:1fr 2fr;gap:2rem;align-items:baseline;background:var(--bg-alt);padding:2.5rem;border:1px solid var(--border);">
+      <div>
+        <span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);display:block;margin-bottom:0.3rem;">04 — El Taller & La Materia</span>
+        <h3 style="font-family:var(--serif);font-size:1.8rem;font-weight:400;" data-i18n="bio.s4.title">Cómo nace un cuadro</h3>
+      </div>
+      <div style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;">
+        <p style="margin-bottom:1rem;" data-i18n="bio.s4.text">La génesis de cada obra en mi estudio de Madrid sigue un ritmo pausado, artesanal y reflexivo. Todo comienza con la selección del lino belga o el panel de abedul de alta densidad. Me gusta preparar y tensar manualmente mis propios bastidores, asegurando que la tensión y el grano respondan con exactitud al carácter de la serie.
+
+Las primeras capas son casi siempre arquitectónicas y estructurales: trazos largos de grafito puro, incisiones con espátula o bloques de pigmento mineral acrílico mate. Una vez establecida la columna vertebral del cuadro, llega el tiempo de las veladuras al óleo amasado con aceites y resinas naturales.</p>
+        <p>Entre una veladura y la siguiente pueden pasar semanas de secado y contemplación en silencio. En ese periodo, la obra dicta sus propias necesidades: a veces me pide lijar la superficie para revelar la memoria del color inferior; otras veces exige un empaste rasgado y contundente en el margen superior. Solo cuando el cuadro alcanza un punto de equilibrio cromático y silencio interior considero que ha culminado su viaje compositivo.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Sección visual de fotografías del estudio -->
+  <div style="border-top:1px solid var(--border);padding-top:4rem;margin-top:4rem;">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <span style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--accent);display:block;margin-bottom:0.5rem;">Intimidad & Proceso</span>
+      <h2 style="font-family:var(--serif);font-size:2.5rem;font-weight:300;" data-i18n="bio.studio.title">El Estudio por Dentro</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
+      <div><img src="assets/obras/luz-de-invierno-iii.jpg" alt="En el caballete" style="width:100%;aspect-ratio:4/3;object-fit:cover;"><p style="font-size:0.8rem;text-align:center;margin-top:0.5rem;font-style:italic;" data-i18n="bio.studio.caption1">Veladuras en el caballete</p></div>
+      <div><img src="assets/obras/meditacion-en-ocre.jpg" alt="Pinceles y espátulas" style="width:100%;aspect-ratio:4/3;object-fit:cover;"><p style="font-size:0.8rem;text-align:center;margin-top:0.5rem;font-style:italic;" data-i18n="bio.studio.caption2">Herramientas del taller</p></div>
+      <div><img src="assets/obras/geometria-del-silencio.jpg" alt="Lienzos tensados" style="width:100%;aspect-ratio:4/3;object-fit:cover;"><p style="font-size:0.8rem;text-align:center;margin-top:0.5rem;font-style:italic;" data-i18n="bio.studio.caption3">Bastidores y lino virgen</p></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">
+  <div class="footer__social">
+    <a href="https://instagram.com/yanayavorskaya" class="soc-icon soc-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="https://x.com/yanayavorskaya" class="soc-icon soc-x" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://pinterest.com/yanayavorskaya" class="soc-icon soc-pin" target="_blank" rel="noopener" aria-label="Pinterest"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg></a>
+    <a href="https://youtube.com/@yanayavorskaya" class="soc-icon soc-yt" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://linkedin.com/in/yanayavorskaya" class="soc-icon soc-li" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="https://facebook.com/yanayavorskaya" class="soc-icon soc-fb" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
+  <div class="footer__inner">
+    <p class="footer__copy" data-i18n="footer.copy">© 2026 Yana Yavorskaya. Todos los derechos reservados.</p>
+    <ul class="footer__links">
+      <li><a href="sobre-mi.html" data-i18n="footer.bio">Bio</a></li>
+      <li><a href="noticias.html" data-i18n="footer.noticias">Noticias</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="footer.obras">Obras</a></li>
+      <li><a href="legal/aviso-legal.html" data-i18n="footer.legal">Aviso Legal</a></li>
+      <li><a href="legal/privacidad.html" data-i18n="footer.privacy">Privacidad</a></li>
+      <li><a href="legal/cookies.html" data-i18n="footer.cookies">Cookies</a></li>
+      <li><a href="legal/terminos.html" data-i18n="footer.terms">Términos</a></li>
+      <li><a href="#" onclick="openSitemap(event)" data-i18n="footer.sitemap">Mapa del sitio</a></li>
+    </ul>
+  </div>
+</div></footer>
+<!-- ===== MAPA DEL SITIO MODAL ===== -->
+<div class="shop-modal" id="sitemap-modal" role="dialog" aria-hidden="true">
+  <div class="shop-modal__inner" style="max-width: 780px;">
+    <button class="shop-modal__close" onclick="closeSitemap()" aria-label="Cerrar">✕</button>
+    <div class="invitation__crest">✦</div>
+    <h3 class="shop-modal__title" style="margin-bottom: 1.5rem; text-align: center;">Mapa del sitio</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2rem; text-align: left; font-family: var(--sans); font-size: 0.88rem;">
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Galería & Obras</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="obras-disponibles.html" style="color: var(--text);">Catálogo Completo</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Luz y Sombra</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Geometría Sagrada</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Horizontes Interiores</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Estudio & Ensayos</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="sobre-mi.html" style="color: var(--text);">Biografía & Filosofía</a></li>
+          <li><a href="index.html#estudio" style="color: var(--text-secondary);">El Estudio en Madrid</a></li>
+          <li><a href="noticias.html" style="color: var(--text);">Noticias del Estudio</a></li>
+          <li><a href="index.html#exposiciones" style="color: var(--text-secondary);">Exposiciones Internacionales</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Contacto & Legal</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="index.html#contacto" style="color: var(--text);">Citas Privadas & Contacto</a></li>
+          <li><a href="legal/aviso-legal.html" style="color: var(--text-secondary);">Aviso Legal</a></li>
+          <li><a href="legal/privacidad.html" style="color: var(--text-secondary);">Privacidad</a></li>
+          <li><a href="legal/cookies.html" style="color: var(--text-secondary);">Cookies</a></li>
+          <li><a href="legal/terminos.html" style="color: var(--text-secondary);">Términos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSitemap(e) { if(e) e.preventDefault(); var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.add('is-open'); sm.setAttribute('aria-hidden','false'); } }
+function closeSitemap() { var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.remove('is-open'); sm.setAttribute('aria-hidden','true'); } }
+</script>
+
+
+<!-- ===== CHAT ASSISTANT (BOTTOM RIGHT) ===== -->
+<div class="chat-assistant">
+  <button class="chat-assistant__trigger" id="chat-trigger" aria-label="Abrir chat">
+    <img src="assets/logo.png" alt="" width="34" height="34">
+  </button>
+</div>
+<div class="chat-panel" id="chat-panel" role="dialog" aria-hidden="true">
+  <div class="chat-panel__header">
+    <img src="assets/logo.png" alt="" width="36" height="36">
+    <div class="chat-panel__header-info">
+      <div class="chat-panel__header-name" data-i18n="chat.name">Yana Yavorskaya</div>
+      <div class="chat-panel__header-status" data-i18n="chat.status">Disponible</div>
+    </div>
+    <button class="chat-panel__close" id="chat-close" aria-label="Cerrar chat">✕</button>
+  </div>
+  <div class="chat-panel__messages" id="chat-messages"></div>
+  <div class="chat-panel__quick-replies" id="chat-quick">
+    <button class="chat-panel__quick-reply" data-msg="Háblame de la colección Luz y Sombra" data-i18n="chat.q1">Luz y Sombra</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Hay obras disponibles?" data-i18n="chat.q3">Disponibilidad</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Qué técnica utilizas?" data-i18n="chat.q2">Técnica</button>
+    <button class="chat-panel__quick-reply" data-msg="Cuéntame sobre las exposiciones" data-i18n="chat.q4">Exposiciones</button>
+  </div>
+  <div class="chat-panel__input-area">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta…" data-i18n="chat.placeholder">
+    <button id="chat-send" data-i18n="chat.send">Enviar</button>
+  </div>
+</div>
+
+<!-- ===== SCROLL UP (BOTTOM LEFT) ===== -->
+<button class="scroll-up" id="scroll-up" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<script src="js/museum.js"></script>
+</body>
+</html>

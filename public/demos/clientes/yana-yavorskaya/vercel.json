@@ -1,0 +1,17 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "env": {
+    "VERCEL_TOOLBAR": "false",
+    "VERCEL_LIVE_FEEDBACK": "false"
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Vercel-Toolbar", "value": "false" },
+        { "key": "X-Vercel-Live-Feedback", "value": "false" }
+      ]
+    }
+  ]
+}

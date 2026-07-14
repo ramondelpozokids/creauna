@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Yana Yavorskaya — Pintora contemporánea. Obra original, exposiciones internacionales, galería privada.">
+  <meta name="i18n-title" content="page.title">
+  <link rel="canonical" href="https://yanayavorskaya.com/">
+  <meta property="og:title" content="Yana Yavorskaya — Pintura Contemporánea">
+  <meta property="og:description" content="Colección de arte contemporáneo. Obras disponibles, exposiciones, consulta privada.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yanayavorskaya.com/">
+  <meta property="og:image" content="https://yanayavorskaya.com/assets/obras/hero-bg.jpg">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://yanayavorskaya.com/assets/obras/hero-bg.jpg">
+  <meta name="theme-color" content="#111">
+  <title>Yana Yavorskaya — Pintura Contemporánea</title>
+  <link rel="stylesheet" href="css/museum.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <meta name="vercel-toolbar" content="false">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" role="navigation">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="assets/logo.png" alt="Yana Yavorskaya" class="nav__brand-logo" width="48" height="45">
+      Yana Yavorskaya
+    </a>
+    <button class="nav__toggle" data-i18n-attr="aria-label:nav.toggle" aria-label="Menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links">
+      <li><a href="index.html#colecciones" data-i18n="nav.colecciones">Colecciones</a></li>
+      <li><a href="index.html#estudio" data-i18n="nav.estudio">Estudio</a></li>
+      <li><a href="index.html#exposiciones" data-i18n="nav.exposiciones">Exposiciones</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="nav.obras">Obras</a></li>
+      <li><a href="noticias.html" data-i18n="nav.noticias">Noticias</a></li>
+      <li><a href="sobre-mi.html" data-i18n="nav.bio">Bio</a></li>
+      <li><a href="index.html#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      <!-- SELECTOR DE IDIOMAS -->
+      <li class="nav__item-lang" id="nav-item-lang-container" style="display: flex; align-items: center; margin: 0 0.4rem;">
+        <div id="lang-switcher" class="lang-switcher"></div>
+      </li>
+      <!-- BOTÓN WHATSAPP -->
+      <li style="display: flex; align-items: center;"><a href="https://wa.me/34600889977?text=Hola%20Yana%20Yavorskaya" target="_blank" rel="noopener" class="nav__wa-clean" title="WhatsApp directo con Yana"><span style="color:#25D366;">🟢</span> <span data-i18n="nav.wa">+34 600 88 99 77</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="contenido-principal">
+
+<!-- ===== HERO — Imagen grande a pantalla completa ===== -->
+<section class="hero">
+  <div class="hero__bg">
+    <img src="assets/obras/hero-bg.jpg" alt="" aria-hidden="true" loading="eager">
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content reveal">
+    <img src="assets/logo.png" alt="Yana Yavorskaya" class="hero__logo" width="518" height="482">
+    <p class="hero__artist" data-i18n="hero.artist">Yana Yavorskaya</p>
+    <h1 class="hero__title"><span data-i18n="hero.headline.line1">Arte que</span><br><span data-i18n="hero.headline.line2">transforma</span></h1>
+    <p class="hero__quote" data-i18n="hero.tagline">«La pintura es una terapia, una medicina, una evasión y una forma de vida.»</p>
+  </div>
+  <div class="hero__scroll" aria-hidden="true">
+    <span data-i18n="hero.scroll">Descubrir</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ===== COLECCIONES — 3 tarjetas exactas ===== -->
+<section id="colecciones" class="section section--light">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__label" data-i18n="collections.label">Colecciones</p>
+      <h2 class="section__title" data-i18n="collections.subtitle">Cada serie es una historia</h2>
+    </div>
+    <div class="collections-grid">
+
+      <article class="collection-card reveal" data-museum-open data-collection="luz-y-sombra">
+        <div class="collection-card__image">
+          <img src="assets/obras/amanecer-bruma.jpg" alt="Luz y Sombra" loading="lazy">
+        </div>
+        <h3 class="collection-card__title" data-i18n="col1.title">Luz y Sombra</h3>
+        <p class="collection-card__desc" data-i18n="col1.desc">2022–2024 · 4 obras</p>
+      </article>
+
+      <article class="collection-card reveal" data-museum-open data-collection="geometria-sagrada">
+        <div class="collection-card__image">
+          <img src="assets/obras/espiral-aurea.jpg" alt="Geometría Sagrada" loading="lazy">
+        </div>
+        <h3 class="collection-card__title" data-i18n="col2.title">Geometría Sagrada</h3>
+        <p class="collection-card__desc" data-i18n="col2.desc">2020–2022 · 3 obras</p>
+      </article>
+
+      <article class="collection-card reveal" data-museum-open data-collection="horizontes-interiores">
+        <div class="collection-card__image">
+          <img src="assets/obras/memoria-horizonte.jpg" alt="Horizontes Interiores" loading="lazy">
+        </div>
+        <h3 class="collection-card__title" data-i18n="col3.title">Horizontes Interiores</h3>
+        <p class="collection-card__desc" data-i18n="col3.desc">2018–2020 · 3 obras</p>
+      </article>
+
+    </div>
+
+    <!-- Obra destacada -->
+    <div class="artwork-detail reveal" style="margin-top: var(--spacing-xl);">
+      <div class="artwork-detail__image">
+        <img src="assets/obras/amanecer-bruma.jpg" alt="Amanecer en la Bruma" loading="lazy">
+      </div>
+      <div class="artwork-detail__info">
+        <p class="section__label" data-i18n="featured.label">Obra destacada</p>
+        <h3 data-i18n="featured.title">Amanecer en la Bruma</h3>
+        <div class="artwork-detail__meta">
+          <span>2024</span><span data-i18n="featured.technique">Óleo sobre lienzo</span><span>180 × 220 cm</span>
+        </div>
+        <p class="artwork-detail__desc" data-i18n="featured.desc">Colección «Luz y Sombra». El amanecer capturado no como momento, sino como sensación: la bruma que se disipa y los primeros rayos que acarician la tierra.</p>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <button class="btn btn--primary" data-museum-open data-collection="luz-y-sombra" data-obra-index="0" data-i18n="featured.museum">Ver en modo inmersivo</button>
+          <button class="btn btn--favorite" data-obra-id="obra-1" data-i18n-attr="aria-label:featured.fav" aria-label="Añadir a favoritos">☆</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ESTUDIO ===== -->
+<section id="estudio" class="section section--alt">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__label" data-i18n="studio.label">El Estudio</p>
+      <h2 class="section__title" data-i18n="studio.subtitle">Donde nace cada obra</h2>
+    </div>
+    <div class="studio-grid">
+      <div class="studio-card reveal"><img src="assets/obras/hero-bg.jpg" alt="El caballete en el estudio de Yana Yavorskaya" loading="lazy"><div class="studio-card__caption" data-i18n="studio.easel">El caballete</div></div>
+      <div class="studio-card reveal"><img src="assets/obras/interludio.jpg" alt="Pigmentos y materiales en el estudio" loading="lazy"><div class="studio-card__caption" data-i18n="studio.pigments">Los pigmentos</div></div>
+      <div class="studio-card reveal"><img src="assets/obras/espiral-aurea.jpg" alt="Detalle de técnica mixta sobre lienzo" loading="lazy"><div class="studio-card__caption" data-i18n="studio.mixed">Técnica mixta</div></div>
+      <div class="studio-card reveal"><img src="assets/obras/ultimo-rayo.jpg" alt="Luz del norte entrando en el estudio" loading="lazy"><div class="studio-card__caption" data-i18n="studio.light">Luz del norte</div></div>
+    </div>
+    <p class="reveal" style="text-align:center;max-width:650px;margin:var(--spacing-lg) auto 0;font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--text-secondary);" data-i18n="studio.quote">«Cada mañana entro al estudio sin expectativas. El lienzo me dice lo que necesita. Yo solo escucho.»</p>
+  </div>
+</section>
+
+<!-- ===== EXPOSICIONES ===== -->
+<section id="exposiciones" class="section section--light">
+  <div class="container container-narrow">
+    <div class="section__header reveal">
+      <p class="section__label" data-i18n="exhibitions.label">Exposiciones</p>
+      <h2 class="section__title"><span data-i18n="exhibitions.title.line1">Más de 40 exposiciones</span> <span data-i18n="exhibitions.title.line2">en 15 países</span></h2>
+    </div>
+    <div class="timeline reveal">
+      <div class="timeline__item"><div class="timeline__year">2026</div><div class="timeline__title" data-i18n="exh1.title">Hauser & Wirth</div><div class="timeline__place" data-i18n="exh1.place">Londres — Individual</div></div>
+      <div class="timeline__item"><div class="timeline__year">2025</div><div class="timeline__title" data-i18n="exh2.title">Luz y Sombra</div><div class="timeline__place" data-i18n="exh2.place">Gagosian Gallery, Nueva York</div></div>
+      <div class="timeline__item"><div class="timeline__year">2024</div><div class="timeline__title" data-i18n="exh3.title">Art Basel Miami</div><div class="timeline__place" data-i18n="exh3.place">Miami Beach — Feria</div></div>
+      <div class="timeline__item"><div class="timeline__year">2023</div><div class="timeline__title" data-i18n="exh4.title">Geometría Sagrada</div><div class="timeline__place" data-i18n="exh4.place">Tate Modern, Londres</div></div>
+      <div class="timeline__item"><div class="timeline__year">2022</div><div class="timeline__title" data-i18n="exh5.title">Horizontes Interiores</div><div class="timeline__place" data-i18n="exh5.place">Fondation Louis Vuitton, París</div></div>
+      <div class="timeline__item"><div class="timeline__year">2021</div><div class="timeline__title" data-i18n="exh6.title">Bienal de Venecia</div><div class="timeline__place" data-i18n="exh6.place">Giardini, Venecia</div></div>
+      <div class="timeline__item"><div class="timeline__year">2020</div><div class="timeline__title" data-i18n="exh7.title">ARCOmadrid</div><div class="timeline__place" data-i18n="exh7.place">IFEMA, Madrid</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACTO & CITAS PRIVADAS ===== -->
+<section id="contacto" class="section section--alt" style="padding: 6rem 0;">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <span class="section__label" data-i18n="contact.label">Atención Exclusiva & Cita Previa</span>
+      <h2 class="section__title" data-i18n="contact.title">Contacto & Visitas al Estudio</h2>
+      <p style="margin: 0 auto; max-width: 680px; font-family: var(--serif); font-style: italic; font-size: 1.25rem; color: var(--text-secondary);" data-i18n="contact.quote">«El estudio en Madrid abre sus puertas a coleccionistas, arquitectos y amantes del arte con cita previa programada.»</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 4rem; align-items: start;">
+      
+      <!-- Columna Izquierda: Datos, Dirección, Teléfono, Horario & Mapa -->
+      <div style="background: var(--bg); padding: 2.5rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+        <h3 style="font-family: var(--serif); font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.8rem;" data-i18n="contact.infoTitle">Datos de Estudio & Ubicación</h3>
+        
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 1.4rem; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 2rem; padding-left: 0;">
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <span style="font-size: 1.3rem;">📍</span>
+            <div>
+              <strong style="color: var(--text); display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--sans);" data-i18n="contact.addressLabel">Dirección del Estudio</strong>
+              <span data-i18n="contact.address">Calle de Almagro, 24, Chamberí, 28010 Madrid, España</span>
+            </div>
+          </li>
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <span style="font-size: 1.3rem;">📞</span>
+            <div>
+              <strong style="color: var(--text); display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--sans);" data-i18n="contact.phoneLabel">Teléfono / WhatsApp de Atención</strong>
+              +34 600 88 99 77 <span data-i18n="contact.phoneNote">(Lunes a Viernes)</span>
+            </div>
+          </li>
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <span style="font-size: 1.3rem;">✉️</span>
+            <div>
+              <strong style="color: var(--text); display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--sans);" data-i18n="contact.emailLabel">Correo Electrónico</strong>
+              estudio@yanayavorskaya.com
+            </div>
+          </li>
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <span style="font-size: 1.3rem;">🕰️</span>
+            <div>
+              <strong style="color: var(--text); display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--sans);" data-i18n="contact.hoursLabel">Horario de Apertura</strong>
+              <span data-i18n="contact.hoursWeekday">Lunes a Viernes de 10:00 a 19:00 h</span><br><span style="font-size: 0.82rem; color: var(--accent);" data-i18n="contact.hoursSaturday">Sábados visitas privadas y vernissages con reserva previa</span>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Mapa de Ubicación -->
+        <div>
+          <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); display: block; margin-bottom: 0.5rem;" data-i18n="contact.mapLabel">🗺️ Ubicación en Chamberí / Madrid</span>
+          <div style="aspect-ratio: 16/10; overflow: hidden; border: 1px solid var(--border);">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3036.8!2d-3.696!3d40.432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd422883!2sCalle+de+Almagro%2C+24%2C+Chamber%C3%AD%2C+28010+Madrid!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses" width="100%" height="100%" style="border:0; filter: grayscale(85%) contrast(110%);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Sistema de Pestañas (Mensaje Directo vs Reserva Cita Previa) -->
+      <div style="background: var(--bg); padding: 2.5rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+        <div class="contact-tabs" style="display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin-bottom: 2rem; gap: 0.5rem 1rem;">
+          <button id="tab-btn-msg" onclick="switchContactTab('msg')" style="padding: 0.8rem 1.5rem; border: none; background: none; font-family: var(--sans); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent); border-bottom: 2px solid var(--accent); cursor: pointer;" data-i18n="contact.tabMessage">✉️ Enviar Mensaje / Consulta</button>
+          <button id="tab-btn-cal" onclick="switchContactTab('cal')" style="padding: 0.8rem 1.5rem; border: none; background: none; font-family: var(--sans); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; color: var(--text-tertiary); cursor: pointer;" data-i18n="contact.tabBooking">📅 Reservar Cita Previa</button>
+        </div>
+
+        <!-- Pestaña 1: Formulario de Mensaje -->
+        <div id="tab-panel-msg" style="display: block;">
+          <form onsubmit="return submitContactMsg(event)" style="display: flex; flex-direction: column; gap: 1.2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+              <div>
+                <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.fullName">Nombre Completo *</label>
+                <input type="text" required data-i18n="contact.fullNamePh" placeholder="Ej. Carlos Martínez" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans);">
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.emailField">Correo Electrónico *</label>
+                <input type="email" required data-i18n="contact.emailPh" placeholder="ejemplo@correo.com" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans);">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+              <div>
+                <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.phoneOptional">Teléfono (Opcional)</label>
+                <input type="tel" data-i18n="contact.phonePh" placeholder="+34 600 00 00 00" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans);">
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.subject">Asunto / Obra de Interés</label>
+                <select style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans); color: var(--text);">
+                  <option value="Consulta general" data-i18n="contact.optGeneral">Consulta general sobre el estudio</option>
+                  <option value="Obras disponibles" data-i18n="contact.optWorks">Información de obras disponibles</option>
+                  <option value="Encargo personalizado" data-i18n="contact.optCommission">Encargo o colección personalizada</option>
+                  <option value="Prensa / Colaboración" data-i18n="contact.optPress">Prensa, entrevistas o colaboración</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.messageLabel">Mensaje *</label>
+              <textarea rows="4" required data-i18n="contact.messagePh" placeholder="Escriba aquí sus dudas, interés por una obra en concreto o detalles de su consulta..." style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--serif); line-height: 1.6;"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--primary" style="align-self: flex-start; padding: 1rem 2rem; font-size: 0.78rem; letter-spacing: 0.18em; width: 100%;" data-i18n="contact.sendBtn">ENVIAR CONSULTA DIRECTA →</button>
+          </form>
+        </div>
+
+        <!-- Pestaña 2: Calendario de Cita Previa -->
+        <div id="tab-panel-cal" style="display: none;">
+          <form onsubmit="return submitContactBooking(event)" style="display: flex; flex-direction: column; gap: 1.2rem;">
+            <div>
+              <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.visitReason">Motivo de la Visita *</label>
+              <select required style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans);">
+                <option value="Contemplar obras" data-i18n="contact.optViewWorks">Contemplación privada de obras disponibles</option>
+                <option value="Asesoramiento" data-i18n="contact.optInterior">Asesoramiento para colecciones y proyectos de interiorismo</option>
+                <option value="Recogida" data-i18n="contact.optPickup">Recogida de obra o certificado en taller</option>
+              </select>
+            </div>
+
+            <!-- Calendario Interactivo -->
+            <div>
+              <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.6rem;" data-i18n="contact.selectDate">Seleccionar Fecha de Visita (Julio / Agosto 2026) *</label>
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; text-align: center; font-size: 0.8rem; font-family: var(--sans);">
+                <button type="button" onclick="selectCalDate(this, 'Lun 13 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--accent); background: var(--accent); color: #fff;"><strong>Lun 13</strong><br><span style="font-size:0.68rem; color:inherit;">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Mar 14 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Mar 14</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Mié 15 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Mié 15</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Jue 16 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Jue 16</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Vie 17 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Vie 17</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Lun 20 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Lun 20</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Mar 21 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Mar 21</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Mié 22 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Mié 22</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Jue 23 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Jue 23</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+                <button type="button" onclick="selectCalDate(this, 'Vie 24 Jul')" class="cal-day-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);"><strong>Vie 24</strong><br><span style="font-size:0.68rem; color:var(--text-tertiary);">Julio</span></button>
+              </div>
+              <input type="hidden" id="cal-selected-date" name="fecha_reserva" required value="Lun 13 Jul">
+            </div>
+
+            <!-- Selector de Hora -->
+            <div>
+              <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.6rem;" data-i18n="contact.selectTime">Seleccionar Franja Horaria *</label>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center; font-size: 0.8rem; font-family: var(--sans);">
+                <button type="button" onclick="selectCalTime(this, '11:00 h')" class="cal-time-btn" style="padding: 0.6rem; border: 1px solid var(--accent); background: var(--accent); color: #fff; font-weight: 600;">11:00 h</button>
+                <button type="button" onclick="selectCalTime(this, '12:30 h')" class="cal-time-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);">12:30 h</button>
+                <button type="button" onclick="selectCalTime(this, '16:30 h')" class="cal-time-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);">16:30 h</button>
+                <button type="button" onclick="selectCalTime(this, '18:00 h')" class="cal-time-btn" style="padding: 0.6rem; border: 1px solid var(--border); background: var(--bg-alt);">18:00 h</button>
+              </div>
+              <input type="hidden" id="cal-selected-time" name="hora_reserva" required value="11:00 h">
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 0.4rem;">
+              <div>
+                <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.yourName">Su Nombre *</label>
+                <input type="text" required data-i18n="contact.yourNamePh" placeholder="Nombre y apellidos" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans);">
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.4rem;" data-i18n="contact.phoneWhatsapp">Teléfono / WhatsApp *</label>
+                <input type="tel" required placeholder="+34 600 00 00 00" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); background: var(--bg-alt); font-size: 0.9rem; font-family: var(--sans);">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--primary" style="align-self: flex-start; padding: 1rem 2rem; font-size: 0.78rem; letter-spacing: 0.18em; width: 100%;" data-i18n="contact.bookBtn">RESERVAR Y CONFIRMAR CITA PREVIA →</button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+function switchContactTab(tab) {
+  var pMsg = document.getElementById('tab-panel-msg');
+  var pCal = document.getElementById('tab-panel-cal');
+  var bMsg = document.getElementById('tab-btn-msg');
+  var bCal = document.getElementById('tab-btn-cal');
+  if (tab === 'msg') {
+    if(pMsg) pMsg.style.display = 'block'; if(pCal) pCal.style.display = 'none';
+    if(bMsg) { bMsg.style.color = 'var(--accent)'; bMsg.style.borderBottom = '2px solid var(--accent)'; bMsg.style.fontWeight = '600'; }
+    if(bCal) { bCal.style.color = 'var(--text-tertiary)'; bCal.style.borderBottom = 'none'; bCal.style.fontWeight = '500'; }
+  } else {
+    if(pMsg) pMsg.style.display = 'none'; if(pCal) pCal.style.display = 'block';
+    if(bCal) { bCal.style.color = 'var(--accent)'; bCal.style.borderBottom = '2px solid var(--accent)'; bCal.style.fontWeight = '600'; }
+    if(bMsg) { bMsg.style.color = 'var(--text-tertiary)'; bMsg.style.borderBottom = 'none'; bMsg.style.fontWeight = '500'; }
+  }
+}
+function submitContactMsg(e) {
+  e.preventDefault();
+  var msg = (window.MuseoI18n && MuseoI18n.t('contact.msgSuccess')) || '✓ Mensaje enviado.';
+  alert(msg);
+  e.target.reset();
+  return false;
+}
+function submitContactBooking(e) {
+  e.preventDefault();
+  var msg = (window.MuseoI18n && MuseoI18n.t('contact.bookSuccess')) || '✓ Cita reservada.';
+  alert(msg);
+  e.target.reset();
+  switchContactTab('msg');
+  return false;
+}
+function selectCalDate(btn, dateStr) {
+  document.querySelectorAll('.cal-day-btn').forEach(function(b){ b.style.borderColor = 'var(--border)'; b.style.background = 'var(--bg-alt)'; b.style.color = 'var(--text)'; });
+  btn.style.borderColor = 'var(--accent)'; btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
+  var idEl = document.getElementById('cal-selected-date'); if(idEl) idEl.value = dateStr;
+}
+function selectCalTime(btn, timeStr) {
+  document.querySelectorAll('.cal-time-btn').forEach(function(b){ b.style.borderColor = 'var(--border)'; b.style.background = 'var(--bg-alt)'; b.style.color = 'var(--text)'; });
+  btn.style.borderColor = 'var(--accent)'; btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
+  var idEl = document.getElementById('cal-selected-time'); if(idEl) idEl.value = timeStr;
+}
+</script>
+
+
+<!-- ===== FOOTER con redes sociales SVG ===== -->
+<footer class="footer"><div class="container">
+  <div class="footer__social">
+    <a href="https://instagram.com/yanayavorskaya" class="soc-icon soc-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="https://x.com/yanayavorskaya" class="soc-icon soc-x" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://pinterest.com/yanayavorskaya" class="soc-icon soc-pin" target="_blank" rel="noopener" aria-label="Pinterest"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg></a>
+    <a href="https://youtube.com/@yanayavorskaya" class="soc-icon soc-yt" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://linkedin.com/in/yanayavorskaya" class="soc-icon soc-li" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="https://facebook.com/yanayavorskaya" class="soc-icon soc-fb" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
+  <div class="footer__inner">
+    <p class="footer__copy" data-i18n="footer.copy">© 2026 Yana Yavorskaya. Todos los derechos reservados.</p>
+    <ul class="footer__links">
+      <li><a href="sobre-mi.html" data-i18n="footer.bio">Bio</a></li>
+      <li><a href="noticias.html" data-i18n="footer.noticias">Noticias</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="footer.obras">Obras</a></li>
+      <li><a href="legal/aviso-legal.html" data-i18n="footer.legal">Aviso Legal</a></li>
+      <li><a href="legal/privacidad.html" data-i18n="footer.privacy">Privacidad</a></li>
+      <li><a href="legal/cookies.html" data-i18n="footer.cookies">Cookies</a></li>
+      <li><a href="legal/terminos.html" data-i18n="footer.terms">Términos</a></li>
+      <li><a href="#" onclick="openSitemap(event)" data-i18n="footer.sitemap">Mapa del sitio</a></li>
+    </ul>
+  </div>
+</div></footer>
+
+<!-- ===== MODO MUSEO ===== -->
+<div class="museum-mode night-gallery" role="dialog" aria-hidden="true">
+  <div class="night-gallery__ambient" aria-hidden="true"></div>
+  <div class="night-gallery__spotlight" aria-hidden="true"></div>
+  <button class="museum-mode__close" aria-label="Cerrar">✕</button>
+  <div class="museum-mode__stage">
+    <div class="museum-mode__artwork"></div>
+  </div>
+  <div class="museum-mode__nav">
+    <button class="museum-mode__prev" aria-label="Anterior">←</button>
+    <span class="museum-mode__counter">1 / 10</span>
+    <button class="museum-mode__next" aria-label="Siguiente">→</button>
+  </div>
+</div>
+
+
+
+
+
+
+
+<script src="js/i18n-content.js"></script>
+<script src="js/db.js"></script>
+<script src="js/i18n.js"></script>
+<!-- ===== MAPA DEL SITIO MODAL ===== -->
+<div class="shop-modal" id="sitemap-modal" role="dialog" aria-hidden="true">
+  <div class="shop-modal__inner" style="max-width: 780px;">
+    <button class="shop-modal__close" onclick="closeSitemap()" aria-label="Cerrar">✕</button>
+    <div class="invitation__crest">✦</div>
+    <h3 class="shop-modal__title" style="margin-bottom: 1.5rem; text-align: center;" data-i18n="sitemap.title">Mapa del sitio</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2rem; text-align: left; font-family: var(--sans); font-size: 0.88rem;">
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;" data-i18n="sitemap.gallery">Galería & Obras</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="obras-disponibles.html" style="color: var(--text);" data-i18n="sitemap.catalog">Catálogo Completo</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);" data-i18n="col1.title">Luz y Sombra</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);" data-i18n="col2.title">Geometría Sagrada</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);" data-i18n="col3.title">Horizontes Interiores</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;" data-i18n="sitemap.studio">Estudio & Ensayos</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="sobre-mi.html" style="color: var(--text);" data-i18n="sitemap.bio">Biografía & Filosofía</a></li>
+          <li><a href="index.html#estudio" style="color: var(--text-secondary);" data-i18n="sitemap.studioMadrid">El Estudio en Madrid</a></li>
+          <li><a href="noticias.html" style="color: var(--text);" data-i18n="sitemap.news">Noticias del Estudio</a></li>
+          <li><a href="index.html#exposiciones" style="color: var(--text-secondary);" data-i18n="sitemap.exhibitions">Exposiciones Internacionales</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;" data-i18n="sitemap.contact">Contacto & Legal</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="index.html#contacto" style="color: var(--text);" data-i18n="sitemap.privateContact">Citas Privadas & Contacto</a></li>
+          <li><a href="legal/aviso-legal.html" style="color: var(--text-secondary);" data-i18n="sitemap.legal">Aviso Legal</a></li>
+          <li><a href="legal/privacidad.html" style="color: var(--text-secondary);" data-i18n="sitemap.privacy">Privacidad</a></li>
+          <li><a href="legal/cookies.html" style="color: var(--text-secondary);" data-i18n="sitemap.cookies">Cookies</a></li>
+          <li><a href="legal/terminos.html" style="color: var(--text-secondary);" data-i18n="sitemap.terms">Términos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSitemap(e) { if(e) e.preventDefault(); var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.add('is-open'); sm.setAttribute('aria-hidden','false'); } }
+function closeSitemap() { var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.remove('is-open'); sm.setAttribute('aria-hidden','true'); } }
+</script>
+
+<!-- ===== CHAT ASSISTANT (BOTTOM RIGHT) ===== -->
+<div class="chat-assistant">
+  <button class="chat-assistant__trigger" id="chat-trigger" aria-label="Abrir chat">
+    <img src="assets/logo.png" alt="" width="34" height="34">
+  </button>
+</div>
+<div class="chat-panel" id="chat-panel" role="dialog" aria-hidden="true">
+  <div class="chat-panel__header">
+    <img src="assets/logo.png" alt="" width="36" height="36">
+    <div class="chat-panel__header-info">
+      <div class="chat-panel__header-name" data-i18n="chat.name">Yana Yavorskaya</div>
+      <div class="chat-panel__header-status" data-i18n="chat.status">Disponible</div>
+    </div>
+    <button class="chat-panel__close" id="chat-close" aria-label="Cerrar chat">✕</button>
+  </div>
+  <div class="chat-panel__messages" id="chat-messages"></div>
+  <div class="chat-panel__quick-replies" id="chat-quick">
+    <button class="chat-panel__quick-reply" data-msg="Háblame de la colección Luz y Sombra" data-i18n="chat.q1">Luz y Sombra</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Hay obras disponibles?" data-i18n="chat.q3">Disponibilidad</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Qué técnica utilizas?" data-i18n="chat.q2">Técnica</button>
+    <button class="chat-panel__quick-reply" data-msg="Cuéntame sobre las exposiciones" data-i18n="chat.q4">Exposiciones</button>
+  </div>
+  <div class="chat-panel__input-area">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta…" data-i18n="chat.placeholder">
+    <button id="chat-send" data-i18n="chat.send">Enviar</button>
+  </div>
+</div>
+
+<!-- ===== SCROLL UP (BOTTOM LEFT) ===== -->
+<button class="scroll-up" id="scroll-up" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<script src="js/museum.js"></script>
+</body>
+</html>

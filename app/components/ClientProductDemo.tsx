@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Play, RotateCcw, Sparkles, ArrowRight, Loader2, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 
-type ScenarioId = 'restArt' | 'kebab' | 'royalBang' | 'campon';
+type ScenarioId = 'restArt' | 'kebab' | 'royalBang' | 'campon' | 'laPerla' | 'yana';
 
 type ChatLine = { role: 'ai' | 'user'; text: string };
 type PreviewMode = 'none' | 'draft' | 'full';
@@ -57,6 +57,22 @@ const copy = {
         refine: 'Añade sección de equipo, tarifas claras y bloque de servicios más detallado.',
         ai2: 'Listo. Web completa con servicios, equipo, tarifas y formulario de contacto.',
       },
+      laPerla: {
+        label: 'La Perla Oriental',
+        prompt:
+          'La Perla Oriental en Vallecas: restaurante chino premium, carta completa, galería de platos y reservas. Estilo elegante y luminoso.',
+        ai1: 'Genial. Primera versión con hero gastronómico, carta interactiva y datos del restaurante.',
+        refine: 'Añade galería de especialidades, reseñas de Google y sección de historia del local.',
+        ai2: 'Hecho. Web premium con carta, galería, especialidades y toda la información del restaurante.',
+      },
+      yana: {
+        label: 'Yana Yavorskaya',
+        prompt:
+          'Yana Yavorskaya: pintora contemporánea con obras disponibles, exposiciones internacionales y galería privada. Estilo museístico y elegante.',
+        ai1: 'Perfecto. Monto la web con hero artístico, colecciones destacadas y contacto para consultas.',
+        refine: 'Más galería de obras, sección de exposiciones y bio del artista más completa.',
+        ai2: 'Listo. Portfolio completo con obras, exposiciones, noticias y formulario de contacto.',
+      },
     },
   },
   en: {
@@ -105,6 +121,22 @@ const copy = {
         refine: 'Add team section, clear pricing and a more detailed services block.',
         ai2: 'Done. Full site with services, team, pricing and contact form.',
       },
+      laPerla: {
+        label: 'La Perla Oriental',
+        prompt:
+          'La Perla Oriental in Vallecas: premium Chinese restaurant, full menu, dish gallery and reservations. Elegant, bright style.',
+        ai1: 'Great. First version with food hero, interactive menu and restaurant details.',
+        refine: 'Add specialty gallery, Google reviews and a history section for the venue.',
+        ai2: 'Done. Premium site with menu, gallery, specialties and full restaurant information.',
+      },
+      yana: {
+        label: 'Yana Yavorskaya',
+        prompt:
+          'Yana Yavorskaya: contemporary painter with available works, international exhibitions and private gallery. Museum-style, elegant.',
+        ai1: 'Perfect. Building artistic hero, featured collections and contact for inquiries.',
+        refine: 'More artwork gallery, exhibitions section and a fuller artist bio.',
+        ai2: 'Done. Full portfolio with works, exhibitions, news and contact form.',
+      },
     },
   },
 } as const;
@@ -136,6 +168,18 @@ const scenarioConfig: Record<
     siteUrl: 'camponasesores.es',
     studioSlug: 'ledger',
     studioPrompt: 'Campón Asesores gestoría Vallecas Madrid',
+  },
+  laPerla: {
+    demoPath: '/demos/clientes/la-perla-oriental/index.html',
+    siteUrl: 'laperlaoriental.com',
+    studioSlug: 'sakura',
+    studioPrompt: 'La Perla Oriental restaurante chino Vallecas Madrid',
+  },
+  yana: {
+    demoPath: '/demos/clientes/yana-yavorskaya/index.html',
+    siteUrl: 'yanayavorskaya.com',
+    studioSlug: 'chronicle',
+    studioPrompt: 'Yana Yavorskaya pintora contemporánea galería arte',
   },
 };
 

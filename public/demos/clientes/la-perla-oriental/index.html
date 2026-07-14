@@ -1,0 +1,4285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta -->
+  <title>La Perla Oriental | Restaurante Chino de Alta Cocina · Madrid</title>
+  <meta name="description" content="La Perla Oriental, el restaurante chino de referencia en Madrid. Décadas de tradición, cocina auténtica, gran salón y terraza. Reserva tu mesa hoy.">
+  <meta name="keywords" content="restaurante chino madrid, la perla oriental, cocina china tradicional, dim sum madrid, reservar restaurante chino, comida china para llevar madrid">
+  <meta name="author" content="La Perla Oriental">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.laperloriental.es/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="restaurant">
+  <meta property="og:title" content="La Perla Oriental | Restaurante Chino · Madrid">
+  <meta property="og:description" content="Décadas de tradición. Cocina china auténtica. Una experiencia que no olvidarás.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1525755662778-491d7f74bfc2?w=1200&q=85">
+  <meta property="og:url" content="https://www.laperloriental.es/">
+  <meta property="og:site_name" content="La Perla Oriental">
+  <meta property="og:locale" content="es_ES">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="La Perla Oriental | Restaurante Chino · Madrid">
+  <meta name="twitter:description" content="Décadas de tradición. Cocina china auténtica en Madrid.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1525755662778-491d7f74bfc2?w=1200&q=85">
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "La Perla Oriental",
+    "description": "Restaurante chino tradicional con décadas de historia en Madrid. Gran salón, terraza, comida para llevar y servicio de reservas.",
+    "servesCuisine": ["Chinese", "Asian"],
+    "priceRange": "€€",
+    "currenciesAccepted": "EUR",
+    "paymentAccepted": "Cash, Credit Card",
+    "url": "https://www.laperloriental.es/",
+    "image": "image/exterior.webp",
+    "logo": "image/logo-oro.png",
+    "telephone": "+34 913 282 938",
+    "email": "<!-- EDITAR: info@laperloriental.es -->",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Cmo. de Valderribas, 93D",
+      "addressLocality": "Madrid",
+      "addressRegion": "Madrid",
+      "postalCode": "28038",
+      "addressCountry": "ES"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "40.3930",
+      "longitude": "-3.6550"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Tuesday",
+        "opens": "12:00",
+        "closes": "16:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Tuesday",
+        "opens": "20:00",
+        "closes": "23:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "12:00",
+        "closes": "16:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "20:00",
+        "closes": "23:30"
+      }
+    ],
+    "hasMenu": "https://www.laperloriental.es/#carta",
+    "acceptsReservations": true,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.5",
+      "reviewCount": "1455"
+    }
+  }
+  </script>
+
+  <!-- Preconnect Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --obsidian:       #1A1612;
+      --deep-red:       #7A1515;
+      --imperial-red:   #B01C2E;
+      --gold:           #A67C2E;
+      --gold-light:     #C49A3C;
+      --gold-shine:     #D4AE56;
+      --ivory:          #FAF7F2;
+      --ivory-dark:     #F0EBE3;
+      --stone:          #6B6560;
+      --stone-light:    #8A8580;
+      --charcoal:       #FFFFFF;
+      --charcoal-mid:   #F5F1EB;
+      --white:          #FFFFFF;
+      --text-primary:   #1A1612;
+      --text-muted:     #6B6560;
+      --border-soft:    rgba(26,22,18,0.08);
+      --shadow-soft:    0 8px 40px rgba(26,22,18,0.06);
+
+      --font-display:   'Cormorant Garamond', Georgia, serif;
+      --font-body:      'Inter', system-ui, sans-serif;
+      --font-chinese:   'Noto Serif SC', serif;
+
+      --ease-silk:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-expo:      cubic-bezier(0.16, 1, 0.3, 1);
+
+      --nav-h:          72px;
+      --section-pad:    clamp(80px, 10vw, 140px);
+      --max-w:          1280px;
+      --max-w-text:     740px;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--text-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button { cursor: none; border: none; background: none; font-family: inherit; }
+    ul, ol { list-style: none; }
+
+    /* ============================================================
+       CUSTOM CURSOR
+    ============================================================ */
+    #cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s var(--ease-silk), opacity 0.3s;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(192,154,74,0.6);
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      transition: width 0.35s var(--ease-expo), height 0.35s var(--ease-expo), border-color 0.3s, transform 0.08s linear;
+    }
+    body:has(a:hover) #cursor-ring,
+    body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: var(--gold); }
+
+    @media (pointer: coarse) {
+      #cursor, #cursor-ring { display: none; }
+      body { cursor: auto; }
+      button { cursor: pointer; }
+    }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--ivory-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ============================================================
+       UTILITY CLASSES
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(20px, 5vw, 60px);
+    }
+
+    .section-pad { padding: var(--section-pad) 0; }
+
+    .label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .display-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .gold-line {
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 1.2rem 0;
+    }
+
+    .gold-line--center {
+      margin: 1.2rem auto;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      width: 80px;
+    }
+
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+    .stagger-5 { transition-delay: 0.5s; }
+    .stagger-6 { transition-delay: 0.6s; }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      z-index: 1000;
+      background: rgba(250, 247, 242, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-soft);
+      transition: background 0.5s var(--ease-silk), box-shadow 0.5s;
+    }
+    #nav.scrolled {
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .nav-inner {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 clamp(20px, 5vw, 60px);
+      gap: 2rem;
+    }
+
+    .nav-links-left, .nav-links-right {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.2rem, 2.5vw, 2.4rem);
+    }
+    .nav-links-right { justify-content: flex-end; }
+
+    .nav-link {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.35s var(--ease-silk);
+    }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link:hover::after { width: 100%; }
+
+    .nav-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .nav-logo img {
+      height: 58px;
+      width: auto;
+      filter: none;
+      transition: transform 0.4s var(--ease-silk);
+    }
+    .nav-logo img:hover { transform: scale(1.04); }
+
+    .nav-cta {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold) !important;
+      border: 1px solid rgba(192,154,74,0.5);
+      padding: 0.55rem 1.4rem;
+      border-radius: 2px;
+      transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--obsidian) !important;
+      box-shadow: 0 0 24px rgba(192,154,74,0.25);
+    }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--text-primary);
+      transition: transform 0.4s var(--ease-expo), opacity 0.3s;
+      transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    /* Mobile nav overlay */
+    #mobile-nav {
+      position: fixed;
+      inset: 0;
+      background: rgba(250,247,242,0.98);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s var(--ease-silk);
+    }
+    #mobile-nav.open { opacity: 1; pointer-events: all; }
+    .mobile-nav-link {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      font-weight: 300;
+      color: var(--text-primary);
+      letter-spacing: 0.04em;
+      transition: color 0.3s;
+      text-align: center;
+    }
+    .mobile-nav-link:hover { color: var(--gold); }
+    .mobile-nav-cta {
+      margin-top: 1rem;
+      padding: 0.9rem 3rem;
+      border: 1px solid var(--gold);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      transition: background 0.3s, color 0.3s;
+      border-radius: 2px;
+    }
+    .mobile-nav-cta:hover { background: var(--gold); color: var(--obsidian); }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      will-change: transform;
+      background:
+        linear-gradient(135deg, #F5EDE0 0%, #E8D5BC 35%, #C4A574 100%);
+    }
+    .hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      transform: scale(1.05);
+      transition: transform 8s var(--ease-silk);
+    }
+    .hero-bg img.is-hidden { opacity: 0; }
+    #hero.loaded .hero-bg img { transform: scale(1); }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(250, 247, 242, 0.55) 0%,
+        rgba(250, 247, 242, 0.35) 45%,
+        rgba(26, 22, 18, 0.45) 100%
+      );
+    }
+    .hero-overlay-grain {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    /* Hero particles */
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 860px;
+      padding: 0 clamp(20px, 5vw, 40px);
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 1.2s var(--ease-expo) 0.2s, transform 1.2s var(--ease-expo) 0.2s;
+    }
+    #hero.loaded .hero-content { opacity: 1; transform: translateY(0); }
+
+    .hero-chinese {
+      font-family: var(--font-chinese);
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: var(--gold);
+      letter-spacing: 0.5em;
+      margin-bottom: 2rem;
+    }
+
+    .hero-logo {
+      height: clamp(160px, 24vw, 260px);
+      width: auto;
+      margin: 0 auto 2rem;
+      filter: drop-shadow(0 12px 32px rgba(26, 22, 18, 0.25));
+    }
+
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2.8vw, 1.65rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      letter-spacing: 0.04em;
+      margin-bottom: 3rem;
+      font-style: italic;
+      text-shadow: 0 1px 12px rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 1rem 2.4rem;
+      background: var(--gold);
+      color: var(--obsidian);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.25s var(--ease-silk);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      box-shadow: 0 0 40px rgba(192,154,74,0.4), 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 1rem 2.4rem;
+      border: 1px solid rgba(26, 22, 18, 0.25);
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.75);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: border-color 0.3s, background 0.3s, transform 0.25s var(--ease-silk);
+    }
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      background: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Scroll indicator */
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: fadeInScroll 1s var(--ease-expo) 2s forwards;
+    }
+    @keyframes fadeInScroll {
+      to { opacity: 1; }
+    }
+    .hero-scroll span {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, rgba(192,154,74,0.8), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0%,100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.4); opacity: 0.4; }
+    }
+
+    /* ============================================================
+       HISTORIA
+    ============================================================ */
+    #historia {
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .historia-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 70vh;
+    }
+
+    .historia-text {
+      padding: var(--section-pad) clamp(30px, 6vw, 80px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .historia-title {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+    }
+
+    .historia-body {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.85;
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+    }
+
+    .historia-quote {
+      font-family: var(--font-chinese);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      color: var(--gold);
+      margin: 2rem 0 0.5rem;
+      letter-spacing: 0.2em;
+    }
+    .historia-quote-trans {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--stone);
+      letter-spacing: 0.05em;
+    }
+
+    .historia-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(192,154,74,0.15);
+    }
+    .stat-item { display: flex; flex-direction: column; }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-top: 0.4rem;
+    }
+
+    .historia-image {
+      position: relative;
+      overflow: hidden;
+    }
+    .historia-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s var(--ease-silk);
+    }
+    .historia-image:hover img { transform: scale(1.04); }
+    .historia-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(28,28,28,0.6) 0%, transparent 50%);
+    }
+
+    /* ============================================================
+       GALERÍA
+    ============================================================ */
+    #galeria {
+      background: var(--ivory-dark);
+    }
+
+    .galeria-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .galeria-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-primary);
+    }
+
+    .gallery-food-block {
+      background: var(--white);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: clamp(1rem, 2vw, 1.5rem);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .gallery-masonry {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      background: var(--charcoal-mid);
+      cursor: pointer;
+      border-radius: 12px;
+      aspect-ratio: 1;
+    }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease-silk);
+      loading: lazy;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26,22,18,0);
+      transition: background 0.4s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-item:hover .gallery-item-overlay { background: rgba(26,22,18,0.35); }
+
+    .gallery-zoom-icon {
+      color: #fff;
+      font-size: 1.5rem;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.35s, transform 0.35s var(--ease-expo);
+    }
+    .gallery-item:hover .gallery-zoom-icon { opacity: 1; transform: scale(1); }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    #lightbox.open { opacity: 1; pointer-events: all; }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 1px;
+      transition: transform 0.4s var(--ease-expo), opacity 0.3s;
+    }
+    .lb-close {
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      font-size: 1.8rem;
+      color: #fff;
+      background: none;
+      border: none;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s, transform 0.3s;
+    }
+    .lb-close:hover { opacity: 1; transform: rotate(90deg); }
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(192,154,74,0.1);
+      border: 1px solid rgba(192,154,74,0.3);
+      color: #fff;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .lb-nav:hover { background: rgba(192,154,74,0.2); border-color: var(--gold); }
+    .lb-prev { left: 1.5rem; }
+    .lb-next { right: 1.5rem; }
+    .lb-counter {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: rgba(244,239,230,0.5);
+    }
+
+    /* ============================================================
+       ESPECIALIDADES
+    ============================================================ */
+    #especialidades {
+      background: var(--white);
+    }
+
+    .esp-header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+    .esp-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-primary);
+    }
+
+    .esp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+      gap: 2px;
+    }
+
+    .esp-card {
+      position: relative;
+      height: clamp(360px, 45vw, 480px);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .esp-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s var(--ease-silk);
+    }
+    .esp-card:hover img { transform: scale(1.07); }
+
+    .esp-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,22,18,0.92) 0%, rgba(26,22,18,0.35) 55%, transparent 85%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2.5rem;
+      transition: background 0.4s;
+    }
+    .esp-card:hover .esp-card-overlay {
+      background: linear-gradient(to top, rgba(8,8,8,0.98) 0%, rgba(8,8,8,0.55) 60%, rgba(8,8,8,0.1) 100%);
+    }
+
+    .esp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(192,154,74,0.15);
+      border: 1px solid rgba(192,154,74,0.4);
+      color: var(--gold);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1px;
+      margin-bottom: 1rem;
+      width: fit-content;
+      backdrop-filter: blur(8px);
+    }
+
+    .esp-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+
+    .esp-desc {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: rgba(244,239,230,0.65);
+      line-height: 1.6;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s var(--ease-expo), opacity 0.4s;
+      opacity: 0;
+    }
+    .esp-card:hover .esp-desc { max-height: 80px; opacity: 1; }
+
+    .esp-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(192,154,74,0.2);
+    }
+    .esp-price {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--gold);
+    }
+    .esp-link {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s, gap 0.3s;
+    }
+    .esp-link:hover { color: var(--gold); gap: 0.8rem; }
+
+    /* ============================================================
+       EXPERIENCIA
+    ============================================================ */
+    #experiencia {
+      background: var(--ivory);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .exp-bg {
+      position: absolute;
+      inset: 0;
+    }
+    .exp-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      will-change: transform;
+    }
+    .exp-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26,22,18,0.62);
+    }
+
+    .exp-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .exp-header {
+      text-align: center;
+      margin-bottom: 6rem;
+    }
+    .exp-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      color: #fff;
+    }
+    .exp-subtitle {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: rgba(255,255,255,0.78);
+      margin-top: 1.2rem;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .exp-pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 3rem 4rem;
+      margin-bottom: 6rem;
+    }
+
+    .exp-pillar { text-align: center; }
+    .exp-icon {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .exp-pillar-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+    .exp-pillar-text {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .exp-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(192,154,74,0.3), transparent);
+      margin-bottom: 5rem;
+    }
+
+    .exp-counters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+    .counter-item {}
+    .counter-num {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .counter-suffix {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      color: var(--gold-light);
+    }
+    .counter-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-top: 0.8rem;
+    }
+
+    /* ============================================================
+       CARTA
+    ============================================================ */
+    #carta {
+      background: var(--ivory-dark);
+    }
+
+    .carta-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .carta-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-primary);
+    }
+
+    /* Search */
+    .carta-search-wrap {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .carta-search {
+      flex: 1;
+      min-width: 200px;
+      background: var(--white);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 0.85rem 1.2rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .carta-search::placeholder { color: var(--stone); }
+    .carta-search:focus { border-color: rgba(192,154,74,0.5); }
+
+    /* Category tabs */
+    .carta-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 3rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: none;
+    }
+    .carta-tabs::-webkit-scrollbar { display: none; }
+
+    .carta-tab {
+      flex-shrink: 0;
+      padding: 0.65rem 1.4rem;
+      background: transparent;
+      border: 1px solid rgba(192,154,74,0.2);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .carta-tab:hover { border-color: rgba(192,154,74,0.5); color: var(--text-primary); }
+    .carta-tab.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--obsidian);
+    }
+
+    /* Filter pills */
+    .carta-filters {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .filter-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: transparent;
+    }
+    .filter-pill:hover { border-color: rgba(192,154,74,0.4); color: var(--text-primary); }
+    .filter-pill.active { background: rgba(192,154,74,0.15); border-color: var(--gold); color: var(--gold); }
+    .filter-pill .pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .pill-dot--chef { background: var(--gold); }
+    .pill-dot--popular { background: #e87c3e; }
+    .pill-dot--spicy { background: #d63031; }
+    .pill-dot--veg { background: #00b894; }
+    .pill-dot--new { background: #6c5ce7; }
+
+    /* Menu grid */
+    .carta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 1.5px;
+      transition: all 0.4s;
+    }
+
+    .menu-item {
+      background: var(--white);
+      padding: 1.8rem 2rem;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease-silk);
+      position: relative;
+    }
+    .menu-item:hover {
+      background: var(--ivory);
+      border-color: rgba(192,154,74,0.15);
+      transform: translateY(-2px);
+    }
+    .menu-item.hidden { display: none; }
+
+    .menu-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+    }
+    .menu-item-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .menu-item-price {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--gold);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .menu-item-desc {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 0.8rem;
+    }
+    .menu-item-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+    .tag--chef { background: rgba(192,154,74,0.15); color: var(--gold); }
+    .tag--popular { background: rgba(232,124,62,0.15); color: #e87c3e; }
+    .tag--spicy { background: rgba(214,48,49,0.15); color: #d63031; }
+    .tag--veg { background: rgba(0,184,148,0.15); color: #00b894; }
+    .tag--new { background: rgba(108,92,231,0.15); color: #a29bfe; }
+
+    /* ============================================================
+       OPINIONES
+    ============================================================ */
+    #opiniones {
+      background: var(--white);
+    }
+
+    .opin-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .opin-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-primary);
+    }
+
+    .opin-carousel-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    .opin-track {
+      display: flex;
+      transition: transform 0.7s var(--ease-expo);
+    }
+    .opin-slide {
+      min-width: 100%;
+      padding: 0 clamp(0px, 5vw, 4rem);
+    }
+    .opin-inner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 1.5rem;
+    }
+
+    .review-card {
+      background: var(--white);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+      transition: border-color 0.3s, transform 0.4s var(--ease-silk);
+    }
+    .review-card:hover { border-color: rgba(192,154,74,0.2); transform: translateY(-4px); }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .review-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--deep-red), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+    .review-meta {}
+    .review-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .review-platform {
+      font-size: 0.68rem;
+      color: var(--stone);
+      letter-spacing: 0.05em;
+      margin-top: 0.15rem;
+    }
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 1rem;
+    }
+    .star { color: var(--gold); font-size: 0.75rem; }
+    .review-text {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.75;
+      font-style: italic;
+    }
+    .review-text::before { content: '\201C'; color: var(--gold); font-family: var(--font-display); font-size: 1.5rem; line-height: 0.5; }
+
+    .opin-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .opin-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(192,154,74,0.3);
+      color: var(--text-primary);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, border-color 0.3s;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .opin-btn:hover { background: rgba(192,154,74,0.1); border-color: var(--gold); }
+
+    .opin-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .opin-dot {
+      width: 24px; height: 2px;
+      background: rgba(192,154,74,0.25);
+      border-radius: 1px;
+      transition: background 0.3s, width 0.3s;
+      cursor: pointer;
+    }
+    .opin-dot.active { background: var(--gold); width: 40px; }
+
+    /* ============================================================
+       RESERVAS
+    ============================================================ */
+    #reservas {
+      background: var(--charcoal);
+    }
+
+    .reservas-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .reservas-info {}
+    .reservas-title {
+      font-size: clamp(2.5rem, 4.5vw, 3.8rem);
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+    .reservas-body {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+    .reservas-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .reservas-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .reservas-detail-icon {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(192,154,74,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .reservas-detail-text {}
+    .reservas-detail-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .reservas-detail-value {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* Form */
+    .reservas-form-wrap {
+      background: var(--white);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: clamp(2rem, 4vw, 3rem);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .form-progress {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2.5rem;
+    }
+    .form-step-label {
+      flex: 1;
+      text-align: center;
+    }
+    .form-step-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(192,154,74,0.25);
+      color: var(--stone);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.4rem;
+      transition: all 0.4s;
+    }
+    .form-step-num.active {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--obsidian);
+    }
+    .form-step-num.done {
+      border-color: var(--gold);
+      background: rgba(192,154,74,0.15);
+      color: var(--gold);
+    }
+    .form-step-text {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--stone);
+      transition: color 0.3s;
+    }
+    .form-step-label:has(.active) .form-step-text { color: var(--gold); }
+    .form-step-connector {
+      flex: 1;
+      height: 1px;
+      background: rgba(192,154,74,0.15);
+      max-width: 60px;
+    }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .form-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+    .form-input, .form-select, .form-textarea {
+      background: var(--ivory);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: rgba(192,154,74,0.5);
+      background: var(--white);
+    }
+    .form-select { cursor: pointer; }
+    .form-select option { background: var(--white); color: var(--text-primary); }
+    .form-textarea { resize: vertical; min-height: 90px; }
+
+    .form-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    .form-btn-back {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-btn-back:hover { color: var(--ivory); }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    .form-success.show { display: block; }
+    .success-icon {
+      font-size: 3rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      animation: successPop 0.5s var(--ease-expo);
+    }
+    @keyframes successPop {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .success-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.8rem;
+    }
+    .success-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ============================================================
+       UBICACIÓN
+    ============================================================ */
+    #ubicacion {
+      background: var(--ivory);
+    }
+
+    .ubicacion-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .ubicacion-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-primary);
+    }
+
+    .ubicacion-map {
+      width: 100%;
+      height: clamp(300px, 45vw, 520px);
+      border: 0;
+      border-radius: 12px;
+      box-shadow: var(--shadow-soft);
+      display: block;
+      margin-bottom: 3rem;
+    }
+
+    .ubicacion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .ubicacion-card {
+      background: var(--white);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 1.8rem;
+      text-align: center;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .ubicacion-card:hover { border-color: rgba(192,154,74,0.2); background: var(--ivory); }
+    .ubicacion-card-icon { font-size: 1.4rem; color: var(--gold); margin-bottom: 1rem; }
+    .ubicacion-card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .ubicacion-card-text { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+
+    /* ============================================================
+       CONTACTO
+    ============================================================ */
+    #contacto {
+      background: var(--white);
+    }
+
+    .contacto-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .contacto-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-primary);
+    }
+
+    .contacto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    .contacto-item {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--ivory);
+      transition: border-color 0.3s, transform 0.3s var(--ease-silk);
+    }
+    .contacto-item:hover { border-color: rgba(192,154,74,0.3); transform: translateY(-4px); }
+    .contacto-icon { font-size: 1.6rem; color: var(--gold); margin-bottom: 1.2rem; }
+    .contacto-item-title { font-family: var(--font-display); font-size: 1.15rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+    .contacto-item-value { font-size: 0.9rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+    .contacto-item-value a { color: var(--text-muted); transition: color 0.3s; }
+    .contacto-item-value a:hover { color: var(--gold); }
+
+    .horario-table {
+      max-width: 500px;
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    .horario-table td {
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-soft);
+      font-weight: 300;
+    }
+    .horario-table td:first-child { color: var(--text-primary); font-weight: 400; }
+    .horario-table tr:last-child td { border-bottom: none; }
+
+    .open-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+    }
+    .open-badge.open { background: rgba(0,184,148,0.15); color: #00b894; }
+    .open-badge.closed { background: rgba(214,48,49,0.15); color: #d63031; }
+    .open-badge::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* WhatsApp */
+    .whatsapp-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding: 2.5rem;
+      border: 1px solid rgba(192,154,74,0.1);
+      border-radius: 2px;
+      text-align: center;
+    }
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #25D366;
+      color: #fff;
+      padding: 1rem 2.5rem;
+      border-radius: 2px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: background 0.3s, transform 0.3s var(--ease-silk), box-shadow 0.3s;
+    }
+    .whatsapp-btn:hover {
+      background: #1ebe57;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(37,211,102,0.3);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    #footer {
+      background: #1A1612;
+      border-top: 1px solid rgba(192,154,74,0.12);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding: 5rem 0 4rem;
+    }
+
+    .footer-brand {}
+    .footer-logo {
+      height: 72px;
+      width: auto;
+      filter: none;
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+    }
+    .footer-tagline {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--stone);
+      line-height: 1.8;
+      max-width: 260px;
+    }
+    .footer-chinese-tag {
+      font-family: var(--font-chinese);
+      font-size: 1.1rem;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-top: 1.2rem;
+      display: block;
+    }
+    .footer-social {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.8rem;
+    }
+    .footer-social-link {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(192,154,74,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--stone);
+      font-size: 0.8rem;
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .footer-social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(192,154,74,0.08);
+    }
+
+    .footer-col-title {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .footer-link {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--stone);
+      transition: color 0.3s, padding-left 0.3s;
+    }
+    .footer-link:hover { color: var(--ivory); padding-left: 4px; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 1.8rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--stone);
+      font-weight: 300;
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-bottom-link {
+      font-size: 0.72rem;
+      color: var(--stone);
+      transition: color 0.3s;
+    }
+    .footer-bottom-link:hover { color: var(--ivory); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .historia-grid { grid-template-columns: 1fr; }
+      .historia-image { height: 420px; }
+      .historia-image-overlay { background: linear-gradient(to bottom, rgba(28,28,28,0.5) 0%, transparent 50%); }
+
+      .reservas-wrap { grid-template-columns: 1fr; gap: 3rem; }
+
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-inner { grid-template-columns: auto 1fr auto; }
+      .nav-links-left { display: none; }
+      .nav-links-right .nav-link { display: none; }
+      .nav-links-right .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-logo { justify-content: flex-start; }
+
+      .historia-stats { gap: 1.5rem; flex-wrap: wrap; }
+
+      .gallery-masonry {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .form-row { grid-template-columns: 1fr; }
+
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-logo { height: 140px; }
+      .exp-pillars { gap: 2rem; }
+      .lb-prev { left: 0.5rem; }
+      .lb-next { right: 0.5rem; }
+    }
+
+    /* Cookie banner */
+    #cookie-banner {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 10001;
+      background: rgba(255, 255, 255, 0.98);
+      border-top: 1px solid var(--border-soft);
+      box-shadow: 0 -8px 40px rgba(26, 22, 18, 0.08);
+      padding: 1.2rem clamp(20px, 5vw, 40px);
+      transform: translateY(110%);
+      transition: transform 0.5s var(--ease-expo);
+    }
+    #cookie-banner.show { transform: translateY(0); }
+    .cookie-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .cookie-text {
+      flex: 1;
+      min-width: 240px;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .cookie-text a { color: var(--gold); font-weight: 500; }
+    .cookie-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .cookie-btn {
+      padding: 0.65rem 1.4rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: background 0.3s, color 0.3s;
+    }
+    .cookie-btn--accept { background: var(--gold); color: #fff; }
+    .cookie-btn--accept:hover { background: var(--gold-light); }
+    .cookie-btn--reject {
+      background: transparent;
+      border: 1px solid var(--border-soft);
+      color: var(--text-primary);
+    }
+    .cookie-btn--reject:hover { border-color: var(--gold); color: var(--gold); }
+  </style>
+</head>
+
+<body>
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="nav" role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <!-- Left links -->
+      <ul class="nav-links-left">
+        <li><a href="#historia" class="nav-link">Historia</a></li>
+        <li><a href="#galeria" class="nav-link">Galería</a></li>
+        <li><a href="#especialidades" class="nav-link">Especialidades</a></li>
+        <li><a href="#carta" class="nav-link">Carta</a></li>
+      </ul>
+
+      <!-- Logo -->
+      <div class="nav-logo">
+        <a href="#hero" aria-label="La Perla Oriental — Inicio">
+          <img src="image/logo-oro.png" alt="La Perla Oriental" width="120" height="58">
+        </a>
+      </div>
+
+      <!-- Right links -->
+      <ul class="nav-links-right">
+        <li><a href="#opiniones" class="nav-link">Opiniones</a></li>
+        <li><a href="#ubicacion" class="nav-link">Ubicación</a></li>
+        <li><a href="#reservas" class="nav-cta nav-link">Reservar</a></li>
+        <li>
+          <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav Overlay -->
+  <nav id="mobile-nav" aria-label="Menú móvil" role="navigation">
+    <a href="#historia" class="mobile-nav-link">Historia</a>
+    <a href="#galeria" class="mobile-nav-link">Galería</a>
+    <a href="#especialidades" class="mobile-nav-link">Especialidades</a>
+    <a href="#carta" class="mobile-nav-link">Carta</a>
+    <a href="#opiniones" class="mobile-nav-link">Opiniones</a>
+    <a href="#ubicacion" class="mobile-nav-link">Ubicación</a>
+    <a href="#reservas" class="mobile-nav-cta">Reservar Mesa</a>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero" aria-label="Portada" class="loaded">
+    <div class="hero-bg">
+      <img
+        src="image/hero.webp"
+        alt="Platos de cocina china La Perla Oriental"
+        fetchpriority="high"
+        width="1920" height="1080"
+        id="hero-img"
+      >
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-overlay-grain" aria-hidden="true"></div>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+    <div class="hero-content">
+      <p class="hero-chinese" aria-label="La Perla del Oriente en chino">东方之珠</p>
+      <img
+        src="image/logo-oro.png"
+        alt="La Perla Oriental"
+        class="hero-logo"
+        width="280" height="260"
+      >
+      <p class="hero-tagline">La auténtica cocina china desde hace décadas.</p>
+      <div class="hero-buttons">
+        <a href="#reservas" class="btn-primary" id="hero-cta-reservar">
+          <span>✦</span> Reservar Mesa
+        </a>
+        <a href="#carta" class="btn-secondary" id="hero-cta-carta">
+          Ver la Carta
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <span>Descubre</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HISTORIA
+  ============================================================ -->
+  <section id="historia" class="section-pad" aria-labelledby="historia-heading">
+    <div class="historia-grid">
+      <div class="historia-text">
+        <p class="label reveal">Nuestra Historia</p>
+        <span class="gold-line reveal stagger-1"></span>
+        <h2 id="historia-heading" class="display-title historia-title reveal stagger-2">
+          Décadas de sabor,<br>
+          <em>una sola familia.</em>
+        </h2>
+        <p class="historia-body reveal stagger-3">
+          La Perla Oriental nació de la pasión de una familia por preservar las recetas más auténticas de la cocina china tradicional. Desde el primer wok encendido, cada plato ha sido elaborado con los mismos valores: ingredientes frescos, técnicas milenarias y el calor de una hospitalidad sin pretensiones.
+        </p>
+        <p class="historia-body reveal stagger-4">
+          Hoy, ese espíritu familiar sigue vivo en cada mesa, en cada aroma que sale de la cocina, en cada cliente que vuelve año tras año. No somos solo un restaurante. Somos un lugar donde el tiempo se detiene.
+        </p>
+
+        <div class="reveal stagger-5">
+          <p class="historia-quote">福如东海</p>
+          <p class="historia-quote-trans">— "Que la prosperidad sea tan vasta como el Mar Oriental"</p>
+        </div>
+
+        <div class="historia-stats reveal stagger-6">
+          <div class="stat-item">
+            <span class="stat-number" data-count="35" data-suffix="+">35+</span>
+            <span class="stat-label">Años de historia</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="98" data-suffix="+">98+</span>
+            <span class="stat-label">Platos en carta</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="50000" data-suffix="+">50k+</span>
+            <span class="stat-label">Familias atendidas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="historia-image">
+        <img
+          src="image/interior-historia.png"
+          alt="Salón principal de La Perla Oriental con gran árbol decorativo"
+          loading="lazy"
+          width="800" height="1000"
+        >
+        <div class="historia-image-overlay" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALERÍA
+  ============================================================ -->
+  <section id="galeria" class="section-pad" aria-labelledby="galeria-heading">
+    <div class="container">
+      <div class="galeria-header">
+        <p class="label reveal">Galería</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="galeria-heading" class="display-title galeria-title reveal stagger-2">
+          Nuestros platos, en cada detalle
+        </h2>
+      </div>
+
+            <div class="gallery-food-block reveal stagger-3">
+        <div class="gallery-masonry" id="gallery-masonry">
+          <div class="gallery-item reveal" data-src="image/1.webp">
+            <img src="image/1.webp" alt="Rollitos de primavera" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="image/2.webp">
+            <img src="image/2.webp" alt="Arroz frito tres delicias" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="image/3.webp">
+            <img src="image/3.webp" alt="Dim Sum variados" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="https://images.pexels.com/photos/5848600/pexels-photo-5848600.jpeg?auto=compress&cs=tinysrgb&w=1200">
+            <img src="https://images.pexels.com/photos/5848600/pexels-photo-5848600.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Pato pekinés laqueado" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="image/5.webp">
+            <img src="image/5.webp" alt="Ternera con salsa de ostras" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="https://images.pexels.com/photos/8954298/pexels-photo-8954298.jpeg?auto=compress&cs=tinysrgb&w=1200">
+            <img src="https://images.pexels.com/photos/8954298/pexels-photo-8954298.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Gambas salteadas al wok" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="https://images.pexels.com/photos/1247677/pexels-photo-1247677.jpeg?auto=compress&cs=tinysrgb&w=1200">
+            <img src="https://images.pexels.com/photos/1247677/pexels-photo-1247677.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Cerdo agridulce" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="image/8.webp">
+            <img src="image/8.webp" alt="Pollo con almendras" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="image/9.webp">
+            <img src="image/9.webp" alt="Sopa agripicante" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="image/10.webp">
+            <img src="image/10.webp" alt="Guo-Tie empanadillas" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="https://images.pexels.com/photos/5848600/pexels-photo-5848600.jpeg?auto=compress&cs=tinysrgb&w=1200">
+            <img src="https://images.pexels.com/photos/5848600/pexels-photo-5848600.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Pato Pekín" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+          <div class="gallery-item reveal" data-src="https://images.pexels.com/photos/725991/pexels-photo-725991.jpeg?auto=compress&cs=tinysrgb&w=1200">
+            <img src="https://images.pexels.com/photos/725991/pexels-photo-725991.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Dim Sum al vapor" loading="lazy" width="400" height="400">
+            <div class="gallery-item-overlay"><span class="gallery-zoom-icon">&#10021;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ESPECIALIDADES
+  ============================================================ -->
+  <section id="especialidades" class="section-pad" aria-labelledby="esp-heading">
+    <div class="container">
+      <div class="esp-header">
+        <p class="label reveal">Especialidades</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="esp-heading" class="display-title esp-title reveal stagger-2">
+          Lo que nos hace únicos
+        </h2>
+      </div>
+    </div>
+
+    <div class="esp-grid">
+      <article class="esp-card reveal">
+        <img src="https://images.pexels.com/photos/5848600/pexels-photo-5848600.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Pato Pekín laqueado" loading="lazy" width="600" height="480">
+        <div class="esp-card-overlay">
+          <span class="esp-badge">✦ Chef Recomienda</span>
+          <h3 class="esp-name">Pato Pekín</h3>
+          <p class="esp-desc">Pato crujiente lacado en salsa hoisin, servido con crepes de trigo, pepino y cebollino. Tradición milenaria en cada bocado.</p>
+          <div class="esp-footer">
+            <span class="esp-price">15,95 €</span>
+            <a href="#carta" class="esp-link">Ver en carta <span>→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="esp-card reveal stagger-1">
+        <img src="https://images.pexels.com/photos/725991/pexels-photo-725991.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Dim Sum variados al vapor" loading="lazy" width="600" height="480">
+        <div class="esp-card-overlay">
+          <span class="esp-badge">🔥 Más Pedido</span>
+          <h3 class="esp-name">Dim-Sum Variados</h3>
+          <p class="esp-desc">Dim-Sum variados al vapor. Selección artesanal de la casa, elaborados según la tradición cantonesa.</p>
+          <div class="esp-footer">
+            <span class="esp-price">8,95 €</span>
+            <a href="#carta" class="esp-link">Ver en carta <span>→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="esp-card reveal stagger-2">
+        <img src="https://images.pexels.com/photos/20150647/pexels-photo-20150647.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Bogavante al Wok" loading="lazy" width="600" height="480">
+        <div class="esp-card-overlay">
+          <span class="esp-badge">✦ Chef Recomienda</span>
+          <h3 class="esp-name">Bogavante al Wok</h3>
+          <p class="esp-desc">Bogavante fresco salteado al wok con jengibre, ajo y salsa de ostras. La intensidad del fuego hace la diferencia.</p>
+          <div class="esp-footer">
+            <span class="esp-price">Consultar</span>
+            <a href="#carta" class="esp-link">Ver en carta <span>→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="esp-card reveal stagger-3">
+        <img src="https://images.pexels.com/photos/842571/pexels-photo-842571.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Wok de ternera con verduras" loading="lazy" width="600" height="480">
+        <div class="esp-card-overlay">
+          <span class="esp-badge">🌿 Favorito</span>
+          <h3 class="esp-name">Wok de Ternera</h3>
+          <p class="esp-desc">Ternera tierna salteada al wok con salsa de ostras, brócoli y setas. Intenso, aromático y lleno de sabor.</p>
+          <div class="esp-footer">
+            <span class="esp-price">8,10 €</span>
+            <a href="#carta" class="esp-link">Ver en carta <span>→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="esp-card reveal stagger-1">
+        <img src="https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Wan-Tun frito crujiente" loading="lazy" width="600" height="480">
+        <div class="esp-card-overlay">
+          <span class="esp-badge">☕ Tradicional</span>
+          <h3 class="esp-name">Wan-Tun Frito</h3>
+          <p class="esp-desc">Wan-tun frito crujiente, servido con la salsa de la casa. Un clásico imprescindible de nuestra carta.</p>
+          <div class="esp-footer">
+            <span class="esp-price">4,30 €</span>
+            <a href="#carta" class="esp-link">Ver en carta <span>→</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPERIENCIA
+  ============================================================ -->
+  <section id="experiencia" class="section-pad" aria-labelledby="exp-heading">
+    <div class="exp-bg">
+      <img src="image/exterior 3.webp" alt="" aria-hidden="true" loading="lazy" width="1920" height="1080" id="exp-parallax">
+      <div class="exp-bg-overlay" aria-hidden="true"></div>
+    </div>
+
+    <div class="exp-content container">
+      <div class="exp-header">
+        <p class="label reveal">La Experiencia</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="exp-heading" class="display-title exp-title reveal stagger-2">
+          No solo se come.<br>
+          <em>Se recuerda.</em>
+        </h2>
+        <p class="exp-subtitle reveal stagger-3">
+          Cada detalle de La Perla Oriental está pensado para crear un momento que vas a querer repetir.
+        </p>
+      </div>
+
+      <div class="exp-pillars">
+        <div class="exp-pillar reveal">
+          <span class="exp-icon">🌿</span>
+          <h3 class="exp-pillar-title">Ingredientes Frescos</h3>
+          <p class="exp-pillar-text">Seleccionamos cada ingrediente con el mismo cuidado de siempre. Producto fresco, de temporada y de confianza.</p>
+        </div>
+        <div class="exp-pillar reveal stagger-1">
+          <span class="exp-icon">🔥</span>
+          <h3 class="exp-pillar-title">El Arte del Wok</h3>
+          <p class="exp-pillar-text">El fuego alto y el wok de hierro son el corazón de nuestra cocina. Una técnica que no se improvisa, se hereda.</p>
+        </div>
+        <div class="exp-pillar reveal stagger-2">
+          <span class="exp-icon">🏮</span>
+          <h3 class="exp-pillar-title">Recetas Milenarias</h3>
+          <p class="exp-pillar-text">Nuestros platos siguen recetas transmitidas de generación en generación. La tradición que no se puede sustituir.</p>
+        </div>
+        <div class="exp-pillar reveal stagger-3">
+          <span class="exp-icon">👨‍👩‍👧</span>
+          <h3 class="exp-pillar-title">Ambiente Familiar</h3>
+          <p class="exp-pillar-text">Cada cliente es parte de nuestra familia. La hospitalidad china genuina no necesita formalismos, solo corazón.</p>
+        </div>
+      </div>
+
+      <div class="exp-divider" aria-hidden="true"></div>
+
+      <div class="exp-counters">
+        <div class="counter-item reveal">
+          <div class="counter-num" data-count="35" data-suffix="+">
+            <span class="count-val">0</span><span class="counter-suffix">+</span>
+          </div>
+          <p class="counter-label">Años de historia</p>
+        </div>
+        <div class="counter-item reveal stagger-1">
+          <div class="counter-num" data-count="98" data-suffix="+">
+            <span class="count-val">0</span><span class="counter-suffix">+</span>
+          </div>
+          <p class="counter-label">Platos en carta</p>
+        </div>
+        <div class="counter-item reveal stagger-2">
+          <div class="counter-num" data-count="320" data-suffix="+">
+            <span class="count-val">0</span><span class="counter-suffix">+</span>
+          </div>
+          <p class="counter-label">Reseñas cinco estrellas</p>
+        </div>
+        <div class="counter-item reveal stagger-3">
+          <div class="counter-num" data-count="7" data-suffix="">
+            <span class="count-val">0</span><span class="counter-suffix"></span>
+          </div>
+          <p class="counter-label">Días a la semana</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CARTA
+  ============================================================ -->
+  <section id="carta" class="section-pad" aria-labelledby="carta-heading">
+    <div class="container">
+      <div class="carta-header">
+        <p class="label reveal">Nuestra Carta</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="carta-heading" class="display-title carta-title reveal stagger-2">
+          Un viaje por la cocina china
+        </h2>
+      </div>
+
+      <!-- Search + filters -->
+      <div class="carta-search-wrap reveal">
+        <input
+          type="search"
+          class="carta-search"
+          id="carta-search"
+          placeholder="Buscar plato..."
+          aria-label="Buscar plato en la carta"
+        >
+      </div>
+
+      <div class="carta-filters reveal stagger-1" role="group" aria-label="Filtros">
+        <button class="filter-pill active" data-filter="all">
+          <span class="pill-dot" style="background:var(--ivory)"></span> Todos
+        </button>
+        <button class="filter-pill" data-filter="chef">
+          <span class="pill-dot pill-dot--chef"></span> Chef Recomienda
+        </button>
+        <button class="filter-pill" data-filter="popular">
+          <span class="pill-dot pill-dot--popular"></span> Más Pedido
+        </button>
+        <button class="filter-pill" data-filter="spicy">
+          <span class="pill-dot pill-dot--spicy"></span> Picante
+        </button>
+        <button class="filter-pill" data-filter="veg">
+          <span class="pill-dot pill-dot--veg"></span> Vegetariano
+        </button>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="carta-tabs reveal stagger-2" role="tablist" aria-label="Categorías de la carta">
+        <button class="carta-tab active" data-cat="entrantes" role="tab" aria-selected="true">Entrantes</button>
+        <button class="carta-tab" data-cat="sopas" role="tab" aria-selected="false">Sopas</button>
+        <button class="carta-tab" data-cat="arroces" role="tab" aria-selected="false">Arroces</button>
+        <button class="carta-tab" data-cat="patos" role="tab" aria-selected="false">Patos</button>
+        <button class="carta-tab" data-cat="cerdos" role="tab" aria-selected="false">Cerdos</button>
+        <button class="carta-tab" data-cat="terneras" role="tab" aria-selected="false">Terneras</button>
+        <button class="carta-tab" data-cat="pollos" role="tab" aria-selected="false">Pollos</button>
+        <button class="carta-tab" data-cat="mariscos" role="tab" aria-selected="false">Mariscos</button>
+        <button class="carta-tab" data-cat="variados" role="tab" aria-selected="false">Variados</button>
+        <button class="carta-tab" data-cat="menus" role="tab" aria-selected="false">Menús</button>
+        <button class="carta-tab" data-cat="bebidas" role="tab" aria-selected="false">Bebidas</button>
+      </div>
+
+      <!-- Menu Grid -->
+      <div class="carta-grid reveal stagger-3" id="carta-grid" role="tabpanel">
+
+        <article class="menu-item" data-cat="entrantes" data-tags="veg">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ensalada china</h3>
+            <span class="menu-item-price">4,95 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese salad</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="veg">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ensalada de algas (wakame)</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Wakame seaweed salad</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="chef">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ensalada de la casa</h3>
+            <span class="menu-item-price">6,95 €</span>
+          </div>
+          <p class="menu-item-desc">House's special salad</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="veg">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ensalada brote de soja</h3>
+            <span class="menu-item-price">7,10 €</span>
+          </div>
+          <p class="menu-item-desc">Soybean sprouts salad</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="popular">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Wan-tun frito</h3>
+            <span class="menu-item-price">4,30 €</span>
+          </div>
+          <p class="menu-item-desc">Fried Wan-tun</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="popular">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Rollo de primavera</h3>
+            <span class="menu-item-price">2,15 €</span>
+          </div>
+          <p class="menu-item-desc">Spring roll</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="veg">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Rollito vegetal</h3>
+            <span class="menu-item-price">2,50 €</span>
+          </div>
+          <p class="menu-item-desc">Veggie roll</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Rollitos vietnamitas (2 ud.)</h3>
+            <span class="menu-item-price">2,80 €</span>
+          </div>
+          <p class="menu-item-desc">Vietnamese rolls (2 pieces)</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Rollitos de jamón y queso (2 ud.)</h3>
+            <span class="menu-item-price">2,90 €</span>
+          </div>
+          <p class="menu-item-desc">Ham and cheese rolls (2 pieces)</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="entrantes" data-tags="">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Rollito de bacon y dátiles (2 ud.)</h3>
+            <span class="menu-item-price">2,70 €</span>
+          </div>
+          <p class="menu-item-desc">Bacon and dates rolls (2 pieces)</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="sopas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sopa de aleta de tiburón</h3>
+            <span class="menu-item-price">3,90 €</span>
+          </div>
+          <p class="menu-item-desc">Sharkfin soup</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="sopas" data-tags="spicy popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sopa agripicante</h3>
+            <span class="menu-item-price">3,40 €</span>
+          </div>
+          <p class="menu-item-desc">Hot and sour soup</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="sopas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sopa de cangrejo con espárragos</h3>
+            <span class="menu-item-price">3,40 €</span>
+          </div>
+          <p class="menu-item-desc">Crab soup with asparagus</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="sopas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sopa de ternera con champiñones</h3>
+            <span class="menu-item-price">3,40 €</span>
+          </div>
+          <p class="menu-item-desc">Beef soup with mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="sopas" data-tags="veg" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sopa de verduras</h3>
+            <span class="menu-item-price">3,40 €</span>
+          </div>
+          <p class="menu-item-desc">Vegetable soup</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="sopas" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sopa de pollo con maíz</h3>
+            <span class="menu-item-price">3,40 €</span>
+          </div>
+          <p class="menu-item-desc">Chicken soup with sweetcorn</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Arroz frito con pollo y verduras</h3>
+            <span class="menu-item-price">5,30 €</span>
+          </div>
+          <p class="menu-item-desc">Chicken and cabbage rice</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Arroz frito tres delicias</h3>
+            <span class="menu-item-price">5,50 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese fried rice</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Arroz frito de la casa</h3>
+            <span class="menu-item-price">5,95 €</span>
+          </div>
+          <p class="menu-item-desc">House's special rice</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="veg" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Arroz frito en cazuela con verduras</h3>
+            <span class="menu-item-price">5,70 €</span>
+          </div>
+          <p class="menu-item-desc">Rice casserole with chinese vegetables</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="veg" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Tallarines con bambú y setas chinas</h3>
+            <span class="menu-item-price">6,95 €</span>
+          </div>
+          <p class="menu-item-desc">Bamboo and mushroom noodles</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Kubak con gambas/ternera/pollo</h3>
+            <span class="menu-item-price">7,10 €</span>
+          </div>
+          <p class="menu-item-desc">Kubak with prawns or beef or chicken</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Tallarines con gambas o tres delicias</h3>
+            <span class="menu-item-price">5,95 €</span>
+          </div>
+          <p class="menu-item-desc">Noodles with prawns or three delights</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Tallarines crujientes con tres delicias</h3>
+            <span class="menu-item-price">5,95 €</span>
+          </div>
+          <p class="menu-item-desc">Three delight crunchy noodles</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Tallarines a la plancha</h3>
+            <span class="menu-item-price">6,80 €</span>
+          </div>
+          <p class="menu-item-desc">Grilled noodles</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Fideos de arroz con tres delicias</h3>
+            <span class="menu-item-price">6,80 €</span>
+          </div>
+          <p class="menu-item-desc">Three delight rice noodles</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="arroces" data-tags="veg" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Fideos de soja en cazuela</h3>
+            <span class="menu-item-price">6,80 €</span>
+          </div>
+          <p class="menu-item-desc">Soy noodle casserole</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="patos" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pato con bambú y setas en plato quemado</h3>
+            <span class="menu-item-price">11,95 €</span>
+          </div>
+          <p class="menu-item-desc">Sizzling duck with mushrooms and bamboo</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="patos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pato a la naranja</h3>
+            <span class="menu-item-price">10,50 €</span>
+          </div>
+          <p class="menu-item-desc">Duck a l'orange</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="patos" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pato con piña (picante)</h3>
+            <span class="menu-item-price">10,95 €</span>
+          </div>
+          <p class="menu-item-desc">Spicy duck with pineapple</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="patos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pato con verduras en cazuela</h3>
+            <span class="menu-item-price">10,50 €</span>
+          </div>
+          <p class="menu-item-desc">Duck casserole with vegetables</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="patos" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pato pekinés (laqueado)</h3>
+            <span class="menu-item-price">15,95 €</span>
+          </div>
+          <p class="menu-item-desc">Peking duck</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="patos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pato salteado en la olla</h3>
+            <span class="menu-item-price">10,95 €</span>
+          </div>
+          <p class="menu-item-desc">Sautéed duck in a pot</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="cerdos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Cerdo agridulce</h3>
+            <span class="menu-item-price">6,85 €</span>
+          </div>
+          <p class="menu-item-desc">Sweet and sour pork</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="cerdos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Cerdo con verduras</h3>
+            <span class="menu-item-price">6,85 €</span>
+          </div>
+          <p class="menu-item-desc">Stir-fried pork with vegetables</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="cerdos" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Cerdo asado al estilo chino</h3>
+            <span class="menu-item-price">7,10 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese style roasted pork</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="cerdos" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Cerdo con picante</h3>
+            <span class="menu-item-price">6,85 €</span>
+          </div>
+          <p class="menu-item-desc">Spicy pork</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="cerdos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Cerdo con champiñones</h3>
+            <span class="menu-item-price">6,95 €</span>
+          </div>
+          <p class="menu-item-desc">Pork with mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="cerdos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Costillas fritas</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Fried ribs</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con verduras en la olla</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Sautéed beef in a pot with vegetables</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con cebolla</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Beef and onion stir-fry</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con salsa de ostras</h3>
+            <span class="menu-item-price">8,10 €</span>
+          </div>
+          <p class="menu-item-desc">Beef with oyster sauce</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con champiñones</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese beef with mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con salsa Sha-Cha</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Beef stir-fry with Sha-Cha sauce</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con ajetes y jengibres</h3>
+            <span class="menu-item-price">8,10 €</span>
+          </div>
+          <p class="menu-item-desc">Stir-fried beef with ginger and leek</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con pimientos rojos y verdes</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Beef with red and green peppers</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con bambú y setas chinas</h3>
+            <span class="menu-item-price">8,10 €</span>
+          </div>
+          <p class="menu-item-desc">Beef with bamboo and Chinese mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera sobre plato quemado</h3>
+            <span class="menu-item-price">8,10 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese Sizzling Beef</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera con setas y champiñones en cazuela</h3>
+            <span class="menu-item-price">8,10 €</span>
+          </div>
+          <p class="menu-item-desc">Beef casserole with mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="terneras" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Ternera frita agripicante</h3>
+            <span class="menu-item-price">8,10 €</span>
+          </div>
+          <p class="menu-item-desc">Fried hot and sour beef</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo con verduras en la olla</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Sautéed chicken in a pot with vegetables</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Tiras de pollo con sésamo y miel</h3>
+            <span class="menu-item-price">7,85 €</span>
+          </div>
+          <p class="menu-item-desc">Honey Sesame Chicken</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo con almendras</h3>
+            <span class="menu-item-price">7,30 €</span>
+          </div>
+          <p class="menu-item-desc">Chicken with almonds</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo al limón</h3>
+            <span class="menu-item-price">7,40 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese lemon chicken</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo al estilo Gong-Bao (picante)</h3>
+            <span class="menu-item-price">7,30 €</span>
+          </div>
+          <p class="menu-item-desc">Gong-Bao chicken (spicy)</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo al curry</h3>
+            <span class="menu-item-price">7,30 €</span>
+          </div>
+          <p class="menu-item-desc">Chicken curry</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo con pimientos rojos y verdes</h3>
+            <span class="menu-item-price">7,30 €</span>
+          </div>
+          <p class="menu-item-desc">Chicken with red and green peppers</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo agripicante</h3>
+            <span class="menu-item-price">7,50 €</span>
+          </div>
+          <p class="menu-item-desc">Sour and spicy chicken</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo en cazuela</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Chicken casserole</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Alitas de pollo fritas</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Fried chicken wings</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Bolitas de pollo fritas</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese fried chicken meatballs</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo frito almendrado</h3>
+            <span class="menu-item-price">7,85 €</span>
+          </div>
+          <p class="menu-item-desc">Almond fried chicken</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo sobre plato quemado al sabor Dou-Shi</h3>
+            <span class="menu-item-price">7,85 €</span>
+          </div>
+          <p class="menu-item-desc">Dou-Shi style Sizzling chicken</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="pollos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Pollo empanado con patatas</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Fried chicken with fries</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas con tomate y guisantes</h3>
+            <span class="menu-item-price">9,10 €</span>
+          </div>
+          <p class="menu-item-desc">Shrimp with tomatoes and peas</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas salteadas en la olla</h3>
+            <span class="menu-item-price">9,10 €</span>
+          </div>
+          <p class="menu-item-desc">Sautéed shrimp in a pot</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="spicy popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas al estilo Gong-Bao (picante)</h3>
+            <span class="menu-item-price">9,10 €</span>
+          </div>
+          <p class="menu-item-desc">Gong Bao Shrimp (spicy)</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas agripicantes en cazuela</h3>
+            <span class="menu-item-price">9,10 €</span>
+          </div>
+          <p class="menu-item-desc">Hot and sour shrimp in a pot</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas sobre plato quemado</h3>
+            <span class="menu-item-price">9,30 €</span>
+          </div>
+          <p class="menu-item-desc">Sizzling shrimp</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas con champiñones</h3>
+            <span class="menu-item-price">9,20 €</span>
+          </div>
+          <p class="menu-item-desc">Shrimp with mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas con bambú y setas chinas</h3>
+            <span class="menu-item-price">9,60 €</span>
+          </div>
+          <p class="menu-item-desc">Shrimp with bamboo and Chinese mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas con verduras</h3>
+            <span class="menu-item-price">9,10 €</span>
+          </div>
+          <p class="menu-item-desc">Shrimp and Vegetable Stir Fry</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Calamares con picante</h3>
+            <span class="menu-item-price">9,20 €</span>
+          </div>
+          <p class="menu-item-desc">Spicy Stir-fried Squid</p>
+          <div class="menu-item-tags"><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas fritas almendradas</h3>
+            <span class="menu-item-price">9,30 €</span>
+          </div>
+          <p class="menu-item-desc">Almond-Crusted Shrimp</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Chipirones sobre plato quemado</h3>
+            <span class="menu-item-price">9,30 €</span>
+          </div>
+          <p class="menu-item-desc">Sizzling squid</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="mariscos" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Gambas fritas</h3>
+            <span class="menu-item-price">9,10 €</span>
+          </div>
+          <p class="menu-item-desc">Fried shrimp</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="veg" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Verduras fritas</h3>
+            <span class="menu-item-price">7,30 €</span>
+          </div>
+          <p class="menu-item-desc">Deep Fried Vegetables</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="veg spicy" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Berenjenas rellenas con salsa picante</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Stuffed eggplant with hot sauce</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span><span class="tag tag--spicy">Picante</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="veg popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Verduras salteadas</h3>
+            <span class="menu-item-price">7,10 €</span>
+          </div>
+          <p class="menu-item-desc">Vegetable Stir Fry</p>
+          <div class="menu-item-tags"><span class="tag tag--veg">Vegetariano</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Champiñones rellenos de carne</h3>
+            <span class="menu-item-price">7,20 €</span>
+          </div>
+          <p class="menu-item-desc">Meat stuffed mushrooms</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Familia feliz</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese Happy Family Stir-Fry</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Tofu con mariscos en cazuela</h3>
+            <span class="menu-item-price">7,95 €</span>
+          </div>
+          <p class="menu-item-desc">Tofu and seafood casserole</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Guo-Tie (Empanadillas a la plancha)</h3>
+            <span class="menu-item-price">8,70 €</span>
+          </div>
+          <p class="menu-item-desc">Chinese pan fried dumplings</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="variados" data-tags="chef popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Dim-Sum variados (al vapor)</h3>
+            <span class="menu-item-price">8,95 €</span>
+          </div>
+          <p class="menu-item-desc">Steamed Dim Sum</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="menus" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Menú Especial — 2 personas</h3>
+            <span class="menu-item-price">24,95 €</span>
+          </div>
+          <p class="menu-item-desc">Rollo primavera, arroz tres delicias, ternera ostras, pollo almendras. Bebida y postre incluidos.</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="menus" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Menú Especial — 3 personas</h3>
+            <span class="menu-item-price">37,95 €</span>
+          </div>
+          <p class="menu-item-desc">Ensalada china, rollitos, arroz, tallarines gambas, pollo almendras, ternera champiñones. Bebida y postre incluidos.</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="menus" data-tags="chef" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Menú Especial — 4 personas</h3>
+            <span class="menu-item-price">49,95 €</span>
+          </div>
+          <p class="menu-item-desc">Ensalada china, rollitos, arroz, tallarines, ternera plato quemado, pollo limón, gambas verduras, cerdo agridulce. Bebida y postre incluidos.</p>
+          <div class="menu-item-tags"><span class="tag tag--chef">Chef</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="menus" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Menú del Día — Opción A</h3>
+            <span class="menu-item-price">10,55 €</span>
+          </div>
+          <p class="menu-item-desc">Entrante + primero + segundo + bebida + postre. Lun–Vie mediodía (excepto festivos).</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="menus" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Menú del Día — Opción B</h3>
+            <span class="menu-item-price">11,60 €</span>
+          </div>
+          <p class="menu-item-desc">Entrante + primero + segundo + bebida + postre. Lun–Vie mediodía (excepto festivos).</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Mahou (cerveza)</h3>
+            <span class="menu-item-price">2,95 €</span>
+          </div>
+          <p class="menu-item-desc">Cerveza nacional</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Agua mineral Solán de Cabras</h3>
+            <span class="menu-item-price">2,20 €</span>
+          </div>
+          <p class="menu-item-desc">Con o sin gas</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Coca-Cola / Light / Zero</h3>
+            <span class="menu-item-price">2,80 €</span>
+          </div>
+          <p class="menu-item-desc">Refresco</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Té chino</h3>
+            <span class="menu-item-price">2,10 €</span>
+          </div>
+          <p class="menu-item-desc">Té tradicional</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Café / Descafeinado</h3>
+            <span class="menu-item-price">2,10 €</span>
+          </div>
+          <p class="menu-item-desc">Café espresso</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Vino de la casa (tinto/blanco/rosado)</h3>
+            <span class="menu-item-price">desde 2,50 €</span>
+          </div>
+          <p class="menu-item-desc">Copa o botella</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sake / Jarra de sake</h3>
+            <span class="menu-item-price">3,30 € / 7,10 €</span>
+          </div>
+          <p class="menu-item-desc">Licor japonés</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Whisky Johnnie Walker Red Label</h3>
+            <span class="menu-item-price">3,30 €</span>
+          </div>
+          <p class="menu-item-desc">Copa</p>
+          <div class="menu-item-tags"></div>
+        </article>
+
+        <article class="menu-item" data-cat="bebidas" data-tags="popular" style="display:none">
+          <div class="menu-item-header">
+            <h3 class="menu-item-name">Sangría / Vino con casera</h3>
+            <span class="menu-item-price">desde 3,30 €</span>
+          </div>
+          <p class="menu-item-desc">Copa</p>
+          <div class="menu-item-tags"><span class="tag tag--popular">Popular</span></div>
+        </article>
+
+      
+    </div><!-- /container -->
+  </section>
+
+  <!-- ============================================================
+       OPINIONES
+  ============================================================ -->
+  <section id="opiniones" class="section-pad" aria-labelledby="opin-heading">
+    <div class="container">
+      <div class="opin-header">
+        <p class="label reveal">Opiniones</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="opin-heading" class="display-title opin-title reveal stagger-2">
+          Lo que dicen nuestros clientes
+        </h2>
+      </div>
+
+      <div class="opin-carousel-wrap reveal stagger-3">
+        <div class="opin-track" id="opin-track">
+          <!-- Slide 1: 3 reviews -->
+          <div class="opin-slide">
+            <div class="opin-inner">
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar">M</div>
+                  <div class="review-meta">
+                    <p class="review-name">María González</p>
+                    <p class="review-platform">Google · hace 2 semanas</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Llevamos viniendo desde hace años y siempre es una experiencia increíble. El pato Pekín es de otro nivel. El trato, familiar y cálido. Imposible no volver.</p>
+              </article>
+
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#0f3d8e,var(--gold))">C</div>
+                  <div class="review-meta">
+                    <p class="review-name">Carlos Ruiz</p>
+                    <p class="review-platform">Google · hace 1 mes</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">El mejor restaurante chino de la zona sin ninguna duda. Los gyozas y el arroz frito son espectaculares. Gran salón para grupos, perfecto para celebraciones.</p>
+              </article>
+
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#6c5ce7,var(--gold))">L</div>
+                  <div class="review-meta">
+                    <p class="review-name">Laura Martínez</p>
+                    <p class="review-platform">Google · hace 3 semanas</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Fui por primera vez y me enamoré del sitio. La decoración, la comida, el servicio... todo en su punto. Ya he reservado para el próximo fin de semana.</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- Slide 2: 3 reviews -->
+          <div class="opin-slide">
+            <div class="opin-inner">
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#d63031,var(--gold))">A</div>
+                  <div class="review-meta">
+                    <p class="review-name">Antonio Sánchez</p>
+                    <p class="review-platform">Google · hace 2 meses</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Calidad y precio inmejorables. La sopa wonton es simplemente perfecta. El local siempre limpio y el personal muy atento. Un referente en la zona desde hace décadas.</p>
+              </article>
+
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#00b894,var(--gold))">S</div>
+                  <div class="review-meta">
+                    <p class="review-name">Sofía Herrera</p>
+                    <p class="review-platform">Google · hace 1 semana</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Vine con toda la familia a celebrar un cumpleaños y fue una velada perfecta. El menú grupal es una maravilla. Los niños encantados. Repetiremos sin duda.</p>
+              </article>
+
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#e17055,var(--gold))">P</div>
+                  <div class="review-meta">
+                    <p class="review-name">Pablo Fernández</p>
+                    <p class="review-platform">Google · hace 2 semanas</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Uno de esos restaurantes que sorprende por su autenticidad. No es cocina adaptada, es cocina china de verdad. El bogavante al wok, una revelación.</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- Slide 3: 3 reviews -->
+          <div class="opin-slide">
+            <div class="opin-inner">
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#0984e3,var(--gold))">R</div>
+                  <div class="review-meta">
+                    <p class="review-name">Rosa Jiménez</p>
+                    <p class="review-platform">Google · hace 3 meses</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Los rollitos de primavera y los dim sum están entre los mejores que he probado en Madrid. El ambiente es acogedor y se nota que hay mucho cariño en lo que hacen.</p>
+              </article>
+
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#fd79a8,var(--gold))">I</div>
+                  <div class="review-meta">
+                    <p class="review-name">Inés López</p>
+                    <p class="review-platform">Google · hace 1 mes</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Pedimos a domicilio regularmente y la comida llega siempre en perfecto estado. El pollo kung pao y el chow mein son nuestros favoritos. Altamente recomendable.</p>
+              </article>
+
+              <article class="review-card">
+                <div class="review-header">
+                  <div class="review-avatar" style="background:linear-gradient(135deg,#55efc4,#2d3436)">J</div>
+                  <div class="review-meta">
+                    <p class="review-name">Javier Moreno</p>
+                    <p class="review-platform">Google · hace 3 semanas</p>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+                <p class="review-text">Más de 15 años viniendo y siempre salen con ganas de repetir. Es de esos sitios que te hacen sentir en casa. La terraza en verano es una maravilla.</p>
+              </article>
+            </div>
+          </div>
+        </div><!-- /opin-track -->
+      </div>
+
+      <div class="opin-controls">
+        <button class="opin-btn" id="opin-prev" aria-label="Opinión anterior">&#8592;</button>
+        <div class="opin-dots" id="opin-dots" aria-label="Diapositivas">
+          <div class="opin-dot active" data-slide="0"></div>
+          <div class="opin-dot" data-slide="1"></div>
+          <div class="opin-dot" data-slide="2"></div>
+        </div>
+        <button class="opin-btn" id="opin-next" aria-label="Opinión siguiente">&#8594;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       RESERVAS
+  ============================================================ -->
+  <section id="reservas" class="section-pad" aria-labelledby="reservas-heading">
+    <div class="container">
+      <div class="reservas-wrap">
+        <!-- Info -->
+        <div class="reservas-info">
+          <p class="label reveal">Reservas</p>
+          <span class="gold-line reveal stagger-1"></span>
+          <h2 id="reservas-heading" class="display-title reservas-title reveal stagger-2">
+            Tu mesa<br>te espera.
+          </h2>
+          <p class="reservas-body reveal stagger-3">
+            Reserva con facilidad y asegúrate de vivir la experiencia La Perla Oriental. Disponemos de gran salón, terraza y sala privada para grupos y celebraciones.
+          </p>
+          <div class="reservas-details reveal stagger-4">
+            <div class="reservas-detail">
+              <div class="reservas-detail-icon">🕐</div>
+              <div class="reservas-detail-text">
+                <p class="reservas-detail-label">Horario</p>
+                <!-- EDITAR: Actualiza el horario real -->
+                <p class="reservas-detail-value">Lun: Cerrado<br>Mar: 12:00–16:00 · 20:00–23:00<br>Mié–Dom: 12:00–16:30 · 20:00–23:30</p>
+              </div>
+            </div>
+            <div class="reservas-detail">
+              <div class="reservas-detail-icon">📞</div>
+              <div class="reservas-detail-text">
+                <p class="reservas-detail-label">Teléfono</p>
+                <!-- EDITAR: Tu teléfono real -->
+                <p class="reservas-detail-value"><a href="tel:+34913282938" style="color:var(--stone-light)">913 28 29 38</a></p>
+              </div>
+            </div>
+            <div class="reservas-detail">
+              <div class="reservas-detail-icon">🏮</div>
+              <div class="reservas-detail-text">
+                <p class="reservas-detail-label">Terraza & Salón Privado</p>
+                <p class="reservas-detail-value">Disponible para grupos y celebraciones especiales</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="reservas-form-wrap reveal stagger-2">
+          <!-- Progress -->
+          <div class="form-progress" aria-label="Pasos del formulario">
+            <div class="form-step-label">
+              <div class="form-step-num active" id="step-num-1">1</div>
+              <p class="form-step-text">Fecha & Hora</p>
+            </div>
+            <div class="form-step-connector"></div>
+            <div class="form-step-label">
+              <div class="form-step-num" id="step-num-2">2</div>
+              <p class="form-step-text">Personas</p>
+            </div>
+            <div class="form-step-connector"></div>
+            <div class="form-step-label">
+              <div class="form-step-num" id="step-num-3">3</div>
+              <p class="form-step-text">Datos</p>
+            </div>
+          </div>
+
+          <form id="reservas-form" novalidate>
+            <!-- Step 1 -->
+            <div class="form-panel active" id="form-step-1">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="res-date">Fecha</label>
+                  <input type="date" class="form-input" id="res-date" name="fecha" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="res-time">Hora</label>
+                  <select class="form-select" id="res-time" name="hora" required>
+                    <option value="">Seleccionar…</option>
+                    <option>12:00</option><option>12:30</option>
+                    <option>13:00</option><option>13:30</option>
+                    <option>14:00</option><option>14:30</option>
+                    <option>15:00</option><option>15:30</option>
+                    <option>16:00</option><option>16:30</option>
+                    <option>20:00</option><option>20:30</option>
+                    <option>21:00</option><option>21:30</option>
+                    <option>22:00</option><option>22:30</option>
+                    <option>23:00</option><option>23:30</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-nav">
+                <span></span>
+                <button type="button" class="btn-primary" id="step1-next">Continuar &rarr;</button>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="form-panel" id="form-step-2">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="res-personas">Personas</label>
+                  <select class="form-select" id="res-personas" name="personas" required>
+                    <option value="">Seleccionar…</option>
+                    <option>1 persona</option><option>2 personas</option>
+                    <option>3 personas</option><option>4 personas</option>
+                    <option>5 personas</option><option>6 personas</option>
+                    <option>7-10 personas</option><option>Más de 10 (grupo)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="res-ocasion">Ocasión</label>
+                  <select class="form-select" id="res-ocasion" name="ocasion">
+                    <option value="">Sin especificar</option>
+                    <option>Cumpleaños</option>
+                    <option>Aniversario</option>
+                    <option>Cena de empresa</option>
+                    <option>Celebración familiar</option>
+                    <option>Primera cita</option>
+                    <option>Otro</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="res-zona">Preferencia de zona</label>
+                <select class="form-select" id="res-zona" name="zona">
+                  <option>Sin preferencia</option>
+                  <option>Salón interior</option>
+                  <option>Terraza</option>
+                  <option>Sala privada (grupos)</option>
+                </select>
+              </div>
+              <div class="form-nav">
+                <button type="button" class="form-btn-back" id="step2-back">&larr; Atrás</button>
+                <button type="button" class="btn-primary" id="step2-next">Continuar &rarr;</button>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="form-panel" id="form-step-3">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="res-nombre">Nombre</label>
+                  <input type="text" class="form-input" id="res-nombre" name="nombre" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="res-telefono">Teléfono</label>
+                  <input type="tel" class="form-input" id="res-telefono" name="telefono" placeholder="+34 6XX XXX XXX" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="res-notas">Notas especiales</label>
+                <textarea class="form-textarea" id="res-notas" name="notas" placeholder="Alergias, peticiones especiales, celebración…"></textarea>
+              </div>
+              <div class="form-nav">
+                <button type="button" class="form-btn-back" id="step3-back">&larr; Atrás</button>
+                <button type="submit" class="btn-primary">Confirmar Reserva ✦</button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Success -->
+          <div class="form-success" id="form-success" aria-live="polite">
+            <div class="success-icon">✦</div>
+            <h3 class="success-title">¡Reserva confirmada!</h3>
+            <p class="success-text">
+              Gracias por elegir La Perla Oriental.<br>
+              Nos pondremos en contacto contigo para confirmar los detalles.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       UBICACIÓN
+  ============================================================ -->
+  <section id="ubicacion" class="section-pad" aria-labelledby="ubicacion-heading">
+    <div class="container">
+      <div class="ubicacion-header">
+        <p class="label reveal">Ubicación</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="ubicacion-heading" class="display-title ubicacion-title reveal stagger-2">
+          Ven a visitarnos
+        </h2>
+      </div>
+
+      <!-- EDITAR: Reemplaza el src del iframe con la URL de tu restaurante en Google Maps -->
+      <iframe
+        class="ubicacion-map reveal stagger-3"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3038.8!2d-3.655!3d40.393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42299780000001%3A0x0!2sLa%20Perla%20Oriental!5e0!3m2!1ses!2ses!4v1!5m2!1ses!2ses"
+        title="Mapa con la ubicación de La Perla Oriental"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+
+      <div class="ubicacion-grid reveal stagger-4">
+        <div class="ubicacion-card">
+          <div class="ubicacion-card-icon">🚗</div>
+          <h3 class="ubicacion-card-title">En Coche</h3>
+          <!-- EDITAR: Indicaciones reales -->
+          <p class="ubicacion-card-text">Acceso fácil desde la A-3 y M-30. Cmo. de Valderribas, 93D, Puente de Vallecas.</p>
+        </div>
+        <div class="ubicacion-card">
+          <div class="ubicacion-card-icon">🚇</div>
+          <h3 class="ubicacion-card-title">Metro</h3>
+          <!-- EDITAR: Parada de metro más cercana -->
+          <p class="ubicacion-card-text">Línea 1 – Portazgo o Buenos Aires, a 10 min a pie.</p>
+        </div>
+        <div class="ubicacion-card">
+          <div class="ubicacion-card-icon">🚌</div>
+          <h3 class="ubicacion-card-title">Autobús</h3>
+          <!-- EDITAR: Líneas de autobús -->
+          <p class="ubicacion-card-text">Líneas 54, 63, 145 y E. Parada en Cmo. de Valderribas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACTO
+  ============================================================ -->
+  <section id="contacto" class="section-pad" aria-labelledby="contacto-heading">
+    <div class="container">
+      <div class="contacto-header">
+        <p class="label reveal">Contacto</p>
+        <span class="gold-line--center gold-line reveal stagger-1"></span>
+        <h2 id="contacto-heading" class="display-title contacto-title reveal stagger-2">
+          Estamos aquí para ti
+        </h2>
+      </div>
+
+      <div class="contacto-grid">
+        <div class="contacto-item reveal">
+          <div class="contacto-icon">📞</div>
+          <h3 class="contacto-item-title">Teléfono</h3>
+          <!-- EDITAR: Tu teléfono -->
+          <p class="contacto-item-value"><a href="tel:+34913282938">913 28 29 38</a></p>
+        </div>
+        <div class="contacto-item reveal stagger-1">
+          <div class="contacto-icon">✉️</div>
+          <h3 class="contacto-item-title">Email</h3>
+          <!-- EDITAR: Tu email -->
+          <p class="contacto-item-value"><a href="mailto:info@laperloriental.es">info@laperloriental.es</a></p>
+        </div>
+        <div class="contacto-item reveal stagger-2">
+          <div class="contacto-icon">📍</div>
+          <h3 class="contacto-item-title">Dirección</h3>
+          <!-- EDITAR: Tu dirección completa -->
+          <p class="contacto-item-value">Cmo. de Valderribas, 93D<br>Puente de Vallecas, 28038 Madrid</p>
+        </div>
+        <div class="contacto-item reveal stagger-3">
+          <div class="contacto-icon">📱</div>
+          <h3 class="contacto-item-title">Redes Sociales</h3>
+          <!-- EDITAR: Tus redes sociales -->
+          <p class="contacto-item-value">
+            <a href="#" aria-label="Instagram">Instagram</a> ·
+            <a href="#" aria-label="Facebook">Facebook</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Horario -->
+      <div style="text-align:center; margin-bottom: 3rem" class="reveal stagger-4">
+        <p class="label" style="margin-bottom:1.5rem">Horario de apertura</p>
+        <table class="horario-table" aria-label="Horario del restaurante">
+          <tbody>
+            <!-- EDITAR: Tu horario real -->
+            <tr>
+              <td>Lunes</td>
+              <td>Cerrado</td>
+              <td><span class="open-badge closed" id="open-badge">Cerrado</span></td>
+            </tr>
+            <tr>
+              <td>Martes</td>
+              <td>12:00 – 16:00 · 20:00 – 23:00</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Miércoles – Domingo</td>
+              <td>12:00 – 16:30 · 20:00 – 23:30</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- WhatsApp CTA -->
+      <div class="whatsapp-cta reveal stagger-5">
+        <p class="label">Contacto rápido</p>
+        <p style="font-size:0.9rem;color:var(--stone-light);font-weight:300;max-width:400px;text-align:center">
+          Escríbenos por WhatsApp para reservas, pedidos a domicilio o cualquier consulta.
+        </p>
+        <!-- EDITAR: Tu número de WhatsApp -->
+        <a href="https://wa.me/34913282938?text=Hola%2C%20quisiera%20hacer%20una%20reserva." class="whatsapp-btn" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+          </svg>
+          Escribir por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer id="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-top">
+        <!-- Brand -->
+        <div class="footer-brand">
+          <img src="image/logo-oro.png" alt="La Perla Oriental" class="footer-logo" width="200" height="72" loading="lazy">
+          <p class="footer-tagline">Cocina china tradicional con décadas de historia. Un espacio donde la autenticidad y la hospitalidad se encuentran en cada plato.</p>
+          <span class="footer-chinese-tag">东方之珠 · La Perla Oriental</span>
+          <div class="footer-social">
+            <!-- EDITAR: Tus redes sociales -->
+            <a href="#" class="footer-social-link" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="#" class="footer-social-link" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="footer-social-link" aria-label="Google Maps">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 110-6 3 3 0 010 6z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <div>
+          <p class="footer-col-title">Navegación</p>
+          <ul class="footer-links">
+            <li><a href="#historia" class="footer-link">Nuestra Historia</a></li>
+            <li><a href="#galeria" class="footer-link">Galería</a></li>
+            <li><a href="#especialidades" class="footer-link">Especialidades</a></li>
+            <li><a href="#experiencia" class="footer-link">La Experiencia</a></li>
+            <li><a href="#carta" class="footer-link">Carta</a></li>
+            <li><a href="#opiniones" class="footer-link">Opiniones</a></li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div>
+          <p class="footer-col-title">Servicios</p>
+          <ul class="footer-links">
+            <li><a href="#reservas" class="footer-link">Reservar Mesa</a></li>
+            <li><a href="#contacto" class="footer-link">Pedidos a Domicilio</a></li>
+            <li><a href="#contacto" class="footer-link">Eventos y Grupos</a></li>
+            <li><a href="#contacto" class="footer-link">Terraza</a></li>
+            <li><a href="#contacto" class="footer-link">Menú del Día</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div>
+          <p class="footer-col-title">Contacto</p>
+          <ul class="footer-links">
+            <li><span class="footer-link">Cmo. de Valderribas, 93D</span></li>
+            <li><span class="footer-link">Puente de Vallecas, 28038 Madrid</span></li>
+            <li><a href="tel:+34913282938" class="footer-link">913 28 29 38</a></li>
+            <li><a href="mailto:info@laperloriental.es" class="footer-link">info@laperloriental.es</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 La Perla Oriental. Todos los derechos reservados.</p>
+        <div class="footer-bottom-links">
+          <a href="politica-privacidad.html" class="footer-bottom-link">Política de Privacidad</a>
+          <a href="aviso-legal.html" class="footer-bottom-link">Aviso Legal</a>
+          <a href="politica-cookies.html" class="footer-bottom-link">Cookies</a>
+          <a href="mapa-sitio.html" class="footer-bottom-link">Mapa del sitio</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cookie banner -->
+  <div id="cookie-banner" role="dialog" aria-label="Aviso de cookies" aria-live="polite">
+    <div class="cookie-inner">
+      <p class="cookie-text">
+        Utilizamos cookies propias y de terceros para mejorar nuestros servicios. Puede aceptar todas, rechazar las no esenciales o consultar más información en nuestra
+        <a href="politica-cookies.html">Política de Cookies</a>.
+      </p>
+      <div class="cookie-actions">
+        <button type="button" class="cookie-btn cookie-btn--reject" id="cookie-reject">Rechazar</button>
+        <button type="button" class="cookie-btn cookie-btn--accept" id="cookie-accept">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+    <button class="lb-close" id="lb-close" aria-label="Cerrar">&times;</button>
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Imagen anterior">&#8592;</button>
+    <img id="lb-img" src="" alt="">
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Imagen siguiente">&#8594;</button>
+    <p class="lb-counter" id="lb-counter"></p>
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+  'use strict';
+
+  /* ----------------------------------------------------------
+     Custom Cursor
+  ---------------------------------------------------------- */
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursor-ring');
+  let mx = -100, my = -100, rx = -100, ry = -100;
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    cursor.style.left = mx + 'px';
+    cursor.style.top  = my + 'px';
+    cursorRing.style.left = rx + 'px';
+    cursorRing.style.top  = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  /* ----------------------------------------------------------
+     Navigation scroll effect
+  ---------------------------------------------------------- */
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ----------------------------------------------------------
+     Mobile menu
+  ---------------------------------------------------------- */
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+
+  hamburger.addEventListener('click', () => {
+    const open = hamburger.classList.toggle('open');
+    mobileNav.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  mobileNav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  /* ----------------------------------------------------------
+     Hero load animation
+  ---------------------------------------------------------- */
+  const heroImg = document.getElementById('hero-img');
+  const heroSection = document.getElementById('hero');
+  const triggerHero = () => heroSection.classList.add('loaded');
+
+  triggerHero();
+  document.addEventListener('DOMContentLoaded', triggerHero);
+
+  if (heroImg) {
+    const fallbacks = [
+      'image/hero.webp',
+      'image/1.webp',
+      'image/4.webp',
+      'image/11.webp',
+      'https://images.unsplash.com/photo-1525755662778-491d7f74bfc2?w=1920&q=85'
+    ];
+    let fallbackIndex = 0;
+
+    heroImg.addEventListener('load', triggerHero);
+    heroImg.addEventListener('error', () => {
+      if (fallbackIndex < fallbacks.length) {
+        heroImg.src = fallbacks[fallbackIndex++];
+      }
+      triggerHero();
+    });
+
+    if (heroImg.complete) triggerHero();
+  }
+
+  /* ----------------------------------------------------------
+     Hero Particles (canvas)
+  ---------------------------------------------------------- */
+  (function() {
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const GOLD = 'rgba(192,154,74,';
+
+    function resize() {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x  = Math.random() * canvas.width;
+        this.y  = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = -Math.random() * 0.5 - 0.15;
+        this.r  = Math.random() * 2 + 0.5;
+        this.o  = Math.random() * 0.5 + 0.1;
+        this.life = Math.random() * 200 + 100;
+        this.age  = 0;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy; this.age++;
+        if (this.age > this.life || this.y < -10) this.reset();
+      }
+      draw() {
+        const fade = this.age < 30 ? this.age / 30 : this.age > this.life - 30 ? (this.life - this.age) / 30 : 1;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = GOLD + this.o * fade + ')';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 22; i++) particles.push(new Particle());
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(loop);
+    }
+    loop();
+  })();
+
+  /* ----------------------------------------------------------
+     Parallax (hero bg + experiencia bg)
+  ---------------------------------------------------------- */
+  const heroBg  = document.querySelector('.hero-bg');
+  const expParallax = document.getElementById('exp-parallax');
+
+  function onParallaxScroll() {
+    const sy = window.scrollY;
+    if (heroBg) heroBg.style.transform = `translateY(${sy * 0.35}px)`;
+    if (expParallax) {
+      const rect = expParallax.closest('section').getBoundingClientRect();
+      const offset = (window.innerHeight / 2 - rect.top) * 0.15;
+      expParallax.style.transform = `translateY(${offset}px)`;
+    }
+  }
+  window.addEventListener('scroll', onParallaxScroll, { passive: true });
+
+  /* ----------------------------------------------------------
+     Intersection Observer — Reveal animations
+  ---------------------------------------------------------- */
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ----------------------------------------------------------
+     Animated Counters
+  ---------------------------------------------------------- */
+  function animateCount(el, target, duration = 1800) {
+    const start = performance.now();
+    const suffix = el.querySelector('.counter-suffix')?.textContent || el.dataset.suffix || '';
+    const valEl  = el.querySelector('.count-val') || el;
+
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 4);
+      const cur = Math.round(ease * target);
+      if (valEl === el) {
+        el.textContent = (target >= 1000 ? (cur >= 1000 ? Math.round(cur/1000)+'k' : cur) : cur) + suffix;
+      } else {
+        valEl.textContent = target >= 1000 ? (cur >= 1000 ? Math.round(cur/1000)+'k' : cur) : cur;
+      }
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.count);
+      animateCount(el, target);
+      counterObs.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+
+  /* ----------------------------------------------------------
+     Gallery Lightbox
+  ---------------------------------------------------------- */
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lb-img');
+  const lbCounter= document.getElementById('lb-counter');
+  const lbClose  = document.getElementById('lb-close');
+  const lbPrev   = document.getElementById('lb-prev');
+  const lbNext   = document.getElementById('lb-next');
+  let galleryItems = [], currentLb = 0;
+
+  document.querySelectorAll('.gallery-item').forEach((item, i) => {
+    galleryItems.push({ src: item.dataset.src, alt: item.querySelector('img').alt });
+    item.addEventListener('click', () => openLightbox(i));
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+    item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openLightbox(i); });
+  });
+
+  function openLightbox(idx) {
+    currentLb = idx;
+    lbImg.src = galleryItems[idx].src;
+    lbImg.alt = galleryItems[idx].alt;
+    lbCounter.textContent = (idx + 1) + ' / ' + galleryItems.length;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lbImg.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => { lbImg.src = ''; }, 400);
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  lbPrev.addEventListener('click', e => { e.stopPropagation(); openLightbox((currentLb - 1 + galleryItems.length) % galleryItems.length); });
+  lbNext.addEventListener('click', e => { e.stopPropagation(); openLightbox((currentLb + 1) % galleryItems.length); });
+
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  lbPrev.click();
+    if (e.key === 'ArrowRight') lbNext.click();
+  });
+
+  // Touch swipe for lightbox
+  let lbTouchX = 0;
+  lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - lbTouchX;
+    if (Math.abs(dx) > 50) { dx < 0 ? lbNext.click() : lbPrev.click(); }
+  }, { passive: true });
+
+  /* ----------------------------------------------------------
+     Carta — Tabs, Search, Filters
+  ---------------------------------------------------------- */
+  const cartaGrid    = document.getElementById('carta-grid');
+  const cartaSearch  = document.getElementById('carta-search');
+  const cartaTabs    = document.querySelectorAll('.carta-tab');
+  const filterPills  = document.querySelectorAll('.filter-pill');
+  let activeCategory = 'entrantes';
+  let activeFilter   = 'all';
+  let searchQuery    = '';
+
+  function applyCartaFilters() {
+    const items = cartaGrid.querySelectorAll('.menu-item');
+    items.forEach(item => {
+      const cat    = item.dataset.cat;
+      const tags   = item.dataset.tags || '';
+      const name   = item.querySelector('.menu-item-name').textContent.toLowerCase();
+      const desc   = item.querySelector('.menu-item-desc').textContent.toLowerCase();
+
+      const catOk    = cat === activeCategory;
+      const filterOk = activeFilter === 'all' || tags.includes(activeFilter);
+      const searchOk = searchQuery === '' || name.includes(searchQuery) || desc.includes(searchQuery);
+
+      const visible = catOk && filterOk && searchOk;
+      item.style.display = visible ? '' : 'none';
+      // animate in
+      if (visible) {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(10px)';
+        requestAnimationFrame(() => {
+          item.style.transition = 'opacity 0.4s, transform 0.4s';
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        });
+      }
+    });
+  }
+
+  // Init: show entrantes, hide rest
+  applyCartaFilters();
+
+  cartaTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      cartaTabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      activeCategory = tab.dataset.cat;
+      applyCartaFilters();
+    });
+  });
+
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      filterPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      applyCartaFilters();
+    });
+  });
+
+  cartaSearch.addEventListener('input', () => {
+    searchQuery = cartaSearch.value.trim().toLowerCase();
+    // When searching, show all categories
+    if (searchQuery) {
+      const items = cartaGrid.querySelectorAll('.menu-item');
+      items.forEach(item => {
+        const name = item.querySelector('.menu-item-name').textContent.toLowerCase();
+        const desc = item.querySelector('.menu-item-desc').textContent.toLowerCase();
+        const filterOk = activeFilter === 'all' || (item.dataset.tags || '').includes(activeFilter);
+        item.style.display = (name.includes(searchQuery) || desc.includes(searchQuery)) && filterOk ? '' : 'none';
+      });
+    } else {
+      applyCartaFilters();
+    }
+  });
+
+  /* ----------------------------------------------------------
+     Opiniones Carousel
+  ---------------------------------------------------------- */
+  const opinTrack = document.getElementById('opin-track');
+  const opinDots  = document.querySelectorAll('.opin-dot');
+  let currentSlide = 0, autoPlay, isDragging = false;
+  const totalSlides = document.querySelectorAll('.opin-slide').length;
+
+  function goToSlide(n) {
+    currentSlide = (n + totalSlides) % totalSlides;
+    opinTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+    opinDots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+  }
+
+  function startAutoPlay() {
+    stopAutoPlay();
+    autoPlay = setInterval(() => goToSlide(currentSlide + 1), 5000);
+  }
+  function stopAutoPlay() { clearInterval(autoPlay); }
+
+  document.getElementById('opin-prev').addEventListener('click', () => { stopAutoPlay(); goToSlide(currentSlide - 1); startAutoPlay(); });
+  document.getElementById('opin-next').addEventListener('click', () => { stopAutoPlay(); goToSlide(currentSlide + 1); startAutoPlay(); });
+  opinDots.forEach(dot => dot.addEventListener('click', () => { stopAutoPlay(); goToSlide(+dot.dataset.slide); startAutoPlay(); }));
+
+  // Touch swipe
+  let touchStartX = 0;
+  opinTrack.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; stopAutoPlay(); }, { passive: true });
+  opinTrack.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? goToSlide(currentSlide + 1) : goToSlide(currentSlide - 1); }
+    startAutoPlay();
+  }, { passive: true });
+
+  opinTrack.addEventListener('mouseenter', stopAutoPlay);
+  opinTrack.addEventListener('mouseleave', startAutoPlay);
+
+  startAutoPlay();
+
+  /* ----------------------------------------------------------
+     Reservas Form — Multi-step
+  ---------------------------------------------------------- */
+  const form      = document.getElementById('reservas-form');
+  const success   = document.getElementById('form-success');
+  const stepNums  = [
+    document.getElementById('step-num-1'),
+    document.getElementById('step-num-2'),
+    document.getElementById('step-num-3'),
+  ];
+  const panels = [
+    document.getElementById('form-step-1'),
+    document.getElementById('form-step-2'),
+    document.getElementById('form-step-3'),
+  ];
+  let currentStep = 0;
+
+  function showStep(n) {
+    panels.forEach((p, i) => p.classList.toggle('active', i === n));
+    stepNums.forEach((s, i) => {
+      s.classList.toggle('active', i === n);
+      s.classList.toggle('done', i < n);
+      if (i < n) s.textContent = '✓';
+      else if (i === n) s.textContent = i + 1;
+      else { s.textContent = i + 1; s.classList.remove('done','active'); }
+    });
+    currentStep = n;
+  }
+
+  document.getElementById('step1-next').addEventListener('click', () => {
+    const date = document.getElementById('res-date');
+    const time = document.getElementById('res-time');
+    if (!date.value || !time.value) { date.style.borderColor = !date.value ? 'var(--imperial-red)' : ''; time.style.borderColor = !time.value ? 'var(--imperial-red)' : ''; return; }
+    date.style.borderColor = ''; time.style.borderColor = '';
+    showStep(1);
+  });
+  document.getElementById('step2-back').addEventListener('click', () => showStep(0));
+  document.getElementById('step2-next').addEventListener('click', () => {
+    const personas = document.getElementById('res-personas');
+    if (!personas.value) { personas.style.borderColor = 'var(--imperial-red)'; return; }
+    personas.style.borderColor = '';
+    showStep(2);
+  });
+  document.getElementById('step3-back').addEventListener('click', () => showStep(1));
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const nombre = document.getElementById('res-nombre');
+    const tel    = document.getElementById('res-telefono');
+    if (!nombre.value || !tel.value) {
+      if (!nombre.value) nombre.style.borderColor = 'var(--imperial-red)';
+      if (!tel.value)    tel.style.borderColor    = 'var(--imperial-red)';
+      return;
+    }
+    form.style.display = 'none';
+    document.querySelector('.form-progress').style.display = 'none';
+    success.classList.add('show');
+  });
+
+  /* ----------------------------------------------------------
+     Open/Closed badge
+  ---------------------------------------------------------- */
+  (function() {
+    const badge = document.getElementById('open-badge');
+    if (!badge) return;
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes();
+    const t = h * 60 + m;
+    // EDITAR: Ajusta los rangos de horario si es necesario
+    const day = now.getDay(); // 0=Dom, 1=Lun...
+    let open = false;
+    if (day === 1) {
+      open = false;
+    } else if (day === 2) {
+      open = (t >= 720 && t <= 960) || (t >= 1200 && t <= 1380);
+    } else {
+      open = (t >= 720 && t <= 990) || (t >= 1200 && t <= 1410);
+    }
+    badge.textContent = open ? 'Abierto Ahora' : 'Cerrado Ahora';
+    badge.className = 'open-badge ' + (open ? 'open' : 'closed');
+  })();
+
+  /* ----------------------------------------------------------
+     Set min date on reservation input
+  ---------------------------------------------------------- */
+  const resDate = document.getElementById('res-date');
+  if (resDate) {
+    const today = new Date();
+    const yy = today.getFullYear();
+    const mm = String(today.getMonth()+1).padStart(2,'0');
+    const dd = String(today.getDate()).padStart(2,'0');
+    resDate.min = `${yy}-${mm}-${dd}`;
+  }
+
+  /* ----------------------------------------------------------
+     Cookie banner
+  ---------------------------------------------------------- */
+  (function() {
+    const banner = document.getElementById('cookie-banner');
+    const accept = document.getElementById('cookie-accept');
+    const reject = document.getElementById('cookie-reject');
+    if (!banner || localStorage.getItem('cookie_consent')) return;
+
+    setTimeout(() => banner.classList.add('show'), 800);
+
+    function saveConsent(value) {
+      localStorage.setItem('cookie_consent', value);
+      banner.classList.remove('show');
+    }
+
+    accept.addEventListener('click', () => saveConsent('accepted'));
+    reject.addEventListener('click', () => saveConsent('rejected'));
+  })();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Noticias, ensayos y crónicas desde el estudio de Yana Yavorskaya en Madrid. Arte contemporáneo, ferias, técnica pictórica y reflexiones de la artista.">
+  <link rel="canonical" href="https://yanayavorskaya.com/noticias">
+  <meta property="og:title" content="Noticias — Yana Yavorskaya">
+  <meta property="og:description" content="Ensayos editoriales y noticias del estudio de Yana Yavorskaya.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yanayavorskaya.com/noticias">
+  <meta property="og:image" content="https://yanayavorskaya.com/assets/obras/memoria-horizonte.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Noticias — Yana Yavorskaya</title>
+  <link rel="stylesheet" href="css/museum.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <script src="js/i18n-content.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>setTimeout(function(){MuseoI18n.init();},50);</script>
+  <style>
+    .news-page { padding: 8rem 0 4rem; min-height: 100vh; }
+    .news-hero { margin-bottom: var(--spacing-xl); }
+    .news-hero h1 { margin-bottom: 0.5rem; }
+    .back-link { display: inline-block; margin-bottom: 2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); }
+    .back-link:hover { color: var(--accent); }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: var(--spacing-lg); }
+    .news-card { border: 1px solid var(--border); background: var(--bg); transition: transform var(--transition-medium), box-shadow var(--transition-medium); }
+    .news-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .news-card__image { aspect-ratio: 16/9; overflow: hidden; background: var(--bg-alt); }
+    .news-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
+    .news-card:hover .news-card__image img { transform: scale(1.03); }
+    .news-card__body { padding: 1.8rem; }
+    .news-card__date { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; }
+    .news-card__category { display: inline-block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.15rem 0.5rem; border: 1px solid var(--border); margin-bottom: 0.8rem; color: var(--text-tertiary); }
+    .news-card__title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; line-height: 1.3; margin-bottom: 0.6rem; }
+    .news-card__text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.75; }
+    @media(max-width:768px){ .news-grid { grid-template-columns: 1fr; } }
+  </style>
+  <meta name="vercel-toolbar" content="false">
+</head>
+<body>
+<nav class="nav" role="navigation">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="assets/logo.png" alt="Yana Yavorskaya" class="nav__brand-logo" width="48" height="45">
+      Yana Yavorskaya
+    </a>
+    <button class="nav__toggle" aria-label="Menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links">
+      <li><a href="index.html#colecciones" data-i18n="nav.colecciones">Colecciones</a></li>
+      <li><a href="index.html#estudio" data-i18n="nav.estudio">Estudio</a></li>
+      <li><a href="index.html#exposiciones" data-i18n="nav.exposiciones">Exposiciones</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="nav.obras">Obras</a></li>
+      <li><a href="noticias.html" data-i18n="nav.noticias">Noticias</a></li>
+      <li><a href="sobre-mi.html" data-i18n="nav.bio">Bio</a></li>
+      <li><a href="index.html#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      <!-- SELECTOR DE IDIOMAS -->
+      <li class="nav__item-lang" id="nav-item-lang-container" style="display: flex; align-items: center; margin: 0 0.4rem;">
+        <div id="lang-switcher" class="lang-switcher"></div>
+      </li>
+      <!-- BOTÓN WHATSAPP -->
+      <li style="display: flex; align-items: center;"><a href="https://wa.me/34600889977?text=Hola%20Yana%20Yavorskaya" target="_blank" rel="noopener" class="nav__wa-clean" title="WhatsApp directo con Yana"><span style="color:#25D366;">🟢</span> <span data-i18n="nav.wa">+34 600 88 99 77</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container container-wide news-page">
+  <a href="index.html" class="back-link" data-i18n="legal.back">← Volver al inicio</a>
+  <div class="news-hero reveal">
+    <p class="section__label" data-i18n="news.label">Noticias & Eventos</p>
+    <h1 data-i18n="news.title">Próximas citas</h1>
+    <p class="text-secondary" style="max-width:600px;" data-i18n="news.subtitle">Ferias, exposiciones y eventos de arte en Madrid y Europa.</p>
+  </div>
+
+  <div class="shop-filters" style="margin-bottom: 2rem;">
+      <button class="shop-filter active" onclick="filterNews('all', this)">Todas las publicaciones</button>
+      <button class="shop-filter" onclick="filterNews('Ferias de arte', this)">Ferias de arte</button>
+      <button class="shop-filter" onclick="filterNews('Exposiciones', this)">Exposiciones</button>
+      <button class="shop-filter" onclick="filterNews('Inspiración artística', this)">Inspiración artística</button>
+      <button class="shop-filter" onclick="filterNews('Técnicas de pintura', this)">Técnicas de pintura</button>
+      <button class="shop-filter" onclick="filterNews('Museos', this)">Museos</button>
+      <button class="shop-filter" onclick="filterNews('Proceso creativo', this)">Proceso creativo</button>
+      <button class="shop-filter" onclick="filterNews('Arte contemporáneo europeo', this)">Arte europeo</button>
+      <button class="shop-filter" onclick="filterNews('Arte en Madrid', this)">Arte en Madrid</button>
+      <button class="shop-filter" onclick="filterNews('Nuevos cuadros', this)">Nuevos cuadros</button>
+      <button class="shop-filter" onclick="filterNews('Eventos culturales', this)">Eventos culturales</button>
+      <button class="shop-filter" onclick="filterNews('Visitas a galerías', this)">Visitas a galerías</button>
+    </div>
+
+<div class="news-grid">
+
+    <article class="news-card" data-category="Ferias de arte">
+      <div class="news-card__image"><img src="assets/obras/memoria-horizonte.jpg" alt="ARCO Madrid, el gran encuentro del arte contemporáneo" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Julio 2026</div>
+        <span class="news-card__category" data-i18n="news.1.cat">Ferias de arte</span>
+        <h3 class="news-card__title" data-i18n="news.1.title">ARCO Madrid, el gran encuentro del arte contemporáneo</h3>
+        <p class="news-card__text" data-i18n="news.1.text">Cada primavera, Madrid se convierte en uno de los grandes centros del arte contemporáneo gracias a ARCO Madrid. Galerías, coleccionistas, artistas y amantes del arte de todo el mundo se reúnen para descubrir nuevas propuestas creativas y establecer conexiones internacionales que trascienden las fronteras físicas y lingüísticas.
+
+Para mí, estos encuentros representan mucho más que una feria comercial. Son una oportunidad invaluable para tomar el pulso a las inquietudes estéticas de nuestro tiempo, conocer nuevas tendencias plásticas, intercambiar experiencias vitales con otros colegas de profesión y, sobre todo, seguir creciendo humana y profesionalmente dentro de un ecosistema en constante transformation.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Arte en Madrid">
+      <div class="news-card__image"><img src="assets/obras/espiral-aurea.jpg" alt="Art Madrid: creatividad en el corazón de la ciudad" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Junio 2026</div>
+        <span class="news-card__category" data-i18n="news.2.cat">Arte en Madrid</span>
+        <h3 class="news-card__title" data-i18n="news.2.title">Art Madrid: creatividad en el corazón de la ciudad</h3>
+        <p class="news-card__text" data-i18n="news.2.text">Durante la Semana del Arte, Madrid ofrece mucho más que una única feria. Art Madrid reúne galerías y artistas nacionales e internacionales en un espacio único y arquitectónicamente sobrecogedor como la Galería de Cristal del Palacio de Cibeles, donde conviven en perfecta armonía pintura, escultura, fotografía y nuevas formas de expresión artística.
+
+Visitar este tipo de eventos siempre resulta profundamente inspirador para cualquier creador. A diferencia de las ferias de dimensiones inabarcables, Art Madrid ofrece una escala más humana y cercana, un ambiente íntimo propicio para detenerse frente a cada obra y descubrir la factura técnica de las piezas.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Inspiración artística">
+      <div class="news-card__image"><img src="assets/obras/el-reposo-del-viento.jpg" alt="La fotografía como fuente de inspiración" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Mayo 2026</div>
+        <span class="news-card__category" data-i18n="news.3.cat">Inspiración artística</span>
+        <h3 class="news-card__title" data-i18n="news.3.title">La fotografía como fuente de inspiración</h3>
+        <p class="news-card__text" data-i18n="news.3.text">El festival PHotoEspaña demuestra cada año en las salas y museos de Madrid cómo la fotografía continúa evolucionando con fuerza y dialogando con otras disciplinas artísticas de una manera fluida, madura y profundamente evocadora.
+
+Aunque mi trabajo artístico se centra principalmente en la pintura al óleo y el acrílico sobre lienzo, siempre encuentro una inagotable fuente de inspiración en la luz, las composiciones geométricas, los contrastes de claroscuro y las historias humanas que transmiten las grandes exposiciones fotográficas que inundan la ciudad.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Arte contemporáneo europeo">
+      <div class="news-card__image"><img src="assets/obras/meditacion-en-ocre.jpg" alt="Europa, un espacio para descubrir nuevas tendencias" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Abril 2026</div>
+        <span class="news-card__category" data-i18n="news.4.cat">Arte contemporáneo europeo</span>
+        <h3 class="news-card__title" data-i18n="news.4.title">Europa, un espacio para descubrir nuevas tendencias</h3>
+        <p class="news-card__text" data-i18n="news.4.text">Europa acoge algunas de las ferias, bienales y citas expositivas más importantes y prestigiosas del mundo. Cada ciudad —ya sea París con su elegancia histórica, Basilea con su rigor institucional o Bruselas con su vanguardismo audaz— aporta una identidad propia y una forma absolutamente diferente de entender y proyectar el arte contemporáneo internacional.
+
+Seguir de cerca y viajar en persona a estos acontecimientos permite no solo conocer nuevas corrientes creativas y descubrir artistas internacionales de primer nivel, sino comprender con perspectiva crítica hacia dónde evoluciona el panorama artístico europeo.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Exposiciones">
+      <div class="news-card__image"><img src="assets/obras/alba-sobre-el-mar.jpg" alt="El valor de encontrarnos a través del arte" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Marzo 2026</div>
+        <span class="news-card__category" data-i18n="news.5.cat">Exposiciones</span>
+        <h3 class="news-card__title" data-i18n="news.5.title">El valor de encontrarnos a través del arte</h3>
+        <p class="news-card__text" data-i18n="news.5.text">Cada exposición e inauguración en la que participo es mucho más que un simple lugar donde colgar cuadros ordenadamente sobre paredes blancas. Es un espacio cívico para conversar, para escuchar con atención las historias vitales de quienes nos visitan y para descubrir con asombro cómo una misma obra abstracta puede despertar emociones y recuerdos completamente distintos.
+
+Ese intercambio humano cálido y directo es una de las partes más valiosas y gratificantes de mi trabajo diario como artista profesional. Pintar es un acto íntimo, pero compartir la obra con el público es lo que verdaderamente le da vida.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Técnicas de pintura">
+      <div class="news-card__image"><img src="assets/obras/el-silencio-de-los-pigmentos.jpg" alt="El silencio de los pigmentos: por qué el óleo requiere tiempo y paciencia" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Julio 2026</div>
+        <span class="news-card__category" data-i18n="news.6.cat">Técnicas de pintura</span>
+        <h3 class="news-card__title" data-i18n="news.6.title">El silencio de los pigmentos: por qué el óleo requiere tiempo y paciencia</h3>
+        <p class="news-card__text" data-i18n="news.6.text">En una sociedad obsesionada con la inmediatez y la productividad vertiginosa, trabajar con pintura al óleo constituye un acto casi revolucionario de resistencia cronológica. El óleo es una materia viva que no tolera las prisas ni los atajos artificiales; impone sus propias leyes de secado, oxidación y maduración lenta de la película pigmentaria sobre la trama del lienzo.
+
+En mi práctica diaria en el estudio, preparo gran parte de mis colores amasando pigmentos minerales en polvo con aceite de linaza purificado al sol y resina dammar.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Proceso creativo">
+      <div class="news-card__image"><img src="assets/obras/aurora-interior.jpg" alt="La anatomía del lienzo en blanco: cómo enfrentarse al vértigo del primer trazo" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Junio 2026</div>
+        <span class="news-card__category" data-i18n="news.7.cat">Proceso creativo</span>
+        <h3 class="news-card__title" data-i18n="news.7.title">La anatomía del lienzo en blanco: cómo enfrentarse al vértigo del primer trazo</h3>
+        <p class="news-card__text" data-i18n="news.7.text">Se ha escrito mucho sobre el "terror al lienzo en blanco", ese supuesto bloqueo paralizante que experimenta el artista frente a una tela virgen y vacía que espera ser conquistada. Sin embargo, con los años de oficio he aprendido a transformar ese miedo inicial en un sentimiento de reverencia, gratitud y expectación serena.
+
+Para mí, el proceso compositivo de un cuadro comienza mucho antes de abrir los tubos de pintura o manchar el primer pincel. Comienza con la elección minuciosa del soporte y la contemplación del lino belga.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Museos">
+      <div class="news-card__image"><img src="assets/obras/luz-de-invierno-iii.jpg" alt="Recorrido por el Museo del Prado: la luz de Velázquez en mi paleta actual" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Mayo 2026</div>
+        <span class="news-card__category" data-i18n="news.8.cat">Museos</span>
+        <h3 class="news-card__title" data-i18n="news.8.title">Recorrido por el Museo del Prado: la luz de Velázquez en mi paleta actual</h3>
+        <p class="news-card__text" data-i18n="news.8.text">Tener el Museo Nacional del Prado a pocos minutos de distancia en Madrid es uno de los mayores privilegios que puede tener un pintor contemporáneo. A pesar de que mi lenguaje visual se inscribe plenamente dentro de la abstracción minimalista, considero que no existe ruptura estructural entre el gran arte clásico y la modernidad bien entendida.
+
+Cuando camino por la gran galería central del Prado y me detengo frente a Velázquez, me fascina comprobar su extraordinaria economía compositiva y pigmentaria.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Nuevos cuadros">
+      <div class="news-card__image"><img src="assets/obras/horizontes-blancos.jpg" alt="Preparando la nueva colección Horizontes Suspendidos para este otoño" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Abril 2026</div>
+        <span class="news-card__category" data-i18n="news.9.cat">Nuevos cuadros</span>
+        <h3 class="news-card__title" data-i18n="news.9.title">Preparando la nueva colección "Horizontes Suspendidos" para este otoño</h3>
+        <p class="news-card__text" data-i18n="news.9.text">Durante los últimos seis meses, el estudio ha sido un hervidero silencioso de actividad donde he concentrado todas mis energías creativas en el desarrollo de mi próxima colección de gran formato, titulada Horizontes Suspendidos. Hoy quiero compartir con vosotros algunas reflexiones sobre el origen y la evolución visual de esta serie.
+
+La génesis parte de una observación metafórica en torno a la línea del horizonte marítimo en los días de calma chicha invernal.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Inspiración artística">
+      <div class="news-card__image"><img src="assets/obras/geometria-del-silencio.jpg" alt="El estudio en invierno: cómo la luz del norte transforma los tonos marfiles" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Enero 2026</div>
+        <span class="news-card__category" data-i18n="news.10.cat">Inspiración artística</span>
+        <h3 class="news-card__title" data-i18n="news.10.title">El estudio en invierno: cómo la luz del norte transforma los tonos marfiles</h3>
+        <p class="news-card__text" data-i18n="news.10.text">Desde la época del Renacimiento hasta los talleres bohemios de Montmartre, los pintores de todas las épocas hemos buscado y codiciado un elemento arquitectónico por encima de cualquier lujo decorativo: los grandes ventanales orientados rigurosamente hacia el norte.
+
+A diferencia de la luz directa del sur o del poniente, la luz difusa del cielo norte es serena, constante, azulada y fría. Es la luz de la verdad en pintura.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Técnicas de pintura">
+      <div class="news-card__image"><img src="assets/obras/eco-de-la-memoria.jpg" alt="El diálogo del lino y el acrílico: texturas que respiran bajo la pintura" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Noviembre 2025</div>
+        <span class="news-card__category" data-i18n="news.11.cat">Técnicas de pintura</span>
+        <h3 class="news-card__title" data-i18n="news.11.title">El diálogo del lino y el acrílico: texturas que respiran bajo la pintura</h3>
+        <p class="news-card__text" data-i18n="news.11.text">Existe la creencia popular de que el lienzo de lino es simplemente un soporte inerte, un trozo de tela pasiva sobre el cual el pintor arroja sus colores hasta ocultar por completo su presencia física. En mi metodología pictórica, ocurre exactamente lo contrario: el tejido de lino es el coprotagonista activo del cuadro.
+
+Trabajo fundamentalmente con lino belga virgen de alto gramaje, dejando reservas donde la fibra cruda permanece visible.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Visitas a galerías">
+      <div class="news-card__image"><img src="assets/obras/silencios-urbanos-nocturno.jpg" alt="Visitas a galerías en Madrid: el auge de la abstracción lírica" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Octubre 2025</div>
+        <span class="news-card__category" data-i18n="news.12.cat">Visitas a galerías</span>
+        <h3 class="news-card__title" data-i18n="news.12.title">Visitas a galerías en Madrid: el auge de la abstracción lírica</h3>
+        <p class="news-card__text" data-i18n="news.12.text">Las tardes de los viernes o sábados me gusta reservar un par de horas para salir de la soledad del estudio y recorrer las galerías de arte contemporáneo de Madrid. Pasear por las históricas calles del Barrio de las Letras o las elegantes avenidas de Salesas confirma la excelente salud cultural de nuestra capital.
+
+En mis recorridos he constatado un resurgir y un renovado interés por la abstracción lírica y geométrica.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Arte contemporáneo europeo">
+      <div class="news-card__image"><img src="assets/obras/sombra-y-luz-v.jpg" alt="El arte contemporáneo como puente emocional en un mundo acelerado" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Septiembre 2025</div>
+        <span class="news-card__category" data-i18n="news.13.cat">Arte contemporáneo europeo</span>
+        <h3 class="news-card__title" data-i18n="news.13.title">El arte contemporáneo como puente emocional en un mundo acelerado</h3>
+        <p class="news-card__text" data-i18n="news.13.text">Vivimos inmersos en una era de hiperconectividad y sobrestimulación audiovisual constante. Desde que despertamos hasta que conciliamos el sueño, nuestras mentes son bombardeadas por miles de notificaciones móviles, titulares efímeros y un ruido digital incesante.
+
+En este contexto histórico tan acelerado, una obra de arte contemporáneo en el hogar o en el lugar de trabajo adquiere una trascendental función de higiene emocional y serenidad.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Proceso creativo">
+      <div class="news-card__image"><img src="assets/obras/bruma-de-otono.jpg" alt="Pinceles, espátulas y materia: mis herramientas favoritas en el día a día" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Agosto 2025</div>
+        <span class="news-card__category" data-i18n="news.14.cat">Proceso creativo</span>
+        <h3 class="news-card__title" data-i18n="news.14.title">Pinceles, espátulas y materia: mis herramientas favoritas en el día a día</h3>
+        <p class="news-card__text" data-i18n="news.14.text">Las herramientas de un pintor con el paso de los años terminan por convertirse en prolongaciones anatómicas directas de sus propias manos y de su sistema nervioso central. En las mesas de mi estudio se apilan docenas de pinceles, brochas, rasquetas y espátulas de acero templado flexible italianas que me permiten depositar la masa del óleo con una firmeza escultórica.</p>
+      </div>
+    </article>
+
+    <article class="news-card" data-category="Eventos culturales">
+      <div class="news-card__image"><img src="assets/obras/transito-nocturno.jpg" alt="La importancia del enmarcado y el montaje en la percepción de la obra" loading="lazy"></div>
+      <div class="news-card__body">
+        <div class="news-card__date">Julio 2025</div>
+        <span class="news-card__category" data-i18n="news.15.cat">Eventos culturales</span>
+        <h3 class="news-card__title" data-i18n="news.15.title">La importancia del enmarcado y el montaje en la percepción de la obra</h3>
+        <p class="news-card__text" data-i18n="news.15.text">Una obra de arte no está completamente terminada cuando el artista da su última pincelada y estampa su firma; el proceso culmina con el diseño y la ejecución técnica del sistema de enmarcado y montaje museográfico. Para mis obras abstractas de gran formato, mi elección predilecta e innegociable es el marco tipo caja americana en madera maciza.</p>
+      </div>
+    </article>
+
+    
+
+  </div>
+
+</main>
+
+<footer class="footer"><div class="container">
+  <div class="footer__social">
+    <a href="https://instagram.com/yanayavorskaya" class="soc-icon soc-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="https://x.com/yanayavorskaya" class="soc-icon soc-x" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://pinterest.com/yanayavorskaya" class="soc-icon soc-pin" target="_blank" rel="noopener" aria-label="Pinterest"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg></a>
+    <a href="https://youtube.com/@yanayavorskaya" class="soc-icon soc-yt" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://linkedin.com/in/yanayavorskaya" class="soc-icon soc-li" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="https://facebook.com/yanayavorskaya" class="soc-icon soc-fb" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
+  <div class="footer__inner">
+    <p class="footer__copy" data-i18n="footer.copy">© 2026 Yana Yavorskaya. Todos los derechos reservados.</p>
+    <ul class="footer__links">
+      <li><a href="sobre-mi.html" data-i18n="footer.bio">Bio</a></li>
+      <li><a href="noticias.html" data-i18n="footer.noticias">Noticias</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="footer.obras">Obras</a></li>
+      <li><a href="legal/aviso-legal.html" data-i18n="footer.legal">Aviso Legal</a></li>
+      <li><a href="legal/privacidad.html" data-i18n="footer.privacy">Privacidad</a></li>
+      <li><a href="legal/cookies.html" data-i18n="footer.cookies">Cookies</a></li>
+      <li><a href="legal/terminos.html" data-i18n="footer.terms">Términos</a></li>
+      <li><a href="#" onclick="openSitemap(event)" data-i18n="footer.sitemap">Mapa del sitio</a></li>
+    </ul>
+  </div>
+</div></footer>
+<script>
+function filterNews(cat, btn) {
+  document.querySelectorAll('.shop-filter').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.news-card').forEach(function(c){
+    c.style.display = (cat === 'all' || c.dataset.category === cat) ? '' : 'none';
+  });
+}
+</script>
+<!-- ===== MAPA DEL SITIO MODAL ===== -->
+<div class="shop-modal" id="sitemap-modal" role="dialog" aria-hidden="true">
+  <div class="shop-modal__inner" style="max-width: 780px;">
+    <button class="shop-modal__close" onclick="closeSitemap()" aria-label="Cerrar">✕</button>
+    <div class="invitation__crest">✦</div>
+    <h3 class="shop-modal__title" style="margin-bottom: 1.5rem; text-align: center;">Mapa del sitio</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2rem; text-align: left; font-family: var(--sans); font-size: 0.88rem;">
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Galería & Obras</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="obras-disponibles.html" style="color: var(--text);">Catálogo Completo</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Luz y Sombra</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Geometría Sagrada</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Horizontes Interiores</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Estudio & Ensayos</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="sobre-mi.html" style="color: var(--text);">Biografía & Filosofía</a></li>
+          <li><a href="index.html#estudio" style="color: var(--text-secondary);">El Estudio en Madrid</a></li>
+          <li><a href="noticias.html" style="color: var(--text);">Noticias del Estudio</a></li>
+          <li><a href="index.html#exposiciones" style="color: var(--text-secondary);">Exposiciones Internacionales</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Contacto & Legal</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="index.html#contacto" style="color: var(--text);">Citas Privadas & Contacto</a></li>
+          <li><a href="legal/aviso-legal.html" style="color: var(--text-secondary);">Aviso Legal</a></li>
+          <li><a href="legal/privacidad.html" style="color: var(--text-secondary);">Privacidad</a></li>
+          <li><a href="legal/cookies.html" style="color: var(--text-secondary);">Cookies</a></li>
+          <li><a href="legal/terminos.html" style="color: var(--text-secondary);">Términos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSitemap(e) { if(e) e.preventDefault(); var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.add('is-open'); sm.setAttribute('aria-hidden','false'); } }
+function closeSitemap() { var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.remove('is-open'); sm.setAttribute('aria-hidden','true'); } }
+</script>
+
+
+<!-- ===== CHAT ASSISTANT (BOTTOM RIGHT) ===== -->
+<div class="chat-assistant">
+  <button class="chat-assistant__trigger" id="chat-trigger" aria-label="Abrir chat">
+    <img src="assets/logo.png" alt="" width="34" height="34">
+  </button>
+</div>
+<div class="chat-panel" id="chat-panel" role="dialog" aria-hidden="true">
+  <div class="chat-panel__header">
+    <img src="assets/logo.png" alt="" width="36" height="36">
+    <div class="chat-panel__header-info">
+      <div class="chat-panel__header-name" data-i18n="chat.name">Yana Yavorskaya</div>
+      <div class="chat-panel__header-status" data-i18n="chat.status">Disponible</div>
+    </div>
+    <button class="chat-panel__close" id="chat-close" aria-label="Cerrar chat">✕</button>
+  </div>
+  <div class="chat-panel__messages" id="chat-messages"></div>
+  <div class="chat-panel__quick-replies" id="chat-quick">
+    <button class="chat-panel__quick-reply" data-msg="Háblame de la colección Luz y Sombra" data-i18n="chat.q1">Luz y Sombra</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Hay obras disponibles?" data-i18n="chat.q3">Disponibilidad</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Qué técnica utilizas?" data-i18n="chat.q2">Técnica</button>
+    <button class="chat-panel__quick-reply" data-msg="Cuéntame sobre las exposiciones" data-i18n="chat.q4">Exposiciones</button>
+  </div>
+  <div class="chat-panel__input-area">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta…" data-i18n="chat.placeholder">
+    <button id="chat-send" data-i18n="chat.send">Enviar</button>
+  </div>
+</div>
+
+<!-- ===== SCROLL UP (BOTTOM LEFT) ===== -->
+<button class="scroll-up" id="scroll-up" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<script src="js/museum.js"></script>
+</body>
+</html>

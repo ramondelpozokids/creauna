@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Catálogo de obras originales de Yana Yavorskaya. Pintura contemporánea disponible con certificado de autenticidad. Consulta precios y disponibilidad.">
+  <link rel="canonical" href="https://yanayavorskaya.com/obras-disponibles">
+  <meta property="og:title" content="Obras disponibles — Yana Yavorskaya">
+  <meta property="og:description" content="12 obras originales disponibles. Pintura contemporánea con certificado firmado por la artista.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yanayavorskaya.com/obras-disponibles">
+  <meta property="og:image" content="https://yanayavorskaya.com/assets/obras/aurora-interior.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Obras — Yana Yavorskaya</title>
+  <link rel="stylesheet" href="css/museum.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <script src="js/i18n-content.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>setTimeout(function(){MuseoI18n.init();},50);</script>
+  <style>
+    .shop-page { padding: 8rem 0 4rem; min-height: 100vh; }
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--spacing-lg); margin-top: var(--spacing-lg); }
+    .shop-card { border: 1px solid var(--border); background: var(--bg); transition: transform var(--transition-medium), box-shadow var(--transition-medium); display: flex; flex-direction: column; }
+    .shop-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .shop-card__image { aspect-ratio: 3/4; overflow: hidden; position: relative; cursor: pointer; }
+    .shop-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
+    .shop-card:hover .shop-card__image img { transform: scale(1.05); }
+    .shop-card__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity var(--transition-medium); }
+    .shop-card:hover .shop-card__overlay { opacity: 1; }
+    .shop-card__overlay span { color: #fff; font-family: var(--serif); font-size: 1.1rem; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.5); padding: 0.5rem 1.5rem; }
+    .shop-card__badge { position: absolute; top: 1rem; left: 1rem; background: var(--accent); color: #fff; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.2rem 0.6rem; }
+    .shop-card__badge--vendida { background: #999; }
+    .shop-card__badge--reservada { background: var(--text-tertiary); }
+    .shop-card__body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+    .shop-card__title { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; margin-bottom: 0.3rem; }
+    .shop-card__collection { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
+    .shop-card__meta { font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; }
+    .shop-card__desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; flex: 1; margin-bottom: 1rem; }
+    .shop-card__footer { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-light); }
+    .shop-card__price { font-family: var(--serif); font-size: 1.15rem; color: var(--text); }
+    .shop-card__price-note { font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+    .shop-card__action { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.45rem 1rem; border: 1px solid var(--accent); color: var(--accent); background: none; cursor: pointer; transition: all var(--transition-fast); font-family: var(--sans); }
+    .shop-card__action:hover { background: var(--accent); color: #fff; }
+    .shop-intro { max-width: 650px; margin-top: 0.5rem; }
+    .shop-intro p { font-size: 1rem; color: var(--text-secondary); line-height: 1.7; }
+    .shop-intro__note { margin-top: 1rem; padding: 1.2rem; border-left: 2px solid var(--accent); background: var(--bg-alt); font-size: 0.85rem; color: var(--text-tertiary); line-height: 1.6; }
+    .shop-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: var(--spacing-md); }
+    .shop-filter { padding: 0.35rem 0.9rem; border: 1px solid var(--border); background: none; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); transition: all var(--transition-fast); font-family: var(--sans); }
+    .shop-filter:hover, .shop-filter.active { border-color: var(--accent); color: var(--accent); }
+    /* Lightbox premium */
+    .lb-overlay { display: none; position: fixed; inset: 0; z-index: 400; background: #030303; align-items: center; justify-content: center; flex-direction: column; overflow: hidden; }
+    .lb-overlay.is-open { display: flex; }
+    .lb-close { position: absolute; top: 1.5rem; right: 1.5rem; z-index: 10; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); }
+    .lb-close:hover { background: rgba(255,255,255,0.2); }
+    .lb-content { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 90%; max-width: 1200px; max-height: 85vh; align-items: center; padding: 2rem; }
+    .lb-image { width: 100%; height: min(70vh, 600px); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .lb-image img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s ease; cursor: zoom-in; }
+    .lb-image img.zoomed { transform: scale(1.8); cursor: zoom-out; }
+    .lb-info { color: #fff; overflow-y: auto; max-height: 70vh; padding-right: 1rem; }
+    .lb-info h2 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    .lb-info .lb-collection { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.8rem; }
+    .lb-info .lb-meta-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.05em; }
+    .lb-info .lb-price { font-family: var(--serif); font-size: 1.4rem; color: var(--accent); margin-bottom: 0.2rem; }
+    .lb-info .lb-status { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.2rem; }
+    .lb-info .lb-desc { font-size: 0.9rem; line-height: 1.8; color: rgba(255,255,255,0.6); margin-bottom: 1.5rem; }
+    .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 48px; height: 48px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); z-index: 10; }
+    .lb-nav:hover { background: rgba(255,255,255,0.18); }
+    .lb-prev { left: 1rem; }
+    .lb-next { right: 1rem; }
+    .lb-counter { position: absolute; top: 1.5rem; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
+    .back-link { display: inline-block; margin-bottom: 2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); }
+    .back-link:hover { color: var(--accent); }
+    .cert-block { margin-top: var(--spacing-lg); padding: 1.2rem; border: 1px solid var(--border); font-size: 0.8rem; color: var(--text-tertiary); text-align: center; }
+    @media(max-width:768px){ .shop-page { padding: 6rem 0 3rem; } .shop-grid { grid-template-columns: 1fr; } .shop-card__footer { flex-direction: column; align-items: flex-start; gap: 0.75rem; } .shop-card__action { width: 100%; text-align: center; } .lb-content { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; } .lb-image { height: 40vh; } .lb-nav { width: 38px; height: 38px; font-size: 1rem; } }
+  </style>
+  <meta name="vercel-toolbar" content="false">
+</head>
+<body>
+<nav class="nav" role="navigation">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="assets/logo.png" alt="Yana Yavorskaya" class="nav__brand-logo" width="48" height="45">
+      Yana Yavorskaya
+    </a>
+    <button class="nav__toggle" aria-label="Menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links">
+      <li><a href="index.html#colecciones" data-i18n="nav.colecciones">Colecciones</a></li>
+      <li><a href="index.html#estudio" data-i18n="nav.estudio">Estudio</a></li>
+      <li><a href="index.html#exposiciones" data-i18n="nav.exposiciones">Exposiciones</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="nav.obras">Obras</a></li>
+      <li><a href="noticias.html" data-i18n="nav.noticias">Noticias</a></li>
+      <li><a href="sobre-mi.html" data-i18n="nav.bio">Bio</a></li>
+      <li><a href="index.html#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      <!-- SELECTOR DE IDIOMAS -->
+      <li class="nav__item-lang" id="nav-item-lang-container" style="display: flex; align-items: center; margin: 0 0.4rem;">
+        <div id="lang-switcher" class="lang-switcher"></div>
+      </li>
+      <!-- BOTÓN WHATSAPP -->
+      <li style="display: flex; align-items: center;"><a href="https://wa.me/34600889977?text=Hola%20Yana%20Yavorskaya" target="_blank" rel="noopener" class="nav__wa-clean" title="WhatsApp directo con Yana"><span style="color:#25D366;">🟢</span> <span data-i18n="nav.wa">+34 600 88 99 77</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container shop-page">
+  <a href="index.html" class="back-link" data-i18n="legal.back">← Volver al inicio</a>
+  <p class="section__label" data-i18n="shop.galeria">Galería privada</p>
+  <h1 data-i18n="shop.title">Obras disponibles</h1>
+  <div class="shop-intro reveal">
+    <p data-i18n="shop.intro">Cada obra incluye certificado de autenticidad firmado por la artista. Para adquirir cualquiera de estas piezas, contacta directamente con Yana.</p>
+    <div class="shop-intro__note" data-i18n="shop.howto">✦ Cómo adquirir una obra: pulsa en cualquier imagen para verla a pantalla completa con toda su historia. Después, si te interesa, contacta con Yana. Sin intermediarios. Directamente desde el estudio.</div>
+  </div>
+  
+
+  <div class="shop-grid">
+
+    <article class="shop-card" data-obra-id="aurora" data-status="disponible" data-title="Aurora Interior" data-price="2.800" data-year="2026" data-tech="Acrílico y óleo sobre lienzo de lino de grano fino" data-size="100 × 80 cm" data-collection="Horizontes Suspendidos" data-status-text="Disponible" data-desc="Esta obra nació durante los últimos días del invierno, cuando las primeras luces del amanecer apenas logran atravesar la espesa bruma que envuelve el estudio al romper el día. Aurora Interior no intenta representar un paisaje físico reconocible, sino la arquitectura silenciosa de nuestro propio estado de ánimo en los instantes de tránsito.
+
+Durante semanas trabajé el lienzo mediante finas capas superpuestas de acrílico muy diluido, permitiendo que la trama del lino crudo respirara a través del pigmento, como si la propia tela fuera la piel de la obra.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/aurora-interior.jpg" alt="Aurora Interior" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Horizontes Suspendidos</span> · <span>2026</span></div>
+        <h3 class="shop-card__title">Aurora Interior</h3>
+        <p class="shop-card__desc">Acrílico y óleo sobre lienzo de lino de grano fino · 100 × 80 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">2.800 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Aurora Interior') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="luz3" data-status="disponible" data-title="Luz de Invierno III" data-price="3.600" data-year="2025" data-tech="Óleo sobre lienzo bastidor 3D" data-size="120 × 120 cm" data-collection="Luz de Invierno" data-status-text="Disponible" data-desc="Forma parte del núcleo central de la serie Luz de Invierno, una investigación cromática y lumínica en la que he trabajado a lo largo de las últimas dos temporadas. En Madrid, los días despejados de enero y febrero ofrecen una luz excepcionalmente clara, cortante y prístina, capaz de perfilar los volúmenes con una nitidez casi escultórica.
+
+Cada estrato de óleo blanco de titanio mezclado con matices de azul cobalto y gris de Payne necesitó días de secado antes de recibir la siguiente veladura.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/luz-de-invierno-iii.jpg" alt="Luz de Invierno III" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Luz de Invierno</span> · <span>2025</span></div>
+        <h3 class="shop-card__title">Luz de Invierno III</h3>
+        <p class="shop-card__desc">Óleo sobre lienzo bastidor 3D · 120 × 120 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">3.600 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Luz de Invierno III') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="silencios" data-status="disponible" data-title="Silencios Urbanos: Nocturno" data-price="2.400" data-year="2025" data-tech="Técnica mixta sobre panel de abedul pulido" data-size="90 × 110 cm" data-collection="Silencios Urbanos" data-status-text="Disponible" data-desc="A menudo se asocia la ciudad con el estruendo y la saturación sensorial, pero Silencios Urbanos: Nocturno explora exactamente lo contrario: esos instantes mágicos de la madrugada en los que las calles se vacían, los faroles proyectan sombras alargadas sobre el pavimento húmedo y la arquitectura urbana recupera una soledad monumental y poética.
+
+Trabajado con pigmentos minerales puros amasados sobre madera de abedul pulido para atrapar la luz de manera aterciopelada y profunda.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/silencios-urbanos-nocturno.jpg" alt="Silencios Urbanos: Nocturno" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Silencios Urbanos</span> · <span>2025</span></div>
+        <h3 class="shop-card__title">Silencios Urbanos: Nocturno</h3>
+        <p class="shop-card__desc">Técnica mixta sobre panel de abedul pulido · 90 × 110 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">2.400 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Silencios Urbanos: Nocturno') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="eco" data-status="reservada" data-title="Eco de la Memoria" data-price="3.200" data-year="2026" data-tech="Óleo sobre lienzo" data-size="130 × 97 cm" data-collection="Naturaleza Latente" data-status-text="Reservada" data-desc="¿Cómo guardamos los recuerdos? Rara vez permanecen intactos como fotografías nítidas; con el paso del tiempo, se transforman en impresiones afectivas, en manchas de color fragmentadas por la nostalgia y el olvido selectivo. Eco de la Memoria es un intento pictórico de rastrear ese proceso psicológico de erosión y persistencia sentimental.
+
+En esta obra, los verdes musgo y los sienas naturales evocan los bosques de mi infancia bajo capas veladas que actúan como la niebla del tiempo.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/eco-de-la-memoria.jpg" alt="Eco de la Memoria" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge shop-card__badge--reservada">Reservada</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Naturaleza Latente</span> · <span>2026</span></div>
+        <h3 class="shop-card__title">Eco de la Memoria</h3>
+        <p class="shop-card__desc">Óleo sobre lienzo · 130 × 97 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">3.200 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Eco de la Memoria') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="reposo" data-status="vendida" data-title="El Reposo del Viento" data-price="4.200" data-year="2024" data-tech="Acrílico, arena de cuarzo y óleo" data-size="150 × 100 cm" data-collection="Horizontes Suspendidos" data-status-text="Obra vendida" data-desc="Este lienzo de gran formato marca un punto de inflexión en mi trayectoria. Fue adquirido por una importante colección privada en París poco después de su presentación y sigue siendo para mí una de las composiciones donde mejor logré armonizar la fuerza elemental de los materiales con la delicadeza del gesto pictórico.
+
+La inspiración nació en la costa del Atlántico tras una violenta tormenta otoñal cuando el viento amaina y la brisa cesa por completo.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/el-reposo-del-viento.jpg" alt="El Reposo del Viento" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge shop-card__badge--vendida">Obra vendida</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Horizontes Suspendidos</span> · <span>2024</span></div>
+        <h3 class="shop-card__title">El Reposo del Viento</h3>
+        <p class="shop-card__desc">Acrílico, arena de cuarzo y óleo · 150 × 100 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">4.200 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('El Reposo del Viento') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="ocre" data-status="disponible" data-title="Meditación en Ocre" data-price="2.100" data-year="2025" data-tech="Óleo y cera fría sobre panel de madera" data-size="80 × 80 cm" data-collection="Naturaleza Latente" data-status-text="Disponible" data-desc="El ocre es uno de los pigmentos más antiguos utilizados por la humanidad; lleva en sus moléculas la memoria mineral de la tierra cocida al sol. Meditación en Ocre es una indagación en la calidez de los tonos terrosos y la capacidad que tienen para anclar nuestra mente en el momento presente, ofreciéndonos una sensación de centro, estabilidad y equilibrio térmico y emocional.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/meditacion-en-ocre.jpg" alt="Meditación en Ocre" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Naturaleza Latente</span> · <span>2025</span></div>
+        <h3 class="shop-card__title">Meditación en Ocre</h3>
+        <p class="shop-card__desc">Óleo y cera fría sobre panel de madera · 80 × 80 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">2.100 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Meditación en Ocre') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="horizontes" data-status="disponible" data-title="Horizontes Blancos" data-price="3.500" data-year="2026" data-tech="Acrílico de alta densidad y grafito sobre lienzo" data-size="140 × 90 cm" data-collection="Horizontes Suspendidos" data-status-text="Disponible" data-desc="En el arte contemporáneo, el color blanco nunca es simple ausencia de color; es la suma de todos los reflejos del universo o, en palabras de Malévich, la nada suprema llena de infinitas promesas. Horizontes Blancos indaga en los infinitos matices del blanco: desde el blanco cálido de leche y marfil hasta el blanco helado de titanio y el blanco grisáceo de la piedra caliza.
+
+La composición se divide mediante una sutil línea horizontal de grafito puro.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/horizontes-blancos.jpg" alt="Horizontes Blancos" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Horizontes Suspendidos</span> · <span>2026</span></div>
+        <h3 class="shop-card__title">Horizontes Blancos</h3>
+        <p class="shop-card__desc">Acrílico de alta densidad y grafito sobre lienzo · 140 × 90 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">3.500 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Horizontes Blancos') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="geometria" data-status="disponible" data-title="Geometría del Silencio" data-price="2.600" data-year="2025" data-tech="Acrílico sobre lienzo de lino crudo" data-size="100 × 100 cm" data-collection="Silencios Urbanos" data-status-text="Disponible" data-desc="La abstracción geométrica suele asociarse a la rigidez matemática y la frialdad industrial, pero en mi trabajo busco humanizar la línea recta y el plano ortogonal dotándolos de un pulso orgánico, imperfecto y profundamente sensible. Geometría del Silencio es un ensayo visual sobre el orden en medio del caos moderno.
+
+Sobre la superficie desnuda del lino belga sin imprimar dispuse bloques rectangulares con aristas vivas y vibrantes.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/geometria-del-silencio.jpg" alt="Geometría del Silencio" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Silencios Urbanos</span> · <span>2025</span></div>
+        <h3 class="shop-card__title">Geometría del Silencio</h3>
+        <p class="shop-card__desc">Acrílico sobre lienzo de lino crudo · 100 × 100 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">2.600 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Geometría del Silencio') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="bruma" data-status="vendida" data-title="Bruma de Otoño" data-price="2.700" data-year="2024" data-tech="Óleo sobre lienzo" data-size="110 × 80 cm" data-collection="Naturaleza Latente" data-status-text="Obra vendida" data-desc="El otoño tiene una cadencia melancólica y serena que siempre me ha cautivado profundamente como artista. Cuando el follaje verde estival cede su lugar a los pálidos ocres, óxidos y grises violáceos, la naturaleza parece prepararse para su largo descanso invernal con una dignidad sobrecogedora.
+
+Pinté esta obra en jornadas continuas bajo la luz gris del cielo nublado de Madrid con trazos verticales fluidos.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/bruma-de-otono.jpg" alt="Bruma de Otoño" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge shop-card__badge--vendida">Obra vendida</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Naturaleza Latente</span> · <span>2024</span></div>
+        <h3 class="shop-card__title">Bruma de Otoño</h3>
+        <p class="shop-card__desc">Óleo sobre lienzo · 110 × 80 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">2.700 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Bruma de Otoño') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="transito" data-status="disponible" data-title="Tránsito Nocturno" data-price="3.100" data-year="2026" data-tech="Óleo y grafito sobre lienzo" data-size="120 × 90 cm" data-collection="Silencios Urbanos" data-status-text="Disponible" data-desc="La noche no es negra; es una sinfonía compleja de azules de Prusia profundos, violetas oscuros, grises grafito y sutiles fulgores artificiales que rebotan en las paredes de vidrio y hormigón de la ciudad. Tránsito Nocturno es una indagación en la belleza del movimiento urbano congelado en la quietud de la oscuridad.
+
+El proceso creativo incluyó frotado al óleo y un desgarro lumínico en blanco hueso y amarillo nápoles pálido.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/transito-nocturno.jpg" alt="Tránsito Nocturno" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Silencios Urbanos</span> · <span>2026</span></div>
+        <h3 class="shop-card__title">Tránsito Nocturno</h3>
+        <p class="shop-card__desc">Óleo y grafito sobre lienzo · 120 × 90 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">3.100 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Tránsito Nocturno') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="sombra5" data-status="disponible" data-title="Sombra y Luz V" data-price="2.900" data-year="2025" data-tech="Acrílico sobre lienzo bastidor museo" data-size="100 × 100 cm" data-collection="Luz de Invierno" data-status-text="Disponible" data-desc="Toda la historia del arte es, en el fondo, una reflexión ininterrumpida sobre el diálogo eterno y necesario entre la luz y la sombra; ninguna de las dos puede existir ni afirmarse sin el contrapunto de su opuesta. En Sombra y Luz V, quinta entrega de esta sub-serie de investigación de taller, he llevado este dualismo a su máxima síntesis formal y poética repartiendo el lienzo en dos campos energéticos armónicos.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/sombra-y-luz-v.jpg" alt="Sombra y Luz V" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge ">Disponible</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Luz de Invierno</span> · <span>2025</span></div>
+        <h3 class="shop-card__title">Sombra y Luz V</h3>
+        <p class="shop-card__desc">Acrílico sobre lienzo bastidor museo · 100 × 100 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">2.900 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Sombra y Luz V') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card" data-obra-id="alba" data-status="vendida" data-title="Alba sobre el Mar" data-price="3.400" data-year="2024" data-tech="Óleo sobre lienzo" data-size="130 × 90 cm" data-collection="Horizontes Suspendidos" data-status-text="Obra vendida" data-desc="Pocas contemplaciones en la naturaleza son tan transformadoras para el espíritu humano como observar el instante preciso en el que el sol asciende sobre la línea del mar, tiñendo las aguas frías de la madrugada con destellos rosa pálido, albaricoque y oro suave. Alba sobre el Mar encapsula el recuerdo sensible de esas auroras mediterráneas y la promesa eterna de renovación del nuevo día.">
+      <div class="shop-card__image" onclick="openLightbox(this.closest('.shop-card'))">
+        <img src="assets/obras/alba-sobre-el-mar.jpg" alt="Alba sobre el Mar" loading="lazy">
+        <div class="shop-card__overlay"><span>Ver obra +</span></div>
+        <span class="shop-card__badge shop-card__badge--vendida">Obra vendida</span>
+      </div>
+      <div class="shop-card__body">
+        <div class="shop-card__meta"><span>Horizontes Suspendidos</span> · <span>2024</span></div>
+        <h3 class="shop-card__title">Alba sobre el Mar</h3>
+        <p class="shop-card__desc">Óleo sobre lienzo · 130 × 90 cm</p>
+        <div class="shop-card__footer">
+          <div>
+            <div class="shop-card__price">3.400 €</div>
+            <div class="shop-card__price-note">Original con certificado</div>
+          </div>
+          <button class="shop-card__action" onclick="window.location.href='index.html?obra=' + encodeURIComponent('Alba sobre el Mar') + '#contacto'">Solicitar información →</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Bloques de certificado y envíos -->
+  <div class="cert-block reveal" style="text-align:center;max-width:700px;margin:var(--spacing-lg) auto 0;" data-i18n="shop.certBlock">✦ Todas las obras originales incluyen certificado de autenticidad firmado por la artista.
+
+Se realizan envíos nacionales e internacionales con embalaje profesional y seguro. Los gastos de envío se informarán durante el proceso de consulta.</div>
+</main>
+
+<!-- ===== LIGHTBOX PREMIUM ===== -->
+<div class="lb-overlay night-gallery" id="lb-overlay" role="dialog" aria-hidden="true">
+  <div class="night-gallery__ambient" aria-hidden="true"></div>
+  <div class="night-gallery__spotlight" aria-hidden="true"></div>
+  <button class="lb-close" onclick="closeLightbox()" aria-label="Cerrar">✕</button>
+  <span class="lb-counter" id="lb-counter">1 / 6</span>
+  <button class="lb-nav lb-prev" onclick="lbPrev()" aria-label="Anterior">←</button>
+  <button class="lb-nav lb-next" onclick="lbNext()" aria-label="Siguiente">→</button>
+  <div class="lb-content">
+    <div class="lb-image" id="lb-image"><img src="" alt="" id="lb-img"></div>
+    <div class="lb-info" id="lb-info"></div>
+  </div>
+</div>
+
+
+
+<footer class="footer"><div class="container">
+  <div class="footer__social">
+    <a href="https://instagram.com/yanayavorskaya" class="soc-icon soc-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="https://x.com/yanayavorskaya" class="soc-icon soc-x" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://pinterest.com/yanayavorskaya" class="soc-icon soc-pin" target="_blank" rel="noopener" aria-label="Pinterest"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg></a>
+    <a href="https://youtube.com/@yanayavorskaya" class="soc-icon soc-yt" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://linkedin.com/in/yanayavorskaya" class="soc-icon soc-li" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="https://facebook.com/yanayavorskaya" class="soc-icon soc-fb" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
+  <div class="footer__inner">
+    <p class="footer__copy" data-i18n="footer.copy">© 2026 Yana Yavorskaya. Todos los derechos reservados.</p>
+    <ul class="footer__links">
+      <li><a href="sobre-mi.html" data-i18n="footer.bio">Bio</a></li>
+      <li><a href="noticias.html" data-i18n="footer.noticias">Noticias</a></li>
+      <li><a href="obras-disponibles.html" data-i18n="footer.obras">Obras</a></li>
+      <li><a href="legal/aviso-legal.html" data-i18n="footer.legal">Aviso Legal</a></li>
+      <li><a href="legal/privacidad.html" data-i18n="footer.privacy">Privacidad</a></li>
+      <li><a href="legal/cookies.html" data-i18n="footer.cookies">Cookies</a></li>
+      <li><a href="legal/terminos.html" data-i18n="footer.terms">Términos</a></li>
+      <li><a href="#" onclick="openSitemap(event)" data-i18n="footer.sitemap">Mapa del sitio</a></li>
+    </ul>
+  </div>
+</div></footer>
+
+<script>
+/* ===== LIGHTBOX PREMIUM ===== */
+var allCards = [];
+var lbIndex = 0;
+
+function collectCards() {
+  allCards = Array.from(document.querySelectorAll('.shop-card'));
+}
+
+function openLightbox(card) {
+  collectCards();
+  if (!card) return;
+  lbIndex = allCards.indexOf(card);
+  if (lbIndex < 0) lbIndex = 0;
+  try { renderLightbox(); } catch(e) { console.error('renderLightbox error', e); }
+  var ov = document.getElementById('lb-overlay');
+  if (ov) {
+    ov.classList.add('is-open');
+    ov.setAttribute('aria-hidden','false');
+    ov.style.setProperty('display', 'flex', 'important');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeLightbox() {
+  var ov = document.getElementById('lb-overlay');
+  if (ov) {
+    ov.classList.remove('is-open');
+    ov.setAttribute('aria-hidden','true');
+    ov.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  var img = document.getElementById('lb-img');
+  if (img) img.classList.remove('zoomed');
+}
+
+function renderLightbox() {
+  var c = allCards[lbIndex];
+  if (!c) return;
+  var img = c.querySelector('.shop-card__image img');
+  var src = img ? img.src : '';
+  var title = c.dataset.title || '';
+  var price = c.dataset.price || '';
+  var year = c.dataset.year || '';
+  var tech = c.dataset.tech || '';
+  var size = c.dataset.size || '';
+  var collection = c.dataset.collection || '';
+  var statusText = c.dataset.statusText || '';
+  var desc = c.dataset.desc || '';
+
+  var lbImg = document.getElementById('lb-img');
+  if (lbImg) {
+    lbImg.src = src;
+    lbImg.alt = title;
+    lbImg.classList.remove('zoomed');
+  }
+  var lbCounter = document.getElementById('lb-counter');
+  if (lbCounter) lbCounter.textContent = (lbIndex + 1) + ' / ' + allCards.length;
+
+  var collLabel = (window.MuseoI18n && MuseoI18n.t) ? MuseoI18n.t('shop.lbCollection') : 'Colección';
+  var reqBtn = (window.MuseoI18n && MuseoI18n.t) ? MuseoI18n.t('shop.requestBtn') : 'Solicitar información →';
+  var infoHtml = '';
+  infoHtml += '<h2>' + title + '</h2>';
+  infoHtml += '<div class="lb-collection">' + collLabel + ' ' + collection + '</div>';
+  infoHtml += '<div class="lb-meta-row"><span>' + year + '</span><span>' + tech + '</span><span>' + size + '</span></div>';
+  if (price) { infoHtml += '<div class="lb-price">' + price + ' €</div>'; }
+  var statusColor = (c.dataset.status === 'disponible') ? 'var(--accent)' : '#999';
+  infoHtml += '<div class="lb-status" style="color:' + statusColor + '">' + statusText + '</div>';
+  infoHtml += '<div class="lb-desc">' + desc.replace(/\n/g, '<br>') + '</div>';
+  infoHtml += '<button class="btn btn--primary" onclick="window.location.href=\'index.html?obra=' + encodeURIComponent(title) + '#contacto\'" style="margin-bottom:0.5rem;width:100%;letter-spacing:0.15em;font-size:0.75rem;padding:0.9rem;">' + reqBtn + '</button>';
+  
+  var lbInfo = document.getElementById('lb-info');
+  if (lbInfo) lbInfo.innerHTML = infoHtml;
+}
+
+function lbPrev() { if (lbIndex > 0) { lbIndex--; renderLightbox(); } }
+function lbNext() { if (lbIndex < allCards.length - 1) { lbIndex++; renderLightbox(); } }
+window.refreshLightboxIfOpen = function() {
+  var ov = document.getElementById('lb-overlay');
+  if (ov && ov.classList.contains('is-open')) renderLightbox();
+};
+
+document.getElementById('lb-overlay').addEventListener('click', function(e){ if (e.target === this) closeLightbox(); });
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') { closeLightbox(); closeInquiry(); }
+  var lbOpen = document.getElementById('lb-overlay').classList.contains('is-open');
+  if (lbOpen && e.key === 'ArrowRight') lbNext();
+  if (lbOpen && e.key === 'ArrowLeft') lbPrev();
+});
+
+/* Zoom en lightbox */
+document.getElementById('lb-img').addEventListener('click', function(e){
+  e.stopPropagation();
+  this.classList.toggle('zoomed');
+});
+
+/* ===== MODAL INQUIRY ===== */
+function openInquiry(obra, precio) {
+  var m = document.getElementById('shop-modal');
+  if (!m) { window.location.href = 'index.html?obra=' + encodeURIComponent(obra) + '#contacto'; return; }
+  document.getElementById('shop-modal-title').textContent = obra;
+  var precioStr = precio ? ' (' + precio + ' €)' : '';
+  document.getElementById('shop-modal-text').textContent = 'Para recibir información sobre «' + obra + '»' + precioStr + ', contacta con Yana.';
+  m.classList.add('is-open');
+  m.setAttribute('aria-hidden','false');
+  closeLightbox();
+}
+function closeInquiry() {
+  var m = document.getElementById('shop-modal');
+  if (!m) return;
+  m.classList.remove('is-open');
+  m.setAttribute('aria-hidden','true');
+}
+if (document.getElementById('shop-modal')) document.getElementById('shop-modal').addEventListener('click', function(e){ if (e.target === this) closeInquiry(); });
+
+/* ===== FILTROS ===== */
+document.querySelectorAll('.shop-filter').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.shop-filter').forEach(function(x){ x.classList.remove('active'); });
+    this.classList.add('active');
+    var f = this.dataset.filter;
+    document.querySelectorAll('.shop-card').forEach(function(c){
+      if (f === 'all') { c.style.display = ''; }
+      else if (f === 'disponible' || f === 'reservada' || f === 'vendida') {
+        c.style.display = (c.dataset.status === f) ? '' : 'none';
+      } else {
+        c.style.display = (c.dataset.collection === f) ? '' : 'none';
+      }
+    });
+  });
+});
+
+collectCards();
+</script>
+<!-- ===== MAPA DEL SITIO MODAL ===== -->
+<div class="shop-modal" id="sitemap-modal" role="dialog" aria-hidden="true">
+  <div class="shop-modal__inner" style="max-width: 780px;">
+    <button class="shop-modal__close" onclick="closeSitemap()" aria-label="Cerrar">✕</button>
+    <div class="invitation__crest">✦</div>
+    <h3 class="shop-modal__title" style="margin-bottom: 1.5rem; text-align: center;">Mapa del sitio</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2rem; text-align: left; font-family: var(--sans); font-size: 0.88rem;">
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Galería & Obras</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="obras-disponibles.html" style="color: var(--text);">Catálogo Completo</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Luz y Sombra</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Geometría Sagrada</a></li>
+          <li><a href="index.html#colecciones" style="color: var(--text-secondary);">Horizontes Interiores</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Estudio & Ensayos</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="sobre-mi.html" style="color: var(--text);">Biografía & Filosofía</a></li>
+          <li><a href="index.html#estudio" style="color: var(--text-secondary);">El Estudio en Madrid</a></li>
+          <li><a href="noticias.html" style="color: var(--text);">Noticias del Estudio</a></li>
+          <li><a href="index.html#exposiciones" style="color: var(--text-secondary);">Exposiciones Internacionales</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Contacto & Legal</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="index.html#contacto" style="color: var(--text);">Citas Privadas & Contacto</a></li>
+          <li><a href="legal/aviso-legal.html" style="color: var(--text-secondary);">Aviso Legal</a></li>
+          <li><a href="legal/privacidad.html" style="color: var(--text-secondary);">Privacidad</a></li>
+          <li><a href="legal/cookies.html" style="color: var(--text-secondary);">Cookies</a></li>
+          <li><a href="legal/terminos.html" style="color: var(--text-secondary);">Términos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSitemap(e) { if(e) e.preventDefault(); var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.add('is-open'); sm.setAttribute('aria-hidden','false'); } }
+function closeSitemap() { var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.remove('is-open'); sm.setAttribute('aria-hidden','true'); } }
+</script>
+
+<!-- ===== MODAL SIMULADOR DE ESCALA EN PARED ===== -->
+<div class="shop-modal" id="room-modal" role="dialog" aria-hidden="true" style="z-index: 600;">
+  <div class="shop-modal__inner" style="max-width: 1100px; width: 96%; padding: 2.2rem; background: var(--bg); border: 1px solid var(--border); box-shadow: var(--shadow-lg);">
+    <button class="shop-modal__close" onclick="closeRoomSimulator()" aria-label="Cerrar">✕</button>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+      <div>
+        <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); display: block; font-family: var(--sans);">Simulador Arquitectónico de Escala</span>
+        <h3 id="room-artwork-title" style="font-family: var(--serif); font-size: 1.9rem; font-weight: 300; margin: 0;"></h3>
+        <p id="room-artwork-size" style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;"></p>
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="room-scene-btn active" onclick="switchRoomScene('living', this)">🛋️ Salón Marfil</button>
+        <button class="room-scene-btn" onclick="switchRoomScene('concrete', this)">🏛️ Hormigón Loft</button>
+        <button class="room-scene-btn" onclick="switchRoomScene('gallery', this)">👤 Galería (Persona 1,75 m)</button>
+      </div>
+    </div>
+
+    <!-- Escenario Interactivo de Pared -->
+    <div id="room-scene-container" class="room-scene room-scene--living">
+      <div class="room-spotlight"></div>
+      
+      <div id="room-artwork-frame" class="room-artwork-frame">
+        <img id="room-artwork-img" src="" alt="Obra en pared" />
+      </div>
+
+      <div id="room-human-silhouette" class="room-human" style="display: none;">
+        <div class="human-head"></div>
+        <div class="human-body"></div>
+        <span class="human-label">Ref: 1,75 m</span>
+      </div>
+
+      <div id="room-living-sofa" class="room-sofa">
+        <div class="sofa-back"></div>
+        <div class="sofa-seat"></div>
+        <span class="sofa-label">Sofá diseño: 2,20 m ancho</span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border-light); font-size: 0.82rem; color: var(--text-secondary);">
+      <div>📐 Escala visual de alta precisión fundamentada en las medidas reales. Incluye margen de caja americana.</div>
+      <button class="btn btn--primary" onclick="closeRoomSimulator(); openInquiry(document.getElementById('room-artwork-title').textContent, '')" style="padding: 0.9rem 2rem; font-size: 0.72rem; letter-spacing: 0.18em;">SOLICITAR ESTA PIEZA EN DIRECTO →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== CHAT ASSISTANT (BOTTOM RIGHT) ===== -->
+<div class="chat-assistant">
+  <button class="chat-assistant__trigger" id="chat-trigger" aria-label="Abrir chat">
+    <img src="assets/logo.png" alt="" width="34" height="34">
+  </button>
+</div>
+<div class="chat-panel" id="chat-panel" role="dialog" aria-hidden="true">
+  <div class="chat-panel__header">
+    <img src="assets/logo.png" alt="" width="36" height="36">
+    <div class="chat-panel__header-info">
+      <div class="chat-panel__header-name" data-i18n="chat.name">Yana Yavorskaya</div>
+      <div class="chat-panel__header-status" data-i18n="chat.status">Disponible</div>
+    </div>
+    <button class="chat-panel__close" id="chat-close" aria-label="Cerrar chat">✕</button>
+  </div>
+  <div class="chat-panel__messages" id="chat-messages"></div>
+  <div class="chat-panel__quick-replies" id="chat-quick">
+    <button class="chat-panel__quick-reply" data-msg="Háblame de la colección Luz y Sombra" data-i18n="chat.q1">Luz y Sombra</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Hay obras disponibles?" data-i18n="chat.q3">Disponibilidad</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Qué técnica utilizas?" data-i18n="chat.q2">Técnica</button>
+    <button class="chat-panel__quick-reply" data-msg="Cuéntame sobre las exposiciones" data-i18n="chat.q4">Exposiciones</button>
+  </div>
+  <div class="chat-panel__input-area">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta…" data-i18n="chat.placeholder">
+    <button id="chat-send" data-i18n="chat.send">Enviar</button>
+  </div>
+</div>
+
+<!-- ===== SCROLL UP (BOTTOM LEFT) ===== -->
+<button class="scroll-up" id="scroll-up" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<script src="js/museum.js"></script>
+</body>
+</html>

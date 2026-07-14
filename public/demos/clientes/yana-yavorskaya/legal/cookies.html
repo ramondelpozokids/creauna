@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>Política de Cookies — Yana Yavorskaya</title>
+  <link rel="stylesheet" href="../css/museum.css">
+  <link rel="icon" href="../assets/logo.png" type="image/png">
+  <style>
+    .legal-page { padding: 8rem 0 4rem; min-height: 100vh; }
+    .legal-page h1 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; margin-bottom: 0.5rem; }
+    .legal-page h2 { font-size: 1.6rem; font-weight: 400; margin-top: 2.5rem; margin-bottom: 1rem; font-family: var(--serif); }
+    .legal-page h3 { font-size: 1.2rem; margin-top: 1.5rem; }
+    .legal-page p, .legal-page li { font-size: 1rem; line-height: 1.8; color: var(--text-secondary); max-width: 680px; }
+    .legal-page ul { padding-left: 1.5rem; margin: 1rem 0; }
+    .legal-page li { margin-bottom: 0.5rem; }
+    .legal-page .back-link { display: inline-block; margin-bottom: 3rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); }
+    .legal-page .back-link:hover { color: var(--accent); }
+    .legal-page .last-update { font-size: 0.8rem; color: var(--text-tertiary); margin-top: 4rem; }
+    .cookie-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    .cookie-table th, .cookie-table td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .cookie-table th { font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; color: var(--text-tertiary); }
+  </style>
+  <meta name="vercel-toolbar" content="false">
+</head>
+<body>
+  <div class="nav"><div class="nav__inner"><a href="../index.html" class="nav__brand" data-i18n="nav.brand">Yana Yavorskaya</a></div></div>
+
+  <main class="container container-narrow legal-page">
+    <a href="../index.html" class="back-link" data-i18n="legal.back">← Volver al inicio</a>
+    <h1 data-i18n="legal.cookies.title">Política de Cookies</h1>
+    <p class="text-secondary"><span data-i18n="legal.update">Última actualización</span>: 11 de julio de 2026</p>
+
+    <h2>1. ¿Qué son las Cookies?</h2>
+    <p>Las cookies son pequeños archivos de texto que los sitios web instalan en el dispositivo del usuario cuando este los visita. Permiten que el sitio web recuerde información sobre la visita, como el idioma preferido y otras opciones.</p>
+
+    <h2>2. Tipos de Cookies Utilizadas</h2>
+    <h3>2.1. Cookies Técnicas (Necesarias)</h3>
+    <p>Son esenciales para el funcionamiento del Sitio Web. Permiten la navegación básica y la funcionalidad principal.</p>
+    <table class="cookie-table">
+      <thead><tr><th>Nombre</th><th>Propósito</th><th>Duración</th></tr></thead>
+      <tbody>
+        <tr><td>museo_session</td><td>Gestión de sesión de navegación</td><td>Sesión</td></tr>
+        <tr><td>museo_prefs</td><td>Preferencias de visualización</td><td>1 año</td></tr>
+        <tr><td>cookie_consent</td><td>Registro del consentimiento de cookies</td><td>1 año</td></tr>
+      </tbody>
+    </table>
+
+    <h3>2.2. Cookies Analíticas</h3>
+    <p>Nos ayudan a comprender cómo interactúan los visitantes con el Sitio Web. Utilizamos herramientas de análisis que anonimizan las direcciones IP.</p>
+    <table class="cookie-table">
+      <thead><tr><th>Nombre</th><th>Propósito</th><th>Duración</th></tr></thead>
+      <tbody>
+        <tr><td>_ga</td><td>Identificador anónimo (Google Analytics)</td><td>2 años</td></tr>
+        <tr><td>_ga_*</td><td>Identificador de sesión anónimo</td><td>2 años</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3. Almacenamiento Local (IndexedDB y localStorage)</h2>
+    <p>Además de las cookies tradicionales, este Sitio Web utiliza tecnologías de almacenamiento local del navegador (IndexedDB y localStorage) para guardar preferencias del usuario como favoritos, historial de obras visitadas y modo de visualización. Estos datos se almacenan exclusivamente en el dispositivo del usuario, no se transmiten a ningún servidor externo, y son controlados en todo momento por el usuario.</p>
+
+    <h2>4. Gestión de Cookies</h2>
+    <p>El usuario puede permitir, bloquear o eliminar las cookies instaladas mediante la configuración de su navegador: Chrome (Configuración → Privacidad y seguridad), Safari (Preferencias → Privacidad), Firefox (Opciones → Privacidad y Seguridad), Edge (Configuración → Cookies y permisos del sitio).</p>
+
+    <h2>5. Modificaciones</h2>
+    <p>Nos reservamos el derecho a modificar la presente Política de Cookies en cualquier momento. Las modificaciones entrarán en vigor desde su publicación en el Sitio Web.</p>
+
+    <p class="last-update" data-i18n="legal.copyright">© 2026 Yana Yavorskaya. Todos los derechos reservados.</p>
+  </main>
+
+  <script src="../js/i18n-content.js"></script>
+  <script src="../js/db.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script>MuseoI18n.init();</script>
+<!-- ===== MAPA DEL SITIO MODAL ===== -->
+<div class="shop-modal" id="sitemap-modal" role="dialog" aria-hidden="true">
+  <div class="shop-modal__inner" style="max-width: 780px;">
+    <button class="shop-modal__close" onclick="closeSitemap()" aria-label="Cerrar">✕</button>
+    <div class="invitation__crest">✦</div>
+    <h3 class="shop-modal__title" style="margin-bottom: 1.5rem; text-align: center;">Mapa del sitio</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2rem; text-align: left; font-family: var(--sans); font-size: 0.88rem;">
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Galería & Obras</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="../obras-disponibles.html" style="color: var(--text);">Catálogo Completo</a></li>
+          <li><a href="../index.html#colecciones" style="color: var(--text-secondary);">Luz y Sombra</a></li>
+          <li><a href="../index.html#colecciones" style="color: var(--text-secondary);">Geometría Sagrada</a></li>
+          <li><a href="../index.html#colecciones" style="color: var(--text-secondary);">Horizontes Interiores</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Estudio & Ensayos</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="../sobre-mi.html" style="color: var(--text);">Biografía & Filosofía</a></li>
+          <li><a href="../index.html#estudio" style="color: var(--text-secondary);">El Estudio en Madrid</a></li>
+          <li><a href="../noticias.html" style="color: var(--text);">Noticias del Estudio</a></li>
+          <li><a href="../index.html#exposiciones" style="color: var(--text-secondary);">Exposiciones Internacionales</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong style="font-family: var(--serif); font-size: 1.15rem; color: var(--accent); display:block; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.3rem;">Contacto & Legal</strong>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0;">
+          <li><a href="../index.html#contacto" style="color: var(--text);">Citas Privadas & Contacto</a></li>
+          <li><a href="aviso-legal.html" style="color: var(--text-secondary);">Aviso Legal</a></li>
+          <li><a href="privacidad.html" style="color: var(--text-secondary);">Privacidad</a></li>
+          <li><a href="cookies.html" style="color: var(--text-secondary);">Cookies</a></li>
+          <li><a href="terminos.html" style="color: var(--text-secondary);">Términos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSitemap(e) { if(e) e.preventDefault(); var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.add('is-open'); sm.setAttribute('aria-hidden','false'); } }
+function closeSitemap() { var sm = document.getElementById('sitemap-modal'); if(sm) { sm.classList.remove('is-open'); sm.setAttribute('aria-hidden','true'); } }
+</script>
+
+
+<!-- ===== CHAT ASSISTANT (BOTTOM RIGHT) ===== -->
+<div class="chat-assistant">
+  <button class="chat-assistant__trigger" id="chat-trigger" aria-label="Abrir chat">
+    <img src="../assets/logo.png" alt="" width="34" height="34">
+  </button>
+</div>
+<div class="chat-panel" id="chat-panel" role="dialog" aria-hidden="true">
+  <div class="chat-panel__header">
+    <img src="../assets/logo.png" alt="" width="36" height="36">
+    <div class="chat-panel__header-info">
+      <div class="chat-panel__header-name" data-i18n="chat.name">Yana Yavorskaya</div>
+      <div class="chat-panel__header-status" data-i18n="chat.status">Disponible</div>
+    </div>
+    <button class="chat-panel__close" id="chat-close" aria-label="Cerrar chat">✕</button>
+  </div>
+  <div class="chat-panel__messages" id="chat-messages"></div>
+  <div class="chat-panel__quick-replies" id="chat-quick">
+    <button class="chat-panel__quick-reply" data-msg="Háblame de la colección Luz y Sombra" data-i18n="chat.q1">Luz y Sombra</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Hay obras disponibles?" data-i18n="chat.q3">Disponibilidad</button>
+    <button class="chat-panel__quick-reply" data-msg="¿Qué técnica utilizas?" data-i18n="chat.q2">Técnica</button>
+    <button class="chat-panel__quick-reply" data-msg="Cuéntame sobre las exposiciones" data-i18n="chat.q4">Exposiciones</button>
+  </div>
+  <div class="chat-panel__input-area">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta…" data-i18n="chat.placeholder">
+    <button id="chat-send" data-i18n="chat.send">Enviar</button>
+  </div>
+</div>
+
+<!-- ===== SCROLL UP (BOTTOM LEFT) ===== -->
+<button class="scroll-up" id="scroll-up" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<script src="../js/museum.js"></script>
+</body>
+</html>
