@@ -34,7 +34,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pricing',
     keywords: ['precio', 'precios', 'plan', 'planes', 'cuanto cuesta', 'cuánto cuesta', 'tarifa', 'coste', 'costo', 'gratis', 'pago', 'suscripción', 'mensual', 'anual'],
-    answer: 'Planes CREAUNA:\n\n• Gratis — 0€, 1 sitio, 15 créditos IA/mes\n• Pro — desde 15€/mes (anual) o 19€/mes, 120 créditos, dominio propio\n• Business — desde 39€/mes (anual) o 49€/mes, sitios ilimitados, 300 créditos\n\nWeb a Medida aparte: 1.790€ + IVA (máximo web premium). Detalle en /precios',
+    answer: 'Dos caminos en /precios:\n\n**Opción 1 — Studio (tú la haces):**\n• Gratis — 0€, probar sin tarjeta (15 cambios/mes, sin exportación completa)\n• Pro — desde 15€/mes (anual) o 19€/mes, exportas archivos y publicas tú\n• Business — desde 39€/mes, equipos y agencias\n\n**Opción 2 — Te la hacemos (pago único):**\n• Web nueva particular — desde 690€\n• Autónomo — 890€ · PYME — 1.290€\n• Web a Medida — 1.790€ + IVA\n\nDominio y hosting no incluidos (presupuesto aparte si lo pides).',
   },
   {
     id: 'credits',
@@ -69,7 +69,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'modernization',
     keywords: ['modernizar', 'modernización', 'modernizacion', 'web antigua', 'web vieja', 'rescate', 'before after', 'antes después', 'antigua'],
-    answer: 'Modernización de webs antiguas (5+ años). Planes por perfil:\n\n• Particular — desde 690€\n• Autónomo — 890€ (Rescate Digital)\n• Empresa/PYME — 1.290€\n• Ya tengo web (Premium) — 1.790€\n\nAntes/Después interactivo en /modernizacion. Preview gratis en /studio',
+    answer: 'Modernizar solo compensa si ya tienes web antigua con contenido que migrar. Si puedes empezar de cero, suele salir más barato:\n\n• Web nueva en Studio — desde 15€/mes\n• Web nueva hecha por nosotros — desde 690€ pago único\n\nModernización (migrar web vieja):\n• Particular — 690€ · Autónomo — 890€ · PYME — 1.290€ · Premium — 1.790€\n\nDetalle en /modernizacion y /precios',
   },
   {
     id: 'custom-web',
@@ -84,7 +84,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'domain',
     keywords: ['dominio', 'hosting', 'publicar', 'subir', 'servidor', 'url propia', 'creauna.com'],
-    answer: 'CREAUNA genera y entrega tu web, pero la subida a tu dominio la haces tú (o contratas el plan Business que incluye hosting 1 año). Te damos todos los archivos listos para publicar.',
+    answer: 'CREAUNA crea la web y te entrega los archivos (HTML/CSS/JS). Dominio y hosting no están incluidos: los contratas tú (~10€/año dominio, ~5–15€/mes hosting). Si quieres que lo gestionemos nosotros, pídelo en /contacto — presupuesto aparte.',
   },
   {
     id: 'payment',
@@ -99,7 +99,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'free-trial',
     keywords: ['prueba', 'trial', 'probar', 'demo', 'test', 'sin tarjeta', 'gratuito'],
-    answer: 'Puedes empezar gratis con 15 créditos/mes sin tarjeta. El plan Pro incluye 14 días de prueba. Abre el Studio en /studio y crea tu primera web ahora mismo.',
+    answer: 'Gratis = probar el Studio sin tarjeta: ver muestras, personalizar y hacer hasta 15 cambios al mes. No incluye exportación completa ni entrega final. Para la web terminada: Pro (desde 15€/mes) o pago único desde 690€ si te la hacemos nosotros.',
   },
   {
     id: 'cancel',
@@ -139,7 +139,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'business-plan',
     keywords: ['business', 'empresa', 'agencia', 'equipo', 'colaboración', 'colaboracion', 'hosting incluido'],
-    answer: 'El plan Business (49€/mes, 300 créditos) incluye hosting + dominio 1 año, colaboración en equipo ilimitada, soporte VIP con SLA y descuento en webs a medida. Ideal para agencias. Detalle en /precios',
+    answer: 'El plan Business (desde 39€/mes anual, 300 créditos) es para agencias y equipos: proyectos ilimitados, colaboración, soporte VIP con SLA y −20% en web a medida. Dominio y hosting no incluidos — te entregamos archivos. Detalle en /precios',
   },
   {
     id: 'pro-plan',

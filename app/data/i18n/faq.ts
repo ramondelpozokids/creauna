@@ -16,7 +16,7 @@ export const faqPageI18n = {
       },
       {
         q: '¿Puedo empezar sin pagar ni poner tarjeta?',
-        a: 'Sí. El plan Gratis incluye 1 sitio en subdominio creauna.app, hasta 5 páginas y 15 créditos de edición al mes. Puedes probar el flujo completo antes de subir a Pro o Business.',
+        a: 'Sí. El plan Gratis te deja probar el Studio: elegir muestra, personalizar y ver la preview con hasta 15 cambios al mes. No incluye exportación completa ni entrega final — es para probar antes de contratar Pro o pedirnos la web hecha.',
       },
       {
         q: '¿Cuánto cuesta cada cambio con IA en el Studio?',
@@ -28,15 +28,15 @@ export const faqPageI18n = {
       },
       {
         q: '¿Qué incluye el plan Pro frente al Gratis?',
-        a: 'Hasta 3 sitios, dominio propio, 120 créditos/mes, sin marca CREAUNA, exportación de código completa, blog, formularios, SEO y soporte prioritario. Incluye 14 días de prueba.',
+        a: 'Exportación completa de archivos (HTML/CSS/JS), 120 créditos/mes, hasta 3 proyectos, sin marca CREAUNA, blog, formularios, SEO y soporte prioritario. Pagas mientras uses el Studio; cuando tengas la web lista, descargas y publicas en tu hosting.',
       },
       {
-        q: '¿Puedo usar mi propio dominio (.com, .es)?',
-        a: 'Sí, desde el plan Pro. Conectas tu dominio y publicas en tu marca. En Gratis publicas en un subdominio creauna.app.',
+        q: '¿Incluís dominio o hosting?',
+        a: 'No por defecto. CREAUNA crea la web y te entrega los archivos. Compras el dominio y contratas el hosting donde prefieras. Si quieres que lo gestionemos nosotros, pídelo en /contacto — presupuesto aparte.',
       },
       {
         q: '¿Puedo exportar la web y alojarla donde quiera?',
-        a: 'En Pro y Business puedes exportar HTML, CSS y JS limpio y subirlo a tu hosting. Sin penalización ni permanencia.',
+        a: 'Sí, desde el plan Pro. Exportas HTML, CSS y JS limpio y lo subes a tu hosting. Sin penalización ni permanencia.',
       },
       {
         q: '¿Qué es la Web a Medida de 1.790€?',
@@ -47,8 +47,8 @@ export const faqPageI18n = {
         a: 'Sí. Es un servicio de pago único según el alcance (rescate, rediseño o premium). Puedes ver opciones en /modernizacion o pedir presupuesto en /contacto.',
       },
       {
-        q: '¿Dónde se alojan las webs publicadas?',
-        a: 'En infraestructura gestionada por CREAUNA (subdominio o dominio propio según plan). Business incluye hosting y dominio el primer año con guía de configuración.',
+        q: '¿Dónde se publica la web?',
+        a: 'Donde tú decidas. Te entregamos los archivos y una guía para subirlos a tu hosting y conectar tu dominio. Si prefieres que lo hagamos nosotros, es un servicio adicional con presupuesto cerrado.',
       },
       {
         q: '¿Mis datos y proyectos están seguros?',
@@ -75,7 +75,7 @@ export const faqPageI18n = {
       },
       {
         q: 'Can I start without paying or adding a card?',
-        a: 'Yes. The Free plan includes 1 site on a creauna.app subdomain, up to 5 pages and 15 editing credits per month. You can try the full flow before upgrading to Pro or Business.',
+        a: 'Yes. Free lets you try Studio: pick a sample, customize and preview with up to 15 changes per month. No full export or final delivery — it is to test before Pro or a done-for-you project.',
       },
       {
         q: 'How much does each AI change in Studio cost?',
@@ -87,15 +87,15 @@ export const faqPageI18n = {
       },
       {
         q: 'What does Pro include compared to Free?',
-        a: 'Up to 3 sites, custom domain, 120 credits/month, no CREAUNA branding, full code export, blog, forms, SEO and priority support. Includes a 14-day trial.',
+        a: 'Full file export (HTML/CSS/JS), 120 credits/month, up to 3 projects, no CREAUNA branding, blog, forms, SEO and priority support. Pay while you use Studio; when ready, download and publish on your hosting.',
       },
       {
-        q: 'Can I use my own domain (.com, .es)?',
-        a: 'Yes, from the Pro plan. Connect your domain and publish under your brand. On Free you publish on a creauna.app subdomain.',
+        q: 'Do you include domain or hosting?',
+        a: 'Not by default. CREAUNA builds the site and delivers files. You buy the domain and hosting wherever you prefer. Want us to manage it? Ask at /contacto — separate quote.',
       },
       {
         q: 'Can I export the site and host it elsewhere?',
-        a: 'On Pro and Business you can export clean HTML, CSS and JS and upload to your hosting. No penalty or lock-in.',
+        a: 'Yes, from the Pro plan. Export clean HTML, CSS and JS and upload to your hosting. No penalty or lock-in.',
       },
       {
         q: 'What is the €1,790 Custom Web service?',
@@ -106,8 +106,8 @@ export const faqPageI18n = {
         a: 'Yes. One-time pricing depending on scope (rescue, redesign or premium). See /modernizacion or request a quote at /contacto.',
       },
       {
-        q: 'Where are published sites hosted?',
-        a: 'On infrastructure managed by CREAUNA (subdomain or custom domain per plan). Business includes hosting and domain for the first year with setup guidance.',
+        q: 'Where is the site published?',
+        a: 'Wherever you choose. We deliver files and a guide to upload to your hosting and connect your domain. If you prefer us to handle it, that is an additional service with a fixed quote.',
       },
       {
         q: 'Are my data and projects secure?',

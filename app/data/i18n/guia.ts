@@ -92,7 +92,7 @@ export const guiaI18n = {
         note: 'Importante: CREAUNA diseña y te entrega tu web. La publicación en tu dominio la haces tú (o tu técnico de confianza).',
         paragraphs: [
           'Cuando tu diseño esté finalizado y hayas completado el pago, te entregamos la web de una de estas formas:',
-          'Para publicar: sube los archivos a tu hosting, conecta tu dominio (.com, .es…) y listo. Si contratas el plan Business, incluimos hosting durante 1 año con guía paso a paso.',
+          'Para publicar: sube los archivos a tu hosting y conecta tu dominio (.com, .es…). Si quieres que gestionemos dominio y hosting por ti, pídelo en /contacto — presupuesto aparte.',
         ],
         steps: [
           'Enlace privado de preview para revisión final.',
@@ -219,7 +219,7 @@ export const guiaI18n = {
         note: 'Important: CREAUNA designs and delivers your site. You publish it on your domain (or your trusted technician).',
         paragraphs: [
           'When your design is finalized and payment is complete, we deliver your site in one of these ways:',
-          'To publish: upload files to your hosting, connect your domain (.com, .es…) and you are done. Business plan includes 1 year of hosting with step-by-step guidance.',
+          'To publish: upload files to your hosting and connect your domain (.com, .es…). Want us to manage domain and hosting? Ask at /contacto — separate quote.',
         ],
         steps: [
           'Private preview link for final review.',
