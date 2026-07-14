@@ -5,6 +5,31 @@ import PremiumNavbar from './components/PremiumNavbar';
 import { useLanguage } from './components/LanguageProvider';
 import { Sparkles, ArrowRight, ShieldCheck, Zap, Heart, CheckCircle2, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { templateImageUrl } from './lib/templateImages';
+
+const FEATURED_CLIENTS = [
+  {
+    name: 'La Perla Oriental',
+    catEs: 'Restaurante Chino & Dim Sum',
+    catEn: 'Chinese Restaurant & Dim Sum',
+    href: '/demos/clientes/la-perla-oriental/index.html',
+    img: templateImageUrl('sakura'),
+  },
+  {
+    name: 'Yana Yavorskaya',
+    catEs: 'Arte Contemporáneo',
+    catEn: 'Contemporary Art',
+    href: '/demos/clientes/yana-yavorskaya/index.html',
+    img: templateImageUrl('chronicle'),
+  },
+  {
+    name: 'Royal Bang',
+    catEs: 'Tatuajes & Piercing',
+    catEn: 'Tattoos & Piercing',
+    href: '/demos/clientes/royal-bang/index.html',
+    img: templateImageUrl('iron-ink'),
+  },
+] as const;
 
 const translations = {
   es: {
@@ -44,9 +69,6 @@ const translations = {
       title: "Plantillas profesionales",
       subtitle: "Elige un punto de partida y conviértelo en tu negocio digital en minutos.",
       viewMore: "Ver catálogo completo →",
-      atelierCat: "Joyería & Lujo",
-      vesperCat: "Arquitectura & Diseño",
-      sableCat: "Restaurantes & Gastronomía",
     },
     future: {
       tag: "MÁS SIMPLE, MÁS CLARO",
@@ -104,9 +126,6 @@ const translations = {
       title: "Professional templates",
       subtitle: "Pick a starting point and turn it into your digital business in minutes.",
       viewMore: "View full catalog →",
-      atelierCat: "Jewelry & Luxury",
-      vesperCat: "Architecture & Design",
-      sableCat: "Gastronomy & Restaurants",
     },
     future: {
       tag: "SIMPLER, CLEARER",
@@ -327,27 +346,25 @@ export default function CreaunaLanding() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[
-            { img: "/images/luxury-jewelry-atelier-elegant-interior--1.jpg", name: "Atelier", cat: t.templatesSection.atelierCat },
-            { img: "/images/modern-architecture-minimalist-building--1.jpg", name: "Vesper", cat: t.templatesSection.vesperCat },
-            { img: "/images/fine-dining-restaurant-interior-elegant--1.jpg", name: "Sable", cat: t.templatesSection.sableCat },
-          ].map((t, i) => (
+          {FEATURED_CLIENTS.map((client) => (
             <Link 
-              key={i} 
-              href="/templates" 
+              key={client.name} 
+              href={client.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="card-luxe group block rounded-[2rem] overflow-hidden border border-slate-200 bg-white"
             >
               <div className="h-72 relative overflow-hidden">
                 <img 
-                  src={t.img} 
-                  alt={t.name} 
+                  src={client.img} 
+                  alt={client.name} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
                 <div className="absolute bottom-6 left-6 text-white">
-                  <div className="text-2xl font-bold tracking-tight">{t.name}</div>
+                  <div className="text-2xl font-bold tracking-tight">{client.name}</div>
                   <div className="text-xs font-semibold opacity-85 mt-1.5 uppercase tracking-wider bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10 w-fit">
-                    {t.cat}
+                    {lang === 'es' ? client.catEs : client.catEn}
                   </div>
                 </div>
               </div>
