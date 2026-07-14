@@ -151,7 +151,7 @@ export const templatesCatalog: TemplateItem[] = [
     categoryEs: 'Estudio de Tatuajes', categoryEn: 'Tattoo Studio',
     descEs: 'Identidad audaz para estudios de tatuaje, piercing y arte corporal profesional.',
     descEn: 'Bold identity for tattoo studios, piercing shops, and professional body art.',
-    image: p(1874644),
+    image: p(955938),
   },
   {
     id: 16, slug: 'torque', categoryKey: 'services',

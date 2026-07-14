@@ -1,0 +1,24 @@
+/** Clientes reales en home — imágenes locales verificadas (no plantillas genéricas). */
+export const FEATURED_CLIENTS = [
+  {
+    name: 'La Perla Oriental',
+    catEs: 'Restaurante Chino & Dim Sum',
+    catEn: 'Chinese Restaurant & Dim Sum',
+    href: '/demos/clientes/la-perla-oriental/index.html',
+    img: '/images/showcase/la-perla-oriental.jpg',
+  },
+  {
+    name: 'Yana Yavorskaya',
+    catEs: 'Arte Contemporáneo',
+    catEn: 'Contemporary Art',
+    href: '/demos/clientes/yana-yavorskaya/index.html',
+    img: '/images/showcase/yana-yavorskaya.jpg',
+  },
+  {
+    name: 'Royal Bang',
+    catEs: 'Tatuajes & Piercing',
+    catEn: 'Tattoos & Piercing',
+    href: '/demos/clientes/royal-bang/index.html',
+    img: '/images/showcase/royal-bang.jpg',
+  },
+] as const;

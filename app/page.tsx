@@ -5,31 +5,8 @@ import PremiumNavbar from './components/PremiumNavbar';
 import { useLanguage } from './components/LanguageProvider';
 import { Sparkles, ArrowRight, ShieldCheck, Zap, Heart, CheckCircle2, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { templateImageUrl } from './lib/templateImages';
-
-const FEATURED_CLIENTS = [
-  {
-    name: 'La Perla Oriental',
-    catEs: 'Restaurante Chino & Dim Sum',
-    catEn: 'Chinese Restaurant & Dim Sum',
-    href: '/demos/clientes/la-perla-oriental/index.html',
-    img: templateImageUrl('sakura'),
-  },
-  {
-    name: 'Yana Yavorskaya',
-    catEs: 'Arte Contemporáneo',
-    catEn: 'Contemporary Art',
-    href: '/demos/clientes/yana-yavorskaya/index.html',
-    img: templateImageUrl('chronicle'),
-  },
-  {
-    name: 'Royal Bang',
-    catEs: 'Tatuajes & Piercing',
-    catEn: 'Tattoos & Piercing',
-    href: '/demos/clientes/royal-bang/index.html',
-    img: templateImageUrl('iron-ink'),
-  },
-] as const;
+import { FEATURED_CLIENTS } from './lib/showcaseClients';
+import { GASTRO_IMAGE_FALLBACK } from './lib/ai/imageFallback';
 
 const translations = {
   es: {
@@ -358,7 +335,11 @@ export default function CreaunaLanding() {
                 <img 
                   src={client.img} 
                   alt={client.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = GASTRO_IMAGE_FALLBACK;
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
                 <div className="absolute bottom-6 left-6 text-white">
