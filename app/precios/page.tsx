@@ -32,17 +32,84 @@ const translations = {
       { icon: Building2, label: 'Autónomo o pyme', plan: 'Pro' },
       { icon: Users, label: 'Agencia o equipo', plan: 'Business' },
     ],
-    compareMarketTitle: 'Resumen de planes CREAUNA',
+    compareMarketTitle: 'Cómo se compara CREAUNA',
     compareMarketSubtitle:
-      'Edición con IA incluida en cada plan. Sin sorpresas ni permanencia.',
-    compareColPlatform: 'Plan',
-    compareColEntry: 'Incluye',
+      'Misma categoría de producto — plataforma IA para webs de negocio — con planes transparentes en euros.',
+    compareColPlatform: 'Plataforma',
+    compareColEntry: 'Plan de entrada',
     compareColPrice: 'Desde',
-    compareColAi: 'IA Studio',
+    compareColAi: 'Qué incluye',
+    marketDisclaimer:
+      'Precios orientativos en euros (jul. 2026), convertidos desde USD cuando aplica. Comprueba siempre la web oficial de cada plataforma.',
     marketRows: [
-      { platform: 'Gratis', plan: '1 sitio · 15 créditos/mes', price: '0€', ai: 'Generación y edición IA', highlight: false },
-      { platform: 'Pro', plan: '3 sitios · dominio propio', price: '15€/mes', ai: '120 créditos Studio/mes', highlight: true },
-      { platform: 'Business', plan: 'Sitios ilimitados · equipo', price: '39€/mes', ai: '300 créditos Studio/mes', highlight: false },
+      {
+        platform: 'Lovable',
+        plan: 'Pro · 100 créditos/mes',
+        price: '~23€/mes',
+        ai: 'Generación por prompt · Dominio propio · Export código',
+        highlight: false,
+      },
+      {
+        platform: 'Emergent',
+        plan: 'Standard · 100 créditos/mes',
+        price: '~18€/mes',
+        ai: 'Apps web y móvil · GitHub · Hosting privado',
+        highlight: false,
+      },
+      {
+        platform: 'Bolt.new',
+        plan: 'Pro · tokens mensuales',
+        price: '~23€/mes',
+        ai: 'IDE en navegador · Dominio · Sin marca en sitio',
+        highlight: false,
+      },
+      {
+        platform: 'Durable',
+        plan: 'Launch · 1 negocio',
+        price: '~20€/mes',
+        ai: 'Web en segundos · CRM · Facturación básica',
+        highlight: false,
+      },
+      {
+        platform: 'Framer',
+        plan: 'Basic · diseño visual',
+        price: '~9€/mes',
+        ai: 'Editor visual · CMS limitado · Sin muestras sectoriales',
+        highlight: false,
+      },
+      {
+        platform: 'CREAUNA',
+        plan: 'Pro · 120 créditos/mes',
+        price: '15€/mes',
+        ai: '9 muestras sectoriales · Legal y SEO · Export HTML · Dominio propio',
+        highlight: true,
+      },
+    ],
+    plansSummaryTitle: 'Planes CREAUNA',
+    creditCompareTitle: 'Coste por edición IA (plan de pago)',
+    creditCompareRows: [
+      { name: 'Lovable Pro', detail: '100 créd./mes · ~23€', cost: '~0,23€' },
+      { name: 'Emergent Standard', detail: '100 créd./mes · ~18€', cost: '~0,18€' },
+      { name: 'CREAUNA Pro', detail: '120 créd./mes · 15€ (anual)', cost: '~0,13€', highlight: true },
+    ],
+    creaunaEdgeTitle: 'Por qué encaja CREAUNA en este mercado',
+    creaunaEdgePoints: [
+      {
+        title: 'Muestras terminadas por sector',
+        body: 'Empiezas desde una web real (restaurante, clínica, hotel…) y personalizas — no desde una página en blanco.',
+      },
+      {
+        title: 'Precio de entrada claro',
+        body: 'Pro desde 15€/mes (anual): por debajo del rango habitual de 20–25€/mes de plataformas similares, con más créditos incluidos.',
+      },
+      {
+        title: 'Créditos predecibles',
+        body: '1 crédito = 1 cambio visible. Sin sorpresas de tokens, despliegues extra ni asientos de editor ocultos.',
+      },
+      {
+        title: 'Entrega profesional',
+        body: 'SEO, aviso legal, cookies, formularios y exportación HTML lista para publicar — pensado para negocios locales en España.',
+      },
     ],
     featuresTitle: 'Comparativa detallada',
     featuresCol: 'Característica',
@@ -51,9 +118,10 @@ const translations = {
       ['Páginas por sitio', 'Hasta 5', 'Ilimitadas', 'Ilimitadas'],
       ['Dominio personalizado', '—', '✓', '✓'],
       ['Quitar marca CREAUNA', '—', '✓', '✓'],
-      ['Plantillas premium', '60', '60', '60'],
+      ['Muestras profesionales por sector', '9', '9', '9'],
+      ['Plantillas del catálogo', '36', '36', '36'],
       ['Créditos Studio IA / mes', '15', '120', '300'],
-      ['Coste por cambio IA', '0€', '~0,16€', '~0,16€'],
+      ['Coste por cambio IA', '0€', '~0,13€', '~0,13€'],
       ['Generación inicial con IA', '✓', '✓', '✓'],
       ['Formularios de contacto', '✓', '✓', '✓'],
       ['SEO básico', '✓', '✓', '✓'],
@@ -99,9 +167,9 @@ const translations = {
     helpSubtitle: 'Consulta la FAQ completa o escríbenos — respondemos en menos de 24h.',
     helpFaq: 'Ver preguntas frecuentes',
     helpContact: 'Contactar',
-    resultsLabel: 'RESULTADOS REALES',
-    resultsTitle: 'Webs con nivel de estudio, no de plantilla genérica.',
-    resultsSubtitle: 'Diseño premium, IA bajo control humano y entrega lista para publicar.',
+    resultsLabel: 'TU NEGOCIO, ONLINE DE VERDAD',
+    resultsTitle: 'Una web profesional. Terminada. Publicable.',
+    resultsSubtitle: 'Elige una muestra de tu sector o descríbenos tu idea — en minutos, no en meses.',
   },
   en: {
     badge: 'CREAUNA PRICING',
@@ -122,17 +190,84 @@ const translations = {
       { icon: Building2, label: 'Freelancer or SMB', plan: 'Pro' },
       { icon: Users, label: 'Agency or team', plan: 'Business' },
     ],
-    compareMarketTitle: 'CREAUNA plans at a glance',
+    compareMarketTitle: 'How CREAUNA compares',
     compareMarketSubtitle:
-      'AI editing included on every plan. No lock-in.',
-    compareColPlatform: 'Plan',
-    compareColEntry: 'Includes',
+      'Same product category — AI platform for business websites — with transparent euro pricing.',
+    compareColPlatform: 'Platform',
+    compareColEntry: 'Entry plan',
     compareColPrice: 'From',
-    compareColAi: 'AI Studio',
+    compareColAi: 'Includes',
+    marketDisclaimer:
+      'Indicative prices in euros (Jul 2026), converted from USD where applicable. Always check each platform’s official site.',
     marketRows: [
-      { platform: 'Free', plan: '1 site · 15 credits/mo', price: '€0', ai: 'AI generation & edits', highlight: false },
-      { platform: 'Pro', plan: '3 sites · custom domain', price: '€15/mo', ai: '120 Studio credits/mo', highlight: true },
-      { platform: 'Business', plan: 'Unlimited sites · team', price: '€39/mo', ai: '300 Studio credits/mo', highlight: false },
+      {
+        platform: 'Lovable',
+        plan: 'Pro · 100 credits/mo',
+        price: '~€23/mo',
+        ai: 'Prompt generation · Custom domain · Code export',
+        highlight: false,
+      },
+      {
+        platform: 'Emergent',
+        plan: 'Standard · 100 credits/mo',
+        price: '~€18/mo',
+        ai: 'Web & mobile apps · GitHub · Private hosting',
+        highlight: false,
+      },
+      {
+        platform: 'Bolt.new',
+        plan: 'Pro · monthly tokens',
+        price: '~€23/mo',
+        ai: 'Browser IDE · Custom domain · No site branding',
+        highlight: false,
+      },
+      {
+        platform: 'Durable',
+        plan: 'Launch · 1 business',
+        price: '~€20/mo',
+        ai: 'Instant site · CRM · Basic invoicing',
+        highlight: false,
+      },
+      {
+        platform: 'Framer',
+        plan: 'Basic · visual design',
+        price: '~€9/mo',
+        ai: 'Visual editor · Limited CMS · No sector samples',
+        highlight: false,
+      },
+      {
+        platform: 'CREAUNA',
+        plan: 'Pro · 120 credits/mo',
+        price: '€15/mo',
+        ai: '9 sector samples · Legal & SEO · HTML export · Custom domain',
+        highlight: true,
+      },
+    ],
+    plansSummaryTitle: 'CREAUNA plans',
+    creditCompareTitle: 'Cost per AI edit (paid plan)',
+    creditCompareRows: [
+      { name: 'Lovable Pro', detail: '100 cred./mo · ~€23', cost: '~€0.23' },
+      { name: 'Emergent Standard', detail: '100 cred./mo · ~€18', cost: '~€0.18' },
+      { name: 'CREAUNA Pro', detail: '120 cred./mo · €15 (annual)', cost: '~€0.13', highlight: true },
+    ],
+    creaunaEdgeTitle: 'Why CREAUNA fits this market',
+    creaunaEdgePoints: [
+      {
+        title: 'Finished sector samples',
+        body: 'Start from a real site (restaurant, clinic, hotel…) and customize — not from a blank canvas.',
+      },
+      {
+        title: 'Clear entry price',
+        body: 'Pro from €15/mo (annual): below the usual €20–25/mo range, with more included credits.',
+      },
+      {
+        title: 'Predictable credits',
+        body: '1 credit = 1 visible change. No token surprises, extra deploy fees or hidden editor seats.',
+      },
+      {
+        title: 'Professional delivery',
+        body: 'SEO, legal pages, forms and HTML export ready to publish — built for local businesses in Spain.',
+      },
     ],
     featuresTitle: 'Full comparison',
     featuresCol: 'Feature',
@@ -141,9 +276,10 @@ const translations = {
       ['Pages per site', 'Up to 5', 'Unlimited', 'Unlimited'],
       ['Custom domain', '—', '✓', '✓'],
       ['Remove CREAUNA branding', '—', '✓', '✓'],
-      ['Premium templates', '60', '60', '60'],
+      ['Professional sector samples', '9', '9', '9'],
+      ['Catalog templates', '36', '36', '36'],
       ['Studio AI credits / month', '15', '120', '300'],
-      ['Cost per AI change', '€0', '~€0.16', '~€0.16'],
+      ['Cost per AI change', '€0', '~€0.13', '~€0.13'],
       ['Initial AI generation', '✓', '✓', '✓'],
       ['Contact forms', '✓', '✓', '✓'],
       ['Basic SEO', '✓', '✓', '✓'],
@@ -189,9 +325,9 @@ const translations = {
     helpSubtitle: 'Browse the full FAQ or get in touch — we reply within 24 hours.',
     helpFaq: 'View FAQ',
     helpContact: 'Contact us',
-    resultsLabel: 'REAL RESULTS',
-    resultsTitle: 'Studio-grade websites, not generic templates.',
-    resultsSubtitle: 'Premium design, AI under human oversight, ready to publish.',
+    resultsLabel: 'YOUR BUSINESS, TRULY ONLINE',
+    resultsTitle: 'A professional website. Finished. Ready to publish.',
+    resultsSubtitle: 'Pick a sample in your industry or describe your idea — in minutes, not months.',
   },
 };
 
@@ -216,7 +352,7 @@ const plans = [
       '1 sitio · subdominio creauna.app',
       'Hasta 5 páginas',
       '15 ediciones IA al mes',
-      '60 plantillas premium',
+      '9 muestras profesionales + 36 plantillas',
       'Vista previa en tiempo real',
       'Marca CREAUNA visible',
     ],
@@ -224,7 +360,7 @@ const plans = [
       '1 site · creauna.app subdomain',
       'Up to 5 pages',
       '15 AI edits per month',
-      '60 premium templates',
+      '9 professional samples + 36 templates',
       'Live preview',
       'CREAUNA branding visible',
     ],
@@ -239,14 +375,15 @@ const plans = [
     priceYearly: 15,
     yearlyTotal: 180,
     credits: 120,
-    perChangeEs: '~0,16€ / cambio',
-    perChangeEn: '~€0.16 / change',
+    perChangeEs: '~0,13€ / cambio',
+    perChangeEn: '~€0.13 / change',
     cta: 'Probar 14 días gratis',
     ctaEn: 'Start 14-day trial',
     href: '/studio',
     popular: true,
     featuresEs: [
       'Hasta 3 sitios activos',
+      '9 muestras profesionales por sector',
       'Dominio propio conectado',
       '120 ediciones IA al mes',
       'Sin marca CREAUNA',
@@ -256,6 +393,7 @@ const plans = [
     ],
     featuresEn: [
       'Up to 3 active sites',
+      '9 professional sector samples',
       'Connect your own domain',
       '120 AI edits per month',
       'No CREAUNA branding',
@@ -274,8 +412,8 @@ const plans = [
     priceYearly: 39,
     yearlyTotal: 468,
     credits: 300,
-    perChangeEs: '~0,16€ / cambio',
-    perChangeEn: '~€0.16 / change',
+    perChangeEs: '~0,13€ / cambio',
+    perChangeEn: '~€0.13 / change',
     cta: 'Hablar con ventas',
     ctaEn: 'Talk to sales',
     href: '/contacto',
@@ -467,6 +605,54 @@ export default function Precios() {
             </tbody>
           </table>
         </div>
+        <p className="mt-4 text-center text-xs text-slate-400 max-w-3xl mx-auto">{t.marketDisclaimer}</p>
+
+        <h3 className="mt-12 mb-6 text-center text-lg font-bold text-slate-900">{t.creaunaEdgeTitle}</h3>
+        <div className="grid md:grid-cols-2 gap-5">
+          {t.creaunaEdgePoints.map((point) => (
+            <div key={point.title} className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-6">
+              <h4 className="font-semibold text-slate-900">{point.title}</h4>
+              <p className="mt-2 text-sm text-slate-600 leading-relaxed">{point.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CREAUNA plans summary */}
+      <div className="container pb-8 max-w-5xl">
+        <h2 className="text-xl font-bold text-slate-950 mb-4 text-center">{t.plansSummaryTitle}</h2>
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                <th className="px-5 py-3 text-left font-semibold">{lang === 'es' ? 'Plan CREAUNA' : 'CREAUNA plan'}</th>
+                <th className="px-4 py-3 text-left font-semibold">{lang === 'es' ? 'Incluye' : 'Includes'}</th>
+                <th className="px-4 py-3 text-center font-semibold">{lang === 'es' ? 'Desde' : 'From'}</th>
+                <th className="px-5 py-3 text-left font-semibold">{lang === 'es' ? 'Créditos Studio' : 'Studio credits'}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              <tr className="hover:bg-slate-50/50">
+                <td className="px-5 py-3.5 font-medium text-slate-900">{lang === 'es' ? 'Gratis' : 'Free'}</td>
+                <td className="px-4 py-3.5 text-slate-600">{lang === 'es' ? '1 sitio · subdominio' : '1 site · subdomain'}</td>
+                <td className="px-4 py-3.5 text-center text-slate-800">0€</td>
+                <td className="px-5 py-3.5 text-slate-600 text-xs">15 {lang === 'es' ? 'créd./mes' : 'cred./mo'}</td>
+              </tr>
+              <tr className="bg-indigo-50/80 font-semibold">
+                <td className="px-5 py-3.5 text-slate-900">Pro</td>
+                <td className="px-4 py-3.5 text-slate-600">{lang === 'es' ? '3 sitios · dominio propio' : '3 sites · custom domain'}</td>
+                <td className="px-4 py-3.5 text-center text-indigo-700">15€/{lang === 'es' ? 'mes' : 'mo'}</td>
+                <td className="px-5 py-3.5 text-indigo-700 text-xs">120 {lang === 'es' ? 'créd./mes' : 'cred./mo'}</td>
+              </tr>
+              <tr className="hover:bg-slate-50/50">
+                <td className="px-5 py-3.5 font-medium text-slate-900">Business</td>
+                <td className="px-4 py-3.5 text-slate-600">{lang === 'es' ? 'Sitios ilimitados · equipo' : 'Unlimited sites · team'}</td>
+                <td className="px-4 py-3.5 text-center text-slate-800">39€/{lang === 'es' ? 'mes' : 'mo'}</td>
+                <td className="px-5 py-3.5 text-slate-600 text-xs">300 {lang === 'es' ? 'créd./mes' : 'cred./mo'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Full feature matrix */}
@@ -523,6 +709,23 @@ export default function Precios() {
         </div>
 
         <p className="text-center text-xs text-slate-500 mb-8">{t.creditsNote}</p>
+
+        <h3 className="text-center text-sm font-bold text-slate-800 mb-4">{t.creditCompareTitle}</h3>
+        <div className="grid md:grid-cols-3 gap-3 mb-8 max-w-3xl mx-auto">
+          {t.creditCompareRows.map((row) => (
+            <div
+              key={row.name}
+              className={`rounded-xl border p-4 text-center text-sm ${
+                row.highlight ? 'border-indigo-300 bg-indigo-50 font-semibold' : 'border-slate-200 bg-white'
+              }`}
+            >
+              <div className="text-slate-900">{row.name}</div>
+              <div className="text-xs text-slate-500 mt-1">{row.detail}</div>
+              <div className={`text-lg mt-2 ${row.highlight ? 'text-indigo-700' : 'text-slate-800'}`}>{row.cost}</div>
+              <div className="text-[10px] text-slate-400 mt-0.5">{lang === 'es' ? 'por cambio' : 'per edit'}</div>
+            </div>
+          ))}
+        </div>
 
         <div className="grid md:grid-cols-2 gap-5">
           <div className="border border-slate-200 rounded-2xl p-5 bg-slate-50">

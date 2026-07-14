@@ -8,6 +8,8 @@ import { getBusinessProfile } from './businessProfiles';
 import { buildSiteBrief, enhanceSiteWithAgents } from './siteAiEnhancer';
 import type { PreviewSection } from './studioEngine';
 import { resolveStudioSector, buildSectorAgentPlaybook } from '../studio/sectorAgentPlaybook';
+import { buildIntentFromDiscovery, synthesizeDiscoveryPrompt } from '../studio/buildIntentFromDiscovery';
+import type { StudioDiscoveryAnswers } from '../studio/discoveryTypes';
 
 export interface InitialSiteResult {
   message: string;
@@ -85,6 +87,66 @@ export async function generateInitialSite(
     motorsUsed: providersUsed.length ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
     source: providersUsed.length ? (aiEnhanced ? 'hybrid' : 'hybrid') : 'rules',
     sectorId: sector?.id,
+    sectorLabel: sectorMeta?.label,
+  };
+}
+
+/** Generación inicial desde wizard de descubrimiento (respuestas estructuradas). */
+export async function generateInitialSiteFromDiscovery(
+  discovery: StudioDiscoveryAnswers,
+  lang: 'es' | 'en'
+): Promise<InitialSiteResult> {
+  const prompt = synthesizeDiscoveryPrompt(discovery, lang);
+  const sector = resolveStudioSector(prompt, discovery.sectorId);
+  const intent = buildIntentFromDiscovery(discovery, lang);
+
+  const tpl = getTemplateBySlug(resolveTemplateSlug(intent.templateSlug)) ?? getTemplateBySlug('iron-ink')!;
+  const preset = getContentPreset(intent.templateSlug);
+  const profile = getBusinessProfile(intent.variant);
+
+  const ruleSections = buildCustomSite(intent, tpl, preset, lang);
+  const sectorMeta = sector
+    ? {
+        id: sector.id,
+        label: lang === 'es' ? sector.labelEs : sector.labelEn,
+        playbook: buildSectorAgentPlaybook(sector, lang),
+      }
+    : undefined;
+  const brief = buildSiteBrief(intent, profile, null, lang, prompt, sectorMeta);
+  const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason } =
+    await enhanceSiteWithAgents(ruleSections, brief);
+
+  const previewSections = toStudioSections(sections);
+  const created = describeCreatedSections(intent.features, lang);
+  const businessName = intent.businessName;
+
+  let motorNote = '';
+  if (providersUsed.length) {
+    motorNote =
+      lang === 'es'
+        ? ` Motores IA activos (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`
+        : ` AI engines active (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`;
+  } else if (aiSkippedReason === 'no_api_keys') {
+    motorNote =
+      lang === 'es'
+        ? ' Añade GEMINI/ANTHROPIC/OPENAI/GROQ en .env.local o Vercel env vars.'
+        : ' Add GEMINI/ANTHROPIC/OPENAI/GROQ to .env.local or Vercel env vars.';
+  }
+
+  const message =
+    lang === 'es'
+      ? `He creado la web de «${businessName}» según tus respuestas: ${created}.${motorNote} Puedes pedirme cambios en cualquier sección.`
+      : `I've created «${businessName}» from your answers: ${created}.${motorNote} Ask me to change any section.`;
+
+  return {
+    message,
+    previewSections,
+    templateSlug: tpl.slug,
+    businessName,
+    changedSectionIds: previewSections.map((s) => s.id),
+    motorsUsed: providersUsed.length ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
+    source: providersUsed.length ? (aiEnhanced ? 'hybrid' : 'hybrid') : 'rules',
+    sectorId: sector?.id ?? discovery.sectorId,
     sectorLabel: sectorMeta?.label,
   };
 }

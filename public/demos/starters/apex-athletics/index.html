@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO & Meta Tags Premium (Premium Fitness) -->
+    <title>APEX ATHLETICS | Club Deportivo de Alto Rendimiento y Bienestar</title>
+    <meta name="description" content="Entrena en el club deportivo más exclusivo. Instalaciones de última generación, entrenadores élite, clases en vivo, spa y nutrición. Tu primera semana es gratis.">
+    <meta name="keywords" content="gimnasio premium, club deportivo de lujo, crossfit, entrenamiento personal, piscina climatizada, spa deportivo, clases dirigidas">
+    <meta name="author" content="Apex Athletics">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://www.apexathletics.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.apexathletics.com/">
+    <meta property="og:title" content="APEX ATHLETICS | Redefine Tus Límites">
+    <meta property="og:description" content="Más que un gimnasio, un estilo de vida. Instalaciones premium, tecnología de vanguardia y una comunidad que te impulsa.">
+    <meta property="og:image" content="https://www.apexathletics.com/assets/og-premium-gym.jpg">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Preconnect & Fonts (Optimizado para Core Web Vitals) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,400;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+    
+    <!-- View Transitions API para 2026 -->
+    <meta name="view-transition" content="same-origin">
+
+    <!-- Schema.org JSON-LD (Enterprise Fitness SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["HealthClub", "SportsActivityLocation", "LocalBusiness"],
+          "name": "Apex Athletics",
+          "image": "https://www.apexathletics.com/assets/logo.png",
+          "url": "https://www.apexathletics.com",
+          "telephone": "+34-900-555-100",
+          "priceRange": "$$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Avenida del Deporte, 100",
+            "addressLocality": "Madrid",
+            "postalCode": "28020",
+            "addressCountry": "ES"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 40.4500,
+            "longitude": -3.6900
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "06:00",
+              "closes": "23:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Saturday", "Sunday"],
+              "opens": "08:00",
+              "closes": "21:00"
+            }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "1850"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Ofrecen prueba gratuita antes de hacerme socio?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí, ofrecemos una semana de prueba gratuita con acceso completo a todas las instalaciones, clases dirigidas y una sesión de valoración con un entrenador personal."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Puedo congelar mi cuota si viajo?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutamente. Nuestros planes Premium y Anuales incluyen hasta 2 meses de congelación de cuota al año sin coste adicional, gestionable desde nuestra App."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        /* =========================================
+           SISTEMA DE DISEÑO: APEX ATHLETICS (Premium Fitness)
+           ========================================= */
+        :root {
+            /* Paleta de Alto Impacto y Lujo Deportivo */
+            --color-bg: #FAFAFA;
+            --color-bg-dark: #0A0A0A; /* Negro profundo */
+            --color-bg-card: #141414;
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: #A3A3A3;
+            --color-text-dark: #0A0A0A;
+            --color-accent-blue: #00D4FF; /* Azul eléctrico */
+            --color-accent-lime: #D4FF00; /* Verde lima energético */
+            --color-metallic: #262626;
+            --color-border: #262626;
+            --color-overlay: rgba(10, 10, 10, 0.85);
+
+            /* Tipografía Potente */
+            --font-display: 'Montserrat', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Espaciado Cinematográfico */
+            --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+            --space-sm: clamp(1rem, 2vw, 1.5rem);
+            --space-md: clamp(2rem, 4vw, 3rem);
+            --space-lg: clamp(4rem, 8vw, 6rem);
+            --space-xl: clamp(6rem, 12vw, 10rem);
+
+            /* Animaciones Premium (Snap & Smooth) */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 0.3s;
+            --duration-medium: 0.6s;
+            --duration-slow: 1s;
+        }
+
+        /* Modo Claro (Opcional, pero el dark mode es el protagonista premium) */
+        [data-theme="light"] {
+            --color-bg: #FFFFFF;
+            --color-bg-dark: #F4F4F5;
+            --color-bg-card: #FFFFFF;
+            --color-text-primary: #0A0A0A;
+            --color-text-secondary: #52525B;
+            --color-border: #E4E4E7;
+            --color-overlay: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--duration-medium) var(--ease-out-expo), color var(--duration-medium) var(--ease-out-expo);
+        }
+
+        /* Tipografía */
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; text-transform: uppercase; }
+        h1 { font-size: clamp(3rem, 8vw, 6rem); }
+        h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
+        h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+        
+        .text-accent {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-accent-lime);
+            margin-bottom: var(--space-xs);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-blue {
+            background: linear-gradient(135deg, var(--color-accent-blue) 0%, #0088FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        .container { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--space-md); }
+        .section-padding { padding: var(--space-xl) 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); align-items: center; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+
+        /* Botones de Alto Rendimiento */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+            padding: 1.1rem 2.5rem; font-family: var(--font-display); font-size: 0.9rem; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border: 2px solid transparent;
+            cursor: pointer; transition: all var(--duration-medium) var(--ease-out-expo); position: relative; overflow: hidden;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .btn-primary { 
+            background-color: var(--color-accent-lime); color: var(--color-bg-dark); border-color: var(--color-accent-lime); 
+        }
+        .btn-primary:hover { 
+            background-color: transparent; color: var(--color-accent-lime); 
+            box-shadow: 0 0 30px rgba(212, 255, 0, 0.3);
+        }
+        .btn-secondary { 
+            background-color: transparent; color: var(--color-text-primary); border-color: var(--color-text-primary); 
+        }
+        .btn-secondary:hover { 
+            background-color: var(--color-text-primary); color: var(--color-bg-dark); 
+        }
+        .btn-glow {
+            background-color: var(--color-accent-blue); color: var(--color-bg-dark); border-color: var(--color-accent-blue);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Animaciones Scroll */
+        .reveal { opacity: 0; transform: translateY(50px); transition: opacity var(--duration-slow) var(--ease-out-expo), transform var(--duration-slow) var(--ease-out-expo); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; background-color: var(--color-bg-dark); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s var(--ease-out-expo), visibility 0.8s;
+        }
+        #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-bar { width: 200px; height: 4px; background: var(--color-metallic); position: relative; overflow: hidden; margin-top: 1rem; }
+        .loader-bar::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: var(--color-accent-lime); animation: load 1.2s infinite var(--ease-out-expo);
+        }
+        @keyframes load { 0% { left: -100%; } 100% { left: 100%; } }
+
+        /* Header */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.5rem 0;
+            transition: all var(--duration-medium) var(--ease-out-expo); background: transparent;
+        }
+        .header.scrolled {
+            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(20px);
+            padding: 1rem 0; border-bottom: 1px solid var(--color-border);
+        }
+        [data-theme="light"] .header.scrolled { background: rgba(255, 255, 255, 0.9); }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { 
+            font-family: var(--font-display); font-size: 1.75rem; font-weight: 900; letter-spacing: -0.05em;
+            color: var(--color-text-primary); text-decoration: none; transition: color var(--duration-fast);
+        }
+        .logo span { color: var(--color-accent-lime); }
+        
+        .nav-menu { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-link { 
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--color-text-secondary); text-decoration: none; position: relative; padding: 0.5rem 0; transition: color var(--duration-fast);
+        }
+        .nav-link:hover { color: var(--color-text-primary); }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+            background-color: var(--color-accent-lime); transition: width var(--duration-medium) var(--ease-out-expo);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+        .icon-btn { 
+            background: none; border: none; cursor: pointer; color: var(--color-text-primary); 
+            transition: color var(--duration-fast); display: flex; align-items: center; justify-content: center;
+        }
+        .icon-btn:hover { color: var(--color-accent-lime); }
+
+        /* Hero Section */
+        .hero {
+            position: relative; height: 100dvh; width: 100%; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, var(--color-bg-dark) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.6) 100%), 
+                        url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2670&auto=format&fit=crop') center/cover no-repeat;
+            transform: scale(1.05);
+            animation: heroZoom 15s infinite alternate var(--ease-out-expo);
+        }
+        @keyframes heroZoom { from { transform: scale(1.05); } to { transform: scale(1.15); } }
+
+        .hero-content { position: relative; z-index: 2; text-align: center; color: var(--color-text-primary); max-width: 1000px; padding: 0 var(--space-sm); }
+        .hero-subtitle { margin-bottom: var(--space-sm); opacity: 0; animation: fadeUp 1s var(--ease-out-expo) 0.3s forwards; }
+        .hero-title { margin-bottom: var(--space-md); opacity: 0; animation: fadeUp 1s var(--ease-out-expo) 0.5s forwards; }
+        .hero-desc { font-size: 1.25rem; font-weight: 300; color: var(--color-text-secondary); margin-bottom: var(--space-md); opacity: 0; animation: fadeUp 1s var(--ease-out-expo) 0.7s forwards; }
+        .hero-actions { display: flex; gap: 1.5rem; justify-content: center; opacity: 0; animation: fadeUp 1s var(--ease-out-expo) 0.9s forwards; }
+        
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--color-bg-card); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);
+            padding: var(--space-md) 0;
+        }
+        .stat-item { text-align: center; border-right: 1px solid var(--color-border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-number { font-family: var(--font-display); font-size: 2.5rem; font-weight: 900; color: var(--color-accent-blue); line-height: 1; margin-bottom: 0.25rem; }
+        .stat-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-text-secondary); }
+
+        /* Facility Cards */
+        .facility-card {
+            position: relative; aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--color-border);
+            group: facility; cursor: pointer;
+        }
+        .facility-img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-slow) var(--ease-out-expo); filter: grayscale(100%); }
+        .facility-card:hover .facility-img { transform: scale(1.1); filter: grayscale(0%); }
+        .facility-overlay {
+            position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: var(--space-md);
+            transition: background var(--duration-medium);
+        }
+        .facility-card:hover .facility-overlay { background: linear-gradient(to top, rgba(0,212,255,0.2) 0%, transparent 60%); }
+        .facility-title { font-size: 1.5rem; color: white; margin-bottom: 0.5rem; }
+        .facility-desc { font-size: 0.9rem; color: rgba(255,255,255,0.8); transform: translateY(20px); opacity: 0; transition: all var(--duration-medium) var(--ease-out-expo); }
+        .facility-card:hover .facility-desc { transform: translateY(0); opacity: 1; }
+
+        /* Pricing Cards */
+        .pricing-card {
+            background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-md);
+            position: relative; transition: all var(--duration-medium) var(--ease-out-expo);
+        }
+        .pricing-card.featured { border-color: var(--color-accent-lime); transform: scale(1.05); z-index: 2; }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .pricing-card.featured:hover { transform: scale(1.05) translateY(-10px); }
+        .pricing-badge {
+            position: absolute; top: -12px; right: var(--space-md); background: var(--color-accent-lime); color: var(--color-bg-dark);
+            padding: 0.25rem 1rem; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .pricing-name { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .pricing-price { font-size: 3rem; font-weight: 900; color: var(--color-text-primary); margin-bottom: var(--space-sm); }
+        .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--color-text-secondary); }
+        .pricing-features { list-style: none; margin-bottom: var(--space-md); }
+        .pricing-features li { padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary); display: flex; align-items: center; gap: 0.75rem; }
+        .pricing-features li::before { content: '✓'; color: var(--color-accent-lime); font-weight: 900; }
+
+        /* Floating Elements */
+        .floating-wa {
+            position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px;
+            background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 999; transition: transform var(--duration-fast); text-decoration: none;
+        }
+        .floating-wa:hover { transform: scale(1.1) rotate(10deg); }
+
+        .cookie-banner {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-bg-card); color: var(--color-text-primary);
+            padding: var(--space-md); z-index: 9998; transform: translateY(100%);
+            transition: transform var(--duration-medium) var(--ease-out-expo); border-top: 2px solid var(--color-accent-lime);
+        }
+        .cookie-banner.visible { transform: translateY(0); }
+
+        /* Accesibilidad WCAG AA */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+        :focus-visible { outline: 3px solid var(--color-accent-lime); outline-offset: 4px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .nav-menu { display: none; } 
+            .pricing-card.featured { transform: scale(1); }
+            .pricing-card.featured:hover { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <!-- Skip to content (Accesibilidad) -->
+    <a href="#main-content" class="sr-only" style="top: 1rem; left: 1rem; width: auto; height: auto; padding: 1rem; background: var(--color-accent-lime); color: var(--color-bg-dark); z-index: 10000; clip: auto; font-weight: 800;">Saltar al contenido principal</a>
+
+    <!-- Preloader -->
+    <div id="preloader" role="status" aria-label="Cargando Apex Athletics">
+        <p class="text-accent" style="color: var(--color-accent-lime); letter-spacing: 0.3em; font-size: 1.5rem;">APEX ATHLETICS</p>
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container nav-container">
+            <a href="/" class="logo" aria-label="Apex Athletics Inicio">APEX<span>.</span></a>
+            
+            <nav aria-label="Navegación principal">
+                <ul class="nav-menu">
+                    <li><a href="#instalaciones" class="nav-link">Instalaciones</a></li>
+                    <li><a href="#actividades" class="nav-link">Clases</a></li>
+                    <li><a href="#entrenadores" class="nav-link">Equipo</a></li>
+                    <li><a href="#planes" class="nav-link">Planes</a></li>
+                    <li><a href="#app" class="nav-link">App & Tech</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn" id="theme-toggle" aria-label="Cambiar modo oscuro/claro">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
+                <a href="tel:+34900555100" class="icon-btn" aria-label="Llamar al club">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </button>
+                <a href="#prueba" class="btn btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.8rem;">Prueba Gratis</a>
+                <a href="#unete" class="btn btn-glow" style="padding: 0.75rem 1.5rem; font-size: 0.8rem;">Hazte Socio</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" aria-label="Introducción">
+            <div class="hero-bg" role="img" aria-label="Atleta entrenando con intensidad en instalaciones de alta gama"></div>
+            <div class="hero-content">
+                <p class="text-accent hero-subtitle">Redefine Tus Límites</p>
+                <h1 class="hero-title">No Es Solo Un Gimnasio.<br>Es Tu <span class="text-gradient-blue">Mejor Versión</span>.</h1>
+                <p class="hero-desc">3.000m² de instalaciones de élite, tecnología biomecánica de vanguardia y un equipo de entrenadores certificados para llevar tu rendimiento al siguiente nivel.</p>
+                <div class="hero-actions">
+                    <a href="#prueba" class="btn btn-primary">Empieza Tu Prueba Gratis</a>
+                    <a href="#instalaciones" class="btn btn-secondary" style="color: white; border-color: white;">Tour Virtual 360°</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="container">
+                <div class="grid-4">
+                    <div class="stat-item reveal">
+                        <p class="stat-number" data-target="2500">0</p>
+                        <p class="stat-label">Socios Activos</p>
+                    </div>
+                    <div class="stat-item reveal">
+                        <p class="stat-number" data-target="3000">0</p>
+                        <p class="stat-label">Metros Cuadrados</p>
+                    </div>
+                    <div class="stat-item reveal">
+                        <p class="stat-number" data-target="45">0</p>
+                        <p class="stat-label">Clases Semanales</p>
+                    </div>
+                    <div class="stat-item reveal">
+                        <p class="stat-number" data-target="4.9">0</p>
+                        <p class="stat-label">Valoración Google</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About -->
+        <section class="section-padding" id="nosotros">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent">Nuestra Filosofía</p>
+                        <h2 style="margin-bottom: var(--space-sm);">La Ciencia del <span class="text-gradient-blue">Movimiento</span></h2>
+                        <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: var(--space-md);">
+                            En Apex Athletics, creemos que el fitness no es un castigo, sino una celebración de lo que tu cuerpo puede lograr. Combinamos la crudeza del entrenamiento funcional con la precisión de la tecnología deportiva más avanzada del mercado (Technogym Artis, plataformas de fuerza Kistler).
+                        </p>
+                        <ul style="list-style: none; margin-bottom: var(--space-md);">
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; color: var(--color-text-primary);">
+                                <span style="color: var(--color-accent-lime); font-size: 1.2rem;">▣</span>
+                                Seguimiento biométrico en tiempo real de tu progreso.
+                            </li>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; color: var(--color-text-primary);">
+                                <span style="color: var(--color-accent-lime); font-size: 1.2rem;">▣</span>
+                                Zona de recuperación con crioterapia y sauna infrarroja.
+                            </li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem; color: var(--color-text-primary);">
+                                <span style="color: var(--color-accent-lime); font-size: 1.2rem;">▣</span>
+                                Comunidad exclusiva con eventos y competiciones internas.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="reveal" style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=2575&auto=format&fit=crop" alt="Zona de peso libre de alta gama" style="width: 100%; border-radius: 4px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);" loading="lazy" decoding="async">
+                        <div style="position: absolute; bottom: -1.5rem; right: -1.5rem; background: var(--color-accent-blue); color: var(--color-bg-dark); padding: 1.5rem; border-radius: 4px; max-width: 200px;">
+                            <p style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1;">TECHNOGYM<br>ARTIS</p>
+                            <p style="font-size: 0.8rem; font-weight: 600; margin-top: 0.5rem;">Equipamiento Oficial</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Facilities -->
+        <section class="section-padding" id="instalaciones" style="background-color: var(--color-bg);">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent" style="color: var(--color-accent-blue);">Instalaciones de Élite</p>
+                    <h2 style="color: var(--color-text-dark);">Todo Lo Que Necesitas. <br>Nada Que Te Sobre.</h2>
+                </div>
+                <div class="grid-3">
+                    <article class="facility-card reveal">
+                        <img src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?q=80&w=2669&auto=format&fit=crop" alt="Zona de Cross Training" class="facility-img" loading="lazy">
+                        <div class="facility-overlay">
+                            <h3 class="facility-title">Functional & Cross Box</h3>
+                            <p class="facility-desc">Jaula olímpica, rigs modulares y superficie de impacto para entrenamiento de alta intensidad.</p>
+                        </div>
+                    </article>
+                    <article class="facility-card reveal">
+                        <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=2574&auto=format&fit=crop" alt="Sala de Cardio Premium" class="facility-img" loading="lazy">
+                        <div class="facility-overlay">
+                            <h3 class="facility-title">Cardio Cinema</h3>
+                            <p class="facility-desc">Cintas de correr y elípticas con pantallas inmersivas y integración con Apple Health.</p>
+                        </div>
+                    </article>
+                    <article class="facility-card reveal">
+                        <img src="https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?q=80&w=2669&auto=format&fit=crop" alt="Zona de Spa y Recuperación" class="facility-img" loading="lazy">
+                        <div class="facility-overlay">
+                            <h3 class="facility-title">Recovery Lab</h3>
+                            <p class="facility-desc">Sauna finlandesa, baño de hielo, pistolas de masaje y fisioterapia deportiva in situ.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activities / Classes -->
+        <section class="section-padding" id="actividades">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent">Programa de Clases</p>
+                        <h2>Energía en Grupo. <br><span class="text-gradient-blue">Resultados Individuales.</span></h2>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Más de 40 clases semanales dirigidas por instructores certificados internacionalmente (Les Mills, CrossFit L2, Yoga Alliance). Reserva tu plaza en tiempo real desde nuestra App.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin: var(--space-md) 0;">
+                            <span style="padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 50px; font-size: 0.85rem; font-weight: 600;">HIIT</span>
+                            <span style="padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 50px; font-size: 0.85rem; font-weight: 600;">Body Pump</span>
+                            <span style="padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 50px; font-size: 0.85rem; font-weight: 600;">Yoga Flow</span>
+                            <span style="padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 50px; font-size: 0.85rem; font-weight: 600;">Spinning</span>
+                            <span style="padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 50px; font-size: 0.85rem; font-weight: 600;">Boxeo</span>
+                        </div>
+                        <a href="#horarios" class="btn btn-secondary">Ver Horario Completo</a>
+                    </div>
+                    <div class="reveal" style="background: var(--color-bg-card); border: 1px solid var(--color-border); padding: var(--space-md); border-radius: 4px;">
+                        <h3 style="margin-bottom: var(--space-sm); font-size: 1.25rem;">Próxima Clase Destacada</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--color-border);">
+                            <div>
+                                <p style="font-weight: 700; font-size: 1.1rem;">APEX HIIT PRO</p>
+                                <p style="font-size: 0.85rem; color: var(--color-text-secondary);">Con Marcos R. • 45 min • Alta Intensidad</p>
+                            </div>
+                            <span style="background: var(--color-accent-lime); color: var(--color-bg-dark); padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 800; border-radius: 4px;">3 PLAZAS</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--color-border);">
+                            <div>
+                                <p style="font-weight: 700; font-size: 1.1rem;">POWER YOGA</p>
+                                <p style="font-size: 0.85rem; color: var(--color-text-secondary);">Con Laura S. • 60 min • Todos los niveles</p>
+                            </div>
+                            <span style="background: var(--color-metallic); color: white; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 800; border-radius: 4px;">12 PLAZAS</span>
+                        </div>
+                        <button class="btn btn-glow" style="width: 100%; margin-top: var(--space-sm);">Reservar en App</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section class="section-padding" id="planes" style="background-color: var(--color-bg);">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent" style="color: var(--color-accent-blue);">Membresías</p>
+                    <h2 style="color: var(--color-text-dark);">Invierte en Ti</h2>
+                </div>
+                <div class="grid-3">
+                    <!-- Plan 1 -->
+                    <div class="pricing-card reveal">
+                        <h3 class="pricing-name">Essential</h3>
+                        <div class="pricing-price">49€<span>/mes</span></div>
+                        <ul class="pricing-features">
+                            <li>Acceso a sala de fitness y cardio</li>
+                            <li>Duchas y taquillas</li>
+                            <li>App de seguimiento básica</li>
+                            <li>1 Sesión de orientación inicial</li>
+                        </ul>
+                        <a href="#" class="btn btn-secondary" style="width: 100%; color: var(--color-text-dark); border-color: var(--color-text-dark);">Elegir Plan</a>
+                    </div>
+                    <!-- Plan 2 (Featured) -->
+                    <div class="pricing-card featured reveal">
+                        <div class="pricing-badge">Más Popular</div>
+                        <h3 class="pricing-name">Apex Pro</h3>
+                        <div class="pricing-price">79€<span>/mes</span></div>
+                        <ul class="pricing-features">
+                            <li>Todo lo incluido en Essential</li>
+                            <li>Acceso ilimitado a clases dirigidas</li>
+                            <li>Acceso a Zona Recovery (Sauna/Hielo)</li>
+                            <li>1 Sesión PT al mes</li>
+                            <li>Congelación de cuota (1 mes/año)</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary" style="width: 100%;">Elegir Plan</a>
+                    </div>
+                    <!-- Plan 3 -->
+                    <div class="pricing-card reveal">
+                        <h3 class="pricing-name">Elite</h3>
+                        <div class="pricing-price">129€<span>/mes</span></div>
+                        <ul class="pricing-features">
+                            <li>Todo lo incluido en Apex Pro</li>
+                            <li>2 Sesiones PT semanales</li>
+                            <li>Plan nutricional personalizado</li>
+                            <li>Toalla y servicio de lavandería</li>
+                            <li>Acceso a eventos exclusivos</li>
+                        </ul>
+                        <a href="#" class="btn btn-secondary" style="width: 100%; color: var(--color-text-dark); border-color: var(--color-text-dark);">Elegir Plan</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech / App Section (Bonus 2026 Feature) -->
+        <section class="section-padding" id="app" style="background-color: var(--color-bg-dark); border-top: 1px solid var(--color-border);">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent">Tecnología Apex</p>
+                        <h2>Tu Entrenador en <br><span class="text-gradient-blue">Tu Bolsillo</span></h2>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Nuestra App propietaria no solo sirve para reservar clases. Sincroniza con tu Apple Watch, Garmin o Polar para analizar tu frecuencia cardíaca en tiempo real durante las clases, ajustar tu plan nutricional semanal y reservar tu taquilla o sesión de fisioterapia con un clic.
+                        </p>
+                        <div style="display: flex; gap: 1rem; margin-top: var(--space-md);">
+                            <button class="btn btn-secondary" style="padding: 0.75rem 1.5rem; font-size: 0.8rem;">Descargar iOS</button>
+                            <button class="btn btn-secondary" style="padding: 0.75rem 1.5rem; font-size: 0.8rem;">Descargar Android</button>
+                        </div>
+                    </div>
+                    <div class="reveal" style="display: flex; justify-content: center;">
+                        <!-- Mockup simulado con CSS/HTML -->
+                        <div style="width: 280px; height: 550px; background: #000; border: 8px solid #333; border-radius: 40px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,212,255,0.2);">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, #111 0%, #000 100%); padding: 2rem 1.5rem;">
+                                <p style="color: var(--color-accent-lime); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em;">HOLA, ALEJANDRO</p>
+                                <h3 style="color: white; font-size: 1.5rem; margin: 0.5rem 0;">Tu Resumen de Hoy</h3>
+                                <div style="background: #222; padding: 1rem; border-radius: 12px; margin-top: 1rem;">
+                                    <p style="color: #888; font-size: 0.8rem;">Próxima Clase</p>
+                                    <p style="color: white; font-weight: 700;">18:30 - CrossFit WOD</p>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                    <div style="background: #222; padding: 1rem; border-radius: 12px; text-align: center;">
+                                        <p style="color: var(--color-accent-blue); font-size: 1.5rem; font-weight: 900;">450</p>
+                                        <p style="color: #888; font-size: 0.7rem;">Kcal Hoy</p>
+                                    </div>
+                                    <div style="background: #222; padding: 1rem; border-radius: 12px; text-align: center;">
+                                        <p style="color: var(--color-accent-lime); font-size: 1.5rem; font-weight: 900;">85</p>
+                                        <p style="color: #888; font-size: 0.7rem;">FC Media</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="section-padding" id="prueba" style="background: linear-gradient(135deg, var(--color-accent-blue) 0%, #0055FF 100%); text-align: center; color: var(--color-bg-dark);">
+            <div class="container reveal">
+                <h2 style="color: white; margin-bottom: var(--space-sm);">Deja de Pensarlo. <br>Empieza a Sudarlo.</h2>
+                <p style="font-size: 1.25rem; max-width: 600px; margin: 0 auto var(--space-md); opacity: 0.9;">
+                    Tu primera semana es completamente gratis. Sin compromisos, sin letra pequeña. Solo tú, tu esfuerzo y las mejores instalaciones de la ciudad.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#contacto" class="btn" style="background: white; color: #0055FF; font-weight: 800;">Reclamar Prueba Gratis</a>
+                    <a href="https://wa.me/34900555100" class="btn" style="background: transparent; color: white; border-color: white;">Hablar con un Asesor</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="background-color: #050505; color: var(--color-text-secondary); padding: var(--space-xl) 0 var(--space-md); border-top: 1px solid var(--color-border);">
+        <div class="container">
+            <div class="grid-4" style="margin-bottom: var(--space-lg);">
+                <div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.75rem; font-weight: 900; margin-bottom: 1rem; color: white;">APEX<span style="color: var(--color-accent-lime);">.</span></h3>
+                    <p style="font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                        El club deportivo de referencia para aquellos que no se conforman con lo promedio. Tecnología, comunidad y resultados.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" aria-label="Instagram" style="color: white; transition: color 0.3s;">IG</a>
+                        <a href="#" aria-label="TikTok" style="color: white; transition: color 0.3s;">TK</a>
+                        <a href="#" aria-label="YouTube" style="color: white; transition: color 0.3s;">YT</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: white; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">Explorar</h4>
+                    <a href="#instalaciones" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Instalaciones</a>
+                    <a href="#actividades" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Clases Dirigidas</a>
+                    <a href="#entrenadores" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Entrenadores</a>
+                    <a href="#planes" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Planes y Precios</a>
+                </div>
+                <div>
+                    <h4 style="color: white; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">Servicios</h4>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Entrenamiento Personal</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Nutrición Deportiva</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Fisioterapia</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Tienda de Suplementos</a>
+                </div>
+                <div>
+                    <h4 style="color: white; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">Contacto</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Av. del Deporte, 100<br>28020, Madrid</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">+34 900 555 100</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">hola@apexathletics.com</p>
+                    <h4 style="color: white; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">Newsletter</h4>
+                    <form style="display: flex; border-bottom: 1px solid var(--color-accent-lime);">
+                        <input type="email" placeholder="Tu email" style="background: transparent; border: none; color: white; padding: 0.5rem 0; width: 100%; outline: none; font-size: 0.9rem;">
+                        <button type="submit" style="background: transparent; border: none; color: var(--color-accent-lime); cursor: pointer; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; font-weight: 800;">Enviar</button>
+                    </form>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--color-border); padding-top: var(--space-md); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem;">
+                <p>&copy; 2026 Apex Athletics. Todos los derechos reservados.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="#aviso-legal" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Aviso Legal</a>
+                    <a href="#privacidad" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Privacidad</a>
+                    <a href="#cookies" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Cookies</a>
+                    <a href="#accesibilidad" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Accesibilidad</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Elements -->
+    <a href="https://wa.me/34900555100" class="floating-wa" aria-label="Contactar por WhatsApp" target="_blank" rel="noopener">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <!-- Cookie Consent Banner (GDPR) -->
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 700; color: white;">Tu rendimiento, tus datos</p>
+                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Utilizamos cookies para personalizar tu experiencia, analizar el tráfico de la web y mostrar contenido relevante. Puedes configurar o rechazar su uso.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cookie-reject" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Rechazar</button>
+                <button id="cookie-settings" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Configurar</button>
+                <button id="cookie-accept" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Aceptar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Optimizado (Vanilla, sin dependencias pesadas) -->
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, { passive: true });
+
+        // Intersection Observer para animaciones de revelado
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Animación de números para estadísticas
+                    if (entry.target.querySelector('.stat-number')) {
+                        animateValue(entry.target.querySelector('.stat-number'), 0, parseFloat(entry.target.querySelector('.stat-number').getAttribute('data-target')), 2000);
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Animación de números
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Formatear con comas si es > 1000, o 1 decimal si es < 10
+                let currentVal = progress * (end - start) + start;
+                if (end >= 1000) {
+                    obj.innerHTML = Math.floor(currentVal).toLocaleString('es-ES') + '+';
+                } else if (end < 10) {
+                    obj.innerHTML = currentVal.toFixed(1);
+                } else {
+                    obj.innerHTML = Math.floor(currentVal) + '+';
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Cookie Consent Logic
+        const cookieBanner = document.getElementById('cookie-banner');
+        if (!localStorage.getItem('cookieConsent')) {
+            setTimeout(() => {
+                cookieBanner.classList.add('visible');
+            }, 2000);
+        }
+
+        document.getElementById('cookie-accept').addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'accepted');
+            cookieBanner.classList.remove('visible');
+        });
+
+        document.getElementById('cookie-reject').addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'rejected');
+            cookieBanner.classList.remove('visible');
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+    <!-- =========================================
+         PÁGINAS LEGALES Y ESTRUCTURA SECUNDARIA
+         (Listas para ser extraídas a archivos .html independientes)
+         ========================================= -->
+    
+    <template id="tpl-privacidad">
+        <section class="section-padding container">
+            <h1>Política de Privacidad</h1>
+            <p class="text-accent">Última actualización: 15 de julio de 2026</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>1. Responsable del Tratamiento</h3>
+                <p>Apex Athletics S.L., con CIF B-12345678 y domicilio en Avenida del Deporte, 100, 28020 Madrid.</p>
+                <h3>2. Finalidad y Legitimación</h3>
+                <p>Tratamos sus datos para gestionar su membresía, reservas de clases, facturación y envío de comunicaciones comerciales (con su consentimiento), conforme al RGPD y la LOPDGDD.</p>
+                <h3>3. Derechos del Socio</h3>
+                <p>Puede ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad enviando un email a privacidad@apexathletics.com.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-aviso-legal">
+        <section class="section-padding container">
+            <h1>Aviso Legal</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), se informa que el titular de este sitio web es Apex Athletics S.L.</p>
+                <p>El uso de las instalaciones deportivas está sujeto a la firma previa de un contrato de adhesión y un certificado médico de aptitud para la práctica deportiva, conforme a la normativa vigente de protección de la salud en el deporte.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-cookies">
+        <section class="section-padding container">
+            <h1>Política de Cookies</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>1. ¿Qué son las cookies?</h3>
+                <p>Son pequeños archivos de texto que se descargan en su dispositivo para almacenar y recuperar información sobre sus hábitos de navegación.</p>
+                <h3>2. Cookies que utilizamos</h3>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Técnicas (Necesarias):</strong> Imprescindibles para el funcionamiento del área de socios y la reserva de clases.</li>
+                    <li><strong>Analíticas:</strong> Google Analytics 4 (IP anonimizada) para medir el tráfico y mejorar nuestros servicios.</li>
+                    <li><strong>Marketing:</strong> Solo se activan con su consentimiento explícito para mostrar publicidad relevante en redes sociales (Meta, TikTok).</li>
+                </ul>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-cancelacion">
+        <section class="section-padding container">
+            <h1>Política de Cancelación y Bajas</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>Cancelación de Clases</h3>
+                <p>Las reservas de clases dirigidas pueden cancelarse sin penalización hasta 4 horas antes del inicio de la misma. Las cancelaciones tardías o los "No-Show" podrán ser penalizados con la pérdida de la reserva semanal si se repiten más de 3 veces al mes.</p>
+                <h3>Baja de la Membresía</h3>
+                <p>Las bajas deben solicitarse con al menos 15 días de antelación a la fecha de renovación del ciclo de facturación a través del Área de Socios en la web o la App, o mediante comunicación escrita a administración@apexathletics.com.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-accesibilidad">
+        <section class="section-padding container">
+            <h1>Declaración de Accesibilidad</h1>
+            <p class="text-accent">Nivel de conformidad: WCAG 2.1 Nivel AA</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>Apex Athletics se compromete a garantizar la accesibilidad digital de su sitio web y de sus instalaciones físicas para todas las personas.</p>
+                <p>Medidas digitales adoptadas: contraste de color verificado, navegación completa por teclado, etiquetas ARIA, textos alternativos en imágenes y tipografías legibles y escalables. Nuestras instalaciones cuentan con acceso para sillas de ruedas y vestuarios adaptados.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-404">
+        <section style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: var(--color-bg-dark);">
+            <p class="text-accent">Error 404</p>
+            <h1 style="margin: 1rem 0; color: white;">Página No Encontrada</h1>
+            <p style="color: var(--color-text-secondary); max-width: 500px; margin-bottom: 2rem;">Parece que te has salido de la ruta. Vuelve al inicio y sigue entrenando.</p>
+            <a href="/" class="btn btn-primary">Volver al Inicio</a>
+        </section>
+    </template>
+
+</body>
+</html>

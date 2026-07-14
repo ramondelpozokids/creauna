@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO & Meta Tags Premium (Luxury Hospitality) -->
+    <title>AURA SANCTUARY | Hotel de Lujo 5 Estrellas Gran Lujo & Spa</title>
+    <meta name="description" content="Descubra Aura Sanctuary, un refugio de lujo 5 estrellas Gran Lujo. Suites exclusivas, gastronomía Michelin, spa de bienestar y experiencias únicas en un entorno privilegiado. Mejor precio garantizado.">
+    <meta name="keywords" content="hotel de lujo 5 estrellas, resort de lujo, suites exclusivas, spa de lujo, gastronomía michelin, vacaciones de lujo, mejor hotel de lujo">
+    <meta name="author" content="Aura Sanctuary Hotels">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://www.aurasanctuary.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.aurasanctuary.com/">
+    <meta property="og:title" content="AURA SANCTUARY | El Arte de la Hospitalidad de Lujo">
+    <meta property="og:description" content="Reserve su estancia en un refugio de calma y exclusividad. Gastronomía, bienestar y vistas inolvidables. Mejor precio garantizado en web oficial.">
+    <meta property="og:image" content="https://www.aurasanctuary.com/assets/og-luxury-hotel.jpg">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Preconnect & Fonts (Optimizado para Core Web Vitals) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- View Transitions API para 2026 -->
+    <meta name="view-transition" content="same-origin">
+
+    <!-- Schema.org JSON-LD (Enterprise Hospitality SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["Hotel", "LodgingBusiness", "LocalBusiness"],
+          "name": "Aura Sanctuary",
+          "image": "https://www.aurasanctuary.com/assets/logo.png",
+          "url": "https://www.aurasanctuary.com",
+          "telephone": "+34-900-800-900",
+          "priceRange": "$$$$",
+          "starRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Paseo Marítimo de la Serena, 1",
+            "addressLocality": "Marbella",
+            "postalCode": "29602",
+            "addressCountry": "ES"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 36.5100,
+            "longitude": -4.8800
+          },
+          "amenityFeature": [
+            { "@type": "LocationFeatureSpecification", "name": "Spa & Wellness", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Michelin Star Restaurant", "value": true },
+            { "@type": "LocationFeatureSpecification", "name": "Infinity Pool", "value": true }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "1240"
+          }
+        },
+        {
+          "@type": "Room",
+          "name": "Suite Presidencial Océano",
+          "description": "200m² de puro lujo con terraza privada, piscina infinity y vistas panorámicas al mar.",
+          "occupancy": {
+            "@type": "QuantitativeValue",
+            "maxValue": 4
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "1500",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.aurasanctuary.com/habitaciones/suite-presidencial"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Cuál es la hora de check-in y check-out?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "El check-in es a partir de las 15:00 h y el check-out hasta las 12:00 h. Ofrecemos check-in/out anticipado o tardío sujeto a disponibilidad y mediante nuestro servicio de conserjería."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        /* =========================================
+           SISTEMA DE DISEÑO: AURA SANCTUARY (Luxury Hospitality)
+           ========================================= */
+        :root {
+            /* Paleta de Lujo Hotelero */
+            --color-bg: #FAFAF9; /* Warm white/stone */
+            --color-bg-alt: #FFFFFF;
+            --color-text-primary: #1C1917; /* Warm black */
+            --color-text-secondary: #57534E; /* Warm gray */
+            --color-accent-gold: #B48A3A; /* Elegant, WCAG AA compliant gold */
+            --color-accent-gold-light: #D4AF37;
+            --color-ocean: #1E3A5F;
+            --color-olive: #556B2F;
+            --color-sand: #E7E5E4;
+            --color-border: #E5E7EB;
+            --color-overlay: rgba(28, 25, 23, 0.6);
+
+            /* Tipografía Editorial */
+            --font-display: 'Playfair Display', serif;
+            --font-accent: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Espaciado Cinematográfico */
+            --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+            --space-sm: clamp(1rem, 2vw, 1.5rem);
+            --space-md: clamp(2rem, 4vw, 3rem);
+            --space-lg: clamp(4rem, 8vw, 6rem);
+            --space-xl: clamp(6rem, 12vw, 10rem);
+
+            /* Animaciones de Alta Gama (Luxury Ease) */
+            --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 0.3s;
+            --duration-medium: 0.6s;
+            --duration-slow: 1.2s;
+        }
+
+        /* Modo Oscuro (Sofisticado, no negro puro) */
+        [data-theme="dark"] {
+            --color-bg: #1C1917;
+            --color-bg-alt: #292524;
+            --color-text-primary: #FAFAF9;
+            --color-text-secondary: #A8A29E;
+            --color-sand: #44403C;
+            --color-border: #44403C;
+            --color-overlay: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--duration-medium) var(--ease-luxury), color var(--duration-medium) var(--ease-luxury);
+        }
+
+        /* Tipografía */
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); }
+        h2 { font-size: clamp(2rem, 4vw, 3.25rem); }
+        h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+        
+        .text-accent {
+            font-family: var(--font-accent);
+            font-size: clamp(1rem, 1.2vw, 1.25rem);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-accent-gold);
+            font-weight: 600;
+        }
+
+        .text-italic { font-style: italic; font-family: var(--font-accent); }
+
+        /* Layout */
+        .container { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--space-md); }
+        .section-padding { padding: var(--space-xl) 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); align-items: center; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+
+        /* Botones Premium */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+            padding: 1rem 2.5rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+            letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1px solid transparent;
+            cursor: pointer; transition: all var(--duration-medium) var(--ease-luxury); position: relative; overflow: hidden;
+        }
+        .btn-primary { 
+            background-color: var(--color-text-primary); color: var(--color-bg); border-color: var(--color-text-primary); 
+        }
+        .btn-primary:hover { 
+            background-color: var(--color-accent-gold); border-color: var(--color-accent-gold); color: var(--color-bg); 
+        }
+        .btn-secondary { 
+            background-color: transparent; color: var(--color-text-primary); border-color: var(--color-text-primary); 
+        }
+        .btn-secondary:hover { 
+            background-color: var(--color-text-primary); color: var(--color-bg); 
+        }
+        .btn-gold {
+            background-color: var(--color-accent-gold); color: var(--color-bg); border-color: var(--color-accent-gold);
+        }
+        .btn-gold:hover {
+            background-color: transparent; color: var(--color-accent-gold);
+        }
+
+        /* Animaciones Scroll */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity var(--duration-slow) var(--ease-luxury), transform var(--duration-slow) var(--ease-luxury); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; background-color: var(--color-bg); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s var(--ease-luxury), visibility 0.8s;
+        }
+        #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-line { width: 120px; height: 1px; background: var(--color-sand); position: relative; overflow: hidden; }
+        .loader-line::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: var(--color-accent-gold); animation: load 1.5s infinite var(--ease-luxury);
+        }
+        @keyframes load { 0% { left: -100%; } 100% { left: 100%; } }
+
+        /* Header */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.5rem 0;
+            transition: all var(--duration-medium) var(--ease-luxury); background: transparent;
+        }
+        .header.scrolled {
+            background: rgba(250, 250, 249, 0.9); backdrop-filter: blur(20px);
+            padding: 1rem 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+        [data-theme="dark"] .header.scrolled { background: rgba(28, 25, 23, 0.9); }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { 
+            font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: 0.05em;
+            color: var(--color-bg-alt); text-decoration: none; transition: color var(--duration-fast);
+        }
+        .header.scrolled .logo { color: var(--color-text-primary); }
+        .logo span { color: var(--color-accent-gold); }
+        
+        .nav-menu { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-link { 
+            font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--color-bg-alt); text-decoration: none; position: relative; padding: 0.5rem 0; transition: color var(--duration-fast);
+        }
+        .header.scrolled .nav-link { color: var(--color-text-primary); }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
+            background-color: var(--color-accent-gold); transition: width var(--duration-medium) var(--ease-luxury);
+        }
+        .nav-link:hover { color: var(--color-accent-gold); }
+        .nav-link:hover::after { width: 100%; }
+
+        .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+        .icon-btn { 
+            background: none; border: none; cursor: pointer; color: var(--color-bg-alt); 
+            transition: color var(--duration-fast); display: flex; align-items: center; justify-content: center;
+        }
+        .header.scrolled .icon-btn { color: var(--color-text-primary); }
+        .icon-btn:hover { color: var(--color-accent-gold); }
+
+        /* Hero Section */
+        .hero {
+            position: relative; height: 100dvh; width: 100%; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            /* Simulación de vídeo premium con Ken Burns effect para rendimiento óptimo en demo */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2670&auto=format&fit=crop') center/cover no-repeat;
+            transform: scale(1.05);
+            animation: heroZoom 20s infinite alternate var(--ease-luxury);
+        }
+        @keyframes heroZoom { from { transform: scale(1.05); } to { transform: scale(1.0); } }
+
+        .hero-content { position: relative; z-index: 2; text-align: center; color: var(--color-bg-alt); max-width: 900px; padding: 0 var(--space-sm); }
+        .hero-subtitle { margin-bottom: var(--space-sm); opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.3s forwards; }
+        .hero-title { margin-bottom: var(--space-md); opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.5s forwards; }
+        .hero-desc { font-size: 1.25rem; font-weight: 300; opacity: 0.9; margin-bottom: var(--space-md); opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.7s forwards; }
+        .hero-actions { display: flex; gap: 1.5rem; justify-content: center; opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.9s forwards; }
+        
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Booking Engine Widget (Floating) */
+        .booking-widget {
+            position: relative; z-index: 20; margin-top: -5rem;
+        }
+        .booking-box {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            padding: var(--space-md); border-radius: 2px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid var(--color-border);
+        }
+        [data-theme="dark"] .booking-box { background: rgba(41, 37, 36, 0.95); }
+        
+        .booking-grid { display: grid; grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr auto; gap: 1rem; align-items: end; }
+        .form-group { position: relative; }
+        .form-label { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
+        .form-input, .form-select {
+            width: 100%; padding: 0.75rem; background: var(--color-bg); border: 1px solid var(--color-border);
+            font-family: var(--font-body); font-size: 0.95rem; color: var(--color-text-primary);
+            transition: border-color var(--duration-fast); outline: none;
+        }
+        .form-input:focus, .form-select:focus { border-color: var(--color-accent-gold); }
+
+        /* Room Cards */
+        .room-card {
+            background: var(--color-bg-alt); border: 1px solid var(--color-border);
+            transition: all var(--duration-medium) var(--ease-luxury); position: relative; overflow: hidden;
+        }
+        .room-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.08); }
+        .room-image-wrapper { position: relative; aspect-ratio: 16/10; overflow: hidden; }
+        .room-img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-slow) var(--ease-luxury); }
+        .room-card:hover .room-img { transform: scale(1.05); }
+        .room-badge {
+            position: absolute; top: 1rem; left: 1rem; background: var(--color-text-primary); color: var(--color-bg-alt);
+            padding: 0.4rem 1rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .room-info { padding: var(--space-md); }
+        .room-name { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .room-desc { font-size: 0.95rem; color: var(--color-text-secondary); margin-bottom: var(--space-sm); line-height: 1.6; }
+        .room-features { display: flex; gap: 1.5rem; margin-bottom: var(--space-sm); font-size: 0.85rem; color: var(--color-text-secondary); }
+        .room-price { font-family: var(--font-accent); font-size: 1.25rem; color: var(--color-accent-gold); font-weight: 600; margin-bottom: var(--space-sm); }
+
+        /* Stats & Awards */
+        .stat-item { text-align: center; padding: var(--space-md); }
+        .stat-number { font-family: var(--font-display); font-size: 3rem; color: var(--color-accent-gold); line-height: 1; margin-bottom: 0.5rem; }
+        .stat-label { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-text-secondary); }
+
+        /* Floating Elements */
+        .floating-wa {
+            position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px;
+            background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 999; transition: transform var(--duration-fast); text-decoration: none;
+        }
+        .floating-wa:hover { transform: scale(1.1); }
+
+        .cookie-banner {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-text-primary); color: var(--color-bg);
+            padding: var(--space-md); z-index: 9998; transform: translateY(100%);
+            transition: transform var(--duration-medium) var(--ease-luxury); border-top: 1px solid var(--color-accent-gold);
+        }
+        .cookie-banner.visible { transform: translateY(0); }
+
+        /* Accesibilidad WCAG AA */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+        :focus-visible { outline: 2px solid var(--color-accent-gold); outline-offset: 4px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .booking-grid { grid-template-columns: 1fr 1fr; }
+            .nav-menu { display: none; } 
+        }
+        @media (max-width: 640px) {
+            .booking-grid { grid-template-columns: 1fr; }
+            .hero-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Skip to content (Accesibilidad) -->
+    <a href="#main-content" class="sr-only" style="top: 1rem; left: 1rem; width: auto; height: auto; padding: 1rem; background: var(--color-accent-gold); color: var(--color-bg); z-index: 10000; clip: auto; font-weight: 600;">Saltar al contenido principal</a>
+
+    <!-- Preloader -->
+    <div id="preloader" role="status" aria-label="Cargando Aura Sanctuary">
+        <p class="text-accent" style="color: var(--color-accent-gold); margin-bottom: 1rem; letter-spacing: 0.3em;">AURA SANCTUARY</p>
+        <div class="loader-line"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container nav-container">
+            <a href="/" class="logo" aria-label="Aura Sanctuary Inicio">AURA <span>SANCTUARY</span></a>
+            
+            <nav aria-label="Navegación principal">
+                <ul class="nav-menu">
+                    <li><a href="#habitaciones" class="nav-link">Suites</a></li>
+                    <li><a href="#experiencias" class="nav-link">Experiencias</a></li>
+                    <li><a href="#gastronomia" class="nav-link">Gastronomía</a></li>
+                    <li><a href="#spa" class="nav-link">Spa & Wellness</a></li>
+                    <li><a href="#eventos" class="nav-link">Eventos</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn" aria-label="Buscar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Cambiar idioma">ES | EUR</button>
+                <button class="icon-btn" id="theme-toggle" aria-label="Cambiar modo oscuro/claro">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
+                <a href="#reservar" class="btn btn-gold" style="padding: 0.75rem 1.5rem; font-size: 0.75rem;">Reservar</a>
+                <a href="https://guest.aurasanctuary.com" class="icon-btn" aria-label="Área de Huéspedes" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;">GUEST</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" aria-label="Introducción">
+            <div class="hero-bg" role="img" aria-label="Vista panorámica de la piscina infinity del hotel al atardecer"></div>
+            <div class="hero-content">
+                <p class="text-accent hero-subtitle">5 Estrellas Gran Lujo</p>
+                <h1 class="hero-title">Donde el Tiempo se Detiene <br>y el <span class="text-italic">Bienestar</span> Comienza</h1>
+                <p class="hero-desc">Un refugio exclusivo de arquitectura orgánica, gastronomía con estrella Michelin y un spa de clase mundial frente al mar.</p>
+                <div class="hero-actions">
+                    <a href="#habitaciones" class="btn btn-primary" style="background: var(--color-bg-alt); color: var(--color-text-primary); border-color: var(--color-bg-alt);">Descubrir Suites</a>
+                    <a href="#experiencias" class="btn btn-secondary" style="color: var(--color-bg-alt); border-color: var(--color-bg-alt);">Explorar Experiencias</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Engine Widget -->
+        <div class="container booking-widget reveal" id="reservar">
+            <div class="booking-box">
+                <form class="booking-grid" aria-label="Motor de reservas">
+                    <div class="form-group">
+                        <label class="form-label" for="checkin">Llegada</label>
+                        <input type="date" id="checkin" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="checkout">Salida</label>
+                        <input type="date" id="checkout" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="guests">Huéspedes</label>
+                        <select id="guests" class="form-select">
+                            <option>2 Adultos</option>
+                            <option>1 Adulto</option>
+                            <option>2 Adultos, 1 Niño</option>
+                            <option>2 Adultos, 2 Niños</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="rooms">Habitaciones</label>
+                        <select id="rooms" class="form-select">
+                            <option>1 Habitación</option>
+                            <option>2 Habitaciones</option>
+                            <option>3+ Habitaciones</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="promo">Código Promo</label>
+                        <input type="text" id="promo" class="form-input" placeholder="Opcional">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="height: 46px;">
+                        Comprobar Disponibilidad
+                    </button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--color-text-secondary);">
+                    <span style="color: var(--color-accent-gold);">✦</span> Mejor Precio Garantizado solo en web oficial <span style="color: var(--color-accent-gold);">✦</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- About / Philosophy -->
+        <section class="section-padding" id="nosotros">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent">Nuestra Filosofía</p>
+                        <h2>El Arte de la <span class="text-italic">Hospitalidad</span> Consciente</h2>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Aura Sanctuary no es solo un hotel; es un estado mental. Diseñado por arquitectos de renombre mundial, cada espacio ha sido concebido para fundirse con la naturaleza, ofreciendo una serenidad absoluta. Nuestro servicio de mayordomía 24 horas anticipa sus deseos antes de que usted los exprese.
+                        </p>
+                        <div style="display: flex; gap: 2rem; margin-top: var(--space-md);">
+                            <div>
+                                <p class="stat-number" style="font-size: 2rem; text-align: left;">15</p>
+                                <p class="stat-label" style="text-align: left;">Años de Excelencia</p>
+                            </div>
+                            <div>
+                                <p class="stat-number" style="font-size: 2rem; text-align: left;">1</p>
+                                <p class="stat-label" style="text-align: left;">Estrella Michelin</p>
+                            </div>
+                            <div>
+                                <p class="stat-number" style="font-size: 2rem; text-align: left;">4.9</p>
+                                <p class="stat-label" style="text-align: left;">TripAdvisor Travelers' Choice</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal" style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2670&auto=format&fit=crop" alt="Interior minimalista y lujoso del lobby del hotel" style="width: 100%; border-radius: 2px;" loading="lazy">
+                        <div style="position: absolute; bottom: -2rem; left: -2rem; background: var(--color-text-primary); color: var(--color-bg-alt); padding: 2rem; max-width: 250px; border-radius: 2px;">
+                            <p style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.5rem;">"Un oasis de paz"</p>
+                            <p style="font-size: 0.85rem; color: var(--color-text-secondary);">— Condé Nast Traveler, 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rooms & Suites -->
+        <section class="section-padding" id="habitaciones" style="background-color: var(--color-bg-alt);">
+            <div class="container">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto var(--space-lg);" class="reveal">
+                    <p class="text-accent">Alojamiento</p>
+                    <h2>Suites y Habitaciones</h2>
+                    <p style="color: var(--color-text-secondary); margin-top: var(--space-sm);">Diseño orgánico, textiles de algodón egipcio y vistas que quitan el aliento. Cada estancia es un santuario personal.</p>
+                </div>
+                
+                <div class="grid-3">
+                    <!-- Room 1 -->
+                    <article class="room-card reveal">
+                        <div class="room-image-wrapper">
+                            <span class="room-badge">Más Popular</span>
+                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=2574&auto=format&fit=crop" alt="Deluxe Ocean View Room" class="room-img" loading="lazy">
+                        </div>
+                        <div class="room-info">
+                            <h3 class="room-name">Deluxe Ocean View</h3>
+                            <p class="room-desc">45m² de serenidad con balcón privado y vistas panorámicas al mar Mediterráneo.</p>
+                            <div class="room-features">
+                                <span>👥 2 Huéspedes</span>
+                                <span>🛏️ King Size</span>
+                                <span>🌊 Vistas al Mar</span>
+                            </div>
+                            <p class="room-price">Desde 450 € / noche</p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Ver Detalles y Reservar</a>
+                        </div>
+                    </article>
+
+                    <!-- Room 2 -->
+                    <article class="room-card reveal">
+                        <div class="room-image-wrapper">
+                            <span class="room-badge" style="background: var(--color-accent-gold);">Recomendada</span>
+                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2670&auto=format&fit=crop" alt="Junior Suite con Piscina" class="room-img" loading="lazy">
+                        </div>
+                        <div class="room-info">
+                            <h3 class="room-name">Junior Suite Plunge Pool</h3>
+                            <p class="room-desc">65m² con terraza privada, piscina de inmersión climatizada y servicio de mayordomo.</p>
+                            <div class="room-features">
+                                <span>👥 2 Huéspedes</span>
+                                <span>🛏️ King Size</span>
+                                <span>💧 Plunge Pool</span>
+                            </div>
+                            <p class="room-price">Desde 750 € / noche</p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Ver Detalles y Reservar</a>
+                        </div>
+                    </article>
+
+                    <!-- Room 3 -->
+                    <article class="room-card reveal">
+                        <div class="room-image-wrapper">
+                            <span class="room-badge">Exclusiva</span>
+                            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2670&auto=format&fit=crop" alt="Presidential Suite" class="room-img" loading="lazy">
+                        </div>
+                        <div class="room-info">
+                            <h3 class="room-name">Presidential Ocean Suite</h3>
+                            <p class="room-desc">200m² de puro lujo. Dos dormitorios, salón, comedor y piscina infinity privada.</p>
+                            <div class="room-features">
+                                <span>👥 4 Huéspedes</span>
+                                <span>🛏️ 2 King Size</span>
+                                <span>👑 Mayordomo 24h</span>
+                            </div>
+                            <p class="room-price">Desde 2.500 € / noche</p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Ver Detalles y Reservar</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experiences & Spa -->
+        <section class="section-padding" id="experiencias">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent">Bienestar</p>
+                        <h2>Spa & Wellness <br><span class="text-italic">Renovación Total</span></h2>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Nuestro spa de 1.500m² es un santuario dentro del santuario. Tratamientos con productos orgánicos locales, circuito termal, sauna de sal del Himalaya y sesiones de yoga al amanecer en nuestra plataforma sobre el acantilado.
+                        </p>
+                        <ul style="list-style: none; margin: var(--space-md) 0;">
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="color: var(--color-accent-gold);">✦</span> Masajes signature con aceites esenciales locales.
+                            </li>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="color: var(--color-accent-gold);">✦</span> Circuito hidrotermal de 5 sensaciones.
+                            </li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="color: var(--color-accent-gold);">✦</span> Consultas de bienestar y nutrición personalizadas.
+                            </li>
+                        </ul>
+                        <a href="#spa" class="btn btn-secondary">Reservar Tratamiento</a>
+                    </div>
+                    <div class="reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2670&auto=format&fit=crop" style="width: 100%; height: 300px; object-fit: cover; border-radius: 2px; margin-top: 2rem;" loading="lazy" alt="Tratamiento de spa">
+                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2680&auto=format&fit=crop" style="width: 100%; height: 300px; object-fit: cover; border-radius: 2px;" loading="lazy" alt="Piscina del spa">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gastronomy -->
+        <section class="section-padding" id="gastronomia" style="background-color: var(--color-text-primary); color: var(--color-bg-alt);">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent" style="color: var(--color-accent-gold);">Alta Cocina</p>
+                    <h2 style="color: var(--color-bg-alt);">Gastronomía de Autor</h2>
+                </div>
+                <div class="grid-2">
+                    <div class="reveal">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2574&auto=format&fit=crop" alt="Plato gourmet en restaurante con estrella Michelin" style="width: 100%; border-radius: 2px;" loading="lazy">
+                    </div>
+                    <div class="reveal">
+                        <h3 style="color: var(--color-bg-alt); margin-bottom: var(--space-sm);">Restaurante *AURA*</h3>
+                        <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: var(--space-md);">
+                            Bajo la dirección del Chef Ejecutivo [Nombre], nuestro restaurante galardonado con una Estrella Michelin ofrece un viaje sensorial a través de la cocina de mercado local, reinterpretada con técnicas de vanguardia. Maridaje exclusivo con nuestra bodega de más de 500 referencias.
+                        </p>
+                        <div style="display: flex; gap: 1rem;">
+                            <a href="#" class="btn btn-gold">Reservar Mesa</a>
+                            <a href="#" class="btn btn-secondary" style="color: var(--color-bg-alt); border-color: var(--color-bg-alt);">Ver Carta</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials / Social Proof -->
+        <section class="section-padding">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent">Lo que dicen nuestros huéspedes</p>
+                    <h2>Experiencias Inolvidables</h2>
+                </div>
+                <div class="grid-3">
+                    <div class="reveal" style="background: var(--color-bg-alt); padding: var(--space-md); border: 1px solid var(--color-border); border-radius: 2px;">
+                        <div style="color: var(--color-accent-gold); margin-bottom: 1rem;">★★★★★</div>
+                        <p style="font-style: italic; color: var(--color-text-secondary); margin-bottom: 1.5rem;">"Simplemente perfecto. Desde el traslado en helicóptero hasta el detalle de la almohada de aromaterapia. El personal hizo que nuestra luna de miel fuera mágica."</p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; background: var(--color-sand); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">MR</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">María & Roberto</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Luna de Miel, Suite Presidencial</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal" style="background: var(--color-bg-alt); padding: var(--space-md); border: 1px solid var(--color-border); border-radius: 2px;">
+                        <div style="color: var(--color-accent-gold); margin-bottom: 1rem;">★★★★★</div>
+                        <p style="font-style: italic; color: var(--color-text-secondary); margin-bottom: 1.5rem;">"El spa es de otro mundo. La atención al detalle en la gastronomía y la privacidad de las villas superan a cualquier otro resort 5 estrellas en el que haya estado."</p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; background: var(--color-sand); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">JL</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">James L.</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Viajero Frecuente, Reino Unido</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal" style="background: var(--color-bg-alt); padding: var(--space-md); border: 1px solid var(--color-border); border-radius: 2px;">
+                        <div style="color: var(--color-accent-gold); margin-bottom: 1rem;">★★★★★</div>
+                        <p style="font-style: italic; color: var(--color-text-secondary); margin-bottom: 1.5rem;">"Una joya escondida. La relación calidad-precio reservando directamente en su web fue excelente, y el upgrade que nos dieron fue un detalle maravilloso."</p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; background: var(--color-sand); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">AP</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">Ana P.</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Escapada Romántica</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="section-padding" style="background-color: var(--color-sand); text-align: center;">
+            <div class="container reveal">
+                <p class="text-accent">Su Santuario le Espera</p>
+                <h2 style="margin-bottom: var(--space-sm);">Comience su Historia con Nosotros</h2>
+                <p style="color: var(--color-text-secondary); max-width: 600px; margin: 0 auto var(--space-md);">Reserve directamente en nuestra web oficial y disfrute de desayuno incluido, upgrade sujeto a disponibilidad y late check-out hasta las 16:00h.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="#reservar" class="btn btn-primary">Reservar Ahora</a>
+                    <a href="https://wa.me/34900800900" class="btn btn-secondary">Consultar por WhatsApp</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="background-color: var(--color-text-primary); color: var(--color-bg-alt); padding: var(--space-xl) 0 var(--space-md);">
+        <div class="container">
+            <div class="grid-4" style="margin-bottom: var(--space-lg);">
+                <div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-bg-alt);">AURA <span style="color: var(--color-accent-gold);">SANCTUARY</span></h3>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                        Un refugio de lujo 5 estrellas Gran Lujo donde la naturaleza, la gastronomía y el bienestar se encuentran para crear momentos inolvidables.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" aria-label="Instagram" style="color: var(--color-bg-alt); transition: color 0.3s;">IG</a>
+                        <a href="#" aria-label="Facebook" style="color: var(--color-bg-alt); transition: color 0.3s;">FB</a>
+                        <a href="#" aria-label="Pinterest" style="color: var(--color-bg-alt); transition: color 0.3s;">PI</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-gold); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">Explorar</h4>
+                    <a href="#habitaciones" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Habitaciones y Suites</a>
+                    <a href="#gastronomia" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Gastronomía</a>
+                    <a href="#spa" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Spa & Wellness</a>
+                    <a href="#eventos" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Bodas y Eventos</a>
+                    <a href="#ofertas" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Ofertas Especiales</a>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-gold); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">Servicios</h4>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Traslados y Helipuerto</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Conserjería 24h</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Gift Cards</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Trabaja con Nosotros</a>
+                    <a href="#" style="display: block; color: var(--color-text-secondary); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Prensa</a>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-gold); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">Contacto</h4>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Paseo Marítimo de la Serena, 1<br>29602 Marbella, España</p>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">+34 900 800 900</p>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">reservas@aurasanctuary.com</p>
+                    <h4 style="color: var(--color-accent-gold); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">Newsletter</h4>
+                    <form style="display: flex; border-bottom: 1px solid var(--color-accent-gold);">
+                        <input type="email" placeholder="Su email" style="background: transparent; border: none; color: white; padding: 0.5rem 0; width: 100%; outline: none; font-size: 0.9rem;">
+                        <button type="submit" style="background: transparent; border: none; color: var(--color-accent-gold); cursor: pointer; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; font-weight: 600;">Enviar</button>
+                    </form>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--space-md); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--color-text-secondary);">
+                <p>&copy; 2026 Aura Sanctuary Hotels. Todos los derechos reservados.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="#aviso-legal" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Aviso Legal</a>
+                    <a href="#privacidad" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Privacidad</a>
+                    <a href="#cookies" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Cookies</a>
+                    <a href="#condiciones" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Condiciones de Reserva</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Elements -->
+    <a href="https://wa.me/34900800900" class="floating-wa" aria-label="Contactar con Conserjería por WhatsApp" target="_blank" rel="noopener">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <!-- Cookie Consent Banner (GDPR) -->
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Respetamos su privacidad</p>
+                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Utilizamos cookies propias y de terceros para mejorar su experiencia de reserva, analizar el tráfico y personalizar contenido. Puede configurar o rechazar su uso conforme a nuestra Política de Cookies.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cookie-reject" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Rechazar</button>
+                <button id="cookie-settings" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Configurar</button>
+                <button id="cookie-accept" class="btn btn-gold" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Aceptar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Optimizado (Vanilla, sin dependencias pesadas) -->
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, { passive: true });
+
+        // Intersection Observer para animaciones de revelado
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Booking Engine Date Validation
+        const checkin = document.getElementById('checkin');
+        const checkout = document.getElementById('checkout');
+        
+        // Set default dates (tomorrow and day after)
+        const today = new Date();
+        const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+        const nextDay = new Date(today); nextDay.setDate(nextDay.getDate() + 2);
+        
+        checkin.valueAsDate = tomorrow;
+        checkout.valueAsDate = nextDay;
+
+        checkin.addEventListener('change', () => {
+            if (new Date(checkout.value) <= new Date(checkin.value)) {
+                const newCheckout = new Date(checkin.value);
+                newCheckout.setDate(newCheckout.getDate() + 1);
+                checkout.valueAsDate = newCheckout;
+            }
+            checkout.min = checkin.value;
+        });
+
+        // Cookie Consent Logic
+        const cookieBanner = document.getElementById('cookie-banner');
+        if (!localStorage.getItem('cookieConsent')) {
+            setTimeout(() => {
+                cookieBanner.classList.add('visible');
+            }, 2000);
+        }
+
+        document.getElementById('cookie-accept').addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'accepted');
+            cookieBanner.classList.remove('visible');
+        });
+
+        document.getElementById('cookie-reject').addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'rejected');
+            cookieBanner.classList.remove('visible');
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+    <!-- =========================================
+         PÁGINAS LEGALES Y ESTRUCTURA SECUNDARIA
+         (Listas para ser extraídas a archivos .html independientes)
+         ========================================= -->
+    
+    <template id="tpl-privacidad">
+        <section class="section-padding container">
+            <h1>Política de Privacidad</h1>
+            <p class="text-accent">Última actualización: 15 de julio de 2026</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>1. Responsable del Tratamiento</h3>
+                <p>Aura Sanctuary Hotels S.L., con CIF A-12345678 y domicilio en Paseo Marítimo de la Serena, 1, 29602 Marbella.</p>
+                <h3>2. Finalidad y Legitimación</h3>
+                <p>Tratamos sus datos para gestionar su reserva, estancia y facturación, basándonos en la ejecución del contrato de hospedaje y su consentimiento explícito, conforme al RGPD y la LOPDGDD.</p>
+                <h3>3. Derechos del Huésped</h3>
+                <p>Puede ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad enviando un email a privacidad@aurasanctuary.com.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-aviso-legal">
+        <section class="section-padding container">
+            <h1>Aviso Legal</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), se informa que el titular de este sitio web es Aura Sanctuary Hotels S.L.</p>
+                <p>La información sobre tarifas, disponibilidad y características de las habitaciones tiene carácter meramente informativo. El contrato de hospedaje se perfecciona únicamente tras la confirmación escrita de la reserva y el pago correspondiente.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-cookies">
+        <section class="section-padding container">
+            <h1>Política de Cookies</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>1. ¿Qué son las cookies?</h3>
+                <p>Son pequeños archivos de texto que se descargan en su dispositivo para almacenar y recuperar información sobre sus hábitos de navegación.</p>
+                <h3>2. Cookies que utilizamos</h3>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Técnicas (Necesarias):</strong> Imprescindibles para el funcionamiento del motor de reservas y la seguridad del sitio.</li>
+                    <li><strong>Analíticas:</strong> Google Analytics 4 (IP anonimizada) para medir el tráfico y mejorar nuestros servicios.</li>
+                    <li><strong>Marketing:</strong> Solo se activan con su consentimiento explícito para mostrar publicidad relevante en redes sociales (Meta, Google Ads).</li>
+                </ul>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-condiciones">
+        <section class="section-padding container">
+            <h1>Condiciones de Reserva y Cancelación</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>Política de Cancelación Estándar</h3>
+                <p>Las reservas pueden cancelarse sin cargo hasta 7 días antes de la fecha de llegada. Las cancelaciones realizadas dentro de los 7 días previos o los "No-Show" estarán sujetos al cargo del 100% de la primera noche.</p>
+                <h3>Tarifas No Reembolsables</h3>
+                <p>Las tarifas con descuento "No Reembolsable" requieren el pago del 100% del importe en el momento de la reserva y no admiten cambios, cancelaciones ni reembolsos bajo ninguna circunstancia.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-accesibilidad">
+        <section class="section-padding container">
+            <h1>Declaración de Accesibilidad</h1>
+            <p class="text-accent">Nivel de conformidad: WCAG 2.1 Nivel AA</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>Aura Sanctuary se compromete a garantizar la accesibilidad digital de su sitio web para todas las personas, incluidas aquellas con discapacidades visuales, auditivas, motoras o cognitivas.</p>
+                <p>Medidas adoptadas: contraste de color verificado, navegación completa por teclado, etiquetas ARIA, textos alternativos en todas las fotografías de instalaciones y tipografías legibles y escalables.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-404">
+        <section style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: var(--color-bg);">
+            <p class="text-accent">Error 404</p>
+            <h1 style="margin: 1rem 0;">Página No Encontrada</h1>
+            <p style="color: var(--color-text-secondary); max-width: 500px; margin-bottom: 2rem;">Lo sentimos, la página que busca no existe o ha sido movida. Le invitamos a volver a nuestra página de inicio para continuar descubriendo Aura Sanctuary.</p>
+            <a href="/" class="btn btn-primary">Volver al Inicio</a>
+        </section>
+    </template>
+
+</body>
+</html>

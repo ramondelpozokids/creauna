@@ -130,6 +130,10 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
   const isGestoria = /gestor[ií]a|asesor[ií]a/i.test(lower);
   const isRenewable = /energ[ií]as?\s+renov|fotovolta|placas\s+solares|autoconsumo|energ[ií]a\s+solar|ritest/i.test(lower);
   const isFoodBlog = /recetas|blog de comida|blog gastron|food blog|comida casera|stanton/i.test(lower);
+  const isJewelry =
+    /joyer[ií]a|relojer[ií]a|jewelry|watchmaker|rolex|cartier|patek|omega|bulgari|tiffany|audemars|alta relojer/i.test(
+      lower
+    );
   const menu =
     isFoodBlog ||
     (!navMenu &&
@@ -137,6 +141,28 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
       (mentioned(/carta|producto|men[uú]\s+(del|degustaci)/) ||
         (mentioned(/men[uú]|menu/) && !navMenu) ||
         listing));
+
+  if (isJewelry) {
+    return {
+      menu: true,
+      services: true,
+      about: true,
+      blog: mentioned(/blog|noticias|news|tendencias|gu[ií]as/) || true,
+      gallery: true,
+      reviews: true,
+      location: true,
+      contact: true,
+      reservation: true,
+      calendar: mentioned(/calendario|calendar/),
+      legalFooter: true,
+      social: true,
+      whatsapp: true,
+      scrollUp: true,
+      sidebar: false,
+      documentUpload: false,
+      vividColors: false,
+    };
+  }
 
   return {
     menu,
@@ -228,7 +254,7 @@ const TEMPLATE_VARIANT: Partial<Record<string, BusinessVariant>> = {
   pistons: 'automotive',
   retreat: 'luxury',
   serene: 'luxury',
-  atelier: 'luxury',
+  atelier: 'jewelry',
   maison: 'luxury',
   vows: 'luxury',
   essence: 'luxury',
@@ -301,6 +327,9 @@ export function buildIntentFromTemplateSlug(templateSlug: string, lang: 'es' | '
 }
 
 export function isExistingSiteSections(sections: { type: string; html?: string }[]): boolean {
+  if (sections.some((s) => s.type === 'fullpage' && (s.html?.length ?? 0) > 5000)) {
+    return true;
+  }
   if (sections.length <= 1) return false;
   const substantive = sections.filter(
     (s) => s.type !== 'widgets' && (s.html?.length ?? 0) > 200

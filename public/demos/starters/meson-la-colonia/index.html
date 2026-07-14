@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+  <title>Mesón La Colonia | Madrid - Comida Española en Vallecas</title>
+  <meta name="description" content="Mesón La Colonia en Puente de Vallecas. Comida española casera, tapas, raciones, menú del día. Ven a ver el fútbol: Liga y Champions. Reserva: 624 69 19 30"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --color-bg: #faf9f6; --color-text: #1a1a1a; --color-text-light: #6b7280;
+      --color-accent: #b8954a; --color-accent-dark: #8b6f3a; --color-accent-light: #d4b978;
+      --color-white: #ffffff; --color-cream: #f5f3ef; --color-border: #e8e5de;
+      --color-dark: #1a1a1a; --shadow-soft: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-medium: 0 8px 30px rgba(0,0,0,0.1); --shadow-hover: 0 12px 40px rgba(0,0,0,0.15);
+      --radius-sm: 8px; --radius: 16px; --radius-lg: 24px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Inter', sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.6; overflow-x: hidden; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
+    img { max-width: 100%; height: auto; display: block; }
+    
+    /* HEADER */
+    header { 
+      position: relative; 
+      height: 85vh; 
+      min-height: 600px; 
+      background: linear-gradient(135deg, rgba(26,26,26,0.7), rgba(26,26,26,0.5)), 
+                  url('https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop') center/cover no-repeat; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: var(--color-white); 
+    }
+    header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.5) 100%); }
+    .header-content { position: relative; z-index: 2; text-align: center; max-width: 900px; padding: 2rem; animation: fadeInUp 1s ease; }
+    .rating-badge { display: inline-flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 0.6rem 1.5rem; border-radius: 50px; font-size: 1rem; border: 1px solid rgba(255,255,255,0.2); flex-wrap: wrap; justify-content: center; }
+    .hero-trust-badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+    .badge-24h { display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(37, 211, 102, 0.2); backdrop-filter: blur(10px); padding: 0.6rem 1.5rem; border-radius: 50px; font-size: 1rem; border: 1px solid rgba(37, 211, 102, 0.35); color: white; }
+    .badge-24h i { color: #25D366; }
+    .badge-24h strong { color: #86efac; }
+    .rating-badge .stars { color: var(--color-accent-light); letter-spacing: 2px; }
+    header h1 { font-size: clamp(2.5rem, 6vw, 5.5rem); margin-bottom: 1rem; letter-spacing: -0.02em; font-weight: 700; text-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    header .subtitle { font-size: clamp(1rem, 2.5vw, 1.3rem); opacity: 0.95; font-weight: 300; margin-bottom: 0.5rem; letter-spacing: 3px; text-transform: uppercase; }
+    header .tagline { font-size: clamp(0.9rem, 2vw, 1.1rem); opacity: 0.9; margin-bottom: 2.5rem; font-style: italic; font-family: 'Playfair Display', serif; }
+    .header-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    
+    .btn { padding: 1rem 2.5rem; border: none; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none; position: relative; overflow: hidden; }
+    .btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent); transform: translateX(-100%); transition: 0.6s; }
+    .btn:hover::before { transform: translateX(100%); }
+    .btn-primary { background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark)); color: var(--color-white); box-shadow: 0 4px 15px rgba(184, 149, 74, 0.4); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(184, 149, 74, 0.5); }
+    .btn-outline { background: transparent; color: var(--color-white); border: 2px solid rgba(255,255,255,0.6); backdrop-filter: blur(10px); }
+    .btn-outline:hover { background: rgba(255,255,255,0.15); border-color: var(--color-white); transform: translateY(-3px); }
+    .btn-whatsapp { background: #25D366; color: var(--color-white); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
+    .btn-whatsapp:hover { background: #128C7E; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); }
+    
+    /* NAVIGATION */
+    nav { position: sticky; top: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); border-bottom: 1px solid var(--color-border); z-index: 1000; padding: 0 1rem; box-shadow: var(--shadow-soft); }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--color-text); text-decoration: none; }
+    .nav-logo span { color: var(--color-accent); }
+    .nav-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--color-text); cursor: pointer; padding: 0.5rem; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; justify-content: center; }
+    .nav-links a { color: var(--color-text); text-decoration: none; font-weight: 500; font-size: 0.95rem; position: relative; padding: 0.5rem 0; transition: var(--transition); }
+    .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--color-accent); transition: var(--transition); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { display: flex; gap: 1rem; align-items: center; }
+    .nav-cta .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+    
+    main { max-width: 1400px; margin: 0 auto; padding: 4rem 1.5rem; }
+    section { margin-bottom: 6rem; animation: fadeInUp 0.8s ease both; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-title { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 1rem; position: relative; display: inline-block; }
+    .section-title::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 3px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light)); }
+    .section-subtitle { color: var(--color-text-light); font-size: 1.1rem; margin-top: 1.5rem; }
+    
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .info-card-premium { background: var(--color-white); padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow-soft); transition: var(--transition); border: 1px solid var(--color-border); position: relative; overflow: hidden; }
+    .info-card-premium::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light)); transform: scaleX(0); transition: var(--transition); }
+    .info-card-premium:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+    .info-card-premium:hover::before { transform: scaleX(1); }
+    .info-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--color-white); font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .info-card-premium h3 { font-size: 1.4rem; margin-bottom: 1rem; color: var(--color-text); }
+    .info-card-premium p { color: var(--color-text-light); line-height: 1.8; }
+    .info-card-premium a { color: var(--color-accent); text-decoration: none; font-weight: 600; transition: var(--transition); }
+    .info-card-premium a:hover { color: var(--color-accent-dark); }
+    .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #fef3c7; color: #92400e; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin-top: 1rem; }
+    .status-badge.closed { background: #fee2e2; color: #b91c1c; }
+    .status-badge.open { background: #d1fae5; color: #065f46; }
+    
+    /* FOOTBALL SECTION */
+    .football-section { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: var(--radius-lg); padding: clamp(2rem, 5vw, 4rem); color: var(--color-white); text-align: center; position: relative; overflow: hidden; margin: 4rem 0; }
+    .football-section::before { content: ''; position: absolute; top: -50%; left: -20%; width: 800px; height: 800px; background: radial-gradient(circle, rgba(184, 149, 74, 0.15), transparent); border-radius: 50%; }
+    .football-content { position: relative; z-index: 1; }
+    .football-icon { font-size: clamp(2.5rem, 5vw, 4rem); color: var(--color-accent); margin-bottom: 1.5rem; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .football-section h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; }
+    .football-section .highlight { color: var(--color-accent); font-weight: 700; }
+    .football-section p { font-size: clamp(1rem, 2vw, 1.2rem); margin-bottom: 2rem; opacity: 0.9; }
+    .football-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; margin-top: 3rem; }
+    .football-feature { background: rgba(255,255,255,0.05); padding: 2rem; border-radius: var(--radius); border: 2px solid rgba(184, 149, 74, 0.3); transition: var(--transition); }
+    .football-feature:hover { background: rgba(255,255,255,0.1); border-color: var(--color-accent); transform: translateY(-5px); }
+    .football-feature i { font-size: 2.5rem; color: var(--color-accent); margin-bottom: 1rem; }
+    .football-feature h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .football-feature p { font-size: 1rem; opacity: 0.85; margin: 0; }
+    
+    .menu-highlight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; margin: 3rem 0; }
+    .menu-highlight-card { background: var(--color-white); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow-soft); border-left: 4px solid var(--color-accent); transition: var(--transition); }
+    .menu-highlight-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+    .menu-highlight-card h4 { color: var(--color-accent); font-size: 1.3rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .menu-highlight-card p { color: var(--color-text-light); line-height: 1.6; }
+    
+    .daily-menu-section { background: var(--color-white); border-radius: var(--radius-lg); padding: clamp(2rem, 4vw, 3rem); box-shadow: var(--shadow-medium); margin-bottom: 3rem; }
+    .menu-grid-daily { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .menu-category-daily { background: var(--color-bg); padding: 2rem; border-radius: var(--radius); border-left: 4px solid var(--color-accent); }
+    .menu-category-daily h4 { font-size: 1.5rem; color: var(--color-accent); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .menu-category-daily ul { list-style: none; }
+    .menu-category-daily li { padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); color: var(--color-text); font-size: 1.05rem; }
+    .menu-category-daily li:last-child { border-bottom: none; }
+    .menu-price-info { background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark)); color: white; padding: 2rem; border-radius: var(--radius); text-align: center; margin-top: 2rem; }
+    .menu-price-info h3 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .menu-price-info p { font-size: 1.1rem; opacity: 0.95; }
+    
+    .qr-section { background: var(--color-cream); border-radius: var(--radius-lg); padding: 3rem; text-align: center; margin-bottom: 0; }
+    .qr-container { display: inline-flex; flex-direction: column; align-items: center; gap: 1.5rem; background: white; padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow-medium); width: 100%; max-width: 400px; }
+    .qr-code { width: 200px; height: 200px; background: white; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--color-border); }
+    .qr-code img { width: 100%; height: 100%; object-fit: contain; }
+    .qr-text h4 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .qr-text p { color: var(--color-text-light); }
+    .digital-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; align-items: center; }
+    .digital-menu-features { background: var(--color-white); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-soft); border: 1px solid var(--color-border); }
+    .digital-menu-features h3 { font-size: 1.6rem; margin-bottom: 1rem; }
+    .digital-menu-features ul { list-style: none; }
+    .digital-menu-features li { padding: 0.85rem 0; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; gap: 0.75rem; color: var(--color-text); }
+    .digital-menu-features li:last-child { border-bottom: none; }
+    .digital-menu-features li i { color: var(--color-accent); width: 1.25rem; text-align: center; }
+    .reserva-24-banner { display: flex; align-items: flex-start; gap: 1.25rem; background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.25); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; }
+    .reserva-24-banner > i { font-size: 2rem; color: #25D366; margin-top: 0.25rem; flex-shrink: 0; }
+    .reserva-24-banner strong { display: block; font-size: 1.2rem; margin-bottom: 0.35rem; }
+    .reserva-24-banner p { color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6; }
+    .google-reviews-cta { text-align: center; margin-top: 2.5rem; }
+    .google-reviews-cta .btn { background: white; color: var(--color-text); border: 2px solid var(--color-border); }
+    .google-reviews-cta .btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .table-ordering-block { margin-top: 3rem; background: linear-gradient(135deg, #1a1a1a, #2d2d2d); border-radius: var(--radius-lg); padding: clamp(2rem, 4vw, 3rem); color: white; text-align: center; }
+    .table-order-headline { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: .75rem; }
+    .table-order-subtitle { color: rgba(255,255,255,.75); margin-bottom: 2rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .table-mesa-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-bottom: 2rem; }
+    .table-mesa-btn { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; border-radius: var(--radius-sm); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.15rem; text-decoration: none; transition: var(--transition); border: 2px solid var(--color-accent-light); }
+    .table-mesa-btn:hover { background: var(--color-accent-dark); transform: translateY(-3px); }
+    .table-qr-print-details { text-align: left; max-width: 720px; margin: 0 auto 1.5rem; background: rgba(255,255,255,.06); border-radius: var(--radius); padding: 1rem 1.25rem; }
+    .table-qr-print-details summary { cursor: pointer; font-weight: 600; color: var(--color-accent-light); list-style: none; }
+    .table-qr-print-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+    .table-qr-card { background: white; border-radius: var(--radius-sm); padding: .75rem; text-align: center; color: var(--color-text); }
+    .table-qr-card img { width: 100%; height: auto; display: block; margin-bottom: .5rem; }
+    .table-qr-card span { font-size: .85rem; font-weight: 700; }
+    .table-order-footnote a { color: var(--color-accent-light); text-decoration: none; font-weight: 600; }
+    .table-order-footnote a:hover { color: white; }
+    
+    .menu-container { background: var(--color-white); border-radius: var(--radius-lg); box-shadow: var(--shadow-medium); overflow: hidden; }
+    .menu-tabs { display: flex; gap: 0; background: var(--color-cream); border-bottom: 2px solid var(--color-border); overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .menu-tabs::-webkit-scrollbar { display: none; }
+    .menu-tab { padding: 1.25rem 2rem; background: none; border: none; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--color-text-light); cursor: pointer; white-space: nowrap; transition: var(--transition); border-bottom: 3px solid transparent; }
+    .menu-tab:hover { color: var(--color-text); background: rgba(184, 149, 74, 0.1); }
+    .menu-tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); background: var(--color-white); }
+    .menu-tab .count { display: inline-block; margin-left: 0.5rem; padding: 0.2rem 0.6rem; background: var(--color-accent); color: white; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+    .menu-content { padding: clamp(1.5rem, 3vw, 3rem); }
+    .menu-category { display: none; animation: fadeIn 0.5s ease; }
+    .menu-category.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .category-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border); flex-wrap: wrap; }
+    .category-icon { width: 50px; height: 50px; background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0; }
+    .category-title { font-size: 2rem; font-family: 'Playfair Display', serif; color: var(--color-text); }
+    .menu-grid { display: grid; gap: 1.5rem; }
+    .menu-item-card { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: 1.5rem; background: var(--color-bg); border-radius: var(--radius); transition: var(--transition); border: 2px solid transparent; }
+    .menu-item-card:hover { background: var(--color-white); border-color: var(--color-accent-light); box-shadow: var(--shadow-medium); transform: translateX(8px); }
+    .menu-item-info h4 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--color-text); }
+    .menu-item-info p { color: var(--color-text-light); font-size: 0.95rem; line-height: 1.6; }
+    .menu-item-price { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--color-accent); white-space: nowrap; align-self: center; }
+    
+    .booking-section { background: linear-gradient(135deg, var(--color-dark), #2d2d2d); border-radius: var(--radius-lg); padding: clamp(2rem, 5vw, 4rem); color: var(--color-white); position: relative; overflow: hidden; }
+    .booking-section::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(184, 149, 74, 0.1), transparent); border-radius: 50%; }
+    .booking-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; position: relative; z-index: 1; }
+    .booking-info h3 { font-size: 2.5rem; margin-bottom: 1.5rem; }
+    .booking-info p { color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-size: 1.1rem; }
+    .booking-features { list-style: none; margin-bottom: 2rem; }
+    .booking-features li { padding: 0.75rem 0; display: flex; align-items: center; gap: 1rem; color: rgba(255,255,255,0.9); }
+    .booking-features i { color: var(--color-accent); font-size: 1.2rem; }
+    .booking-form { background: var(--color-white); padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow-hover); }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; color: var(--color-text); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 1rem; border: 2px solid var(--color-border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 1rem; transition: var(--transition); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(184, 149, 74, 0.1); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    
+    .calendar-widget { background: var(--color-white); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; border: 2px solid var(--color-border); }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border); }
+    .calendar-header h4 { font-size: 1.3rem; color: var(--color-text); font-weight: 700; }
+    .calendar-nav { display: flex; gap: 0.5rem; }
+    .calendar-nav button { width: 36px; height: 36px; border: none; background: var(--color-accent); color: white; border-radius: 50%; cursor: pointer; transition: var(--transition); font-weight: 600; }
+    .calendar-nav button:hover { background: var(--color-accent-dark); transform: scale(1.1); }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; }
+    .calendar-day-name { font-size: 0.85rem; font-weight: 700; color: var(--color-text); padding: 0.75rem 0.5rem; background: var(--color-cream); border-radius: var(--radius-sm); }
+    .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: var(--transition); font-size: 0.95rem; font-weight: 600; color: var(--color-text); background: var(--color-bg); border: 2px solid transparent; }
+    .calendar-day:hover:not(.disabled) { background: var(--color-accent); color: white; border-color: var(--color-accent); transform: scale(1.1); }
+    .calendar-day.selected { background: var(--color-accent); color: white; font-weight: 700; border-color: var(--color-accent-dark); box-shadow: 0 4px 12px rgba(184, 149, 74, 0.4); }
+    .calendar-day.disabled { color: var(--color-border); cursor: not-allowed; background: var(--color-cream); }
+    .calendar-day.today { border: 2px solid var(--color-accent); font-weight: 700; }
+    
+    /* GALLERY */
+    .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 280px); gap: 1rem; border-radius: var(--radius-lg); overflow: hidden; margin: 0 auto; max-width: 1400px; }
+    .gallery-item { position: relative; overflow: hidden; border-radius: var(--radius); cursor: pointer; box-shadow: var(--shadow-soft); opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .gallery-item.visible { opacity: 1; transform: translateY(0); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(184, 149, 74, 0.3), transparent); opacity: 0; transition: opacity 0.3s ease; }
+    .gallery-item:hover::after { opacity: 1; }
+    .gallery-item:nth-child(1) { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+    .gallery-item:nth-child(5) { grid-column: 3 / span 2; grid-row: 1; }
+    .gallery-item:nth-child(6) { grid-column: 3; grid-row: 2; }
+    .gallery-item:nth-child(7) { grid-column: 4; grid-row: 2; }
+    .gallery-item:nth-child(8) { grid-column: 1; grid-row: 3; }
+    .gallery-item:nth-child(9) { grid-column: 2; grid-row: 3; }
+    .gallery-item:nth-child(10) { grid-column: 3; grid-row: 3; }
+    .gallery-item:nth-child(11) { grid-column: 4; grid-row: 3; }
+    .gallery-item:nth-child(12) { grid-column: 1 / span 2; grid-row: 2; }
+    
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; padding: 2rem; opacity: 0; transition: opacity 0.3s ease; }
+    .lightbox.active { display: flex; opacity: 1; }
+    .lightbox-img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: var(--radius-sm); box-shadow: 0 20px 60px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
+    .lightbox.active .lightbox-img { transform: scale(1); }
+    .lightbox-close { position: absolute; top: 2rem; right: 2rem; width: 50px; height: 50px; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; color: white; font-size: 1.5rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); transform: rotate(90deg); }
+    .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-prev { left: 2rem; } .lightbox-next { right: 2rem; }
+    
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+    .review-card-premium { background: var(--color-white); padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow-soft); transition: var(--transition); border: 1px solid var(--color-border); }
+    .review-card-premium:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .reviewer-info { display: flex; align-items: center; gap: 1rem; }
+    .reviewer-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem; font-family: 'Playfair Display', serif; flex-shrink: 0; }
+    .reviewer-details h4 { font-size: 1.2rem; margin-bottom: 0.25rem; }
+    .reviewer-details .badge { font-size: 0.85rem; color: var(--color-text-light); }
+    .review-rating { color: var(--color-accent); font-size: 1.1rem; letter-spacing: 2px; }
+    .review-date { color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 1rem; }
+    .review-text { color: var(--color-text); line-height: 1.8; font-size: 1rem; }
+    
+    footer { background: linear-gradient(135deg, var(--color-dark), #2d2d2d); color: var(--color-white); padding: 5rem 2rem 2rem; position: relative; }
+    .footer-content { max-width: 1400px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 3rem; margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .footer-brand .footer-logo { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--color-accent); }
+    .footer-brand p { color: rgba(255,255,255,0.8); line-height: 1.8; margin-bottom: 2rem; }
+    .social-links-premium { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .social-links-premium a { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--color-white); transition: var(--transition); border: 2px solid transparent; font-size: 1.2rem; }
+    .social-links-premium a:hover { background: transparent; border-color: var(--color-accent); color: var(--color-accent); transform: translateY(-4px); }
+    .footer-section h4 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--color-white); text-transform: uppercase; letter-spacing: 1px; }
+    .footer-section ul { list-style: none; }
+    .footer-section ul li { margin-bottom: 0.75rem; }
+    .footer-section a { color: rgba(255,255,255,0.8); text-decoration: none; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem; }
+    .footer-section a:hover { color: var(--color-accent); padding-left: 5px; }
+    .footer-section i { color: var(--color-accent); font-size: 0.9rem; width: 20px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
+    .footer-copy { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
+    .footer-legal { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .footer-legal a { color: rgba(255,255,255,0.6); text-decoration: none; transition: var(--transition); font-size: 0.95rem; }
+    .footer-legal a:hover { color: var(--color-accent); }
+    
+    .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, #25D366, #128C7E); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.2rem; box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5); cursor: pointer; transition: var(--transition); z-index: 1000; text-decoration: none; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5); } 50% { box-shadow: 0 6px 40px rgba(37, 211, 102, 0.8); } }
+    .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
+    
+    .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: var(--color-accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: var(--transition); z-index: 999; border: none; font-size: 1.2rem; box-shadow: var(--shadow-medium); }
+    .back-to-top.visible { opacity: 1; visibility: visible; }
+    .back-to-top:hover { background: var(--color-accent-dark); transform: translateY(-5px); }
+    
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .booking-container { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 240px); }
+      .gallery-item:nth-child(1) { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+      .gallery-item:nth-child(12) { grid-column: 1 / span 2; grid-row: 3; }
+      .gallery-item:nth-child(5) { grid-column: 3; grid-row: 1; }
+      .gallery-item:nth-child(6) { grid-column: 3; grid-row: 2; }
+      .gallery-item:nth-child(7) { grid-column: 3; grid-row: 3; }
+      .gallery-item:nth-child(8) { grid-column: 1; grid-row: 3; }
+      .gallery-item:nth-child(9) { grid-column: 2; grid-row: 3; }
+      .gallery-item:nth-child(10) { grid-column: 3; grid-row: 4; }
+      .gallery-item:nth-child(11) { grid-column: 3; grid-row: 4; }
+    }
+    @media (max-width: 768px) {
+      header { height: 70vh; min-height: 500px; }
+      header h1 { font-size: 2.5rem; }
+      .nav-links { display: none; flex-direction: column; width: 100%; text-align: center; padding: 1rem 0; }
+      .nav-links.active { display: flex; }
+      .nav-toggle { display: block; }
+      .nav-cta { display: none; }
+      .section-title { font-size: 2rem; }
+      .menu-content { padding: 1.5rem; }
+      .menu-item-card { grid-template-columns: 1fr; }
+      .menu-item-price { text-align: right; }
+      .gallery-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .gallery-item { grid-column: span 1 !important; grid-row: auto !important; height: 250px; }
+      .footer-top { grid-template-columns: 1fr; text-align: center; }
+      .social-links-premium { justify-content: center; }
+      .footer-section ul li { justify-content: center; }
+      .footer-section a { justify-content: center; }
+      .booking-section { padding: 2rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .calendar-day { font-size: 0.85rem; }
+      .lightbox-nav { display: none; }
+      .back-to-top { bottom: 110px; left: 20px; }
+      .menu-grid-daily { grid-template-columns: 1fr; }
+      .football-section { padding: 2.5rem 1.5rem; }
+      .football-section h2 { font-size: 1.8rem; }
+      .football-icon { font-size: 3rem; }
+    }
+    @media (max-width: 480px) {
+      .header-actions { flex-direction: column; align-items: stretch; }
+      .btn { width: 100%; justify-content: center; }
+      .info-grid { grid-template-columns: 1fr; }
+      .menu-highlight-grid { grid-template-columns: 1fr; }
+      .whatsapp-float { width: 55px; height: 55px; font-size: 1.8rem; bottom: 20px; right: 20px; }
+    }
+    
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 2rem; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--color-white); padding: 3rem; border-radius: var(--radius-lg); max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; animation: fadeInUp 0.3s ease; }
+    .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; width: 40px; height: 40px; border: none; background: var(--color-bg); border-radius: 50%; cursor: pointer; font-size: 1.5rem; transition: var(--transition); color: var(--color-text); }
+    .modal-close:hover { background: var(--color-accent); color: white; }
+    .back-to-home { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-accent); text-decoration: none; font-weight: 600; margin-bottom: 2rem; transition: var(--transition); }
+    .back-to-home:hover { color: var(--color-accent-dark); }
+  </style>
+</head>
+<body>
+
+  <a href="https://wa.me/34624691930?text=Hola,%20me%20gustar%C3%ADa%20reservar%20una%20mesa" class="whatsapp-float" target="_blank" title="Reservar por WhatsApp"><i class="fab fa-whatsapp"></i></a>
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()" title="Volver arriba"><i class="fas fa-arrow-up"></i></button>
+
+  <header id="inicio">
+    <div class="header-content">
+      <div class="hero-trust-badges" id="hero-trust">
+        <div class="rating-badge"><span class="stars"><i class="fab fa-google"></i> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span><strong>3.7</strong><span>(33 reseñas Google)</span></div>
+        <div class="badge-24h"><i class="fas fa-clock"></i> Reserva online <strong>24h</strong></div>
+      </div>
+      <h1>Mesón La Colonia</h1>
+      <p class="subtitle">Tapas y Comida Española</p>
+      <p class="tagline">"Comida casera muy bien preparada en un ambiente acogedor"</p>
+      <div class="header-actions">
+        <a href="#reservas" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Reservar Mesa</a>
+        <a href="#menu" class="btn btn-outline"><i class="fas fa-utensils"></i> Ver Carta</a>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#inicio" class="nav-logo">Mesón <span>La Colonia</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Menú"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links">
+        <li><a href="#inicio" class="active">Inicio</a></li>
+        <li><a href="#futbol">⚽ Fútbol</a></li>
+        <li><a href="#destacados">Destacados</a></li>
+        <li><a href="#menu-diario">Menús</a></li>
+        <li><a href="#menu">Carta</a></li>
+        <li><a href="#carta-digital">Carta QR</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#reservas">Reservas</a></li>
+        <li><a href="#ubicacion">Ubicación</a></li>
+      </ul>
+      <div class="nav-cta"><a href="tel:+34624691930" class="btn btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.9rem;"><i class="fas fa-phone"></i> 624 69 19 30</a></div>
+    </div>
+  </nav>
+
+  <main>
+    
+    <section id="futbol" class="football-section">
+      <div class="football-content">
+        <div class="football-icon"><i class="fas fa-futbol"></i></div>
+        <h2>⚽ Llega una Nueva Liga de Fútbol</h2>
+        <p>Ven a vivir el fútbol en <span class="highlight">Mesón La Colonia</span></p>
+        <p style="font-size: 1.3rem; margin: 2rem 0;"><strong>Todos los partidos de Liga y Champions League</strong></p>
+        <div class="football-features">
+          <div class="football-feature"><i class="fas fa-tv"></i><h3>Pantallas Gigantes</h3><p>Disfruta de todos los partidos en nuestras pantallas de alta definición</p></div>
+          <div class="football-feature"><i class="fas fa-beer"></i><h3>Cervezas Frías</h3><p>Acompaña el partido con nuestras mejores cervezas y tapas</p></div>
+          <div class="football-feature"><i class="fas fa-users"></i><h3>Ambiente Inmejorable</h3><p>Vive el fútbol con amigos en un ambiente único y acogedor</p></div>
+          <div class="football-feature"><i class="fas fa-utensils"></i><h3>Comida Casera</h3><p>Disfruta de nuestra carta mientras ves el partido</p></div>
+        </div>
+        <div style="margin-top: 3rem;"><a href="#reservas" class="btn btn-primary" style="font-size: 1.1rem; padding: 1.2rem 3rem;"><i class="fas fa-calendar-check"></i> Reserva tu Mesa</a></div>
+      </div>
+    </section>
+
+    <section id="info">
+      <div class="section-header"><h2 class="section-title">Información</h2><p class="section-subtitle">Todo lo que necesitas saber sobre nosotros</p></div>
+      <div class="info-grid">
+        <div class="info-card-premium"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><h3>Ubicación</h3><p>C. Puerto de Canencia, 7<br>Puente de Vallecas<br>28038 Madrid, España</p><a href="#ubicacion" style="margin-top: 1rem; display: inline-block;"><i class="fas fa-directions"></i> Cómo llegar →</a></div>
+        <div class="info-card-premium"><div class="info-icon"><i class="fas fa-clock"></i></div><h3>Horario</h3><p><strong>Lunes a Domingo:</strong><br>13:00 - 00:00 hrs</p><span class="status-badge open"><i class="fas fa-check-circle"></i> Abierto ahora</span></div>
+        <div class="info-card-premium"><div class="info-icon"><i class="fas fa-euro-sign"></i></div><h3>Precios</h3><p><strong>Menú del Día:</strong> 14,00€<br><strong>Menú Fin de Semana:</strong> 25,00€<br><strong>Precio medio:</strong> 10-20€</p></div>
+        <div class="info-card-premium"><div class="info-icon"><i class="fas fa-concierge-bell"></i></div><h3>Especialidades</h3><p><i class="fas fa-check" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Comida española casera<br><i class="fas fa-check" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Tapas y raciones<br><i class="fas fa-check" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Jamón Ibérico<br><i class="fas fa-check" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Cocido tradicional<br><i class="fas fa-check" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Ver fútbol: Liga y Champions</p></div>
+      </div>
+    </section>
+
+    <section id="destacados">
+      <div class="section-header"><h2 class="section-title">Destacados del Menú</h2><p class="section-subtitle">Nuestras especialidades más populares</p></div>
+      <div class="menu-highlight-grid">
+        <div class="menu-highlight-card"><h4><i class="fas fa-bowl-food"></i> Sopa de Cocido</h4><p>Tradicional sopa de cocido madrileño, perfecta para empezar la comida con sabor casero.</p></div>
+        <div class="menu-highlight-card"><h4><i class="fas fa-cake-candles"></i> Tarta de la Abuela</h4><p>Deliciosa tarta casera de galleta y chocolate, un clásico que nunca falla.</p></div>
+        <div class="menu-highlight-card"><h4><i class="fas fa-ice-cream"></i> Flan con Nata</h4><p>Flan casero cremoso acompañado de nata montada. El postre perfecto.</p></div>
+        <div class="menu-highlight-card"><h4><i class="fas fa-drumstick-bite"></i> Jamón Ibérico</h4><p>Corte de jamón ibérico de pata negra, una auténtica delicia para los amantes del buen jamón.</p></div>
+      </div>
+    </section>
+
+    <section id="menu-diario">
+      <div class="daily-menu-section">
+        <div class="section-header"><h2 class="section-title">Nuestros Menús</h2><p class="section-subtitle">La mejor relación calidad-precio</p></div>
+        <div class="menu-grid-daily">
+          <div class="menu-category-daily"><h4><i class="fas fa-calendar-day"></i> Menú del Día</h4><p style="font-size: 2rem; color: var(--color-accent); font-weight: 700; margin: 1rem 0;">14,00 €</p><p><strong>Válido de Lunes a Viernes</strong><br>13:00 - 16:00 hrs</p><ul style="margin-top: 1.5rem;"><li>Primer plato</li><li>Segundo plato</li><li>Postre o café</li><li>Pan incluido</li></ul></div>
+          <div class="menu-category-daily"><h4><i class="fas fa-calendar-weekend"></i> Menú Fin de Semana</h4><p style="font-size: 2rem; color: var(--color-accent); font-weight: 700; margin: 1rem 0;">25,00 €</p><p><strong>Válido Sábados y Domingos</strong><br>Todo el día</p><ul style="margin-top: 1.5rem;"><li>Primeros platos variados</li><li>Segundos platos especiales</li><li>Postre</li><li>Pan incluido</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="section-header"><h2 class="section-title">Nuestra Carta</h2><p class="section-subtitle">Descubre nuestra amplia variedad de platos</p></div>
+      <div class="menu-container">
+        <div class="menu-tabs">
+          <button class="menu-tab active" data-category="ensaladas"><i class="fas fa-leaf"></i> Ensaladas <span class="count">4</span></button>
+          <button class="menu-tab" data-category="raciones"><i class="fas fa-drumstick-bite"></i> Raciones <span class="count">15</span></button>
+          <button class="menu-tab" data-category="hamburguesas"><i class="fas fa-hamburger"></i> Hamburguesas <span class="count">3</span></button>
+          <button class="menu-tab" data-category="principal"><i class="fas fa-utensils"></i> Principal <span class="count">6</span></button>
+          <button class="menu-tab" data-category="postres"><i class="fas fa-ice-cream"></i> Postres <span class="count">2</span></button>
+          <button class="menu-tab" data-category="desayunos"><i class="fas fa-coffee"></i> Desayunos <span class="count">8</span></button>
+        </div>
+        <div class="menu-content">
+          <div class="menu-category active" id="ensaladas">
+            <div class="category-header"><div class="category-icon"><i class="fas fa-leaf"></i></div><h3 class="category-title">Ensaladas</h3></div>
+            <div class="menu-grid">
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Ensaladilla rusa</h4></div><div class="menu-item-price">11,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Piquillo de atún</h4></div><div class="menu-item-price">11,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Ensalada mixta</h4></div><div class="menu-item-price">12,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tomate con burrata</h4></div><div class="menu-item-price">14,00€</div></div>
+            </div>
+          </div>
+          <div class="menu-category" id="raciones">
+            <div class="category-header"><div class="category-icon"><i class="fas fa-drumstick-bite"></i></div><h3 class="category-title">Raciones</h3></div>
+            <div class="menu-grid">
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Patatas bravas o Ali-Oli</h4></div><div class="menu-item-price">8,50€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Patatas mixtas</h4></div><div class="menu-item-price">10,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Alitas de pollo</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tiras de pollo</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Croquetas de jamón</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Berenjena rebozadas</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Oreja a la plancha</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Morcilla de burgos</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Calamares</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Chorizo a la sidra</h4></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Boquerones fritos</h4></div><div class="menu-item-price">13,50€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Huevos rotos con jamón o chistorra</h4></div><div class="menu-item-price">14,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Chopitos</h4></div><div class="menu-item-price">16,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Parrillada de verduras</h4></div><div class="menu-item-price">16,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Fritura de pescado</h4></div><div class="menu-item-price">16,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Gambas al ajillo</h4></div><div class="menu-item-price">16,00€</div></div>
+            </div>
+          </div>
+          <div class="menu-category" id="hamburguesas">
+            <div class="category-header"><div class="category-icon"><i class="fas fa-hamburger"></i></div><h3 class="category-title">Hamburguesas</h3></div>
+            <div class="menu-grid">
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Clásica</h4><p>Carne de ternera, con lechuga, tomate y queso</p></div><div class="menu-item-price">13,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Completa</h4><p>Carne de ternera con huevo, Jamón York, queso, lechuga y tomate</p></div><div class="menu-item-price">15,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>De la casa</h4><p>Carne de ternera, bacon crujiente, cebolla caramelizada, queso de cabra y queso fundido</p></div><div class="menu-item-price">16,00€</div></div>
+            </div>
+          </div>
+          <div class="menu-category" id="principal">
+            <div class="category-header"><div class="category-icon"><i class="fas fa-utensils"></i></div><h3 class="category-title">Principal</h3></div>
+            <div class="menu-grid">
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Sepia a la plancha</h4></div><div class="menu-item-price">15,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Secreto ibérico</h4></div><div class="menu-item-price">16,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Aguja ibérica</h4></div><div class="menu-item-price">16,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Emperador</h4></div><div class="menu-item-price">18,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Entrecot</h4></div><div class="menu-item-price">19,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Cachopo asturiano</h4></div><div class="menu-item-price">21,00€</div></div>
+            </div>
+          </div>
+          <div class="menu-category" id="postres">
+            <div class="category-header"><div class="category-icon"><i class="fas fa-ice-cream"></i></div><h3 class="category-title">Postres</h3></div>
+            <div class="menu-grid">
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Pudín / Flan casero</h4></div><div class="menu-item-price">4,00€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tartas caseras variadas</h4></div><div class="menu-item-price">5,50€</div></div>
+            </div>
+          </div>
+          <div class="menu-category" id="desayunos">
+            <div class="category-header"><div class="category-icon"><i class="fas fa-coffee"></i></div><h3 class="category-title">Desayunos y Meriendas</h3></div>
+            <div class="menu-grid">
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tostada con tomate</h4><p>Media 2,80€ / Entera 3,70€</p></div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tostada con tomate y lacón</h4><p>Media 3,80€ / Entera 4,80€</p></div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tostada con tomate y jamón serrano</h4><p>Media 3,80€ / Entera 4,80€</p></div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Tostada con tomate y aguacate</h4><p>Media 3,80€ / Entera 4,80€</p></div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Cruasán</h4></div><div class="menu-item-price">3,70€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Cruasán Mixto</h4></div><div class="menu-item-price">5,50€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Sándwich Mixto</h4></div><div class="menu-item-price">5,80€</div></div>
+              <div class="menu-item-card"><div class="menu-item-info"><h4>Desayuno Americano</h4></div><div class="menu-item-price">6,50€</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="carta-digital">
+      <div class="section-header"><h2 class="section-title">Carta Digital</h2><p class="section-subtitle">Escanea el QR y pide desde tu mesa</p></div>
+      <div class="digital-menu-grid">
+        <div class="qr-section">
+          <div class="qr-container">
+            <div class="qr-code"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pedir.html%3Fmesa%3D1" alt="QR Carta digital" width="200" height="200"></div>
+            <div class="qr-text"><h4>Escanea y consulta</h4><p>Sin app · Sin registro · Siempre actualizada</p></div>
+          </div>
+        </div>
+        <div class="digital-menu-features">
+          <h3>Tu carta, en el móvil del cliente</h3>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> Acceso instantáneo escaneando el QR de mesa</li>
+            <li><i class="fas fa-check-circle"></i> Carta siempre al día con nuestros platos y precios</li>
+            <li><i class="fas fa-check-circle"></i> Pedido directo a WhatsApp con número de mesa</li>
+            <li><i class="fas fa-check-circle"></i> Consulta cómoda desde cualquier dispositivo</li>
+          </ul>
+          <div style="margin-top: 1.5rem;"><a href="pedir.html" class="btn btn-primary"><i class="fas fa-shopping-basket"></i> Pedir ahora</a></div>
+        </div>
+      </div>
+      <div class="table-ordering-block">
+        <h3 class="table-order-headline">¿Estás en una de nuestras mesas?</h3>
+        <p class="table-order-subtitle">Escanea el QR de tu mesa o selecciona el número para pedir por WhatsApp</p>
+        <div class="table-mesa-grid">
+            <a href="pedir.html?mesa=1" class="table-mesa-btn" title="Mesa 1">1</a>
+            <a href="pedir.html?mesa=2" class="table-mesa-btn" title="Mesa 2">2</a>
+            <a href="pedir.html?mesa=3" class="table-mesa-btn" title="Mesa 3">3</a>
+            <a href="pedir.html?mesa=4" class="table-mesa-btn" title="Mesa 4">4</a>
+            <a href="pedir.html?mesa=5" class="table-mesa-btn" title="Mesa 5">5</a>
+            <a href="pedir.html?mesa=6" class="table-mesa-btn" title="Mesa 6">6</a>
+            <a href="pedir.html?mesa=7" class="table-mesa-btn" title="Mesa 7">7</a>
+            <a href="pedir.html?mesa=8" class="table-mesa-btn" title="Mesa 8">8</a>
+            <a href="pedir.html?mesa=9" class="table-mesa-btn" title="Mesa 9">9</a>
+            <a href="pedir.html?mesa=10" class="table-mesa-btn" title="Mesa 10">10</a>
+        </div>
+        <p class="table-order-footnote"><a href="pedir.html"><i class="fas fa-utensils"></i> Ver carta para pedir sin asignar mesa</a></p>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <div class="section-header"><h2 class="section-title">Galería</h2><p class="section-subtitle">Descubre nuestros platos</p></div>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox(0)"><img src="https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Interior del restaurante" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(1)"><img src="https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Hamburguesa con bacon y patatas" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(2)"><img src="https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Piquillo de atún" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(3)"><img src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Parrillada de verduras" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(4)"><img src="https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Carne a la plancha con patatas" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(5)"><img src="https://images.pexels.com/photos/6248864/pexels-photo-6248864.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Gambas al ajillo" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(6)"><img src="https://images.pexels.com/photos/7049655/pexels-photo-7049655.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Hamburguesa clásica" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(7)"><img src="https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Pescado rebozado" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(8)"><img src="https://images.pexels.com/photos/2964168/pexels-photo-2964168.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Huevos con habas" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(9)"><img src="https://images.pexels.com/photos/5938421/pexels-photo-5938421.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Ensaladilla" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(10)"><img src="https://images.pexels.com/photos/60616/pexels-photo-60616.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Carne a la plancha" loading="lazy"></div>
+        <div class="gallery-item" onclick="openLightbox(11)"><img src="https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" alt="Hamburguesa gourmet" loading="lazy"></div>
+      </div>
+    </section>
+
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+      <button class="lightbox-nav lightbox-prev" onclick="changeImage(-1)"><i class="fas fa-chevron-left"></i></button>
+      <img src="" alt="" class="lightbox-img" id="lightboxImg">
+      <button class="lightbox-nav lightbox-next" onclick="changeImage(1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    </section>
+
+    <section id="reseñas">
+      <div class="section-header"><h2 class="section-title">Lo que dicen nuestros clientes</h2><p class="section-subtitle">Opiniones reales en Google</p></div>
+      <div class="reviews-grid">
+        <div class="review-card-premium">
+          <div class="review-header"><div class="reviewer-info"><div class="reviewer-avatar">MG</div><div class="reviewer-details"><h4>María G.</h4><span class="badge">Cliente habitual</span></div></div><div class="review-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div>
+          <p class="review-date">Hace 2 semanas</p>
+          <p class="review-text">Comida casera excelente y trato muy familiar. El menú del día tiene una relación calidad-precio increíble. Volveremos seguro.</p>
+        </div>
+        <div class="review-card-premium">
+          <div class="review-header"><div class="reviewer-info"><div class="reviewer-avatar">JL</div><div class="reviewer-details"><h4>Javier L.</h4><span class="badge">Local Guide</span></div></div><div class="review-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div></div>
+          <p class="review-date">Hace 1 mes</p>
+          <p class="review-text">Perfecto para ver el fútbol con amigos. Buenas raciones, cervezas frías y ambiente acogedor en Vallecas.</p>
+        </div>
+        <div class="review-card-premium">
+          <div class="review-header"><div class="reviewer-info"><div class="reviewer-avatar">AP</div><div class="reviewer-details"><h4>Ana P.</h4><span class="badge">Reserva online</span></div></div><div class="review-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div></div>
+          <p class="review-date">Hace 3 semanas</p>
+          <p class="review-text">Reservamos online un sábado noche y todo perfecto. La ensaladilla y el jamón ibérico, buenísimos.</p>
+        </div>
+      </div>
+      <div class="google-reviews-cta"><a href="https://www.google.com/maps/search/?api=1&query=Mesón+La+Colonia+Madrid" target="_blank" rel="noopener noreferrer" class="btn"><i class="fab fa-google"></i> Ver todas las reseñas en Google</a></div>
+    </section>
+
+    <section id="reservas">
+      <div class="booking-section">
+        <div class="booking-container">
+          <div class="booking-info">
+            <div class="reserva-24-banner"><i class="fas fa-moon"></i><div><strong>Reserva cuando quieras, las 24 horas</strong><p>El 60% de las reservas se hacen fuera del horario del restaurante. Reserva ahora y confirma al instante, sin llamadas.</p></div></div>
+            <h3>Reserva tu Mesa</h3>
+            <p>Reserva ahora y asegura tu lugar. Confirmación inmediata.</p>
+            <ul class="booking-features">
+              <li><i class="fas fa-check-circle"></i> Confirmación inmediata online</li>
+              <li><i class="fas fa-check-circle"></i> Disponible 24 horas, todos los días</li>
+              <li><i class="fas fa-check-circle"></i> Cancelación gratuita</li>
+              <li><i class="fas fa-check-circle"></i> Opciones para grupos y eventos</li>
+            </ul>
+            <div style="margin-top: 2rem;"><p style="margin-bottom: 1rem;"><strong>O reserva al instante por WhatsApp:</strong></p><a href="https://wa.me/34624691930?text=Hola,%20me%20gustar%C3%ADa%20reservar%20una%20mesa" target="_blank" class="btn btn-whatsapp" style="margin-bottom: 1rem;"><i class="fab fa-whatsapp"></i> Reservar por WhatsApp</a><p style="margin-top: 1rem;"><strong>O por teléfono:</strong></p><a href="tel:+34624691930" style="font-size: 2rem; color: var(--color-accent); text-decoration: none; font-family: 'Playfair Display', serif;"><i class="fas fa-phone"></i> 624 69 19 30</a></div>
+          </div>
+          <div class="booking-form">
+            <div class="calendar-widget">
+              <div class="calendar-header"><h4 id="currentMonth">Mayo 2026</h4><div class="calendar-nav"><button onclick="changeMonth(-1)" type="button"><i class="fas fa-chevron-left"></i></button><button onclick="changeMonth(1)" type="button"><i class="fas fa-chevron-right"></i></button></div></div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+            <form id="reservationForm">
+              <div class="form-row">
+                <div class="form-group"><label><i class="fas fa-user"></i> Nombre</label><input type="text" name="nombre" required placeholder="Tu nombre"></div>
+                <div class="form-group"><label><i class="fas fa-users"></i> Personas</label><select name="personas" required><option value="">Seleccionar</option><option value="1">1 persona</option><option value="2">2 personas</option><option value="3">3 personas</option><option value="4">4 personas</option><option value="5">5 personas</option><option value="6">6+ personas</option></select></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label><i class="fas fa-clock"></i> Hora</label><select name="hora" required><option value="">Seleccionar</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option><option value="22:30">22:30</option></select></div>
+                <div class="form-group"><label><i class="fas fa-phone"></i> Teléfono</label><input type="tel" name="telefono" required placeholder="600 000 000"></div>
+              </div>
+              <div class="form-group"><label><i class="fas fa-comment"></i> Notas especiales</label><textarea name="notas" rows="3" placeholder="Alergias, ocasión especial, preferencias..."></textarea></div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;"><i class="fab fa-whatsapp"></i> Confirmar reserva por WhatsApp</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ubicacion">
+      <div class="section-header"><h2 class="section-title">Ubicación</h2><p class="section-subtitle">Cómo llegar</p></div>
+      <div class="info-card-premium" style="padding: 0; overflow: hidden;">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.1234567890123!2d-3.6581234567890123!3d40.39812345678901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42288f1234567890%3A0x1234567890abcdef!2sC.%20Puerto%20de%20Canencia%2C%207%2C%20Puente%20de%20Vallecas%2C%2028038%20Madrid!5e0!3m2!1ses!2ses!4v1234567890123!5m2!1ses!2ses" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <div style="padding: 2rem;"><h3 style="margin-bottom: 1rem;">Mesón La Colonia</h3><p style="margin-bottom: 1rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-accent); margin-right: 0.5rem;"></i>C. Puerto de Canencia, 7, Puente de Vallecas, 28038 Madrid</p><p style="margin-bottom: 1rem;"><i class="fas fa-phone" style="color: var(--color-accent); margin-right: 0.5rem;"></i>624 69 19 30</p><p style="margin-bottom: 1rem;"><i class="fas fa-envelope" style="color: var(--color-accent); margin-right: 0.5rem;"></i>lacolonia.meson@gmail.com</p><p><i class="fas fa-clock" style="color: var(--color-accent); margin-right: 0.5rem;"></i>Abierto · Cierre: 0:00</p></div>
+      </div>
+    </section>
+  </main>
+
+ <footer>
+    <div class="footer-content">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">Mesón La Colonia</div>
+          <p>Restaurante especializado en comida española con tapas, raciones, a la carta y menú del día. Ven a ver el fútbol: Liga y Champions League. Ambiente acogedor y trato familiar en el corazón de Vallecas.</p>
+          <div class="social-links-premium">
+            <a href="https://www.facebook.com/profile.php?id=61570750061648" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/mesonlacolonia" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/34624691930" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Explorar</h4>
+          <ul>
+            <li><a href="#inicio"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+            <li><a href="#futbol"><i class="fas fa-chevron-right"></i> Fútbol</a></li>
+            <li><a href="#destacados"><i class="fas fa-chevron-right"></i> Destacados</a></li>
+            <li><a href="menu-diario.html"><i class="fas fa-chevron-right"></i> Menús</a></li>
+            <li><a href="#menu"><i class="fas fa-chevron-right"></i> Carta</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Menú</h4>
+          <ul>
+            <li><a href="menu-diario.html"><i class="fas fa-chevron-right"></i> Menú del Día</a></li>
+            <li><a href="menu-fin-de-semana.html"><i class="fas fa-chevron-right"></i> Menú Fin de Semana</a></li>
+            <li><a href="#menu"><i class="fas fa-chevron-right"></i> Ensaladas</a></li>
+            <li><a href="#menu"><i class="fas fa-chevron-right"></i> Raciones</a></li>
+            <li><a href="#menu"><i class="fas fa-chevron-right"></i> Postres</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="tel:+34624691930"><i class="fas fa-phone"></i> 624 69 19 30</a></li>
+            <li><a href="https://wa.me/34624691930" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+            <li><a href="mailto:lacolonia.meson@gmail.com"><i class="fas fa-envelope"></i> Email</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <!-- ✅ CORREGIDO: Sin onclick, solo href a las páginas reales -->
+            <li><a href="aviso-legal.html"><i class="fas fa-file-contract"></i> Aviso Legal</a></li>
+            <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
+            <li><a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a></li>
+            <li><a href="accesibilidad.html"><i class="fas fa-universal-access"></i> Accesibilidad</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Mesón La Colonia. Todos los derechos reservados.</p>
+        <div class="footer-legal">
+          <a href="aviso-legal.html">Aviso Legal</a>
+          <a href="privacidad.html">Privacidad</a>
+          <a href="cookies.html">Cookies</a>
+	  <a href="accesibilidad.html">Accesibilidad</a>
+        </div>
+      </div>
+    </div>
+</footer>
+
+  <!-- Modales legales omitidos por brevedad - están en el archivo original -->
+
+  <script>
+    // Galería con imágenes locales
+    const galleryImages = [
+      'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/6248864/pexels-photo-6248864.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/7049655/pexels-photo-7049655.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/2964168/pexels-photo-2964168.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/5938421/pexels-photo-5938421.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/60616/pexels-photo-60616.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop',
+      'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop'
+    ];
+    let currentImageIndex = 0;
+    function openLightbox(index) { currentImageIndex = index; document.getElementById('lightboxImg').src = galleryImages[index]; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = ''; }
+    function changeImage(direction) { currentImageIndex += direction; if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1; if (currentImageIndex >= galleryImages.length) currentImageIndex = 0; document.getElementById('lightboxImg').src = galleryImages[currentImageIndex]; }
+    document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) closeLightbox(); });
+    document.addEventListener('keydown', function(e) { if (document.getElementById('lightbox').classList.contains('active')) { if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowLeft') changeImage(-1); if (e.key === 'ArrowRight') changeImage(1); } });
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }), { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.gallery-item').forEach((item, index) => { item.style.transitionDelay = `${index * 0.1}s`; observer.observe(item); });
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    window.addEventListener('scroll', function() { const btn = document.getElementById('backToTop'); if (window.pageYOffset > 300) btn.classList.add('visible'); else btn.classList.remove('visible'); });
+    document.querySelectorAll('.menu-tab').forEach(tab => { tab.addEventListener('click', function() { document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.menu-category').forEach(c => c.classList.remove('active')); this.classList.add('active'); document.getElementById(this.getAttribute('data-category')).classList.add('active'); }); });
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { const href = this.getAttribute('href'); if (href !== '#' && !href.includes('modal')) { e.preventDefault(); const target = document.querySelector(href); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }); });
+    window.addEventListener('scroll', () => { const sections = document.querySelectorAll('section, header'); const navLinks = document.querySelectorAll('.nav-links a'); let current = ''; sections.forEach(section => { const sectionTop = section.offsetTop - 100; if (pageYOffset >= sectionTop) current = section.getAttribute('id'); }); navLinks.forEach(link => { link.classList.remove('active'); if (link.getAttribute('href').slice(1) === current) link.classList.add('active'); }); });
+    let currentDate = new Date(), selectedDate = null;
+    function generateCalendar() { const year = currentDate.getFullYear(), month = currentDate.getMonth(), firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate(), monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']; document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`; const grid = document.getElementById('calendarGrid'); grid.innerHTML = ''; ['D','L','M','X','J','V','S'].forEach(day => { const div = document.createElement('div'); div.className = 'calendar-day-name'; div.textContent = day; grid.appendChild(div); }); for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div')); const today = new Date(); for (let day = 1; day <= daysInMonth; day++) { const div = document.createElement('div'); div.className = 'calendar-day'; div.textContent = day; const date = new Date(year, month, day), dayOfWeek = date.getDay(); if (dayOfWeek === 2 || date < new Date(today.setHours(0,0,0,0))) div.classList.add('disabled'); else div.addEventListener('click', function() { document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected')); this.classList.add('selected'); selectedDate = date; }); if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) div.classList.add('today'); grid.appendChild(div); } }
+    function changeMonth(delta) { currentDate.setMonth(currentDate.getMonth() + delta); generateCalendar(); }
+    document.getElementById('reservationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!selectedDate) { alert('Por favor, seleccione una fecha en el calendario'); return; }
+      const fd = new FormData(this);
+      const nombre = fd.get('nombre') || '';
+      const hora = fd.get('hora') || '';
+      const personas = fd.get('personas') || '';
+      const telefono = fd.get('telefono') || '';
+      const notas = fd.get('notas') || '';
+      const fecha = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const waEl = document.querySelector('a.whatsapp-float[href*="wa.me"]');
+      const waPhone = (waEl && waEl.href.match(/wa\.me\/(\d+)/)) ? waEl.href.match(/wa\.me\/(\d+)/)[1] : '34624691930';
+      const h1 = document.querySelector('header h1');
+      const business = h1 ? h1.textContent.trim() : 'Mesón La Colonia';
+      let msg = 'Hola ' + business + ', quiero reservar mesa:\n';
+      if (nombre) msg += '👤 ' + nombre + '\n';
+      msg += '📅 ' + fecha + '\n🕒 ' + hora + '\n👥 ' + personas + (String(personas).includes('persona') ? '' : ' personas') + '\n📞 ' + telefono;
+      if (notas && String(notas).trim()) msg += '\n📝 ' + notas;
+      window.open('https://wa.me/' + waPhone + '?text=' + encodeURIComponent(msg), '_blank');
+      this.reset();
+      document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+      selectedDate = null;
+    });
+    function openModal(modalId) { event.preventDefault(); document.getElementById(modalId).classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeModal(modalId) { event.preventDefault(); document.getElementById(modalId).classList.remove('active'); document.body.style.overflow = ''; }
+    window.onclick = function(event) { if (event.target.classList.contains('modal')) { event.target.classList.remove('active'); document.body.style.overflow = ''; } }
+    generateCalendar();
+  </script>
+</body>
+</html>

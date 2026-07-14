@@ -1,7 +1,7 @@
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 
-export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'renewable' | 'default';
+export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'jewelry' | 'nonprofit' | 'renewable' | 'default';
 
 export type AccentColor = 'red' | 'indigo' | 'gold' | 'blue' | 'rose';
 
@@ -674,6 +674,88 @@ export const LUXURY_PROFILE: BusinessProfile = {
   email: 'reservas@lamaisondoree.com',
 };
 
+const JEWELRY_IMAGES = {
+  hero: 'https://images.pexels.com/photos/2779107/pexels-photo-2779107.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop',
+  gal1: 'https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+  gal2: 'https://images.pexels.com/photos/1573407/pexels-photo-1573407.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+  gal3: 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+  gal4: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+  gal5: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+  gal6: 'https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+  p1: 'https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+  p2: 'https://images.pexels.com/photos/2779107/pexels-photo-2779107.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+  p3: 'https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+  p4: 'https://images.pexels.com/photos/1573407/pexels-photo-1573407.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+  p5: 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+  p6: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+};
+
+export const JEWELRY_PROFILE: BusinessProfile = {
+  variant: 'jewelry',
+  heroImage: JEWELRY_IMAGES.hero,
+  galleryImages: [
+    JEWELRY_IMAGES.gal1,
+    JEWELRY_IMAGES.gal2,
+    JEWELRY_IMAGES.gal3,
+    JEWELRY_IMAGES.gal4,
+    JEWELRY_IMAGES.gal5,
+    JEWELRY_IMAGES.gal6,
+  ],
+  taglineEs: 'Alta relojería y joyería de autor · Desde 1989',
+  taglineEn: 'Haute horlogerie and author jewelry · Since 1989',
+  typeEs: 'Joyería & Relojería de Lujo',
+  typeEn: 'Luxury Jewelry & Watches',
+  badgeEs: 'Distribuidor autorizado · Cita privada',
+  badgeEn: 'Authorized dealer · Private appointment',
+  ctaPrimaryEs: 'Reservar cita privada',
+  ctaPrimaryEn: 'Book private appointment',
+  ctaSecondaryEs: 'Descubrir colección',
+  ctaSecondaryEn: 'Discover collection',
+  menuItems: {
+    es: [
+      { title: 'Rolex Submariner Date', price: 'Desde 12.500 €', image: JEWELRY_IMAGES.p1, cta: 'Descubrir' },
+      { title: 'Omega Speedmaster', price: 'Desde 7.800 €', image: JEWELRY_IMAGES.p2, cta: 'Descubrir' },
+      { title: 'Anillo diamante solitario', price: 'Desde 4.200 €', image: JEWELRY_IMAGES.p3, cta: 'Descubrir' },
+      { title: 'Cartier Tank Must', price: 'Desde 3.950 €', image: JEWELRY_IMAGES.p4, cta: 'Descubrir' },
+      { title: 'Collar oro 18k', price: 'Desde 2.100 €', image: JEWELRY_IMAGES.p5, cta: 'Descubrir' },
+      { title: 'Breitling Navitimer', price: 'Desde 8.400 €', image: JEWELRY_IMAGES.p6, cta: 'Descubrir' },
+    ],
+    en: [
+      { title: 'Rolex Submariner Date', price: 'From €12,500', image: JEWELRY_IMAGES.p1, cta: 'Discover' },
+      { title: 'Omega Speedmaster', price: 'From €7,800', image: JEWELRY_IMAGES.p2, cta: 'Discover' },
+      { title: 'Solitaire diamond ring', price: 'From €4,200', image: JEWELRY_IMAGES.p3, cta: 'Discover' },
+      { title: 'Cartier Tank Must', price: 'From €3,950', image: JEWELRY_IMAGES.p4, cta: 'Discover' },
+      { title: '18k gold necklace', price: 'From €2,100', image: JEWELRY_IMAGES.p5, cta: 'Discover' },
+      { title: 'Breitling Navitimer', price: 'From €8,400', image: JEWELRY_IMAGES.p6, cta: 'Discover' },
+    ],
+  },
+  reviews: {
+    es: [
+      { name: 'Elena M.', text: 'Compré mi Rolex aquí. Trato impecable, autenticidad garantizada y una experiencia digna de las mejores boutiques de Europa.', stars: 5 },
+      { name: 'Carlos R.', text: 'Restauraron un reloj de mi abuelo con un acabado espectacular. Profesionalidad y confianza absoluta.', stars: 5 },
+      { name: 'Isabel V.', text: 'El anillo de compromiso superó todas mis expectativas. Asesoramiento personalizado de primer nivel.', stars: 5 },
+    ],
+    en: [
+      { name: 'Elena M.', text: 'I bought my Rolex here. Impeccable service, guaranteed authenticity and an experience worthy of Europe\'s finest boutiques.', stars: 5 },
+      { name: 'Carlos R.', text: 'They restored my grandfather\'s watch with spectacular finish. Absolute professionalism and trust.', stars: 5 },
+      { name: 'Isabel V.', text: 'The engagement ring exceeded all expectations. First-class personal advisory.', stars: 5 },
+    ],
+  },
+  addressEs: 'Calle Serrano 45, 28001 Madrid',
+  addressEn: '45 Serrano Street, 28001 Madrid',
+  hoursEs: 'Lunes – Sábado: 10:00 – 20:00 · Cita previa recomendada',
+  hoursEn: 'Mon – Sat: 10:00 AM – 8:00 PM · Appointment recommended',
+  infoEs: 'Distribuidor autorizado · Taller propio · Financiación disponible',
+  infoEn: 'Authorized dealer · In-house workshop · Financing available',
+  phone: '910 88 22 00',
+  ratingLabelEs: '5.0 · 312 reseñas Google',
+  ratingLabelEn: '5.0 · 312 Google reviews',
+  aboutEs: 'Desde 1989, nuestra boutique reúne la pasión por la alta relojería suiza y la joyería de autor. Cada pieza es seleccionada con el mismo rigor que las grandes maisons de Ginebra y París. Creemos en la artesanía, la autenticidad y en crear momentos irrepetibles.',
+  aboutEn: 'Since 1989, our boutique has united passion for Swiss haute horlogerie and author jewelry. Every piece is selected with the same rigor as the great Geneva and Paris maisons. We believe in craftsmanship, authenticity and creating unforgettable moments.',
+  accent: 'gold',
+  email: 'boutique@atelierjoyas.com',
+};
+
 const RENEWABLE_IMAGES = {
   hero: 'https://images.pexels.com/photos/9875446/pexels-photo-9875446.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&fit=crop',
   gal1: 'https://images.pexels.com/photos/159397/solar-roof-power-159397.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
@@ -813,6 +895,13 @@ export function detectVariant(prompt: string): BusinessVariant {
   ) {
     return 'renewable';
   }
+  if (
+    /joyer[ií]a|relojer[ií]a|jewelry|watchmaker|alta relojer|reloj de lujo|relojes de lujo|boutique de lujo|rolex|cartier|patek|omega|bulgari|tiffany|audemars|chopard|tag heuer|iwc|breitling|van cleef|richard mille|boucheron|diamante|anillo de compromiso|alianzas/i.test(
+      prompt
+    )
+  ) {
+    return 'jewelry';
+  }
   if (/maison|fine dining|alta cocina|gourmet|la maison/i.test(prompt)) return 'luxury';
   if (/yamaha|motos?\s+cort|concesionario|motocicleta|motorcycle\s+dealer|taller\s+oficial/i.test(prompt)) return 'automotive';
   if (/abogad|law firm|notar[ií]a|jur[ií]dic|bufete/i.test(prompt)) return 'default';
@@ -830,6 +919,7 @@ function menuCta(variant: BusinessVariant): string {
   if (variant === 'tattoo' || variant === 'beauty') return 'Reservar cita';
   if (variant === 'corporate') return 'Solicitar consulta';
   if (variant === 'automotive') return 'Pedir cita';
+  if (variant === 'jewelry') return 'Descubrir';
   return 'Ver más';
 }
 
@@ -858,7 +948,7 @@ function applyListingToProfile(base: BusinessProfile, listing: ParsedGoogleListi
       es: menuEs,
       en: menuEs.map((p) => ({ ...p, cta: base.variant === 'cafe' ? 'Book a table' : 'Book appointment' })),
     },
-    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'luxury', 'nonprofit', 'foodblog'].includes(base.variant)
+    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'luxury', 'jewelry', 'nonprofit', 'foodblog'].includes(base.variant)
       ? { es: base.reviews.es, en: base.reviews.en }
       : { es: listing.reviews, en: listing.reviews },
     badgeEs: listing.serviceOptions?.slice(0, 40) ?? base.badgeEs,
@@ -880,6 +970,7 @@ export function getBusinessProfile(
             : variant === 'corporate' ? CORPORATE_PROFILE
               : variant === 'automotive' ? AUTOMOTIVE_PROFILE
                 : variant === 'luxury' ? LUXURY_PROFILE
+                  : variant === 'jewelry' ? JEWELRY_PROFILE
                   : variant === 'nonprofit' ? NONPROFIT_PROFILE
                     : variant === 'renewable' ? RENEWABLE_PROFILE
                       : null;

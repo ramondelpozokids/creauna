@@ -20,6 +20,54 @@ type Props = {
   onImproveSection: (id: number) => void;
 };
 
+function FullPagePreview({
+  html,
+  viewMode,
+  lang,
+  isThinking,
+}: {
+  html: string;
+  viewMode: 'desktop' | 'mobile';
+  lang: 'es' | 'en';
+  isThinking: boolean;
+}) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const srcDoc = useMemo(() => html, [html]);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const resize = () => {
+      const doc = iframe.contentDocument;
+      if (!doc?.body) return;
+      const height = Math.max(doc.documentElement.scrollHeight, doc.body.scrollHeight, 720);
+      iframe.style.height = `${height + 16}px`;
+    };
+
+    iframe.addEventListener('load', resize);
+    const t = window.setTimeout(resize, 200);
+    const interval = window.setInterval(resize, 1500);
+    return () => {
+      iframe.removeEventListener('load', resize);
+      window.clearTimeout(t);
+      window.clearInterval(interval);
+    };
+  }, [srcDoc]);
+
+  return (
+    <iframe
+      ref={iframeRef}
+      title={lang === 'es' ? 'Muestra premium' : 'Premium sample'}
+      srcDoc={srcDoc}
+      className={`w-full border-0 bg-white min-h-[720px] ${
+        viewMode === 'mobile' ? 'max-w-[390px] mx-auto shadow-xl rounded-[2rem]' : ''
+      } ${isThinking ? 'opacity-95' : ''}`}
+      sandbox="allow-scripts allow-same-origin allow-popups"
+    />
+  );
+}
+
 export default function StudioSectionPreview({
   sections,
   viewMode,
@@ -33,6 +81,7 @@ export default function StudioSectionPreview({
   onImproveSection,
 }: Props) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const fullPage = sections.find((s) => s.type === 'fullpage');
 
   const mobileSrcDoc = useMemo(() => {
     const body = sections
@@ -45,7 +94,7 @@ export default function StudioSectionPreview({
   }, [sections, lang]);
 
   useEffect(() => {
-    if (viewMode !== 'mobile') return;
+    if (fullPage || viewMode !== 'mobile') return;
     const iframe = iframeRef.current;
     if (!iframe) return;
 
@@ -61,7 +110,15 @@ export default function StudioSectionPreview({
       iframe.removeEventListener('load', resize);
       window.clearTimeout(t);
     };
-  }, [viewMode, mobileSrcDoc]);
+  }, [viewMode, mobileSrcDoc, fullPage]);
+
+  if (fullPage) {
+    return (
+      <div className="bg-slate-100 p-4 md:p-6 min-h-full">
+        <FullPagePreview html={fullPage.html} viewMode={viewMode} lang={lang} isThinking={isThinking} />
+      </div>
+    );
+  }
 
   if (viewMode === 'mobile') {
     return (

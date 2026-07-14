@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO & Meta Tags Premium (Medical Clinic) -->
+    <title>Lumina Dental Institute | Odontología de Precisión y Estética de Vanguardia</title>
+    <meta name="description" content="Clínica dental premium en Madrid. Especialistas en implantes, ortodoncia invisible Invisalign y estética dental. Tecnología 3D, diagnóstico digital y atención personalizada.">
+    <meta name="keywords" content="clínica dental premium, implantes dentales, ortodoncia invisible, Invisalign, estética dental, dentista Madrid, TAC dental 3D">
+    <meta name="author" content="Lumina Dental Institute">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://www.luminadental.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.luminadental.com/">
+    <meta property="og:title" content="Lumina Dental Institute | Donde la Ciencia encuentra la Estética">
+    <meta property="og:description" content="Experimente la odontología del futuro. Tecnología de vanguardia, equipo de élite y un compromiso inquebrantable con su salud y sonrisa.">
+    <meta property="og:image" content="https://www.luminadental.com/assets/og-clinic-premium.jpg">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Lumina Dental Institute | Odontología de Precisión">
+    <meta property="twitter:description" content="Tecnología 3D, implantes de carga inmediata y estética dental de máxima calidad.">
+    <meta property="twitter:image" content="https://www.luminadental.com/assets/twitter-clinic.jpg">
+
+    <!-- Preconnect & Fonts (Optimizado para Core Web Vitals) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- View Transitions API -->
+    <meta name="view-transition" content="same-origin">
+
+    <!-- Schema.org JSON-LD (Enterprise Medical SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["MedicalClinic", "Dentist", "LocalBusiness"],
+          "name": "Lumina Dental Institute",
+          "image": "https://www.luminadental.com/assets/logo.png",
+          "url": "https://www.luminadental.com",
+          "telephone": "+34-910-000-000",
+          "priceRange": "$$$",
+          "medicalSpecialty": "Dentistry",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Paseo de la Castellana, 100",
+            "addressLocality": "Madrid",
+            "postalCode": "28046",
+            "addressCountry": "ES"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 40.4400,
+            "longitude": -3.6900
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "09:00",
+              "closes": "20:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Saturday",
+              "opens": "10:00",
+              "closes": "14:00"
+            }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "342"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Duele la colocación de implantes dentales?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gracias a nuestra tecnología de cirugía guiada por ordenador y anestesia computarizada, el procedimiento es mínimamente invasivo y prácticamente indoloro."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Ofrecen financiación para los tratamientos?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí, disponemos de planes de financiación a medida hasta en 24 meses sin intereses, para que la salud bucodental de calidad sea accesible."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        /* =========================================
+           SISTEMA DE DISEÑO: LUMINA DENTAL INSTITUTE
+           ========================================= */
+        :root {
+            /* Paleta Médica Premium */
+            --color-deep-navy: #0F172A;
+            --color-primary-blue: #1E3A8A;
+            --color-medical-teal: #0D9488; /* Verde sanitario elegante */
+            --color-medical-teal-light: #14B8A6;
+            --color-pure-white: #FFFFFF;
+            --color-off-white: #F8FAFC;
+            --color-light-gray: #E2E8F0;
+            --color-text-primary: #0F172A;
+            --color-text-secondary: #475569;
+            --color-accent-gold: #C9A227;
+            --color-urgency: #DC2626;
+            --color-overlay: rgba(15, 23, 42, 0.85);
+
+            /* Tipografía */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Espaciado */
+            --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+            --space-sm: clamp(1rem, 2vw, 1.5rem);
+            --space-md: clamp(2rem, 4vw, 3rem);
+            --space-lg: clamp(4rem, 8vw, 6rem);
+            --space-xl: clamp(6rem, 12vw, 10rem);
+
+            /* Animaciones Cinematográficas */
+            --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 0.3s;
+            --duration-medium: 0.6s;
+            --duration-slow: 1s;
+        }
+
+        /* Modo Oscuro (Solicitado, aunque en médico se usa poco, se implementa con elegancia) */
+        [data-theme="dark"] {
+            --color-pure-white: #0F172A;
+            --color-off-white: #1E293B;
+            --color-light-gray: #334155;
+            --color-text-primary: #F8FAFC;
+            --color-text-secondary: #94A3B8;
+            --color-overlay: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-pure-white);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--duration-medium) var(--ease-luxury), color var(--duration-medium) var(--ease-luxury);
+        }
+
+        /* Tipografía */
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); }
+        h2 { font-size: clamp(2rem, 4vw, 3rem); }
+        h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+        
+        .text-accent {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-medical-teal);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--color-primary-blue) 0%, var(--color-medical-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        .container { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--space-md); }
+        .section-padding { padding: var(--space-xl) 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); align-items: center; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+
+        /* Botones */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem 2rem; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+            letter-spacing: 0.05em; text-decoration: none; border: 1px solid transparent;
+            cursor: pointer; transition: all var(--duration-medium) var(--ease-luxury); border-radius: 4px;
+        }
+        .btn-primary { background-color: var(--color-medical-teal); color: var(--color-pure-white); border-color: var(--color-medical-teal); }
+        .btn-primary:hover { background-color: var(--color-primary-blue); border-color: var(--color-primary-blue); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(13, 148, 136, 0.2); }
+        
+        .btn-secondary { background-color: transparent; color: var(--color-text-primary); border-color: var(--color-text-primary); }
+        .btn-secondary:hover { background-color: var(--color-text-primary); color: var(--color-pure-white); }
+        
+        .btn-urgency { background-color: var(--color-urgency); color: var(--color-pure-white); animation: pulse-urgency 2s infinite; }
+        @keyframes pulse-urgency { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
+
+        /* Animaciones Scroll */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity var(--duration-slow) var(--ease-luxury), transform var(--duration-slow) var(--ease-luxury); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; background-color: var(--color-pure-white); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s var(--ease-luxury), visibility 0.8s;
+        }
+        #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-pulse { width: 60px; height: 60px; border: 3px solid var(--color-light-gray); border-top-color: var(--color-medical-teal); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Header */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.5rem 0;
+            transition: all var(--duration-medium) var(--ease-luxury); background: transparent;
+        }
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            padding: 1rem 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="dark"] .header.scrolled { background: rgba(15, 23, 42, 0.95); }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--color-text-primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo span { color: var(--color-medical-teal); }
+        
+        .nav-menu { display: flex; gap: 2rem; list-style: none; }
+        .nav-link { font-size: 0.85rem; font-weight: 500; color: var(--color-text-primary); text-decoration: none; position: relative; padding: 0.5rem 0; transition: color var(--duration-fast); }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--color-medical-teal); transition: width var(--duration-medium) var(--ease-luxury); }
+        .nav-link:hover { color: var(--color-medical-teal); }
+        .nav-link:hover::after { width: 100%; }
+
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .icon-btn { background: none; border: none; cursor: pointer; color: var(--color-text-primary); padding: 0.5rem; display: flex; align-items: center; justify-content: center; transition: color var(--duration-fast); }
+        .icon-btn:hover { color: var(--color-medical-teal); }
+
+        /* Hero */
+        .hero {
+            position: relative; height: 100vh; width: 100%; overflow: hidden;
+            display: flex; align-items: center;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.4)), url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2668&auto=format&fit=crop') center/cover no-repeat;
+        }
+        .hero-content { position: relative; z-index: 2; color: var(--color-pure-white); max-width: 700px; }
+        .hero-subtitle { color: var(--color-medical-teal-light); margin-bottom: var(--space-sm); opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.3s forwards; }
+        .hero-title { margin-bottom: var(--space-md); opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.5s forwards; }
+        .hero-desc { font-size: 1.25rem; color: var(--color-light-gray); margin-bottom: var(--space-md); font-weight: 300; opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.7s forwards; }
+        .hero-actions { display: flex; gap: 1rem; opacity: 0; animation: fadeUp 1s var(--ease-luxury) 0.9s forwards; }
+        
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards & Components */
+        .specialty-card {
+            background: var(--color-off-white); padding: var(--space-md); border-radius: 8px;
+            border: 1px solid var(--color-light-gray); transition: all var(--duration-medium) var(--ease-luxury);
+        }
+        .specialty-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: var(--color-medical-teal); }
+        .specialty-icon { width: 48px; height: 48px; color: var(--color-medical-teal); margin-bottom: var(--space-sm); }
+        
+        .team-card { text-align: center; }
+        .team-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; margin-bottom: var(--space-sm); filter: grayscale(20%); transition: filter var(--duration-medium); }
+        .team-card:hover .team-img { filter: grayscale(0%); }
+        
+        /* Formulario Premium */
+        .form-group { margin-bottom: var(--space-sm); position: relative; }
+        .form-input {
+            width: 100%; padding: 1rem; background: var(--color-off-white); border: 1px solid var(--color-light-gray);
+            border-radius: 4px; font-family: var(--font-body); font-size: 1rem; color: var(--color-text-primary);
+            transition: border-color var(--duration-fast); outline: none;
+        }
+        .form-input:focus { border-color: var(--color-medical-teal); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+        .form-label {
+            position: absolute; left: 1rem; top: 1rem; font-size: 0.9rem; color: var(--color-text-secondary);
+            pointer-events: none; transition: all var(--duration-fast) var(--ease-luxury); background: transparent; padding: 0 0.25rem;
+        }
+        .form-input:focus ~ .form-label, .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -0.6rem; left: 0.8rem; font-size: 0.75rem; color: var(--color-medical-teal); background: var(--color-pure-white);
+        }
+
+        /* Floating Elements */
+        .floating-wa {
+            position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px;
+            background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 999; transition: transform var(--duration-fast); text-decoration: none;
+        }
+        .floating-wa:hover { transform: scale(1.1); }
+
+        .cookie-banner {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-deep-navy); color: var(--color-pure-white);
+            padding: var(--space-md); z-index: 9998; transform: translateY(100%);
+            transition: transform var(--duration-medium) var(--ease-luxury); border-top: 2px solid var(--color-medical-teal);
+        }
+        .cookie-banner.visible { transform: translateY(0); }
+
+        /* Accesibilidad */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+        :focus-visible { outline: 3px solid var(--color-medical-teal); outline-offset: 4px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .nav-menu { display: none; } /* En producción: menú hamburguesa full-screen con animación */
+            .hero-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Skip to content (Accesibilidad) -->
+    <a href="#main-content" class="sr-only" style="top: 1rem; left: 1rem; width: auto; height: auto; padding: 1rem; background: var(--color-medical-teal); color: white; z-index: 10000; clip: auto;">Saltar al contenido principal</a>
+
+    <!-- Preloader -->
+    <div id="preloader" role="status" aria-label="Cargando clínica">
+        <div class="loader-pulse"></div>
+        <p class="text-accent" style="margin-top: 1rem; color: var(--color-text-secondary);">Lumina Dental Institute</p>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container nav-container">
+            <a href="/" class="logo" aria-label="Lumina Dental Inicio">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-medical-teal);"><path d="M12 2C7.5 2 4 6.5 4 12s4.5 10 8 10 8-4.5 8-10S16.5 2 12 2z"/><path d="M12 6v12"/><path d="M8 10h8"/><path d="M8 14h8"/></svg>
+                LUMINA <span>DENTAL</span>
+            </a>
+            
+            <nav aria-label="Navegación principal">
+                <ul class="nav-menu">
+                    <li><a href="#nosotros" class="nav-link">La Clínica</a></li>
+                    <li><a href="#especialidades" class="nav-link">Especialidades</a></li>
+                    <li><a href="#equipo" class="nav-link">Equipo</a></li>
+                    <li><a href="#tecnologia" class="nav-link">Tecnología</a></li>
+                    <li><a href="#casos" class="nav-link">Casos de Éxito</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn" id="theme-toggle" aria-label="Cambiar modo oscuro/claro">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
+                <a href="tel:+34910000000" class="icon-btn" aria-label="Llamar a la clínica">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </a>
+                <a href="#urgencias" class="btn btn-urgency" style="padding: 0.75rem 1.25rem; font-size: 0.8rem;">Urgencias 24h</a>
+                <a href="#cita" class="btn btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">Pedir Cita</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" aria-label="Introducción">
+            <div class="hero-bg" role="img" aria-label="Instalaciones modernas de clínica dental"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <p class="text-accent hero-subtitle">Excelencia en Odontología desde 2005</p>
+                    <h1 class="hero-title">Donde la Ciencia de Precisión <br>encuentra la <em>Estética Natural</em></h1>
+                    <p class="hero-desc">Experimente la odontología del futuro. Diagnóstico digital 3D, implantes de carga inmediata y un equipo de élite comprometido con su salud y su sonrisa.</p>
+                    <div class="hero-actions">
+                        <a href="#cita" class="btn btn-primary">Reservar Primera Consulta</a>
+                        <a href="tel:+34910000000" class="btn btn-secondary" style="color: white; border-color: white;">Llamar Ahora</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Bar (Estadísticas rápidas) -->
+        <section style="background: var(--color-off-white); padding: var(--space-md) 0; border-bottom: 1px solid var(--color-light-gray);">
+            <div class="container">
+                <div class="grid-4" style="text-align: center;">
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-medical-teal); font-weight: 700;">18+</p>
+                        <p class="text-accent" style="margin: 0; color: var(--color-text-secondary);">Años de Experiencia</p>
+                    </div>
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-medical-teal); font-weight: 700;">15k+</p>
+                        <p class="text-accent" style="margin: 0; color: var(--color-text-secondary);">Pacientes Satisfechos</p>
+                    </div>
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-medical-teal); font-weight: 700;">4.9/5</p>
+                        <p class="text-accent" style="margin: 0; color: var(--color-text-secondary);">Valoración Google</p>
+                    </div>
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-medical-teal); font-weight: 700;">100%</p>
+                        <p class="text-accent" style="margin: 0; color: var(--color-text-secondary);">Tecnología Digital</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sobre Nosotros -->
+        <section class="section-padding" id="nosotros">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=2574&auto=format&fit=crop" alt="Consulta dental moderna y luminosa" style="width: 100%; border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);" loading="lazy" decoding="async">
+                    </div>
+                    <div class="reveal">
+                        <p class="text-accent">Nuestra Filosofía</p>
+                        <h2 style="margin-bottom: var(--space-sm);">Más que una clínica, un <span class="text-gradient">centro de excelencia</span> para su salud.</h2>
+                        <p style="color: var(--color-text-secondary); margin-bottom: var(--space-sm); line-height: 1.8;">
+                            En Lumina Dental Institute, fusionamos la calidez humana con la tecnología más avanzada. Creemos que cada paciente es único, por lo que nuestros protocolos se basan en diagnósticos digitales precisos, materiales biocompatibles de primera línea y un enfoque mínimamente invasivo.
+                        </p>
+                        <ul style="list-style: none; margin-bottom: var(--space-md);">
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; color: var(--color-text-primary);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-medical-teal)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                Protocolos estrictos de esterilización y bioseguridad.
+                            </li>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; color: var(--color-text-primary);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-medical-teal)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                Planes de tratamiento transparentes y sin sorpresas.
+                            </li>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; color: var(--color-text-primary);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-medical-teal)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                Garantía por escrito en todos nuestros tratamientos de implantes.
+                            </li>
+                        </ul>
+                        <a href="#equipo" class="btn btn-secondary">Conozca a nuestros especialistas</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Especialidades -->
+        <section class="section-padding" id="especialidades" style="background-color: var(--color-off-white);">
+            <div class="container">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto var(--space-lg);" class="reveal">
+                    <p class="text-accent">Excelencia Clínica</p>
+                    <h2>Nuestras Especialidades</h2>
+                    <p style="color: var(--color-text-secondary); margin-top: var(--space-sm);">Abordamos cada caso con un enfoque multidisciplinar, garantizando soluciones integrales y duraderas.</p>
+                </div>
+                
+                <div class="grid-3">
+                    <article class="specialty-card reveal">
+                        <svg class="specialty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C7.5 2 4 6.5 4 12s4.5 10 8 10 8-4.5 8-10S16.5 2 12 2z"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                        <h3>Implantología Avanzada</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">Implantes de carga inmediata y cirugía guiada por ordenador para una recuperación rápida y predecible.</p>
+                    </article>
+                    <article class="specialty-card reveal">
+                        <svg class="specialty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <h3>Ortodoncia Invisible</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">Proveedores oficiales de Invisalign®. Alineadores transparentes diseñados digitalmente para su comodidad.</p>
+                    </article>
+                    <article class="specialty-card reveal">
+                        <svg class="specialty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        <h3>Estética Dental</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">Carillas de porcelana E-max, blanqueamiento dental de última generación y diseño digital de sonrisa (DSD).</p>
+                    </article>
+                    <article class="specialty-card reveal">
+                        <svg class="specialty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        <h3>Odontopediatría</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">Un entorno adaptado y profesional especializado en la salud bucodental de los más pequeños, sin miedo.</p>
+                    </article>
+                    <article class="specialty-card reveal">
+                        <svg class="specialty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        <h3>Radiología Digital 3D</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">TAC Cone Beam de baja radiación en nuestras instalaciones para diagnósticos milimétricos al instante.</p>
+                    </article>
+                    <article class="specialty-card reveal">
+                        <svg class="specialty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        <h3>Periodoncia y Láser</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">Tratamiento de encías con tecnología láser para una regeneración tisular más rápida y menos dolorosa.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipo -->
+        <section class="section-padding" id="equipo">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent">Talento Humano</p>
+                    <h2>Un Equipo de Élite a su Servicio</h2>
+                </div>
+                <div class="grid-4">
+                    <article class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop" alt="Dr. Alejandro Vargas" class="team-img" loading="lazy">
+                        <h4>Dr. Alejandro Vargas</h4>
+                        <p class="text-accent" style="margin: 0.25rem 0;">Director Médico</p>
+                        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">Especialista en Implantología y Cirugía Oral. Máster por la Univ. de Nueva York.</p>
+                    </article>
+                    <article class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=2670&auto=format&fit=crop" alt="Dra. Elena Rivas" class="team-img" loading="lazy">
+                        <h4>Dra. Elena Rivas</h4>
+                        <p class="text-accent" style="margin: 0.25rem 0;">Ortodoncista</p>
+                        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">Diamond Provider Invisalign®. Experta en ortodoncia estética para adultos.</p>
+                    </article>
+                    <article class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2670&auto=format&fit=crop" alt="Dr. Marcos Soto" class="team-img" loading="lazy">
+                        <h4>Dr. Marcos Soto</h4>
+                        <p class="text-accent" style="margin: 0.25rem 0;">Estética y Prótesis</p>
+                        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">Especialista en Diseño Digital de Sonrisa y rehabilitación oral compleja.</p>
+                    </article>
+                    <article class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=2574&auto=format&fit=crop" alt="Laura Méndez" class="team-img" loading="lazy">
+                        <h4>Laura Méndez</h4>
+                        <p class="text-accent" style="margin: 0.25rem 0;">Higienista Senior</p>
+                        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">Especializada en periodoncia y prevención. Enfoque en la comodidad del paciente.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tecnología -->
+        <section class="section-padding" id="tecnologia" style="background-color: var(--color-deep-navy); color: var(--color-pure-white);">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent" style="color: var(--color-medical-teal-light);">Innovación Constante</p>
+                        <h2 style="color: var(--color-pure-white);">Tecnología de Vanguardia al Servicio de su Salud</h2>
+                        <p style="color: var(--color-light-gray); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Invertimos continuamente en la última tecnología para ofrecer diagnósticos más precisos, tratamientos menos invasivos y resultados predecibles. Su seguridad y comodidad son nuestra prioridad.
+                        </p>
+                        <ul style="list-style: none; margin-top: var(--space-md);">
+                            <li style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                                <span style="color: var(--color-medical-teal-light); font-size: 1.5rem;">01.</span>
+                                <div><strong style="display: block; margin-bottom: 0.25rem;">Escáner Intraoral 3D</strong><span style="color: var(--color-light-gray); font-size: 0.9rem;">Olvídese de las pastas de impresión. Digitalizamos su boca en minutos con precisión micrométrica.</span></div>
+                            </li>
+                            <li style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                                <span style="color: var(--color-medical-teal-light); font-size: 1.5rem;">02.</span>
+                                <div><strong style="display: block; margin-bottom: 0.25rem;">TAC Cone Beam de Baja Radiación</strong><span style="color: var(--color-light-gray); font-size: 0.9rem;">Imágenes tridimensionales para planificar implantes y endodoncias con total seguridad.</span></div>
+                            </li>
+                            <li style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                                <span style="color: var(--color-medical-teal-light); font-size: 1.5rem;">03.</span>
+                                <div><strong style="display: block; margin-bottom: 0.25rem;">Fresadora CAD/CAM Propia</strong><span style="color: var(--color-light-gray); font-size: 0.9rem;">Diseñamos y fabricamos sus coronas o férulas en la clínica, reduciendo los tiempos de espera.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <img src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=2670&auto=format&fit=crop" alt="Tecnología dental avanzada" style="width: 100%; border-radius: 8px; opacity: 0.9;" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proceso -->
+        <section class="section-padding">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent">Su Experiencia</p>
+                    <h2>Un Proceso Transparente y Sencillo</h2>
+                </div>
+                <div class="grid-4" style="position: relative;">
+                    <!-- Línea conectora (visible en desktop) -->
+                    <div style="position: absolute; top: 24px; left: 10%; right: 10%; height: 2px; background: var(--color-light-gray); z-index: 0; display: none;" class="desktop-only"></div>
+                    
+                    <div class="reveal" style="position: relative; z-index: 1; text-align: center;">
+                        <div style="width: 50px; height: 50px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto var(--space-sm);">1</div>
+                        <h4>Primera Visita</h4>
+                        <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: 0.5rem;">Evaluación exhaustiva, TAC 3D y escucha activa de sus necesidades.</p>
+                    </div>
+                    <div class="reveal" style="position: relative; z-index: 1; text-align: center;">
+                        <div style="width: 50px; height: 50px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto var(--space-sm);">2</div>
+                        <h4>Diagnóstico Digital</h4>
+                        <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: 0.5rem;">Le presentamos un plan de tratamiento personalizado con simulación visual.</p>
+                    </div>
+                    <div class="reveal" style="position: relative; z-index: 1; text-align: center;">
+                        <div style="width: 50px; height: 50px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto var(--space-sm);">3</div>
+                        <h4>Tratamiento</h4>
+                        <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: 0.5rem;">Ejecución con máxima precisión, biocompatibilidad y confort.</p>
+                    </div>
+                    <div class="reveal" style="position: relative; z-index: 1; text-align: center;">
+                        <div style="width: 50px; height: 50px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto var(--space-sm);">4</div>
+                        <h4>Seguimiento</h4>
+                        <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: 0.5rem;">Revisiones periódicas para garantizar la longevidad de su tratamiento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonios -->
+        <section class="section-padding" style="background-color: var(--color-off-white);">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent">Confianza Demostrada</p>
+                    <h2>Lo que dicen nuestros pacientes</h2>
+                    <div style="display: flex; justify-content: center; gap: 0.25rem; margin-top: 1rem; color: #FBBF24;">
+                        ★★★★★ <span style="color: var(--color-text-secondary); margin-left: 0.5rem;">4.9/5 en Google Reviews (342 opiniones)</span>
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <article class="specialty-card reveal" style="background: var(--color-pure-white);">
+                        <div style="color: #FBBF24; margin-bottom: 1rem;">★★★★★</div>
+                        <p style="font-style: italic; color: var(--color-text-secondary); margin-bottom: 1.5rem;">"Tenía pánico al dentista. El Dr. Vargas y su equipo me hicieron sentir en casa. Mi implante fue indoloro y la corona parece un diente natural. No puedo estar más agradecida."</p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; background: var(--color-light-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">MC</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">María C.</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Paciente de Implantes</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="specialty-card reveal" style="background: var(--color-pure-white);">
+                        <div style="color: #FBBF24; margin-bottom: 1rem;">★★★★★</div>
+                        <p style="font-style: italic; color: var(--color-text-secondary); margin-bottom: 1.5rem;">"La tecnología que tienen es impresionante. Me mostraron cómo quedaría mi sonrisa con el diseño digital antes de empezar. El resultado superó mis expectativas."</p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; background: var(--color-light-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">JL</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">Javier L.</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Paciente de Estética</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="specialty-card reveal" style="background: var(--color-pure-white);">
+                        <div style="color: #FBBF24; margin-bottom: 1rem;">★★★★★</div>
+                        <p style="font-style: italic; color: var(--color-text-secondary); margin-bottom: 1.5rem;">"Llevo a mis dos hijos desde hace 5 años. La paciencia y el trato con los niños es excepcional. Las instalaciones están impecables siempre."</p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; background: var(--color-light-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">AR</div>
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">Ana R.</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Odontopediatría</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Financiación -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="grid-2" style="background: var(--color-deep-navy); color: white; padding: var(--space-lg); border-radius: 8px; overflow: hidden; position: relative;">
+                    <div style="position: relative; z-index: 2;" class="reveal">
+                        <p class="text-accent" style="color: var(--color-medical-teal-light);">Facilidades de Pago</p>
+                        <h2 style="color: white;">Su salud no puede esperar. <br>Financiación a su medida.</h2>
+                        <p style="color: var(--color-light-gray); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Ofrecemos planes de financiación flexibles hasta en 24 meses sin intereses. Queremos que el factor económico no sea un obstáculo para acceder a la mejor odontología.
+                        </p>
+                        <ul style="list-style: none; margin-bottom: var(--space-md);">
+                            <li style="margin-bottom: 0.5rem;">✓ Estudio financiero gratuito y sin compromiso.</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Respuesta en 24 horas.</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Colaboramos con las principales entidades financieras.</li>
+                        </ul>
+                        <a href="#cita" class="btn btn-primary">Solicitar Presupuesto Personalizado</a>
+                    </div>
+                    <div style="position: absolute; right: -50px; bottom: -50px; opacity: 0.1; z-index: 1;">
+                        <svg width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12"/><path d="M8 10h8"/><path d="M8 14h8"/></svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cita / Contacto -->
+        <section class="section-padding" id="cita" style="background-color: var(--color-off-white);">
+            <div class="container">
+                <div class="grid-2">
+                    <div class="reveal">
+                        <p class="text-accent">Comience su cambio</p>
+                        <h2>Reserve su Primera Consulta</h2>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-sm) 0; line-height: 1.8;">
+                            Dé el primer paso hacia la sonrisa que merece. Complete el formulario y nuestro coordinador de pacientes se pondrá en contacto con usted en menos de 2 horas para confirmar su cita.
+                        </p>
+                        
+                        <div style="margin-top: var(--space-md);">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div style="width: 40px; height: 40px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                </div>
+                                <div>
+                                    <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Llámenos</p>
+                                    <p style="font-weight: 600;">+34 910 000 000</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div style="width: 40px; height: 40px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                </div>
+                                <div>
+                                    <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Email</p>
+                                    <p style="font-weight: 600;">concierge@luminadental.com</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 40px; height: 40px; background: var(--color-medical-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                </div>
+                                <div>
+                                    <p style="font-size: 0.8rem; color: var(--color-text-secondary);">Ubicación</p>
+                                    <p style="font-weight: 600;">Paseo de la Castellana, 100, Madrid</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal" style="background: var(--color-pure-white); padding: var(--space-md); border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.05);">
+                        <form aria-label="Formulario de reserva de cita">
+                            <div class="grid-2" style="gap: var(--space-sm); margin-bottom: 0;">
+                                <div class="form-group">
+                                    <input type="text" id="nombre" class="form-input" placeholder=" " required>
+                                    <label for="nombre" class="form-label">Nombre completo</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" id="telefono" class="form-input" placeholder=" " required>
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-input" placeholder=" " required>
+                                <label for="email" class="form-label">Correo electrónico</label>
+                            </div>
+                            <div class="form-group">
+                                <select id="tratamiento" class="form-input" style="color: var(--color-text-primary);" required>
+                                    <option value="" disabled selected>Seleccione el tratamiento de interés</option>
+                                    <option value="revision">Primera visita / Revisión</option>
+                                    <option value="implantes">Implantes Dentales</option>
+                                    <option value="ortodoncia">Ortodoncia / Invisalign</option>
+                                    <option value="estetica">Estética Dental</option>
+                                    <option value="urgencia">Urgencia Dental</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="mensaje" class="form-input" rows="3" placeholder=" "></textarea>
+                                <label for="mensaje" class="form-label">Comentarios adicionales (opcional)</label>
+                            </div>
+                            <div style="margin-bottom: var(--space-sm); display: flex; align-items: flex-start; gap: 0.5rem;">
+                                <input type="checkbox" id="privacidad" required style="margin-top: 0.25rem;">
+                                <label for="privacidad" style="font-size: 0.8rem; color: var(--color-text-secondary);">Acepto la <a href="#privacidad" style="color: var(--color-medical-teal);">Política de Privacidad</a> y el tratamiento de mis datos para gestionar mi cita.</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Solicitar Cita Ahora</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="background-color: var(--color-deep-navy); color: var(--color-light-gray); padding: var(--space-xl) 0 var(--space-md);">
+        <div class="container">
+            <div class="grid-4" style="margin-bottom: var(--space-lg);">
+                <div>
+                    <h3 style="color: var(--color-pure-white); font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">LUMINA <span style="color: var(--color-medical-teal);">DENTAL</span></h3>
+                    <p style="font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                        Comprometidos con la excelencia clínica, la innovación tecnológica y el bienestar integral de nuestros pacientes desde 2005.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" aria-label="Instagram" style="color: var(--color-pure-white); transition: color 0.3s;">IG</a>
+                        <a href="#" aria-label="Facebook" style="color: var(--color-pure-white); transition: color 0.3s;">FB</a>
+                        <a href="#" aria-label="LinkedIn" style="color: var(--color-pure-white); transition: color 0.3s;">LI</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-pure-white); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem;">Especialidades</h4>
+                    <a href="#" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Implantología</a>
+                    <a href="#" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Ortodoncia Invisible</a>
+                    <a href="#" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Estética Dental</a>
+                    <a href="#" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Odontopediatría</a>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-pure-white); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem;">Enlaces Rápidos</h4>
+                    <a href="#nosotros" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">La Clínica</a>
+                    <a href="#equipo" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Equipo Médico</a>
+                    <a href="#casos" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Casos de Éxito</a>
+                    <a href="#blog" style="display: block; color: var(--color-light-gray); text-decoration: none; margin-bottom: 0.75rem; font-size: 0.9rem; transition: color 0.3s;">Blog de Salud</a>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-pure-white); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem;">Horario</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Lun - Vie: 9:00 - 20:00</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Sábados: 10:00 - 14:00</p>
+                    <h4 style="color: var(--color-pure-white); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem;">Newsletter</h4>
+                    <form style="display: flex; border-bottom: 1px solid var(--color-medical-teal);">
+                        <input type="email" placeholder="Su email" style="background: transparent; border: none; color: white; padding: 0.5rem 0; width: 100%; outline: none; font-size: 0.9rem;">
+                        <button type="submit" style="background: transparent; border: none; color: var(--color-medical-teal); cursor: pointer; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; font-weight: 600;">Enviar</button>
+                    </form>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--space-md); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--color-text-secondary);">
+                <p>&copy; 2026 Lumina Dental Institute. Todos los derechos reservados. Nº Registro Sanitario: CS-12345.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="#aviso-legal" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Aviso Legal</a>
+                    <a href="#privacidad" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Privacidad</a>
+                    <a href="#cookies" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Cookies</a>
+                    <a href="#accesibilidad" style="color: var(--color-text-secondary); text-decoration: none; transition: color 0.3s;">Accesibilidad</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Elements -->
+    <a href="https://wa.me/34910000000" class="floating-wa" aria-label="Contactar por WhatsApp" target="_blank" rel="noopener">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <!-- Cookie Consent Banner (GDPR) -->
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Respetamos su privacidad</p>
+                <p style="font-size: 0.8rem; color: var(--color-light-gray);">Utilizamos cookies propias y de terceros para mejorar su experiencia, analizar el tráfico y personalizar contenido. Puede configurar o rechazar su uso conforme a nuestra Política de Cookies.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cookie-reject" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Rechazar</button>
+                <button id="cookie-settings" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Configurar</button>
+                <button id="cookie-accept" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Aceptar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Optimizado (Vanilla) -->
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 800);
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, { passive: true });
+
+        // Intersection Observer para animaciones
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Cookie Consent Logic
+        const cookieBanner = document.getElementById('cookie-banner');
+        if (!localStorage.getItem('cookieConsent')) {
+            setTimeout(() => cookieBanner.classList.add('visible'), 1500);
+        }
+        document.getElementById('cookie-accept').addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'accepted');
+            cookieBanner.classList.remove('visible');
+        });
+        document.getElementById('cookie-reject').addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'rejected');
+            cookieBanner.classList.remove('visible');
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+    <!-- =========================================
+         PÁGINAS LEGALES Y ESTRUCTURA SECUNDARIA
+         (Listas para ser extraídas a archivos .html independientes)
+         ========================================= -->
+    
+    <template id="tpl-privacidad">
+        <section class="section-padding container">
+            <h1>Política de Privacidad</h1>
+            <p class="text-accent">Última actualización: 15 de julio de 2026</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>1. Responsable del Tratamiento</h3>
+                <p>Lumina Dental Institute S.L., con CIF B-87654321 y domicilio en Paseo de la Castellana, 100, 28046 Madrid.</p>
+                <h3>2. Finalidad y Legitimación</h3>
+                <p>Tratamos sus datos para gestionar citas, historiales clínicos y facturación, basándonos en la ejecución del contrato y su consentimiento explícito, conforme al RGPD y la LOPDGDD.</p>
+                <h3>3. Derechos del Paciente</h3>
+                <p>Puede ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad enviando un email a rgpd@luminadental.com.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-aviso-legal">
+        <section class="section-padding container">
+            <h1>Aviso Legal</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), se informa que el titular de este sitio web es Lumina Dental Institute S.L., inscrita en el Registro Mercantil de Madrid.</p>
+                <p>Nº de Registro Sanitario: CS-12345. La información contenida en esta web tiene carácter meramente informativo y no sustituye el diagnóstico médico profesional.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-cookies">
+        <section class="section-padding container">
+            <h1>Política de Cookies</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <h3>1. ¿Qué son las cookies?</h3>
+                <p>Son pequeños archivos de texto que se descargan en su dispositivo para almacenar y recuperar información sobre sus hábitos de navegación.</p>
+                <h3>2. Cookies que utilizamos</h3>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Técnicas (Necesarias):</strong> Permiten la navegación y el uso de funciones básicas.</li>
+                    <li><strong>Analíticas:</strong> Google Analytics 4 (IP anonimizada) para mejorar nuestros servicios.</li>
+                    <li><strong>Marketing:</strong> Solo se activan con su consentimiento explícito para mostrar publicidad relevante.</li>
+                </ul>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-cancelacion">
+        <section class="section-padding container">
+            <h1>Política de Cancelación de Citas</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>En Lumina Dental Institute valoramos su tiempo y el de nuestros profesionales. Le rogamos que, en caso de no poder asistir a su cita, nos avise con al menos 24 horas de antelación.</p>
+                <p>Las cancelaciones realizadas con menos de 24 horas de antelación o los incomparecimientos sin aviso previo podrán estar sujetos a un cargo de gestión de 30€, según lo establecido en la normativa vigente de protección de datos y gestión de citas sanitarias.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-accesibilidad">
+        <section class="section-padding container">
+            <h1>Declaración de Accesibilidad</h1>
+            <p class="text-accent">Nivel de conformidad: WCAG 2.1 Nivel AA</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-secondary); line-height: 1.8;">
+                <p>Lumina Dental Institute se compromete a garantizar la accesibilidad digital de su sitio web para todas las personas, incluidas aquellas con discapacidades visuales, auditivas, motoras o cognitivas.</p>
+                <p>Medidas adoptadas: contraste de color verificado, navegación completa por teclado, etiquetas ARIA, textos alternativos en imágenes y tipografías legibles y escalables.</p>
+            </article>
+        </section>
+    </template>
+
+    <template id="tpl-404">
+        <section style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: var(--color-off-white);">
+            <p class="text-accent">Error 404</p>
+            <h1 style="margin: 1rem 0;">Página No Encontrada</h1>
+            <p style="color: var(--color-text-secondary); max-width: 500px; margin-bottom: 2rem;">Lo sentimos, la página que busca no existe o ha sido movida. Le invitamos a volver a nuestra página de inicio.</p>
+            <a href="/" class="btn btn-primary">Volver a la Clínica</a>
+        </section>
+    </template>
+
+</body>
+</html>

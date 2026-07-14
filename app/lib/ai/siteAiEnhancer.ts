@@ -37,6 +37,7 @@ const VARIANT_DESIGN: Partial<Record<BusinessVariant, string>> = {
   tattoo: 'Estudio tatuajes (Royal Bang): negro/rojo, galería portfolio, reservar cita.',
   kebab: 'Kebab premium urbano: fotos apetitosas, carta real, ambiente Vallecas.',
   luxury: 'Fine dining (La Maison Dorée): negro #1a1a1a + oro #c8a97e, script decorativo, cinematográfico, alta cocina.',
+  jewelry: 'Joyería/relojería lujo (Rolex/Cartier): negro #0a0a0a, marfil, champagne, oro cepillado, font-serif editorial, mucho espacio en blanco, hero cinematográfico, mega menú, marcas suizas, galería premium, cita privada. PROHIBIDO estilo restaurante o plantilla genérica.',
   nonprofit: 'ONG/accesibilidad (InfoSordos): azul #0a3bf6, misión clara, inclusivo, recursos LSE, subtítulos.',
   renewable: 'Empresa energías renovables premium (referencia ritest.es): hero oscuro con parque solar, verde energético #16a34a, azul tech #0f172a, grid sutil, stats confianza, tarjetas servicios fotovoltaica/baterías/EV, proceso 5 pasos, proyectos reales, FAQ acordeón, footer corporativo. PROHIBIDO spa, masajes, hotel, piscina, belleza, restaurante.',
   default: 'Web de agencia premium: Playfair + sans, mucho aire, sombras suaves, rounded-[2rem]. Cero placeholders genéricos.',

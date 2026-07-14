@@ -1,16 +1,22 @@
-import { analyzeIntent } from '../ai/intentAnalyzer';
+import { analyzeIntent, buildIntentFromTemplateSlug } from '../ai/intentAnalyzer';
 import { detectVariant, getBusinessProfile } from '../ai/businessProfiles';
 import { buildSiteBrief, enhanceSelectedSections, type SiteBrief } from '../ai/siteAiEnhancer';
-import { extractPreviewBusinessName } from '../ai/siteSections';
 import type { StudioGenerateInput, StudioGenerateResult, PreviewSection } from '../ai/studioEngine';
 import { generateInitialSite } from '../ai/siteGenerator';
 import { resolveStudioSector, buildSectorAgentPlaybook } from './sectorAgentPlaybook';
 import type { TemplatePageSection } from '../templatePages';
 import { wrapSectionHtml } from '../ai/siteSectionWrap';
 import { hasMeaningfulSectionChanges } from './sectionDiff';
+import {
+  appendMissingSections,
+  isTemplateContextLocked,
+  regenerateFromLockedTemplate,
+  resolveStudioBusinessName,
+} from './studioContextLock';
 
 export type DirectorStrategy =
   | 'full_regenerate'
+  | 'add_section'
   | 'multi_agent'
   | 'visual'
   | 'copy'
@@ -69,6 +75,7 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
   const { prompt, lang, previewSections } = input;
   const lower = prompt.toLowerCase();
   const types = existingTypes(previewSections);
+  const locked = isTemplateContextLocked(input);
 
   const wantsNewSection =
     /a[nñ]ad(e|ir|a)|agrega|nueva secci|más secci|falta|sin secci|crea.*secci|new section|add section/i.test(lower);
@@ -76,23 +83,37 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
   const wantsFull =
     /web completa|todo el sitio|entera|regenera|desde cero|rehaz|rebuild|whole site/i.test(lower);
 
-  if (wantsFull || wantsPage || (wantsNewSection && previewSections.length >= 2)) {
+  if (wantsFull || wantsPage) {
     return {
       strategy: 'full_regenerate',
       targetTypes: [],
       motorLabels: ['visual', 'copy', 'ux', 'code'],
-      reasonEs: 'Regeneración completa con biblioteca de sector y plantilla premium.',
-      reasonEn: 'Full regeneration using sector library and premium template.',
+      reasonEs: locked
+        ? 'Regeneración completa respetando la plantilla y el negocio cargados.'
+        : 'Regeneración completa con biblioteca de sector y plantilla premium.',
+      reasonEn: locked
+        ? 'Full regeneration keeping the loaded template and business context.'
+        : 'Full regeneration using sector library and premium template.',
     };
   }
 
   if (/testimonio|reseñ|review|opinion/i.test(lower) && !types.has('reviews')) {
     return {
-      strategy: 'full_regenerate',
+      strategy: 'add_section',
       targetTypes: ['reviews'],
       motorLabels: ['copy', 'visual'],
-      reasonEs: 'Añadir bloque de testimonios con agente Copy + Visual.',
-      reasonEn: 'Add testimonials block with Copy + Visual agents.',
+      reasonEs: 'Añadir bloque de testimonios sin perder el resto de la web.',
+      reasonEn: 'Add testimonials block without losing the rest of the site.',
+    };
+  }
+
+  if (wantsNewSection && !locked && previewSections.length < 2) {
+    return {
+      strategy: 'full_regenerate',
+      targetTypes: [],
+      motorLabels: ['visual', 'copy', 'ux', 'code'],
+      reasonEs: 'Sitio mínimo: generación completa para añadir la sección pedida.',
+      reasonEn: 'Minimal site: full generation to add the requested section.',
     };
   }
 
@@ -179,32 +200,50 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
 
 function buildBriefFromPreview(input: StudioGenerateInput): SiteBrief {
   const blob = previewBlob(input.previewSections);
-  const businessName = extractPreviewBusinessName(input.previewSections);
-  const sector = resolveStudioSector(`${input.prompt} ${blob}`, input.sectorId);
-  const intent = analyzeIntent(`${input.prompt} ${businessName} ${blob.slice(0, 500)}`, input.lang);
+  const businessName = resolveStudioBusinessName(input);
+  const locked = isTemplateContextLocked(input);
 
-  if (sector) {
-    intent.templateSlug = sector.templateSlug;
-    intent.businessType = input.lang === 'es' ? sector.labelEs : sector.labelEn;
-  }
+  let intent;
+  let sectorMeta: { id: string; label: string; playbook: string } | undefined;
 
-  const profile = getBusinessProfile(intent.variant);
-  const sectorMeta = sector
-    ? {
+  if (input.templateSlug) {
+    intent = buildIntentFromTemplateSlug(input.templateSlug, input.lang);
+    intent.businessName = businessName;
+  } else {
+    const sector = resolveStudioSector(`${input.prompt} ${blob}`, input.sectorId);
+    intent = analyzeIntent(`${input.prompt} ${businessName} ${blob.slice(0, 500)}`, input.lang);
+    if (sector) {
+      intent.templateSlug = sector.templateSlug;
+      intent.businessType = input.lang === 'es' ? sector.labelEs : sector.labelEn;
+      sectorMeta = {
         id: sector.id,
         label: input.lang === 'es' ? sector.labelEs : sector.labelEn,
         playbook: buildSectorAgentPlaybook(sector, input.lang),
-      }
-    : undefined;
+      };
+    }
+  }
+
+  if (!sectorMeta && !locked) {
+    const sector = resolveStudioSector(`${input.prompt} ${blob}`, input.sectorId);
+    if (sector) {
+      sectorMeta = {
+        id: sector.id,
+        label: input.lang === 'es' ? sector.labelEs : sector.labelEn,
+        playbook: buildSectorAgentPlaybook(sector, input.lang),
+      };
+    }
+  }
+
+  const profile = getBusinessProfile(intent.variant);
 
   const directorNote =
     input.lang === 'es'
-      ? `\n[DIRECTOR CREAUNA] El cliente ya tiene una web premium generada. MEJORA lo existente según: «${input.prompt}». Mantén calidad de agencia (€1.500–3.000), imágenes profesionales, secciones completas. Nunca empeores ni simplifiques.`
-      : `\n[CREAUNA DIRECTOR] Client already has a premium site. IMPROVE what exists per: «${input.prompt}». Keep agency-grade quality, pro images, full sections. Never downgrade.`;
+      ? `\n[DIRECTOR CREAUNA] El cliente ya tiene una web premium generada${locked ? ` (plantilla ${input.templateSlug})` : ''}. MEJORA lo existente según: «${input.prompt}». Mantén calidad de agencia (€1.500–3.000), imágenes profesionales, secciones completas. Nunca empeores ni simplifiques.`
+      : `\n[CREAUNA DIRECTOR] Client already has a premium site${locked ? ` (template ${input.templateSlug})` : ''}. IMPROVE what exists per: «${input.prompt}». Keep agency-grade quality, pro images, full sections. Never downgrade.`;
 
   const brief = buildSiteBrief(intent, profile, null, input.lang, input.prompt + directorNote, sectorMeta);
   brief.businessName = businessName;
-  brief.variant = detectVariant(blob + ' ' + input.prompt);
+  brief.variant = locked ? intent.variant : detectVariant(blob + ' ' + input.prompt);
   return brief;
 }
 
@@ -241,6 +280,17 @@ export async function executeDirectorPlan(
   const brief = buildBriefFromPreview(input);
 
   if (plan.strategy === 'full_regenerate') {
+    if (isTemplateContextLocked(input)) {
+      const result = regenerateFromLockedTemplate(input, lang);
+      return {
+        ...result,
+        message:
+          lang === 'es'
+            ? `${plan.reasonEs} ${result.message}`
+            : `${plan.reasonEn} ${result.message}`,
+        motorsUsed: plan.motorLabels,
+      };
+    }
     const enriched = enrichRegeneratePrompt(input, brief);
     const result = await generateInitialSite(enriched, lang, input.sectorId ?? brief.sectorId);
     return {
@@ -257,6 +307,22 @@ export async function executeDirectorPlan(
       sectorId: result.sectorId,
       sectorLabel: result.sectorLabel,
     };
+  }
+
+  if (plan.strategy === 'add_section') {
+    const added = appendMissingSections(
+      input,
+      plan.targetTypes,
+      lang,
+      plan.reasonEs,
+      plan.reasonEn
+    );
+    if (added) {
+      return {
+        ...added,
+        motorsUsed: plan.motorLabels,
+      };
+    }
   }
 
   const templateSections = previewToTemplate(previewSections);
@@ -297,6 +363,8 @@ export async function executeDirectorPlan(
     motorsUsed: motorsUsed.length ? motorsUsed : plan.motorLabels,
     source: 'hybrid',
     changedSectionIds: ids,
+    templateSlug: input.templateSlug,
+    businessName: resolveStudioBusinessName(input),
     sectorId: sector?.id,
     sectorLabel: sector ? (lang === 'es' ? sector.labelEs : sector.labelEn) : undefined,
   };

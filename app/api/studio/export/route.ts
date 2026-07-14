@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { sanitizeText } from '../../../lib/api/validate';
+import { getPremiumStarterBySlug } from '../../../data/premiumStarters';
+import { buildPedirPageHtml } from '../../../lib/studio/mesonContentBridge';
+import { mergePersonalization } from '../../../lib/studio/personalizePremiumStarter';
+import { normalizePremiumContent, type PremiumStarterContent } from '../../../lib/studio/premiumContentTypes';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -11,8 +15,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const projectName = sanitizeText(body.projectName, 120) || 'mi-proyecto';
     const sections = Array.isArray(body.previewSections) ? body.previewSections : [];
+    const premiumStarterSlug = sanitizeText(body.premiumStarterSlug, 80);
+    const premiumContent = body.premiumContent as PremiumStarterContent | undefined;
 
-    const html = `<!DOCTYPE html>
+    const fullpage = sections.find((s: { type?: string; html?: string }) => s.type === 'fullpage');
+    const indexHtml =
+      fullpage?.html ??
+      `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -28,12 +37,27 @@ export async function POST(req: Request) {
 </body>
 </html>`;
 
+    const files: Record<string, string> = { 'index.html': indexHtml };
+
+    if (premiumStarterSlug === 'meson-la-colonia' && premiumContent) {
+      const starter = getPremiumStarterBySlug('meson-la-colonia');
+      if (starter) {
+        const personalization = mergePersonalization(starter, body.premiumPersonalization);
+        const content = normalizePremiumContent(premiumContent);
+        if (content.digital.orderingEnabled && content.menu.length > 0) {
+          files['pedir.html'] = buildPedirPageHtml(
+            content,
+            personalization.businessName,
+            personalization.phoneE164
+          );
+        }
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       projectName,
-      files: {
-        'index.html': html,
-      },
+      files,
       exportedAt: new Date().toISOString(),
     });
   } catch (error) {

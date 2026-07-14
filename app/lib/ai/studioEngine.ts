@@ -1,5 +1,5 @@
 import { chatCompletion, type MotorId } from './providers';
-import { generateInitialSite } from './siteGenerator';
+import { generateInitialSite, generateInitialSiteFromDiscovery } from './siteGenerator';
 import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
 import { detectVariant } from './businessProfiles';
 import { applyVisualEnhancement, applyStrongVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
@@ -7,6 +7,16 @@ import { validateSectionHtml } from '../studio/sectionValidator';
 import { planStudioChange, executeDirectorPlan } from '../studio/studioDirector';
 import { resolveStudioSector, buildSectorAgentPlaybook } from '../studio/sectorAgentPlaybook';
 import { extractPreviewBusinessName } from './siteSections';
+import {
+  appendMissingSections,
+  isPremiumStarterContextLocked,
+  isTemplateContextLocked,
+  personalizeFromPremiumStarter,
+  regenerateFromLockedTemplate,
+} from '../studio/studioContextLock';
+import type { StudioDiscoveryAnswers } from '../studio/discoveryTypes';
+import type { PremiumStarterPersonalization } from '../../data/premiumStarters';
+import type { PremiumStarterContent } from './premiumContentTypes';
 
 export interface PreviewSection {
   id: number;
@@ -24,6 +34,17 @@ export interface StudioGenerateInput {
   action?: StudioAction;
   sectionId?: number;
   sectorId?: string;
+  /** Slug de plantilla del catálogo — bloquea variant/sector en refinamientos. */
+  templateSlug?: string;
+  /** Muestra premium terminada (HTML real) — personalización acotada, sin regenerar diseño. */
+  premiumStarterSlug?: string;
+  premiumPersonalization?: Partial<PremiumStarterPersonalization>;
+  premiumContent?: PremiumStarterContent;
+  businessName?: string;
+  /** false = permitir re-análisis de sector aunque haya templateSlug */
+  lockedTemplate?: boolean;
+  /** Respuestas del wizard de descubrimiento (generación inicial estructurada). */
+  discovery?: StudioDiscoveryAnswers;
   recentMessages?: { role: 'user' | 'ai'; content: string }[];
   sectionOutline?: string;
 }
@@ -196,20 +217,32 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
 
   if (
     (lower.includes('testimonio') || lower.includes('testimonial') || lower.includes('reseñ')) &&
-    !isExistingSiteSections(previewSections)
+    !sections.find((s) => s.type === 'reviews')
   ) {
-    const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang, input.sectorId);
-    return {
-      message: lang === 'es' ? 'Bloque de reseñas añadido con opiniones reales.' : 'Reviews section added with real testimonials.',
-      previewSections: result.previewSections,
-      motorsUsed: result.motorsUsed ?? ['copy'],
-      source: result.source,
-      changedSectionIds: result.changedSectionIds,
-      templateSlug: result.templateSlug,
-      businessName: result.businessName,
-      sectorId: result.sectorId,
-      sectorLabel: result.sectorLabel,
-    };
+    if (input.templateSlug) {
+      const added = appendMissingSections(
+        input,
+        ['reviews'],
+        lang,
+        'Bloque de reseñas añadido con opiniones reales.',
+        'Reviews section added with real testimonials.'
+      );
+      if (added) return added;
+    }
+    if (!isExistingSiteSections(previewSections)) {
+      const result = await generateInitialSite(enrichPromptFromSections(input.prompt, sections), lang, input.sectorId);
+      return {
+        message: lang === 'es' ? 'Bloque de reseñas añadido con opiniones reales.' : 'Reviews section added with real testimonials.',
+        previewSections: result.previewSections,
+        motorsUsed: result.motorsUsed ?? ['copy'],
+        source: result.source,
+        changedSectionIds: result.changedSectionIds,
+        templateSlug: result.templateSlug,
+        businessName: result.businessName,
+        sectorId: result.sectorId,
+        sectorLabel: result.sectorLabel,
+      };
+    }
   }
 
   if (isCorporatePreviewSite(previewSections) && corporateUpgradePrompt(lower)) {
@@ -388,6 +421,7 @@ function pickMotorForSection(prompt: string, sectionType: string): MotorId {
 }
 
 async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
+  if (isPremiumStarterContextLocked(input)) return null;
   const target = targetSection(input);
   if (!target) return null;
 
@@ -456,7 +490,25 @@ Action: ${input.action || 'change'}`,
 }
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
+  if (input.discovery && input.action === 'initial') {
+    const result = await generateInitialSiteFromDiscovery(input.discovery, input.lang);
+    return {
+      message: result.message,
+      previewSections: result.previewSections,
+      motorsUsed: result.motorsUsed ?? ['visual', 'copy', 'ux', 'code'],
+      source: result.source,
+      changedSectionIds: result.changedSectionIds,
+      templateSlug: result.templateSlug,
+      businessName: result.businessName,
+      sectorId: result.sectorId,
+      sectorLabel: result.sectorLabel,
+    };
+  }
+
   if (shouldGenerateFullSite(input.prompt, input.action, input.previewSections)) {
+    if (isTemplateContextLocked(input)) {
+      return regenerateFromLockedTemplate(input, input.lang);
+    }
     const result = await generateInitialSite(input.prompt, input.lang, input.sectorId);
     return {
       message: result.message,
@@ -469,6 +521,15 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       sectorId: result.sectorId,
       sectorLabel: result.sectorLabel,
     };
+  }
+
+  if (isPremiumStarterContextLocked(input) && input.action === 'change') {
+    return personalizeFromPremiumStarter(input, input.lang);
+  }
+
+  if (input.action === 'change' && isTemplateContextLocked(input) && isCosmeticPrompt(input.prompt)) {
+    const ruleResult = await applyPromptRules(input);
+    if (ruleResult) return ruleResult;
   }
 
   if (input.action === 'change' && (isCosmeticPrompt(input.prompt) || isSiteBuildPrompt(input.prompt))) {

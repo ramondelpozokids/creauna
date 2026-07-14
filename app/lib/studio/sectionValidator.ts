@@ -51,6 +51,16 @@ export interface SectionValidationResult {
 }
 
 export function validateSectionHtml(html: string, sectionId?: number, sectionType?: string): SectionValidationResult {
+  if (sectionType === 'fullpage') {
+    const ok = (html?.length ?? 0) > 1000 && html.includes('<!DOCTYPE');
+    return {
+      ok,
+      errors: ok ? [] : ['HTML de muestra premium inválido'],
+      sectionId,
+      sectionType,
+    };
+  }
+
   const errors: string[] = [];
   const cleaned = stripGoogleMapIframes(html);
 

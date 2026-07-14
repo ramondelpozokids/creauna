@@ -20,7 +20,7 @@ export const faqPageI18n = {
       },
       {
         q: '¿Cuánto cuesta cada cambio con IA en el Studio?',
-        a: '1 crédito = 1 cambio visible (un mensaje en el chat, pulsar «Mejorar» en una sección, cambiar estilo, etc.). En Gratis el coste efectivo es 0€. En Pro y Business ronda los 0,16€ por cambio según tu plan mensual.',
+        a: '1 crédito = 1 cambio visible (un mensaje en el chat, pulsar «Mejorar» en una sección, cambiar estilo, etc.). En Gratis el coste efectivo es 0€. En Pro y Business ronda los 0,13€ por cambio con facturación anual (0,16€ en mensual).',
       },
       {
         q: '¿Los créditos se acumulan de un mes a otro?',
@@ -79,7 +79,7 @@ export const faqPageI18n = {
       },
       {
         q: 'How much does each AI change in Studio cost?',
-        a: '1 credit = 1 visible change (one chat message, clicking Improve on a section, changing style, etc.). On Free the effective cost is €0. On Pro and Business it is roughly €0.16 per change depending on your monthly plan.',
+        a: '1 credit = 1 visible change (one chat message, clicking Improve on a section, changing style, etc.). On Free the effective cost is €0. On Pro and Business it is roughly €0.13 per change on annual billing (€0.16 on monthly).',
       },
       {
         q: 'Do credits roll over month to month?',

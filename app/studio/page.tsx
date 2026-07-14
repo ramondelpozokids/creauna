@@ -4,14 +4,22 @@ import { Suspense, useState, useEffect, useCallback, useRef, useMemo } from 'rea
 import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Send, Sparkles, RefreshCw, Download, Share2,
-  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye,
+  Monitor, Smartphone, Zap, Coins, Rocket, History, Eye, Image, UtensilsCrossed, Star, CalendarDays, Info, Trophy, ScanLine,
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import StudioCheckoutModal from '../components/StudioCheckoutModal';
 import StudioOnboarding from '../components/StudioOnboarding';
+import StudioDiscoveryWizard from '../components/StudioDiscoveryWizard';
+import StudioPremiumStarterForm from '../components/StudioPremiumStarterForm';
+import StudioPremiumContentEditor, { type PremiumEditorTab } from '../components/StudioPremiumContentEditor';
 import StudioSectionPreview from '../components/StudioSectionPreview';
+import type { StudioDiscoveryAnswers } from '../lib/studio/discoveryTypes';
+import type { PremiumStarterPersonalization } from '../data/premiumStarters';
+import { getPremiumStarterBySlug } from '../data/premiumStarters';
+import { buildPremiumStarterHtml, loadPremiumStarter } from '../lib/studio/loadPremiumStarter';
+import { normalizePremiumContent, type PremiumStarterContent } from '../lib/studio/premiumContentTypes';
 import { useLanguage } from '../components/LanguageProvider';
 import { getCredits, setCredits as setCreditsCache, syncCreditsFromServer, FREE_CREDITS } from '../lib/studioCredits';
 import { getTemplateBySlug } from '../data/templates';
@@ -57,9 +65,13 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'Diseño con IA',
     welcome: 'Hola. Soy tu director de diseño. Los 4 motores de IA trabajan en equipo para crear tu web. ¿Qué quieres diseñar hoy?',
-    welcomeOnboarding: 'Bienvenido al Studio. Elige una plantilla del catálogo o describe tu web en el panel de conversación.',
-    welcomeDescribe: 'Perfecto. Cuéntame tu negocio: sector, estilo visual, secciones que necesitas (contacto, menú, reservas…) y crearé tu primera versión.',
-    welcomeTemplate: (name: string) => `Plantilla «${name}» cargada. Navega la vista en tiempo real a la derecha y dime qué quieres mejorar.`,
+    welcomeOnboarding: 'Bienvenido al Studio. Elige una plantilla del catálogo o crea tu web con el asistente guiado.',
+    welcomeDiscovery: 'Te guiaré paso a paso: sector, secciones, colores, menú y más. Al final genero tu web profesional completa.',
+    welcomeDescribe: 'Cuéntame tu negocio en texto libre y crearé tu primera versión.',
+    welcomePremium: (name: string) =>
+      `Muestra premium «${name}» cargada. Edita carta, destacados, menús del día o galería desde la barra superior.`,
+    welcomeTemplate: (name: string) =>
+      `Plantilla «${name}» cargada. Navega la vista en tiempo real a la derecha y dime qué quieres mejorar.`,
     placeholder: 'Describe lo que quieres cambiar...',
     placeholderDescribe: 'Ej: gestoría con contacto, mapa, sidebar y footer legal…',
     regenerate: 'Regenerar',
@@ -81,8 +93,8 @@ const translations = {
     thinking: 'Los motores IA refinan tu diseño…',
     successUpdate: 'Diseño actualizado',
     noCredits: 'Sin créditos. Mejora tu plan en /precios',
-    creditUsed: '1 crédito (~0,16€ en Pro)',
-    creditHint: '1 cambio = 1 crédito · Gratis: 0€ · Pro: ~0,16€/cambio',
+    creditUsed: '1 crédito (~0,13€ en Pro anual)',
+    creditHint: '1 cambio = 1 crédito · Gratis: 0€ · Pro: ~0,13€/cambio (anual)',
     paymentRequired: 'Completa el pago para exportar o publicar',
     creditsLeft: 'créditos',
     unlimitedAccess: 'Acceso ilimitado',
@@ -93,7 +105,7 @@ const translations = {
     templateLoaded: 'Plantilla activa',
     instant: 'CADA CAMBIO ES INSTANTÁNEO',
     selectSection: 'Selecciona una sección para editarla',
-    sections: { hero: 'Inicio', menu: 'Menú', services: 'Servicios', about: 'Sobre nosotros', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', blog: 'Blog', reservation: 'Reservas', contact: 'Contacto', footer: 'Legal', widgets: 'Accesos', testimonial: 'Testimonios' },
+    sections: { hero: 'Inicio', menu: 'Menú', services: 'Servicios', about: 'Sobre nosotros', gallery: 'Galería', reviews: 'Reseñas', location: 'Ubicación', blog: 'Blog', reservation: 'Reservas', contact: 'Contacto', footer: 'Legal', widgets: 'Accesos', testimonial: 'Testimonios', fullpage: 'Web completa' },
     changeApplied: 'Cambio visible aplicado',
     snapshots: 'Restaurar versión',
     restore: 'Restaurar',
@@ -104,9 +116,13 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'AI Design',
     welcome: 'Hello. Your design director here. 4 AI engines work as a team to build your site. What shall we design today?',
-    welcomeOnboarding: 'Welcome to the Studio. Pick a catalog template or describe your site in the conversation panel.',
-    welcomeDescribe: 'Great. Tell me about your business: industry, visual style, sections you need (contact, menu, booking…) and I will build your first version.',
-    welcomeTemplate: (name: string) => `Template «${name}» loaded. Check the live preview on the right and tell me what to improve.`,
+    welcomeOnboarding: 'Welcome to the Studio. Pick a catalog template or create your site with the guided assistant.',
+    welcomeDiscovery: 'I will guide you step by step: sector, sections, colors, menu and more. Then I generate your full professional site.',
+    welcomeDescribe: 'Tell me about your business in free text and I will create your first version.',
+    welcomePremium: (name: string) =>
+      `Premium sample «${name}» loaded. Edit menu, highlights, daily menus or gallery from the top bar.`,
+    welcomeTemplate: (name: string) =>
+      `Template «${name}» loaded. Check the live preview on the right and tell me what to improve.`,
     placeholder: 'Describe what you want to change...',
     placeholderDescribe: 'E.g. law firm with contact, map, sidebar and legal footer…',
     regenerate: 'Regenerate',
@@ -128,8 +144,8 @@ const translations = {
     thinking: 'AI engines refining your design…',
     successUpdate: 'Design updated',
     noCredits: 'No credits left. Upgrade at /precios',
-    creditUsed: '1 credit (~€0.16 on Pro)',
-    creditHint: '1 change = 1 credit · Free: €0 · Pro: ~€0.16/change',
+    creditUsed: '1 credit (~€0.13 on Pro annual)',
+    creditHint: '1 change = 1 credit · Free: €0 · Pro: ~€0.13/change (annual)',
     paymentRequired: 'Complete payment to export or publish',
     creditsLeft: 'credits',
     unlimitedAccess: 'Unlimited access',
@@ -140,7 +156,7 @@ const translations = {
     templateLoaded: 'Active template',
     instant: 'EVERY CHANGE IS INSTANT',
     selectSection: 'Select a section to edit it',
-    sections: { hero: 'Home', menu: 'Menu', services: 'Services', about: 'About us', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', blog: 'Blog', reservation: 'Booking', contact: 'Contact', footer: 'Legal', widgets: 'Shortcuts', testimonial: 'Testimonials' },
+    sections: { hero: 'Home', menu: 'Menu', services: 'Services', about: 'About us', gallery: 'Gallery', reviews: 'Reviews', location: 'Location', blog: 'Blog', reservation: 'Booking', contact: 'Contact', footer: 'Legal', widgets: 'Shortcuts', testimonial: 'Testimonials', fullpage: 'Full site' },
     changeApplied: 'Visible change applied',
     snapshots: 'Restore version',
     restore: 'Restore',
@@ -177,6 +193,7 @@ function StudioContent() {
   const searchParams = useSearchParams();
   const { lang: globalLang, setLang: setGlobalLang } = useLanguage();
   const templateParam = searchParams.get('template');
+  const starterParam = searchParams.get('starter');
   const projectParam = searchParams.get('project');
   const langParam = searchParams.get('lang') as Language | null;
 
@@ -199,8 +216,14 @@ function StudioContent() {
   const [isThinking, setIsThinking] = useState(false);
   const [credits, setCredits] = useState(FREE_CREDITS);
   const [unlimitedAccess, setUnlimitedAccess] = useState(false);
-  const [studioPhase, setStudioPhase] = useState<'onboarding' | 'describe' | 'active'>(
-    templateParam || projectParam ? 'active' : 'onboarding'
+  const [studioPhase, setStudioPhase] = useState<
+    'onboarding' | 'discovery' | 'describe' | 'premium-starter' | 'active'
+  >(
+    starterParam
+      ? 'premium-starter'
+      : templateParam || projectParam
+        ? 'active'
+        : 'onboarding'
   );
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -212,6 +235,16 @@ function StudioContent() {
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [mounted, setMounted] = useState(false);
   const [activeTemplateSlug, setActiveTemplateSlug] = useState<string | undefined>();
+  const [activePremiumStarterSlug, setActivePremiumStarterSlug] = useState<string | undefined>();
+  const [premiumPersonalization, setPremiumPersonalization] = useState<
+    Partial<PremiumStarterPersonalization>
+  >({});
+  const [pendingPremiumStarterSlug, setPendingPremiumStarterSlug] = useState<string | undefined>(
+    starterParam ?? undefined
+  );
+  const premiumBaseHtmlRef = useRef<string | null>(null);
+  const [premiumContent, setPremiumContent] = useState<PremiumStarterContent | null>(null);
+  const [contentEditorTab, setContentEditorTab] = useState<PremiumEditorTab | null>(null);
   const [changeLog, setChangeLog] = useState<ChangeEntry[]>([]);
   const [snapshots, setSnapshots] = useState<SnapshotRow[]>([]);
   const [previewPulse, setPreviewPulse] = useState(false);
@@ -228,9 +261,10 @@ function StudioContent() {
     const lastAi = [...messages].reverse().find((m) => m.role === 'ai');
     if (lastAi) return lastAi.content;
     if (studioPhase === 'onboarding') return t.welcomeOnboarding;
+    if (studioPhase === 'discovery') return t.welcomeDiscovery;
     if (studioPhase === 'describe') return t.welcomeDescribe;
     return t.welcome;
-  }, [messages, studioPhase, t.welcome, t.welcomeOnboarding, t.welcomeDescribe]);
+  }, [messages, studioPhase, t.welcome, t.welcomeOnboarding, t.welcomeDiscovery, t.welcomeDescribe]);
 
   const threadMessages = useMemo(() => {
     const hasUser = messages.some((m) => m.role === 'user');
@@ -309,6 +343,22 @@ function StudioContent() {
       return;
     }
     if (!mounted || templateLoadedRef.current) return;
+    if (starterParam && getPremiumStarterBySlug(starterParam)) {
+      templateLoadedRef.current = true;
+      setPendingPremiumStarterSlug(starterParam);
+      setStudioPhase('premium-starter');
+      setMessages([
+        {
+          id: 1,
+          role: 'ai',
+          content:
+            lang === 'es'
+              ? 'Personaliza los datos de tu negocio. Partimos de la muestra Mesón La Colonia — diseño profesional ya terminado.'
+              : 'Customize your business details. We start from the Mesón La Colonia sample — professional design already finished.',
+        },
+      ]);
+      return;
+    }
     if (templateParam) {
       const tpl = getTemplateBySlug(templateParam);
       if (tpl) {
@@ -362,7 +412,138 @@ function StudioContent() {
       setMessages([{ id: 1, role: 'ai', content: t.welcomeDescribe }]);
       setPreviewSections([{ id: 101, type: 'hero', html: buildDescribePlaceholder(lang) }]);
     }
-  }, [mounted, templateParam, projectParam, lang, studioPhase, t.welcomeOnboarding, t.welcomeDescribe, t.welcomeTemplate]);
+  }, [mounted, templateParam, starterParam, projectParam, lang, studioPhase, t.welcomeOnboarding, t.welcomeDescribe, t.welcomeTemplate]);
+
+  const handleChoosePremiumStarter = (slug: string) => {
+    setPendingPremiumStarterSlug(slug);
+    setStudioPhase('premium-starter');
+    const starter = getPremiumStarterBySlug(slug);
+    setMessages([
+      {
+        id: 1,
+        role: 'ai',
+        content:
+          lang === 'es'
+            ? `Muestra «${starter?.nameEs ?? slug}» seleccionada. Rellena los datos de tu negocio.`
+            : `Sample «${starter?.nameEn ?? slug}» selected. Fill in your business details.`,
+      },
+    ]);
+  };
+
+  const handlePremiumStarterComplete = async (data: PremiumStarterPersonalization) => {
+    if (!pendingPremiumStarterSlug) return;
+    setIsThinking(true);
+    try {
+      const loaded = await loadPremiumStarter(pendingPremiumStarterSlug, lang, data);
+      setPreviewSections(loaded.previewSections);
+      setProjectName(loaded.businessName);
+      setActivePremiumStarterSlug(loaded.starter.slug);
+      setActiveTemplateSlug(loaded.starter.catalogTemplateSlug);
+      setSelectedSectorId(loaded.starter.sectorId);
+      setPremiumPersonalization(data);
+      premiumBaseHtmlRef.current = loaded.baseHtml;
+      setPremiumContent(normalizePremiumContent(loaded.content));
+      setStudioPhase('active');
+      setMessages([
+        {
+          id: 1,
+          role: 'ai',
+          content: t.welcomePremium(loaded.businessName),
+        },
+      ]);
+      setChangeLog([
+        {
+          id: Date.now(),
+          summary:
+            lang === 'es'
+              ? `Muestra premium ${loaded.starter.nameEs} — ${loaded.businessName}`
+              : `Premium sample ${loaded.starter.nameEn} — ${loaded.businessName}`,
+          time: new Date().toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        },
+      ]);
+      scheduleSave(loaded.previewSections, [], loaded.businessName, [
+        { id: 1, role: 'ai', content: t.welcomePremium(loaded.businessName) },
+      ]);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setIsThinking(false);
+    }
+  };
+
+  const rebuildPremiumPreview = useCallback(
+    (personalization: Partial<PremiumStarterPersonalization>, content: PremiumStarterContent) => {
+      const slug = activePremiumStarterSlug;
+      const base = premiumBaseHtmlRef.current;
+      const starter = slug ? getPremiumStarterBySlug(slug) : undefined;
+      if (!slug || !base || !starter) return null;
+      return buildPremiumStarterHtml(base, starter, personalization, content);
+    },
+    [activePremiumStarterSlug]
+  );
+
+  const handlePremiumContentSave = async (content: PremiumStarterContent, savedTab: PremiumEditorTab) => {
+    const personalization: Partial<PremiumStarterPersonalization> = {
+      ...premiumPersonalization,
+      businessName: projectName,
+    };
+    const normalized = normalizePremiumContent(content);
+    const html = rebuildPremiumPreview(personalization, normalized);
+    if (!html) return;
+
+    setPremiumContent(normalized);
+    setPreviewSections([{ id: 1, type: 'fullpage', html }]);
+    setContentEditorTab(null);
+
+    const summaryByTab: Record<PremiumEditorTab, { es: string; en: string }> = {
+      menu: { es: 'Carta actualizada', en: 'Menu updated' },
+      highlights: { es: 'Destacados actualizados', en: 'Highlights updated' },
+      daily: { es: 'Menús del día actualizados', en: 'Daily menus updated' },
+      info: { es: 'Información actualizada', en: 'Info updated' },
+      football: { es: 'Sección de fútbol actualizada', en: 'Football section updated' },
+      digital: { es: 'Carta QR y reservas actualizadas', en: 'QR menu and booking updated' },
+      gallery: { es: 'Galería actualizada', en: 'Gallery updated' },
+    };
+    const summary = lang === 'es' ? summaryByTab[savedTab].es : summaryByTab[savedTab].en;
+    const nextLog = addChange(summary);
+    scheduleSave([{ id: 1, type: 'fullpage', html }], nextLog, projectName);
+    flashSections([1]);
+
+    const shouldSyncPedir =
+      activePremiumStarterSlug === 'meson-la-colonia' &&
+      normalized.digital.orderingEnabled &&
+      normalized.menu.some((c) => c.items.some((i) => i.name.trim()));
+
+    if (shouldSyncPedir) {
+      try {
+        const syncRes = await fetch('/api/studio/sync-premium-files', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            premiumStarterSlug: activePremiumStarterSlug,
+            premiumContent: normalized,
+            premiumPersonalization: personalization,
+          }),
+        });
+        const syncData = await syncRes.json();
+        if (syncData.synced?.includes('pedir.html')) {
+          toast.success(
+            lang === 'es'
+              ? 'Cambios aplicados · pedir.html actualizado'
+              : 'Changes applied · pedir.html updated'
+          );
+          return;
+        }
+      } catch {
+        /* pedir sync is best-effort; export still includes pedir.html */
+      }
+    }
+
+    toast.success(lang === 'es' ? 'Cambios aplicados a la vista previa' : 'Changes applied to preview');
+  };
 
   const loadSnapshots = useCallback(() => {
     if (!projectId) return;
@@ -424,11 +605,70 @@ function StudioContent() {
     }
   };
 
-  const handleChooseDescribe = () => {
+  const handleChooseDiscovery = () => {
+    setStudioPhase('discovery');
+    setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
+    setPreviewSections([{ id: 101, type: 'hero', html: buildDescribePlaceholder(lang) }]);
+    setMessages([
+      {
+        id: 1,
+        role: 'ai',
+        content: t.welcomeDiscovery,
+      },
+    ]);
+  };
+
+  const handleChooseFreeText = () => {
     setStudioPhase('describe');
     setProjectName(lang === 'es' ? 'Mi nueva web' : 'My new website');
     setPreviewSections([{ id: 101, type: 'hero', html: buildDescribePlaceholder(lang) }]);
+    setMessages([
+      {
+        id: 1,
+        role: 'ai',
+        content: t.welcomeDescribe,
+      },
+    ]);
   };
+
+  const handleDiscoveryComplete = async (answers: StudioDiscoveryAnswers) => {
+    if (!(await ensureCredits())) return;
+    setIsThinking(true);
+    setProjectName(answers.businessName);
+    setActiveTemplateSlug(answers.templateSlug);
+    setSelectedSectorId(answers.sectorId);
+    try {
+      const data = await callStudioApi({
+        prompt: answers.businessName,
+        action: 'initial',
+        discovery: answers,
+      });
+      setPreviewSections(data.previewSections);
+      setStudioPhase('active');
+      if (data.templateSlug) setActiveTemplateSlug(data.templateSlug);
+      if (data.sectorId) setSelectedSectorId(data.sectorId);
+      if (data.sectorLabel) setSelectedSectorLabel(data.sectorLabel);
+      applyCreditFromResponse(data.credits);
+
+      const summary = lang === 'es' ? 'Web creada con asistente' : 'Site created with assistant';
+      const nextLog = addChange(summary);
+      const aiMsg: Message = { id: Date.now() + 1, role: 'ai', content: data.message };
+      setMessages((prev) => {
+        const updated = [...prev, aiMsg];
+        scheduleSave(data.previewSections, nextLog, answers.businessName, updated);
+        return updated;
+      });
+      loadSnapshots();
+      flashSections(data.changedSectionIds ?? []);
+      toast.success(t.changeApplied, { description: t.creditUsed });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Error');
+    } finally {
+      setIsThinking(false);
+    }
+  };
+
+  const handleChooseDescribe = handleChooseDiscovery;
 
   const addChange = (summary: string, prev?: ChangeEntry[]) => {
     const base = prev ?? changeLog;
@@ -532,6 +772,12 @@ function StudioContent() {
         changeLog,
         messages: chatPayload(),
         sectorId: selectedSectorId ?? undefined,
+        templateSlug: activeTemplateSlug ?? undefined,
+        premiumStarterSlug: activePremiumStarterSlug ?? undefined,
+        premiumPersonalization:
+          Object.keys(premiumPersonalization).length > 0 ? premiumPersonalization : undefined,
+        premiumContent: premiumContent ?? undefined,
+        businessName: projectName?.trim() || undefined,
         ...payload,
       }),
     });
@@ -635,8 +881,12 @@ function StudioContent() {
 
   const sendMessage = async () => {
     if (!input.trim() || isThinking) return;
-    if (studioPhase === 'onboarding') {
-      toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
+    if (studioPhase === 'onboarding' || studioPhase === 'discovery') {
+      toast.info(
+        lang === 'es'
+          ? 'Completa el asistente en el panel derecho o elige plantilla.'
+          : 'Complete the assistant in the right panel or pick a template.'
+      );
       return;
     }
     if (!(await ensureCredits())) return;
@@ -658,8 +908,12 @@ function StudioContent() {
   };
 
   const applyQuickPrompt = async (prompt: string) => {
-    if (studioPhase === 'onboarding') {
-      toast.info(lang === 'es' ? 'Elige plantilla o «Describir mi web» en el panel.' : 'Pick a template or «Describe my website» in the panel.');
+    if (studioPhase === 'onboarding' || studioPhase === 'discovery') {
+      toast.info(
+        lang === 'es'
+          ? 'Completa el asistente en el panel derecho o elige plantilla.'
+          : 'Complete the assistant in the right panel or pick a template.'
+      );
       return;
     }
     if (!(await ensureCredits())) return;
@@ -731,16 +985,41 @@ function StudioContent() {
       const res = await fetch('/api/studio/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectName, previewSections }),
+        body: JSON.stringify({
+          projectName,
+          previewSections,
+          premiumStarterSlug: activePremiumStarterSlug ?? undefined,
+          premiumContent: premiumContent ?? undefined,
+          premiumPersonalization: premiumPersonalization ?? undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error al exportar');
-      const html = data.files?.['index.html'] || '';
+      const files = data.files as Record<string, string> | undefined;
+      const slug = projectName.replace(/\s+/g, '-').toLowerCase();
+      if (files && Object.keys(files).length > 1) {
+        for (const [name, content] of Object.entries(files)) {
+          const blob = new Blob([content], { type: 'text/html' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = name === 'index.html' ? `${slug}.html` : name;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+        toast.success(
+          lang === 'es'
+            ? 'Exportados index.html y pedir.html'
+            : 'Exported index.html and pedir.html'
+        );
+        return;
+      }
+      const html = files?.['index.html'] || '';
       const blob = new Blob([html], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${projectName.replace(/\s+/g, '-').toLowerCase()}.html`;
+      a.download = `${slug}.html`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success(lang === 'es' ? 'Exportado como código limpio' : 'Exported as clean code');
@@ -766,7 +1045,17 @@ function StudioContent() {
             onChange={(e) => setProjectName(e.target.value)}
             className="bg-transparent font-semibold tracking-tight text-xl focus:outline-none w-[200px] md:w-[260px]"
           />
-          {activeTemplateSlug && (
+          {activePremiumStarterSlug ? (
+            <a
+              href={`/demos/starters/${activePremiumStarterSlug}/index.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-800"
+            >
+              <Eye className="w-3 h-3" />
+              {lang === 'es' ? 'Muestra premium' : 'Premium sample'}
+            </a>
+          ) : activeTemplateSlug ? (
             <Link
               href={`/templates/preview/${activeTemplateSlug}`}
               className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-semibold text-indigo-700"
@@ -774,7 +1063,7 @@ function StudioContent() {
               <Eye className="w-3 h-3" />
               {t.templateLoaded}
             </Link>
-          )}
+          ) : null}
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-800">
             <Coins className="w-3.5 h-3.5" />
             {unlimitedAccess ? t.unlimitedAccess : `${credits} ${t.creditsLeft}`}
@@ -786,6 +1075,66 @@ function StudioContent() {
             <button onClick={() => setLang('es')} className={`px-3 py-1 rounded-2xl text-xs cursor-pointer ${lang === 'es' ? 'bg-slate-900 text-white' : ''}`}>ES</button>
             <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-2xl text-xs cursor-pointer ${lang === 'en' ? 'bg-slate-900 text-white' : ''}`}>EN</button>
           </div>
+          {activePremiumStarterSlug && studioPhase === 'active' && (
+            <div className="hidden xl:flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('menu')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <UtensilsCrossed className="w-3.5 h-3.5" />
+                {lang === 'es' ? 'Carta' : 'Menu'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('highlights')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <Star className="w-3.5 h-3.5" />
+                {lang === 'es' ? 'Destacados' : 'Highlights'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('daily')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <CalendarDays className="w-3.5 h-3.5" />
+                {lang === 'es' ? 'Menús' : 'Daily'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('info')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <Info className="w-3.5 h-3.5" />
+                {lang === 'es' ? 'Info' : 'Info'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('football')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <Trophy className="w-3.5 h-3.5" />
+                {lang === 'es' ? 'Fútbol' : 'Football'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('digital')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <ScanLine className="w-3.5 h-3.5" />
+                {lang === 'es' ? 'QR / 24h' : 'QR / 24h'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentEditorTab('gallery')}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer text-[11px]"
+              >
+                <Image className="w-3.5 h-3.5" aria-hidden="true" />
+                {lang === 'es' ? 'Galería' : 'Gallery'}
+              </button>
+            </div>
+          )}
           <button onClick={regenerate} className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-2xl border border-slate-200 hover:bg-slate-100 cursor-pointer">
             <RefreshCw className="w-3.5 h-3.5" /> {t.regenerate}
           </button>
@@ -805,7 +1154,19 @@ function StudioContent() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-[min(340px,32vw)] flex flex-col border-r border-slate-200 bg-white shrink-0">
+        <div className="w-[min(340px,32vw)] flex flex-col border-r border-slate-200 bg-white shrink-0 min-h-0">
+          {contentEditorTab && premiumContent && activePremiumStarterSlug ? (
+            <StudioPremiumContentEditor
+              lang={lang}
+              tab={contentEditorTab}
+              content={premiumContent}
+              onTabChange={setContentEditorTab}
+              onBack={() => setContentEditorTab(null)}
+              onSave={handlePremiumContentSave}
+              isSaving={isThinking}
+            />
+          ) : (
+            <>
           {/* Cabecera Studio */}
           <div className="px-5 py-4 border-b border-slate-100 shrink-0">
             <div className="flex items-center gap-3">
@@ -824,12 +1185,65 @@ function StudioContent() {
             <p className="text-[10px] font-bold tracking-[0.2em] text-indigo-600 uppercase mb-3">
               {lang === 'es' ? 'Conversación' : 'Conversation'}
             </p>
-            {studioPhase === 'onboarding' ? (
+            {studioPhase === 'onboarding' || studioPhase === 'discovery' ? (
               <div className="rounded-2xl bg-white border border-slate-200 px-4 py-3.5 text-[14px] leading-relaxed text-slate-700">
-                {t.welcomeOnboarding}
+                {studioPhase === 'discovery' ? t.welcomeDiscovery : t.welcomeOnboarding}
               </div>
             ) : (
               <div className="rounded-2xl bg-white border border-slate-200 px-4 py-3.5 shadow-sm">
+                {activePremiumStarterSlug && studioPhase === 'active' && (
+                  <div className="grid grid-cols-2 gap-2 mb-3 xl:hidden">
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('menu')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'Carta' : 'Menu'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('highlights')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'Destacados' : 'Highlights'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('daily')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'Menús' : 'Daily'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('info')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'Info' : 'Info'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('football')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'Fútbol' : 'Football'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('digital')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'QR / 24h' : 'QR / 24h'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentEditorTab('gallery')}
+                      className="text-xs py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 cursor-pointer"
+                    >
+                      {lang === 'es' ? 'Galería' : 'Gallery'}
+                    </button>
+                  </div>
+                )}
                 <p className="text-[14px] leading-relaxed text-slate-700 whitespace-pre-wrap">{composerHint}</p>
                 <textarea
                   ref={inlineInputRef}
@@ -870,7 +1284,7 @@ function StudioContent() {
 
           {/* SECCIÓN 2 · Resto (sugerencias, historial, cambios…) */}
           <div ref={chatScrollRef} className="flex-1 overflow-auto px-5 py-4 min-h-0 flex flex-col gap-4 text-[14px] bg-white">
-            {studioPhase !== 'onboarding' && (
+            {studioPhase !== 'onboarding' && studioPhase !== 'discovery' && (
               <div className="shrink-0">
                 <div className="text-[10px] tracking-widest text-slate-400 mb-2">{lang === 'es' ? 'SUGERENCIAS' : 'SUGGESTIONS'}</div>
                 <div className="flex flex-wrap gap-1.5">
@@ -923,7 +1337,9 @@ function StudioContent() {
 
             {studioPhase === 'onboarding' && (
               <p className="text-xs text-slate-400 text-center py-4">
-                {lang === 'es' ? 'Elige plantilla o describe tu web en el panel derecho.' : 'Pick a template or describe your site in the right panel.'}
+                {lang === 'es'
+                  ? 'Elige muestra profesional, plantilla o asistente en el panel derecho.'
+                  : 'Pick professional sample, template or assistant in the right panel.'}
               </p>
             )}
 
@@ -972,6 +1388,8 @@ function StudioContent() {
               </div>
             </div>
           </div>
+            </>
+          )}
         </div>
 
         <div className="flex-1 bg-slate-100 p-4 md:p-6 overflow-auto min-w-0 flex flex-col">
@@ -1022,7 +1440,29 @@ function StudioContent() {
               className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full overflow-hidden ${viewMode === 'mobile' ? 'max-w-[390px] rounded-[2.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
             >
               {studioPhase === 'onboarding' ? (
-                <StudioOnboarding lang={lang} onChooseDescribe={handleChooseDescribe} />
+                <StudioOnboarding
+                  lang={lang}
+                  onChooseDescribe={handleChooseDiscovery}
+                  onChoosePremiumStarter={handleChoosePremiumStarter}
+                />
+              ) : studioPhase === 'premium-starter' && pendingPremiumStarterSlug ? (
+                <StudioPremiumStarterForm
+                  lang={lang}
+                  starterSlug={pendingPremiumStarterSlug}
+                  onBack={() => {
+                    setPendingPremiumStarterSlug(undefined);
+                    setStudioPhase('onboarding');
+                    setMessages([{ id: 1, role: 'ai', content: t.welcomeOnboarding }]);
+                  }}
+                  onComplete={handlePremiumStarterComplete}
+                />
+              ) : studioPhase === 'discovery' ? (
+                <StudioDiscoveryWizard
+                  lang={lang}
+                  onComplete={handleDiscoveryComplete}
+                  onFreeText={handleChooseFreeText}
+                  isGenerating={isThinking}
+                />
               ) : studioPhase === 'describe' && previewSections.length === 1 && (previewSections[0]?.html.includes('Tu web aparecerá') || previewSections[0]?.html.includes('Your site will appear')) ? (
                 <div className="p-6 md:p-10">
                   <div dangerouslySetInnerHTML={{ __html: previewSections[0].html }} />

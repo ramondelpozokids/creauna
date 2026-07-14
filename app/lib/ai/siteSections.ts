@@ -10,6 +10,7 @@ import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 import { wrapSectionHtml } from './siteSectionWrap';
 import { galleryImg } from './imageFallback';
+import { buildJewelryWatchSite } from './jewelrySiteBuilder';
 
 const GALLERY_BY_CATEGORY: Record<string, string[]> = {
   gastronomy: [
@@ -2369,6 +2370,21 @@ export function buildCustomSite(
 
   if (profile?.variant === 'automotive') {
     return finalizeSiteSections(buildAutomotiveSite(ctx, features));
+  }
+
+  if (profile?.variant === 'jewelry') {
+    const jewelryCtx = {
+      name: ctx.name,
+      tagline: ctx.tagline,
+      badge: ctx.badge,
+      heroImage: ctx.heroImage,
+      ctaPrimary: ctx.ctaPrimary,
+      ctaSecondary: ctx.ctaSecondary,
+      images: ctx.images,
+      lang: ctx.lang,
+      profile: ctx.profile,
+    };
+    return finalizeSiteSections(buildJewelryWatchSite(jewelryCtx, features));
   }
 
   if (profile?.variant === 'luxury') {

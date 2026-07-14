@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO & Meta Tags Premium -->
+    <title>Aeterna & Co. | Alta Relojería y Joyería de Lujo desde 1924</title>
+    <meta name="description" content="Descubra la excelencia de la alta relojería y la joyería de autor. Rolex, Patek Philippe, Cartier. Taller propio, autenticidad garantizada y asesoramiento exclusivo.">
+    <meta name="keywords" content="relojes de lujo, joyería exclusiva, Rolex, Patek Philippe, alta relojería, anillos de compromiso, taller de relojería, compra venta relojes">
+    <meta name="author" content="Aeterna & Co.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://www.aeternaco.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.aeternaco.com/">
+    <meta property="og:title" content="Aeterna & Co. | El Tiempo, Elevado a la Categoría de Arte">
+    <meta property="og:description" content="Descubra colecciones exclusivas de alta relojería y joyería. Experiencia de boutique digital de máximo nivel.">
+    <meta property="og:image" content="https://www.aeternaco.com/assets/og-image-luxury.jpg">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.aeternaco.com/">
+    <meta property="twitter:title" content="Aeterna & Co. | Alta Relojería y Joyería de Lujo">
+    <meta property="twitter:description" content="Donde la precisión encuentra la eternidad. Descubra nuestras colecciones exclusivas.">
+    <meta property="twitter:image" content="https://www.aeternaco.com/assets/twitter-image-luxury.jpg">
+
+    <!-- Preconnect & Fonts (Optimizado para Core Web Vitals) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- View Transitions API para 2026 -->
+    <meta name="view-transition" content="same-origin">
+
+    <!-- Schema.org JSON-LD (Enterprise SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "JewelryStore",
+          "name": "Aeterna & Co.",
+          "image": "https://www.aeternaco.com/assets/logo.png",
+          "url": "https://www.aeternaco.com",
+          "telephone": "+34-900-123-456",
+          "priceRange": "$$$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Paseo de la Castellana, 45",
+            "addressLocality": "Madrid",
+            "postalCode": "28046",
+            "addressCountry": "ES"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 40.4378,
+            "longitude": -3.6915
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "10:00",
+              "closes": "20:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Saturday",
+              "opens": "10:00",
+              "closes": "14:00"
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.aeternaco.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Alta Relojería", "item": "https://www.aeternaco.com/alta-relojeria" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        /* =========================================
+           SISTEMA DE DISEÑO DE LUJO (AETERNA & CO.)
+           ========================================= */
+        :root {
+            /* Paleta de Colores */
+            --color-deep-black: #0a0a0a;
+            --color-pure-white: #ffffff;
+            --color-ivory: #fffff0;
+            --color-champagne: #f7e7ce;
+            --color-gold: #d4af37;
+            --color-gold-light: #e5c158;
+            --color-brushed-gold: #c5a028;
+            --color-copper: #b87333;
+            --color-elegant-gray: #f5f5f5;
+            --color-text-dark: #1a1a1a;
+            --color-text-light: #6b6b6b;
+            --color-overlay: rgba(10, 10, 10, 0.85);
+
+            /* Tipografía Editorial */
+            --font-display: 'Playfair Display', serif;
+            --font-accent: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Espaciado y Layout */
+            --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+            --space-sm: clamp(1rem, 2vw, 1.5rem);
+            --space-md: clamp(2rem, 4vw, 3rem);
+            --space-lg: clamp(4rem, 8vw, 6rem);
+            --space-xl: clamp(6rem, 12vw, 10rem);
+
+            /* Animaciones Cinematográficas */
+            --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 0.3s;
+            --duration-medium: 0.6s;
+            --duration-slow: 1.2s;
+        }
+
+        /* Modo Oscuro (Toggleable) */
+        [data-theme="dark"] {
+            --color-pure-white: #0a0a0a;
+            --color-ivory: #121212;
+            --color-elegant-gray: #1a1a1a;
+            --color-text-dark: #f5f5f5;
+            --color-text-light: #a0a0a0;
+            --color-overlay: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-pure-white);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--duration-medium) var(--ease-luxury), color var(--duration-medium) var(--ease-luxury);
+        }
+
+        /* Tipografía Premium */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
+        h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
+        h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+
+        .text-accent {
+            font-family: var(--font-accent);
+            font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-brushed-gold) 50%, var(--color-copper) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Utilidades de Layout */
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        .section-padding {
+            padding: var(--space-xl) 0;
+        }
+
+        /* Botones de Lujo */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all var(--duration-medium) var(--ease-luxury);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--color-deep-black);
+            color: var(--color-pure-white);
+            border-color: var(--color-deep-black);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--color-deep-black);
+        }
+
+        [data-theme="dark"] .btn-primary {
+            background-color: var(--color-gold);
+            color: var(--color-deep-black);
+            border-color: var(--color-gold);
+        }
+
+        [data-theme="dark"] .btn-primary:hover {
+            background-color: transparent;
+            color: var(--color-gold);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-text-dark);
+            border-color: var(--color-text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-text-dark);
+            color: var(--color-pure-white);
+        }
+
+        /* Animaciones de Scroll (Intersection Observer) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity var(--duration-slow) var(--ease-luxury), transform var(--duration-slow) var(--ease-luxury);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           COMPONENTES ESPECÍFICOS
+           ========================================= */
+        
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background-color: var(--color-deep-black);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s var(--ease-luxury), visibility 0.8s;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-text {
+            font-family: var(--font-display);
+            color: var(--color-gold);
+            font-size: 1.5rem;
+            letter-spacing: 0.3em;
+            animation: pulse 2s infinite;
+        }
+
+        /* Header & Navegación */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all var(--duration-medium) var(--ease-luxury);
+            background: transparent;
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] .header.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--color-pure-white);
+            text-decoration: none;
+            transition: color var(--duration-fast);
+        }
+
+        .header.scrolled .logo {
+            color: var(--color-text-dark);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-pure-white);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color var(--duration-fast);
+        }
+
+        .header.scrolled .nav-link {
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--color-gold);
+            transition: width var(--duration-medium) var(--ease-luxury);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-pure-white);
+            transition: color var(--duration-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header.scrolled .icon-btn {
+            color: var(--color-text-dark);
+        }
+
+        .icon-btn:hover {
+            color: var(--color-gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=2574&auto=format&fit=crop') center/cover no-repeat;
+            transform: scale(1.1);
+            animation: heroZoom 20s infinite alternate var(--ease-luxury);
+        }
+
+        @keyframes heroZoom {
+            from { transform: scale(1.1); }
+            to { transform: scale(1.0); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--color-pure-white);
+            max-width: 900px;
+            padding: 0 var(--space-sm);
+        }
+
+        .hero-subtitle {
+            margin-bottom: var(--space-sm);
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-luxury) 0.5s forwards;
+        }
+
+        .hero-title {
+            margin-bottom: var(--space-md);
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-luxury) 0.8s forwards;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-luxury) 1.1s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-pure-white);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-luxury) 1.5s forwards;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--color-gold), transparent);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: scaleY(1); opacity: 1; }
+            50% { transform: scaleY(0.5); opacity: 0.5; }
+        }
+
+        /* Grid de Categorías Asimétrico */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .category-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            cursor: pointer;
+        }
+
+        .category-item:nth-child(1) { grid-column: span 7; }
+        .category-item:nth-child(2) { grid-column: span 5; }
+        .category-item:nth-child(3) { grid-column: span 5; }
+        .category-item:nth-child(4) { grid-column: span 7; }
+
+        .category-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--duration-slow) var(--ease-luxury);
+        }
+
+        .category-item:hover .category-img {
+            transform: scale(1.05);
+        }
+
+        .category-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--space-md);
+            color: var(--color-pure-white);
+        }
+
+        /* Productos Destacados */
+        .product-card {
+            group: product;
+            position: relative;
+            background: var(--color-elegant-gray);
+            overflow: hidden;
+        }
+
+        .product-image-wrapper {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--duration-medium) var(--ease-luxury);
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.08);
+        }
+
+        .product-info {
+            padding: var(--space-sm);
+            text-align: center;
+        }
+
+        .product-brand {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-dark);
+        }
+
+        .product-price {
+            font-family: var(--font-accent);
+            font-size: 1.1rem;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        /* Marcas (Marquee) */
+        .brands-marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .brands-track {
+            display: inline-flex;
+            gap: 4rem;
+            animation: marquee 30s linear infinite;
+        }
+
+        .brand-logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-text-light);
+            opacity: 0.6;
+            transition: opacity var(--duration-fast);
+            filter: grayscale(100%);
+        }
+
+        .brand-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+            color: var(--color-gold);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Formulario Premium */
+        .form-group {
+            margin-bottom: var(--space-sm);
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--color-text-light);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-text-dark);
+            transition: border-color var(--duration-fast);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-bottom-color: var(--color-gold);
+        }
+
+        .form-label {
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            pointer-events: none;
+            transition: all var(--duration-fast) var(--ease-luxury);
+        }
+
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -0.5rem;
+            font-size: 0.75rem;
+            color: var(--color-gold);
+        }
+
+        /* Floating Elements */
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: transform var(--duration-fast);
+            text-decoration: none;
+        }
+
+        .floating-whatsapp:hover {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--color-deep-black);
+            color: var(--color-ivory);
+            padding: var(--space-xl) 0 var(--space-md);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .footer-title {
+            font-family: var(--font-accent);
+            font-size: 0.9rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: var(--space-sm);
+        }
+
+        .footer-link {
+            display: block;
+            color: var(--color-text-light);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            transition: color var(--duration-fast);
+        }
+
+        .footer-link:hover {
+            color: var(--color-pure-white);
+        }
+
+        /* Cookie Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-deep-black);
+            color: var(--color-pure-white);
+            padding: var(--space-md);
+            z-index: 9998;
+            transform: translateY(100%);
+            transition: transform var(--duration-medium) var(--ease-luxury);
+            border-top: 1px solid var(--color-gold);
+        }
+
+        .cookie-banner.visible {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .category-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .category-item:nth-child(n) { grid-column: span 1; }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; } /* En producción: menú hamburguesa full-screen */
+            .hero-actions { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Accesibilidad WCAG AA */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-gold);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Preloader -->
+    <div id="preloader" role="status" aria-label="Cargando sitio web">
+        <div class="loader-text">AETERNA & CO.</div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container nav-container">
+            <a href="/" class="logo" aria-label="Aeterna & Co. Inicio">AETERNA & CO.</a>
+            
+            <nav aria-label="Navegación principal">
+                <ul class="nav-menu">
+                    <li><a href="#coleccion" class="nav-link">Colección</a></li>
+                    <li><a href="#alta-relojeria" class="nav-link">Alta Relojería</a></li>
+                    <li><a href="#joyeria" class="nav-link">Joyería</a></li>
+                    <li><a href="#taller" class="nav-link">Taller</a></li>
+                    <li><a href="#experiencia" class="nav-link">Experiencia</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn" id="theme-toggle" aria-label="Cambiar modo oscuro/claro">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Buscar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </button>
+                <a href="tel:+34900123456" class="icon-btn" aria-label="Llamar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </a>
+                <a href="#cita" class="btn btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.75rem;">Reservar Cita</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" aria-label="Introducción">
+            <div class="hero-bg" role="img" aria-label="Reloj de lujo en entorno cinematográfico"></div>
+            <div class="hero-content">
+                <p class="text-accent hero-subtitle">Desde 1924</p>
+                <h1 class="hero-title">El Tiempo, Elevado a la <span class="text-gold-gradient">Categoría de Arte</span></h1>
+                <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9; font-weight: 300;">Descubra una curaduría excepcional de alta relojería y joyería de autor. Donde la precisión encuentra la eternidad.</p>
+                <div class="hero-actions">
+                    <a href="#coleccion" class="btn btn-primary" style="background: var(--color-pure-white); color: var(--color-deep-black); border-color: var(--color-pure-white);">Explorar Colección</a>
+                    <a href="#cita" class="btn btn-secondary" style="color: var(--color-pure-white); border-color: var(--color-pure-white);">Cita Privada</a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>Descubrir</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- Presentación -->
+        <section class="section-padding" style="background-color: var(--color-ivory);" id="nosotros">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); align-items: center;">
+                    <div class="reveal">
+                        <p class="text-accent">Nuestra Filosofía</p>
+                        <h2 style="margin: var(--space-sm) 0;">Maestros del Tiempo y la <br><em>Elegancia Atemporal</em></h2>
+                        <p style="color: var(--color-text-light); margin-bottom: var(--space-sm); font-size: 1.1rem; line-height: 1.8;">
+                            Durante tres generaciones, Aeterna & Co. ha sido el guardián de las complicaciones más exquisitas y las gemas más raras. No vendemos relojes ni joyas; custodiamos legados. Nuestro taller, dirigido por maestros artesanos certificados, garantiza que cada pieza que lleva nuestro nombre haya sido inspeccionada, restaurada o creada con un rigor absoluto.
+                        </p>
+                        <a href="#taller" class="btn btn-secondary">Conozca a nuestros maestros</a>
+                    </div>
+                    <div class="reveal" style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1587925358603-c2fea4581712?q=80&w=2670&auto=format&fit=crop" alt="Maestro relojero trabajando en un movimiento de alta gama" style="width: 100%; height: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.1);" loading="lazy" decoding="async">
+                        <div style="position: absolute; bottom: -2rem; left: -2rem; background: var(--color-deep-black); color: var(--color-gold); padding: 2rem; max-width: 250px;">
+                            <p style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem;">100 Años</p>
+                            <p style="font-size: 0.85rem; color: var(--color-ivory);">De excelencia ininterrumpida y confianza absoluta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marcas (Marquee) -->
+        <section class="section-padding" style="padding: var(--space-md) 0; background: var(--color-pure-white); border-top: 1px solid var(--color-elegant-gray); border-bottom: 1px solid var(--color-elegant-gray);">
+            <div class="brands-marquee">
+                <div class="brands-track">
+                    <span class="brand-logo">ROLEX</span>
+                    <span class="brand-logo">PATEK PHILIPPE</span>
+                    <span class="brand-logo">CARTIER</span>
+                    <span class="brand-logo">AUDEMARS PIGUET</span>
+                    <span class="brand-logo">OMEGA</span>
+                    <span class="brand-logo">VACHERON CONSTANTIN</span>
+                    <span class="brand-logo">BVLGARI</span>
+                    <span class="brand-logo">CHOPARD</span>
+                    <span class="brand-logo">JAEGER-LECOULTRE</span>
+                    <span class="brand-logo">ROLEX</span>
+                    <span class="brand-logo">PATEK PHILIPPE</span>
+                    <span class="brand-logo">CARTIER</span>
+                    <span class="brand-logo">AUDEMARS PIGUET</span>
+                    <span class="brand-logo">OMEGA</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías -->
+        <section class="section-padding" id="coleccion">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: var(--space-lg);" class="reveal">
+                    <p class="text-accent">Universo Aeterna</p>
+                    <h2>Colecciones Exclusivas</h2>
+                </div>
+                <div class="category-grid">
+                    <article class="category-item reveal">
+                        <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2680&auto=format&fit=crop" alt="Relojes de Hombre" class="category-img" loading="lazy">
+                        <div class="category-overlay">
+                            <p class="text-accent" style="color: var(--color-champagne);">Colección Masculina</p>
+                            <h3>Alta Relojería</h3>
+                        </div>
+                    </article>
+                    <article class="category-item reveal">
+                        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2670&auto=format&fit=crop" alt="Joyería Fina" class="category-img" loading="lazy">
+                        <div class="category-overlay">
+                            <p class="text-accent" style="color: var(--color-champagne);">Piezas Únicas</p>
+                            <h3>Joyería de Autor</h3>
+                        </div>
+                    </article>
+                    <article class="category-item reveal">
+                        <img src="https://images.unsplash.com/photo-1605100804763-247f67b2548e?q=80&w=2670&auto=format&fit=crop" alt="Alianzas y Compromiso" class="category-img" loading="lazy">
+                        <div class="category-overlay">
+                            <p class="text-accent" style="color: var(--color-champagne);">Eternidad</p>
+                            <h3>Compromiso</h3>
+                        </div>
+                    </article>
+                    <article class="category-item reveal">
+                        <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2670&auto=format&fit=crop" alt="Ediciones Limitadas" class="category-img" loading="lazy">
+                        <div class="category-overlay">
+                            <p class="text-accent" style="color: var(--color-champagne);">Exclusividad</p>
+                            <h3>Ediciones Limitadas</h3>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos Destacados -->
+        <section class="section-padding" style="background-color: var(--color-elegant-gray);">
+            <div class="container">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-md);" class="reveal">
+                    <div>
+                        <p class="text-accent">Selección del Curador</p>
+                        <h2>Piezas Destacadas</h2>
+                    </div>
+                    <a href="#" class="btn btn-secondary">Ver todo el catálogo</a>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-md);">
+                    <!-- Producto 1 -->
+                    <article class="product-card reveal">
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=2599&auto=format&fit=crop" alt="Rolex Submariner Date" class="product-img" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <p class="product-brand">Rolex</p>
+                            <h3 class="product-name">Submariner Date</h3>
+                            <p class="product-price">Consultar Precio</p>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">Descubrir</button>
+                        </div>
+                    </article>
+                    <!-- Producto 2 -->
+                    <article class="product-card reveal">
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1548169874-53e85f753f1e?q=80&w=2620&auto=format&fit=crop" alt="Cartier Love Bracelet" class="product-img" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <p class="product-brand">Cartier</p>
+                            <h3 class="product-name">Pulsera LOVE</h3>
+                            <p class="product-price">7.850 €</p>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">Descubrir</button>
+                        </div>
+                    </article>
+                    <!-- Producto 3 -->
+                    <article class="product-card reveal">
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1619134778706-7015533a6150?q=80&w=2670&auto=format&fit=crop" alt="Patek Philippe Nautilus" class="product-img" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <p class="product-brand">Patek Philippe</p>
+                            <h3 class="product-name">Nautilus 5711</h3>
+                            <p class="product-price">Consultar Precio</p>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">Descubrir</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experiencia & Servicios -->
+        <section class="section-padding" id="experiencia">
+            <div class="container">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto var(--space-lg);" class="reveal">
+                    <p class="text-accent">La Promesa Aeterna</p>
+                    <h2>Más que una Compra, una <em>Relación de Confianza</em></h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md);">
+                    <div class="reveal" style="text-align: center; padding: var(--space-md); border: 1px solid var(--color-elegant-gray);">
+                        <div style="font-size: 2rem; color: var(--color-gold); margin-bottom: 1rem;">✦</div>
+                        <h4 style="margin-bottom: 0.5rem;">Autenticidad Certificada</h4>
+                        <p style="color: var(--color-text-light); font-size: 0.9rem;">Cada pieza incluye certificado de autenticidad y origen verificable.</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: var(--space-md); border: 1px solid var(--color-elegant-gray);">
+                        <div style="font-size: 2rem; color: var(--color-gold); margin-bottom: 1rem;">⚙</div>
+                        <h4 style="margin-bottom: 0.5rem;">Taller Propio</h4>
+                        <p style="color: var(--color-text-light); font-size: 0.9rem;">Maestros relojeros certificados para mantenimiento y restauración.</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: var(--space-md); border: 1px solid var(--color-elegant-gray);">
+                        <div style="font-size: 2rem; color: var(--color-gold); margin-bottom: 1rem;">◈</div>
+                        <h4 style="margin-bottom: 0.5rem;">Asesoramiento Privado</h4>
+                        <p style="color: var(--color-text-light); font-size: 0.9rem;">Personal Shopper dedicado para encontrar la pieza perfecta.</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: var(--space-md); border: 1px solid var(--color-elegant-gray);">
+                        <div style="font-size: 2rem; color: var(--color-gold); margin-bottom: 1rem;">✹</div>
+                        <h4 style="margin-bottom: 0.5rem;">Entrega Asegurada</h4>
+                        <p style="color: var(--color-text-light); font-size: 0.9rem;">Transporte blindado y seguro integral en cada entrega.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cita Privada (Conversión) -->
+        <section class="section-padding" id="cita" style="background-color: var(--color-deep-black); color: var(--color-pure-white);">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); align-items: center;">
+                    <div class="reveal">
+                        <p class="text-accent" style="color: var(--color-gold);">Experiencia Exclusiva</p>
+                        <h2 style="color: var(--color-pure-white); margin-bottom: var(--space-sm);">Reserve su Cita Privada</h2>
+                        <p style="color: var(--color-text-light); margin-bottom: var(--space-md); line-height: 1.8;">
+                            Le invitamos a descubrir nuestras colecciones en un entorno de absoluta privacidad. Nuestro equipo le atenderá con una copa de champagne, preparándole una selección personalizada según sus deseos.
+                        </p>
+                        <ul style="list-style: none; margin-bottom: var(--space-md);">
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><span style="color: var(--color-gold);">✓</span> Atención 1 a 1 con un experto</li>
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><span style="color: var(--color-gold);">✓</span> Acceso a piezas no publicadas</li>
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><span style="color: var(--color-gold);">✓</span> Servicio de tasación in situ</li>
+                        </ul>
+                    </div>
+                    <div class="reveal" style="background: rgba(255,255,255,0.03); padding: var(--space-md); border: 1px solid rgba(212, 175, 55, 0.2);">
+                        <form aria-label="Formulario de reserva de cita">
+                            <div class="form-group">
+                                <input type="text" id="nombre" class="form-input" placeholder=" " required style="color: white; border-bottom-color: rgba(255,255,255,0.3);">
+                                <label for="nombre" class="form-label" style="color: rgba(255,255,255,0.6);">Nombre completo</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-input" placeholder=" " required style="color: white; border-bottom-color: rgba(255,255,255,0.3);">
+                                <label for="email" class="form-label" style="color: rgba(255,255,255,0.6);">Correo electrónico</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="telefono" class="form-input" placeholder=" " style="color: white; border-bottom-color: rgba(255,255,255,0.3);">
+                                <label for="telefono" class="form-label" style="color: rgba(255,255,255,0.6);">Teléfono</label>
+                            </div>
+                            <div class="form-group">
+                                <select id="interes" class="form-input" style="color: white; border-bottom-color: rgba(255,255,255,0.3); background: var(--color-deep-black);">
+                                    <option value="" disabled selected>Interés principal</option>
+                                    <option value="reloj">Compra de Reloj</option>
+                                    <option value="joyeria">Joyería / Compromiso</option>
+                                    <option value="tasacion">Tasación / Venta</option>
+                                    <option value="servicio">Servicio Técnico</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-sm); background-color: var(--color-gold); color: var(--color-deep-black); border-color: var(--color-gold);">Solicitar Cita</button>
+                            <p style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 1rem; text-align: center;">
+                                Al enviar, acepta nuestra <a href="#privacidad" style="color: var(--color-gold);">Política de Privacidad</a>.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estadísticas -->
+        <section class="section-padding" style="background-color: var(--color-ivory);">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); text-align: center;">
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 3rem; color: var(--color-gold);">100</p>
+                        <p class="text-accent" style="font-size: 0.8rem;">Años de Historia</p>
+                    </div>
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 3rem; color: var(--color-gold);">15k+</p>
+                        <p class="text-accent" style="font-size: 0.8rem;">Clientes Satisfechos</p>
+                    </div>
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 3rem; color: var(--color-gold);">50+</p>
+                        <p class="text-accent" style="font-size: 0.8rem;">Marcas Exclusivas</p>
+                    </div>
+                    <div class="reveal">
+                        <p style="font-family: var(--font-display); font-size: 3rem; color: var(--color-gold);">4.9</p>
+                        <p class="text-accent" style="font-size: 0.8rem;">Valoración Media</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Completo -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-pure-white);">AETERNA & CO.</h3>
+                    <p style="color: var(--color-text-light); font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                        Guardanes del tiempo y la elegancia desde 1924. Alta relojería, joyería de autor y un servicio técnico de excelencia en el corazón de Madrid.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" aria-label="Instagram" style="color: var(--color-gold);">IG</a>
+                        <a href="#" aria-label="Facebook" style="color: var(--color-gold);">FB</a>
+                        <a href="#" aria-label="LinkedIn" style="color: var(--color-gold);">LI</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="footer-title">Explorar</h4>
+                    <a href="#" class="footer-link">Relojes Hombre</a>
+                    <a href="#" class="footer-link">Relojes Mujer</a>
+                    <a href="#" class="footer-link">Joyería</a>
+                    <a href="#" class="footer-link">Ediciones Limitadas</a>
+                    <a href="#" class="footer-link">Blog & Tendencias</a>
+                </div>
+                <div>
+                    <h4 class="footer-title">Servicios</h4>
+                    <a href="#" class="footer-link">Taller de Relojería</a>
+                    <a href="#" class="footer-link">Restauración</a>
+                    <a href="#" class="footer-link">Tasación y Compra</a>
+                    <a href="#" class="footer-link">Cita Privada</a>
+                    <a href="#" class="footer-link">Financiación</a>
+                </div>
+                <div>
+                    <h4 class="footer-title">Contacto</h4>
+                    <p style="color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 0.5rem;">Paseo de la Castellana, 45<br>28046, Madrid, España</p>
+                    <p style="color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 0.5rem;">+34 900 123 456</p>
+                    <p style="color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 1.5rem;">concierge@aeternaco.com</p>
+                    <h4 class="footer-title">Newsletter</h4>
+                    <form style="display: flex; border-bottom: 1px solid var(--color-gold);">
+                        <input type="email" placeholder="Su email" style="background: transparent; border: none; color: white; padding: 0.5rem 0; width: 100%; outline: none;">
+                        <button type="submit" style="background: transparent; border: none; color: var(--color-gold); cursor: pointer; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;">Enviar</button>
+                    </form>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--space-md); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--color-text-light);">
+                <p>&copy; 2026 Aeterna & Co. Todos los derechos reservados.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="#aviso-legal" class="footer-link" style="margin: 0;">Aviso Legal</a>
+                    <a href="#privacidad" class="footer-link" style="margin: 0;">Privacidad</a>
+                    <a href="#cookies" class="footer-link" style="margin: 0;">Cookies</a>
+                    <a href="#accesibilidad" class="footer-link" style="margin: 0;">Accesibilidad</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Elements -->
+    <a href="https://wa.me/34900123456" class="floating-whatsapp" aria-label="Contactar por WhatsApp" target="_blank" rel="noopener">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <!-- Cookie Consent Banner (GDPR) -->
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Valoramos su privacidad</p>
+                <p style="font-size: 0.8rem; color: var(--color-text-light);">Utilizamos cookies propias y de terceros para mejorar su experiencia, analizar el tráfico y personalizar contenido. Puede configurar o rechazar su uso.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cookie-reject" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Rechazar</button>
+                <button id="cookie-settings" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem; color: white; border-color: rgba(255,255,255,0.3);">Configurar</button>
+                <button id="cookie-accept" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--color-gold); color: var(--color-deep-black); border-color: var(--color-gold);">Aceptar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Optimizado (Vanilla, sin dependencias pesadas) -->
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            lastScroll = currentScroll;
+        }, { passive: true });
+
+        // Intersection Observer para animaciones de revelado
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Solo animar una vez
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.setAttribute('data-theme', 'dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Cookie Consent Logic
+        const cookieBanner = document.getElementById('cookie-banner');
+        const cookieAccept = document.getElementById('cookie-accept');
+        const cookieReject = document.getElementById('cookie-reject');
+
+        if (!localStorage.getItem('cookieConsent')) {
+            setTimeout(() => {
+                cookieBanner.classList.add('visible');
+            }, 2000);
+        }
+
+        cookieAccept.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'accepted');
+            cookieBanner.classList.remove('visible');
+        });
+
+        cookieReject.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'rejected');
+            cookieBanner.classList.remove('visible');
+        });
+
+        // Smooth Scroll para anchors
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- =========================================
+         PÁGINAS LEGALES Y ESTRUCTURA SECUNDARIA
+         (Listas para ser extraídas a archivos .html independientes)
+         ========================================= -->
+    
+    <!-- TEMPLATE: Política de Privacidad (privacidad.html) -->
+    <template id="tpl-privacidad">
+        <section class="section-padding container">
+            <h1>Política de Privacidad</h1>
+            <p class="text-accent">Última actualización: 14 de julio de 2026</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-light); line-height: 1.8;">
+                <h3>1. Responsable del Tratamiento</h3>
+                <p>Aeterna & Co. S.L., con CIF B-12345678 y domicilio en Paseo de la Castellana, 45, 28046 Madrid.</p>
+                <h3>2. Datos Recopilados</h3>
+                <p>Recopilamos datos de identificación, contacto y preferencias de compra únicamente con su consentimiento explícito, conforme al RGPD (Reglamento General de Protección de Datos) de la UE.</p>
+                <h3>3. Derechos ARCO</h3>
+                <p>Puede ejercer sus derechos de Acceso, Rectificación, Cancelación y Oposición enviando un email a protecciondedatos@aeternaco.com.</p>
+            </article>
+        </section>
+    </template>
+
+    <!-- TEMPLATE: Aviso Legal (aviso-legal.html) -->
+    <template id="tpl-aviso-legal">
+        <section class="section-padding container">
+            <h1>Aviso Legal</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-light); line-height: 1.8;">
+                <p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), se informa que el titular de este sitio web es Aeterna & Co. S.L.</p>
+                <p>La reproducción, distribución o comunicación pública total o parcial de los contenidos de esta web, con fines comerciales, queda estrictamente prohibida sin la autorización expresa de Aeterna & Co.</p>
+            </article>
+        </section>
+    </template>
+
+    <!-- TEMPLATE: Política de Cookies (cookies.html) -->
+    <template id="tpl-cookies">
+        <section class="section-padding container">
+            <h1>Política de Cookies</h1>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-light); line-height: 1.8;">
+                <h3>¿Qué son las cookies?</h3>
+                <p>Las cookies son pequeños archivos de texto que se descargan en su dispositivo al acceder a determinadas páginas web.</p>
+                <h3>Tipos de cookies utilizadas</h3>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Técnicas:</strong> Imprescindibles para la navegación (sesión, seguridad).</li>
+                    <li><strong>Analíticas:</strong> Google Analytics 4 (anonimizado) para medir el tráfico.</li>
+                    <li><strong>Marketing:</strong> Solo con su consentimiento explícito para personalizar anuncios.</li>
+                </ul>
+            </article>
+        </section>
+    </template>
+
+    <!-- TEMPLATE: Accesibilidad (accesibilidad.html) -->
+    <template id="tpl-accesibilidad">
+        <section class="section-padding container">
+            <h1>Declaración de Accesibilidad</h1>
+            <p class="text-accent">Nivel de conformidad: WCAG 2.1 Nivel AA</p>
+            <article style="max-width: 800px; margin-top: 2rem; color: var(--color-text-light); line-height: 1.8;">
+                <p>Aeterna & Co. se compromete a hacer que su sitio web sea accesible para todas las personas, incluidas aquellas con discapacidades visuales, auditivas, motoras o cognitivas.</p>
+                <p>Utilizamos etiquetas ARIA, contraste de color verificado, navegación por teclado completa y textos alternativos en todas las imágenes.</p>
+            </article>
+        </section>
+    </template>
+
+    <!-- TEMPLATE: Página 404 Personalizada (404.html) -->
+    <template id="tpl-404">
+        <section style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: var(--color-deep-black); color: var(--color-pure-white);">
+            <p class="text-accent" style="color: var(--color-gold);">Error 404</p>
+            <h1 style="font-size: 4rem; margin: 1rem 0;">Página No Encontrada</h1>
+            <p style="color: var(--color-text-light); max-width: 500px; margin-bottom: 2rem;">La pieza que busca no está en nuestro inventario actual o ha sido movida a nuestra colección privada.</p>
+            <a href="/" class="btn btn-primary" style="background: var(--color-gold); color: var(--color-deep-black); border-color: var(--color-gold);">Volver a la Boutique</a>
+        </section>
+    </template>
+
+</body>
+</html>
