@@ -9,6 +9,7 @@ import { getBusinessProfile, type AccentColor, type BusinessProfile } from './bu
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 import { wrapSectionHtml } from './siteSectionWrap';
+import { galleryImg } from './imageFallback';
 
 const GALLERY_BY_CATEGORY: Record<string, string[]> = {
   gastronomy: [
@@ -1555,7 +1556,7 @@ function buildCafeGallery(ctx: BuildCtx): TemplatePageSection {
     html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-stone-100">
       ${cafeHeadingLight(es ? 'Galería' : 'Gallery', es ? 'Descubre nuestro espacio, nuestra terraza y nuestros platos' : 'Discover our space, terrace and dishes')}
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]"><img src="${img}" alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
+        ${images.slice(0, 6).map((img, i) => `<div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]">${galleryImg(img, es ? `Galería ${i + 1}` : `Gallery ${i + 1}`, 'w-full h-full object-cover hover:scale-105 transition-transform duration-700')}</div>`).join('')}
       </div>
     </div>`,
   };
@@ -1948,7 +1949,7 @@ function buildItalianGallery(ctx: BuildCtx): TemplatePageSection {
     html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-amber-100">
       ${cafeHeadingLight(es ? 'Galería' : 'Gallery', es ? 'Nuestros platos, la pasta fresca y el ambiente de la trattoria' : 'Our dishes, fresh pasta and trattoria atmosphere')}
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]"><img src="${img}" alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
+        ${images.slice(0, 6).map((img, i) => `<div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]">${galleryImg(img, es ? `Plato ${i + 1}` : `Dish ${i + 1}`, 'w-full h-full object-cover hover:scale-105 transition-transform duration-700')}</div>`).join('')}
       </div>
     </div>`,
   };
