@@ -16,7 +16,7 @@ import {
 } from '../studio/studioContextLock';
 import type { StudioDiscoveryAnswers } from '../studio/discoveryTypes';
 import type { PremiumStarterPersonalization } from '../../data/premiumStarters';
-import type { PremiumStarterContent } from './premiumContentTypes';
+import type { PremiumStarterContent } from '../studio/premiumContentTypes';
 
 export interface PreviewSection {
   id: number;
