@@ -5,13 +5,19 @@ const p = (id: number, w = 1400, h = 800) =>
 const sq = (id: number, size = 600) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${size}&h=${size}&fit=crop`;
 
+/** Unsplash — IDs verificados por sector (evita mezclar cocinas en galerías). */
+const u = (id: string, w = 1400, h = 800) =>
+  `https://images.unsplash.com/photo-${id}?ixlib=rb-4.0.3&auto=format&fit=crop&w=${w}&h=${h}&q=80`;
+
+const usq = (id: string, size = 600) => u(id, size, size);
+
 export const IMAGE_BANK = {
   cafe: {
-    hero: p(6261332),
+    hero: p(1267320),
     gallery: [sq(941861), sq(1267320), sq(6248864), sq(958545), sq(696218), sq(1023613)],
     menu: [p(941861, 600, 400), p(6248864, 600, 400), p(958545, 600, 400), p(696218, 600, 400)],
     interior: p(1267320, 900, 600),
-    terrace: p(6261332, 900, 600),
+    terrace: p(1267320, 900, 600),
     cocktails: [sq(1023613), sq(1267320), sq(6248864)],
   },
   kebab: {
@@ -73,6 +79,25 @@ export const IMAGE_BANK = {
     posts: [p(6248864, 600, 750), p(262978, 600, 750), p(7049655, 600, 750)],
     gallery: [sq(6248864), sq(262978), sq(7049655), sq(5938421), sq(696218), sq(1267320)],
     newsletter: p(5938421, 1400, 600),
+  },
+  /** Solo cocina y ambiente italiano — pizza, pasta, trattoria. */
+  italian: {
+    hero: u('1513104890138-7c749659a591'),
+    gallery: [
+      usq('1621996346565-e3dbc646d586'),
+      usq('1563379927115-03af4b89cdc3'),
+      usq('1513104890138-7c749659a591'),
+      usq('1598866598110-d69112b4bc6e'),
+      usq('1556910105-1c02745aae4d'),
+      usq('1414235077428-338989a2e8c0'),
+    ],
+    menu: [
+      u('1621996346565-e3dbc646d586', 600, 400),
+      u('1563379927115-03af4b89cdc3', 600, 400),
+      u('1513104890138-7c749659a591', 600, 400),
+      u('1598866598110-d69112b4bc6e', 600, 400),
+    ],
+    interior: u('1414235077428-338989a2e8c0', 900, 600),
   },
   renewable: {
     hero: p(9875446),

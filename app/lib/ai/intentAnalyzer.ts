@@ -235,6 +235,7 @@ const TEMPLATE_VARIANT: Partial<Record<string, BusinessVariant>> = {
   chronicle: 'luxury',
   arc: 'nonprofit',
   kebab: 'kebab',
+  trattoria: 'italian',
 };
 
 function findIntentRuleForTemplate(slug: string): IntentRule {

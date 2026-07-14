@@ -1162,7 +1162,7 @@ function buildLocation(ctx: BuildCtx): TemplatePageSection {
     id: 'location', type: 'location', navLabelEs: 'Ubicación', navLabelEn: 'Location',
     html: `<div class="bg-slate-50 border border-slate-200 rounded-[2rem] cua-section-pad p-6 sm:p-10 md:p-16">
       <h2 class="text-3xl sm:text-4xl font-bold font-serif tracking-tight text-slate-900">${es ? 'Visítanos' : 'Visit us'}</h2>
-      <p class="mt-3 text-base sm:text-lg text-slate-600">${es ? `Te esperamos en ${name}, Puente de Vallecas.` : `We look forward to seeing you at ${name}, Puente de Vallecas.`}</p>
+      <p class="mt-3 text-base sm:text-lg text-slate-600">${es ? `Te esperamos en ${esc(name)}.` : `We look forward to seeing you at ${esc(name)}.`}</p>
       <div class="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 cua-grid-2col gap-8 sm:gap-10">
         <div class="space-y-6 min-w-0">
           <div><div class="font-semibold text-slate-900">${es ? 'Dirección' : 'Address'}</div><p class="text-slate-600 mt-1">${esc(address)}</p></div>
@@ -1638,7 +1638,7 @@ function buildCafeContact(ctx: BuildCtx): TemplatePageSection {
           </div>
           <div class="mt-6 text-sm text-stone-600">
             <div class="font-semibold text-stone-900">🚇 ${es ? 'Cómo llegar' : 'Getting here'}</div>
-            <p class="mt-2">${es ? 'Metro: Puente de Vallecas (Línea 1)' : 'Metro: Puente de Vallecas (Line 1)'}</p>
+            <p class="mt-2">${profile?.variant === 'cafe' ? (es ? 'Metro: Puente de Vallecas (Línea 1)' : 'Metro: Puente de Vallecas (Line 1)') : profile?.variant === 'italian' ? (es ? 'Metro: Antón Martín (Línea 1) · 3 min' : 'Metro: Antón Martín (Line 1) · 3 min') : (es ? 'Transporte público cercano' : 'Nearby public transport')}</p>
             <p>${es ? 'Bus: Líneas de EMT cercanas' : 'Bus: Nearby EMT lines'}</p>
           </div>
           <div class="mt-6 rounded-xl overflow-hidden border border-stone-200 min-h-[220px]">
@@ -1794,6 +1794,292 @@ function buildFoodBlogSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageS
     shop,
     footer,
     premiumWidgets(ctx),
+  ];
+}
+
+function buildItalianHero(ctx: BuildCtx): TemplatePageSection {
+  const { heroImage, tagline, ctaPrimary, ctaSecondary, profile, lang, name } = ctx;
+  const es = lang === 'es';
+  const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '4.8 · 312 reseñas';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const nav = es
+    ? ['Inicio', 'Carta', 'Vinos', 'Reservas', 'Galería', 'Ubicación']
+    : ['Home', 'Menu', 'Wines', 'Booking', 'Gallery', 'Location'];
+  return {
+    id: 'hero', type: 'hero', navLabelEs: 'Inicio', navLabelEn: 'Home',
+    html: `<div class="bg-[#fdf8f3] overflow-hidden rounded-[2rem] shadow-xl border border-amber-100">
+      <div class="flex flex-wrap items-center justify-between gap-4 px-6 md:px-10 py-5 border-b border-amber-100">
+        <div class="font-serif font-semibold text-xl md:text-2xl text-stone-900 tracking-tight">${esc(name)}</div>
+        <div class="hidden lg:flex gap-8 text-[11px] tracking-[0.2em] uppercase text-stone-500 font-medium">
+          ${nav.map((n) => `<span>${n}</span>`).join('')}
+        </div>
+        ${phone ? `<div class="flex items-center gap-3 ml-auto">
+          <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-xs font-semibold rounded-full">WhatsApp</span>
+          <span class="inline-flex items-center gap-2 text-sm font-medium text-stone-700">📞 <a href="tel:+34${phoneDigits}">${esc(phone)}</a></span>
+        </div>` : ''}
+      </div>
+      <div class="relative min-h-[480px] md:min-h-[560px] flex items-center justify-center text-center">
+        <img src="${heroImage}" alt="${esc(name)}" class="absolute inset-0 w-full h-full object-cover" referrerpolicy="no-referrer" />
+        <div class="absolute inset-0 bg-gradient-to-b from-stone-950/55 via-stone-950/45 to-stone-950/80"></div>
+        <div class="relative z-10 px-6 py-16 max-w-3xl mx-auto">
+          <p class="text-amber-300/95 text-xl md:text-2xl font-serif italic">${esc(tagline)}</p>
+          <h1 class="mt-4 text-5xl md:text-7xl font-bold font-serif text-white tracking-tight drop-shadow-lg">${esc(name)}</h1>
+          <div class="mt-6 inline-flex items-center gap-2 px-5 py-2 bg-stone-950/70 backdrop-blur rounded-full border border-white/10">
+            <span class="text-amber-400 text-sm">★★★★★</span>
+            <span class="text-white/90 text-sm font-medium">${esc(rating)}</span>
+          </div>
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <span class="px-10 py-4 bg-amber-800 hover:bg-amber-700 text-white rounded-md text-sm font-bold tracking-[0.12em] uppercase shadow-lg">${esc(ctaPrimary)}</span>
+            <span class="px-10 py-4 bg-white text-stone-900 rounded-md text-sm font-bold tracking-[0.12em] uppercase shadow-lg">${esc(ctaSecondary)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildItalianInfoBar(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const address = profile ? (es ? profile.addressEs : profile.addressEn) : '';
+  const hours = profile ? (es ? profile.hoursEs : profile.hoursEn) : '';
+  const services = es
+    ? ['Pasta fresca diaria', 'Vinos italianos DOC', 'Terraza']
+    : ['Fresh pasta daily', 'Italian DOC wines', 'Terrace'];
+  return {
+    id: 'about', type: 'about', navLabelEs: 'Info', navLabelEn: 'Info',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-14 border border-amber-100 shadow-sm">
+      <div class="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto divide-y md:divide-y-0 md:divide-x divide-amber-100">
+        <div class="text-center px-4 pt-4 md:pt-0">
+          <h3 class="font-serif font-bold text-amber-900 text-lg">${es ? 'Ubicación' : 'Location'}</h3>
+          <p class="mt-4 text-stone-600 text-sm leading-relaxed">${esc(address)}</p>
+          <span class="mt-4 inline-block text-amber-800 text-sm font-medium">${es ? 'Cómo llegar →' : 'Get directions →'}</span>
+        </div>
+        <div class="text-center px-4 pt-8 md:pt-0">
+          <h3 class="font-serif font-bold text-amber-900 text-lg">${es ? 'Horario' : 'Hours'}</h3>
+          <p class="mt-4 text-stone-600 text-sm leading-relaxed">${esc(hours)}</p>
+        </div>
+        <div class="text-center px-4 pt-8 md:pt-0">
+          <h3 class="font-serif font-bold text-amber-900 text-lg">${es ? 'Especialidades' : 'Specialties'}</h3>
+          <div class="mt-4 space-y-2">${services.map((s) => `<div class="text-stone-600 text-sm">🍝 ${esc(s)}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildItalianCarta(ctx: BuildCtx): TemplatePageSection {
+  const es = ctx.lang === 'es';
+  type Dish = { name: string; price: string; desc: string };
+  const antipasti: Dish[] = es
+    ? [
+        { name: 'Bruschetta al pomodoro', price: '8,50 €', desc: 'Pan tostado, tomate San Marzano, albahaca fresca y aceite de oliva virgen extra.' },
+        { name: 'Carpaccio di manzo', price: '12,90 €', desc: 'Láminas finas de ternera, rúcula, parmigiano reggiano y vinagreta de limón.' },
+        { name: 'Burrata con tomate cherry', price: '11,50 €', desc: 'Burrata cremosa de Puglia con tomates confitados y pesto de albahaca.' },
+      ]
+    : [
+        { name: 'Bruschetta al pomodoro', price: '€8.50', desc: 'Toasted bread, San Marzano tomatoes, fresh basil and extra virgin olive oil.' },
+        { name: 'Beef carpaccio', price: '€12.90', desc: 'Thin beef slices, arugula, Parmigiano Reggiano and lemon vinaigrette.' },
+        { name: 'Burrata with cherry tomatoes', price: '€11.50', desc: 'Creamy Puglia burrata with confit tomatoes and basil pesto.' },
+      ];
+  const primi: Dish[] = es
+    ? [
+        { name: 'Spaghetti alla Carbonara', price: '14,50 €', desc: 'Guanciale crujiente, yema de huevo, pecorino romano y pimienta negra.' },
+        { name: 'Tagliatelle al ragù bolognese', price: '13,90 €', desc: 'Pasta fresca con ragù cocinado 6 horas a fuego lento.' },
+        { name: 'Risotto ai funghi porcini', price: '15,50 €', desc: 'Arborio cremoso con setas porcini, mantequilla y parmigiano.' },
+        { name: 'Lasagna della nonna', price: '13,50 €', desc: 'Capas de pasta casera, ragù, bechamel y gratinado al forno.' },
+      ]
+    : [
+        { name: 'Spaghetti alla Carbonara', price: '€14.50', desc: 'Crispy guanciale, egg yolk, Pecorino Romano and black pepper.' },
+        { name: 'Tagliatelle al ragù bolognese', price: '€13.90', desc: 'Fresh pasta with ragù slow-cooked for 6 hours.' },
+        { name: 'Porcini mushroom risotto', price: '€15.50', desc: 'Creamy Arborio with porcini, butter and Parmigiano.' },
+        { name: 'Nonna\'s lasagna', price: '€13.50', desc: 'Homemade pasta layers, ragù, béchamel and oven-gratin.' },
+      ];
+  const secondi: Dish[] = es
+    ? [
+        { name: 'Saltimbocca alla romana', price: '18,90 €', desc: 'Ternera con prosciutto, salvia y vino blanco.' },
+        { name: 'Pollo alla cacciatora', price: '16,50 €', desc: 'Pollo guisado con tomate, aceitunas y hierbas provenzales.' },
+        { name: 'Branzino al forno', price: '19,90 €', desc: 'Lubina al horno con patatas, limón y aceite de oliva.' },
+      ]
+    : [
+        { name: 'Saltimbocca alla romana', price: '€18.90', desc: 'Veal with prosciutto, sage and white wine.' },
+        { name: 'Pollo alla cacciatora', price: '€16.50', desc: 'Braised chicken with tomato, olives and herbs.' },
+        { name: 'Oven-baked sea bass', price: '€19.90', desc: 'Sea bass with potatoes, lemon and olive oil.' },
+      ];
+  const dolci: Dish[] = es
+    ? [
+        { name: 'Tiramisù della casa', price: '6,50 €', desc: 'Mascarpone, café espresso y cacao amargo.' },
+        { name: 'Panna cotta', price: '5,90 €', desc: 'Con coulis de frutos rojos.' },
+        { name: 'Cannoli siciliani', price: '6,90 €', desc: 'Masa crujiente rellena de ricotta y pistachos.' },
+      ]
+    : [
+        { name: 'House tiramisù', price: '€6.50', desc: 'Mascarpone, espresso coffee and bitter cocoa.' },
+        { name: 'Panna cotta', price: '€5.90', desc: 'With red berry coulis.' },
+        { name: 'Sicilian cannoli', price: '€6.90', desc: 'Crisp shell filled with ricotta and pistachios.' },
+      ];
+  const col = (title: string, items: Dish[]) => `<div>
+    <h3 class="font-serif font-bold text-amber-900 text-xl pb-3 border-b-2 border-amber-800/30">${title}</h3>
+    <div class="mt-6 space-y-6">${items.map((i) => `<div>
+      <div class="flex justify-between gap-4"><span class="font-semibold text-stone-900">${esc(i.name)}</span><span class="font-bold text-amber-800 whitespace-nowrap">${esc(i.price)}</span></div>
+      <p class="mt-1 text-sm text-stone-500">${esc(i.desc)}</p>
+    </div>`).join('')}</div>
+  </div>`;
+  return {
+    id: 'menu', type: 'menu', navLabelEs: 'Carta', navLabelEn: 'Menu',
+    html: `<div class="bg-[#fdf8f3] rounded-[2rem] p-10 md:p-16 border border-amber-100 shadow-sm">
+      ${cafeHeadingLight(es ? 'La Nostra Carta' : 'Our Menu', es ? 'Cocina italiana auténtica con ingredientes frescos y recetas tradicionales' : 'Authentic Italian cuisine with fresh ingredients and traditional recipes')}
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        ${col(es ? '🥗 Antipasti' : '🥗 Antipasti', antipasti)}
+        ${col(es ? '🍝 Primi Piatti' : '🍝 Primi Piatti', primi)}
+        ${col(es ? '🍖 Secondi Piatti' : '🍖 Secondi Piatti', secondi)}
+        ${col(es ? '🍮 Dolci' : '🍮 Dolci', dolci)}
+      </div>
+      <div class="mt-12 text-center"><span class="inline-block px-8 py-3 border-2 border-amber-800 text-amber-900 font-semibold rounded-md text-sm tracking-wide uppercase">${es ? 'Ver carta de vinos' : 'View wine list'}</span></div>
+    </div>`,
+  };
+}
+
+function buildItalianGallery(ctx: BuildCtx): TemplatePageSection {
+  const { images, lang } = ctx;
+  const es = lang === 'es';
+  return {
+    id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-amber-100">
+      ${cafeHeadingLight(es ? 'Galería' : 'Gallery', es ? 'Nuestros platos, la pasta fresca y el ambiente de la trattoria' : 'Our dishes, fresh pasta and trattoria atmosphere')}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        ${images.slice(0, 6).map((img) => `<div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]"><img src="${img}" alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}
+      </div>
+    </div>`,
+  };
+}
+
+function buildItalianReviews(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const reviews = profile ? (es ? profile.reviews.es : profile.reviews.en) : [];
+  const rating = profile ? (es ? profile.ratingLabelEs : profile.ratingLabelEn) : '';
+  const initials = (n: string) => n.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  return {
+    id: 'reviews', type: 'reviews', navLabelEs: 'Reseñas', navLabelEn: 'Reviews',
+    html: `<div class="bg-[#fdf8f3] rounded-[2rem] p-10 md:p-16 border border-amber-100">
+      ${cafeHeadingLight(es ? 'Reseñas' : 'Reviews', es ? 'Lo que dicen nuestros comensales' : 'What our guests say')}
+      <div class="text-center -mt-8 mb-10"><span class="text-amber-500">★★★★★</span> <span class="text-stone-500 text-sm ml-2">${esc(rating ?? '')}</span></div>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        ${reviews.map((r) => `<div class="bg-white rounded-xl p-8 shadow-sm border-l-4 border-amber-800 relative">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center text-xs font-bold">${initials(r.name)}</div>
+            <div><div class="font-serif font-bold text-stone-900 text-sm">${esc(r.name)}</div><div class="text-xs text-stone-400">${es ? 'Cliente verificado' : 'Verified guest'}</div></div>
+          </div>
+          <p class="mt-5 text-stone-600 text-sm leading-relaxed italic">"${esc(r.text)}"</p>
+          <div class="mt-4 text-amber-500 text-sm">${'★'.repeat(r.stars)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`,
+  };
+}
+
+function buildItalianBooking(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const phone = profile?.phone ?? '';
+  return {
+    id: 'reservation', type: 'reservation', navLabelEs: 'Reservas', navLabelEn: 'Booking',
+    html: `<div class="bg-white rounded-[2rem] overflow-hidden border border-amber-200 shadow-lg max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2">
+        <div class="bg-stone-950 text-white p-10 md:p-12 flex flex-col justify-center">
+          <h2 class="text-3xl font-serif font-bold">${es ? 'Reserva tu Mesa' : 'Book your Table'}</h2>
+          <p class="mt-4 text-stone-400 text-sm leading-relaxed">${es ? 'Disfruta de una experiencia italiana auténtica. Confirmación inmediata.' : 'Enjoy an authentic Italian experience. Instant confirmation.'}</p>
+          <ul class="mt-8 space-y-3 text-sm text-stone-300">${(es ? ['Confirmación inmediata', 'Cancelación gratuita hasta 2h antes', 'Mesa en terraza bajo petición'] : ['Instant confirmation', 'Free cancellation up to 2h before', 'Terrace table on request']).map((b) => `<li>✅ ${b}</li>`).join('')}</ul>
+          ${phone ? `<div class="mt-10 p-5 bg-stone-900 rounded-xl border border-stone-800">
+            <div class="text-xs text-stone-500 uppercase tracking-wider">${es ? 'O reserva por teléfono' : 'Or book by phone'}</div>
+            <div class="mt-2 text-xl font-bold text-amber-400">📞 ${esc(phone)}</div>
+          </div>` : ''}
+        </div>
+        <div class="p-10 md:p-12 bg-white space-y-5">
+          <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Fecha' : 'Date'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">dd/mm/aaaa 📅</div></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Hora' : 'Time'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Seleccionar' : 'Select'}</div></div>
+            <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Personas' : 'Guests'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">${es ? 'Seleccionar' : 'Select'}</div></div>
+          </div>
+          <div><label class="text-[10px] font-bold tracking-widest uppercase text-stone-400">${es ? 'Teléfono' : 'Phone'}</label><div class="mt-2 border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-400">+34 600 000 000</div></div>
+          <div class="px-6 py-4 bg-amber-800 text-white font-serif font-bold text-center rounded-md tracking-wide">${es ? 'Confirmar Reserva' : 'Confirm Booking'}</div>
+          <p class="text-[10px] text-stone-400 text-center">${es ? 'Al reservar aceptas nuestra Política de Privacidad.' : 'By booking you accept our Privacy Policy.'}</p>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildItalianContact(ctx: BuildCtx): TemplatePageSection {
+  const { profile, lang } = ctx;
+  const es = lang === 'es';
+  const address = profile ? (es ? profile.addressEs : profile.addressEn) : '';
+  const phone = profile?.phone ?? '';
+  const phoneDigits = phone.replace(/\D/g, '');
+  const email = profile?.email ?? 'reservas@trattoriabella.es';
+  return {
+    id: 'location', type: 'location', navLabelEs: 'Ubicación', navLabelEn: 'Location',
+    html: `<div class="bg-white rounded-[2rem] p-10 md:p-16 border border-amber-100">
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-stone-900">${es ? 'Ubicación' : 'Location'}</h2>
+          <div class="mt-6 p-6 bg-[#fdf8f3] rounded-xl border border-amber-100">
+            <div class="font-semibold text-stone-900">📍 ${es ? 'Dirección' : 'Address'}</div>
+            <p class="mt-2 text-stone-600 text-sm">${esc(address)}</p>
+            <span class="mt-3 inline-block text-amber-800 text-sm font-medium">${es ? 'Abrir en Google Maps →' : 'Open in Google Maps →'}</span>
+          </div>
+          <div class="mt-6 text-sm text-stone-600">
+            <div class="font-semibold text-stone-900">🚇 ${es ? 'Cómo llegar' : 'Getting here'}</div>
+            <p class="mt-2">${es ? 'Metro: Antón Martín (Línea 1) · 3 min a pie' : 'Metro: Antón Martín (Line 1) · 3 min walk'}</p>
+          </div>
+          <div class="mt-6 rounded-xl overflow-hidden border border-amber-100 min-h-[220px]">
+            <iframe title="Mapa" src="https://maps.google.com/maps?q=${encodeURIComponent(address)}&amp;output=embed" class="w-full min-h-[220px] border-0" loading="lazy" referrerpolicy="no-referrer"></iframe>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-stone-900">${es ? 'Contacto' : 'Contact'}</h2>
+          <div class="mt-6 space-y-5">
+            ${phone ? `<div class="flex items-center gap-4"><span class="text-2xl">📞</span><div><div class="text-xs text-stone-400 uppercase">${es ? 'Teléfono' : 'Phone'}</div><a href="tel:+34${phoneDigits}" class="text-amber-800 font-semibold">${esc(phone)}</a></div></div>` : ''}
+            <div class="flex items-center gap-4"><span class="text-2xl">💬</span><div><div class="text-xs text-stone-400 uppercase">WhatsApp</div><span class="text-amber-800 font-semibold">${es ? 'Enviar mensaje' : 'Send message'}</span></div></div>
+            <div class="flex items-center gap-4"><span class="text-2xl">✉️</span><div><div class="text-xs text-stone-400 uppercase">Email</div><span class="text-amber-800 font-semibold">${esc(email)}</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  };
+}
+
+function buildItalianFooter(ctx: BuildCtx): TemplatePageSection {
+  const { name, lang, profile } = ctx;
+  const es = lang === 'es';
+  const year = new Date().getFullYear();
+  const about = profile ? (es ? profile.aboutEs : profile.aboutEn) : '';
+  return {
+    id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
+    html: `<div class="bg-stone-950 text-stone-400 rounded-[2rem] p-10 md:p-16">
+      <div class="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div><h3 class="text-white font-serif font-bold text-xl">${esc(name)}</h3><p class="mt-4 text-sm leading-relaxed">${esc(about?.slice(0, 140) ?? '')}</p></div>
+        <div><h4 class="text-white text-xs font-bold tracking-[0.2em] uppercase">${es ? 'Explorar' : 'Explore'}</h4><div class="mt-4 space-y-2 text-sm">${(es ? ['Inicio', 'Carta', 'Vinos', 'Reservas', 'Galería', 'Ubicación'] : ['Home', 'Menu', 'Wines', 'Booking', 'Gallery', 'Location']).map((l) => `<div>${l}</div>`).join('')}</div></div>
+        <div><h4 class="text-white text-xs font-bold tracking-[0.2em] uppercase">Legal</h4><div class="mt-4 space-y-2 text-sm underline"><div>Aviso Legal</div><div>Política de Privacidad</div><div>Política de Cookies</div></div></div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-stone-800 text-center text-xs">© ${year} ${esc(name)}. ${es ? 'Todos los derechos reservados.' : 'All rights reserved.'}</div>
+    </div>`,
+  };
+}
+
+function buildItalianSite(ctx: BuildCtx, features: SiteFeatures): TemplatePageSection[] {
+  return [
+    buildItalianHero(ctx),
+    buildItalianInfoBar(ctx),
+    ...(features.about ? [buildAbout(ctx)] : []),
+    ...(features.menu ? [buildItalianCarta(ctx)] : []),
+    ...(features.gallery ? [buildItalianGallery(ctx)] : []),
+    ...(features.reviews ? [buildItalianReviews(ctx)] : []),
+    ...(features.reservation || features.calendar ? [buildItalianBooking(ctx)] : []),
+    ...(features.location || features.contact ? [buildItalianContact(ctx)] : []),
+    ...(features.legalFooter || features.social ? [buildItalianFooter(ctx)] : []),
+    buildCafeWidgets(ctx),
   ];
 }
 
@@ -2062,6 +2348,10 @@ export function buildCustomSite(
 
   if (profile?.variant === 'cafe') {
     return finalizeSiteSections(buildCafeSite(ctx, features));
+  }
+
+  if (profile?.variant === 'italian') {
+    return finalizeSiteSections(buildItalianSite(ctx, features));
   }
 
   if (profile?.variant === 'beauty') {

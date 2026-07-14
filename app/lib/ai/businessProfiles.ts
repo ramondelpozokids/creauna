@@ -1,7 +1,7 @@
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 
-export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'renewable' | 'default';
+export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'nonprofit' | 'renewable' | 'default';
 
 export type AccentColor = 'red' | 'indigo' | 'gold' | 'blue' | 'rose';
 
@@ -204,6 +204,84 @@ const CAFE_IMAGES = {
   m4: IMAGE_BANK.cafe.menu[3],
   m5: IMAGE_BANK.cafe.menu[3],
   m6: IMAGE_BANK.cafe.menu[2],
+};
+
+const ITALIAN_IMAGES = {
+  hero: IMAGE_BANK.italian.hero,
+  gal1: IMAGE_BANK.italian.gallery[0],
+  gal2: IMAGE_BANK.italian.gallery[1],
+  gal3: IMAGE_BANK.italian.gallery[2],
+  gal4: IMAGE_BANK.italian.gallery[3],
+  gal5: IMAGE_BANK.italian.gallery[4],
+  gal6: IMAGE_BANK.italian.gallery[5],
+  m1: IMAGE_BANK.italian.menu[0],
+  m2: IMAGE_BANK.italian.menu[1],
+  m3: IMAGE_BANK.italian.menu[2],
+  m4: IMAGE_BANK.italian.menu[3],
+};
+
+export const ITALIAN_PROFILE: BusinessProfile = {
+  variant: 'italian',
+  heroImage: ITALIAN_IMAGES.hero,
+  galleryImages: [
+    ITALIAN_IMAGES.gal1, ITALIAN_IMAGES.gal2, ITALIAN_IMAGES.gal3,
+    ITALIAN_IMAGES.gal4, ITALIAN_IMAGES.gal5, ITALIAN_IMAGES.gal6,
+    ITALIAN_IMAGES.m1, ITALIAN_IMAGES.m2,
+  ],
+  taglineEs: 'Auténtica cocina italiana · Pasta fresca diaria',
+  taglineEn: 'Authentic Italian cuisine · Fresh pasta daily',
+  typeEs: 'Trattoria Italiana',
+  typeEn: 'Italian Trattoria',
+  badgeEs: 'Cocina casera · Vinos DOC',
+  badgeEn: 'Home cooking · DOC wines',
+  ctaPrimaryEs: 'Reservar mesa',
+  ctaPrimaryEn: 'Book a table',
+  ctaSecondaryEs: 'Ver carta',
+  ctaSecondaryEn: 'View menu',
+  menuItems: {
+    es: [
+      { title: 'Spaghetti alla Carbonara', price: '14,50 €', image: ITALIAN_IMAGES.m1, cta: 'Reservar mesa' },
+      { title: 'Tagliatelle al ragù', price: '13,90 €', image: ITALIAN_IMAGES.m2, cta: 'Reservar mesa' },
+      { title: 'Risotto ai funghi porcini', price: '15,50 €', image: ITALIAN_IMAGES.m3, cta: 'Ver carta' },
+      { title: 'Pizza Margherita DOP', price: '11,90 €', image: ITALIAN_IMAGES.m4, cta: 'Ver carta' },
+      { title: 'Saltimbocca alla romana', price: '18,90 €', image: ITALIAN_IMAGES.m1, cta: 'Ver carta' },
+      { title: 'Tiramisù della casa', price: '6,50 €', image: ITALIAN_IMAGES.m2, cta: 'Ver carta' },
+    ],
+    en: [
+      { title: 'Spaghetti alla Carbonara', price: '€14.50', image: ITALIAN_IMAGES.m1, cta: 'Book a table' },
+      { title: 'Tagliatelle al ragù', price: '€13.90', image: ITALIAN_IMAGES.m2, cta: 'Book a table' },
+      { title: 'Porcini mushroom risotto', price: '€15.50', image: ITALIAN_IMAGES.m3, cta: 'View menu' },
+      { title: 'Margherita DOP pizza', price: '€11.90', image: ITALIAN_IMAGES.m4, cta: 'View menu' },
+      { title: 'Saltimbocca alla romana', price: '€18.90', image: ITALIAN_IMAGES.m1, cta: 'View menu' },
+      { title: 'House tiramisù', price: '€6.50', image: ITALIAN_IMAGES.m2, cta: 'View menu' },
+    ],
+  },
+  reviews: {
+    es: [
+      { name: 'Luca B.', text: 'La carbonara es auténtica, cremosa y con el punto justo de pimienta. Ambiente acogedor y servicio impecable.', stars: 5 },
+      { name: 'Elena M.', text: 'Pasta fresca hecha in situ. El risotto de setas porcini es espectacular. Volveremos sin duda.', stars: 5 },
+      { name: 'Marco R.', text: 'Trattoria con alma italiana en Madrid. Buena carta de vinos y postres caseros. Muy recomendable.', stars: 5 },
+    ],
+    en: [
+      { name: 'Luca B.', text: 'Authentic carbonara — creamy with the perfect pepper kick. Cozy atmosphere and flawless service.', stars: 5 },
+      { name: 'Elena M.', text: 'Fresh pasta made on site. The porcini risotto is spectacular. We will definitely return.', stars: 5 },
+      { name: 'Marco R.', text: 'A trattoria with real Italian soul in Madrid. Great wine list and homemade desserts. Highly recommended.', stars: 5 },
+    ],
+  },
+  addressEs: 'Calle de Huertas 15, 28012 Madrid',
+  addressEn: 'Calle de Huertas 15, 28012 Madrid',
+  hoursEs: 'Martes – Domingo: 13:00 – 16:00 · 20:00 – 23:30',
+  hoursEn: 'Tue – Sun: 1:00 PM – 4:00 PM · 8:00 PM – 11:30 PM',
+  infoEs: 'Pasta fresca diaria · Vinos italianos DOC · Terraza',
+  infoEn: 'Fresh pasta daily · Italian DOC wines · Terrace',
+  phone: '91 429 18 76',
+  ratingLabelEs: '4.8 · 312 reseñas verificadas',
+  ratingLabelEn: '4.8 · 312 verified reviews',
+  aboutEs: 'Trattoria de cocina italiana auténtica en el corazón de Madrid. Pasta fresca elaborada cada mañana, recetas de la nonna y una carta de vinos seleccionada de Toscana, Piamonte y Sicilia.',
+  aboutEn: 'An authentic Italian trattoria in the heart of Madrid. Fresh pasta made every morning, nonna\'s recipes, and a wine list curated from Tuscany, Piedmont, and Sicily.',
+  accent: 'gold',
+  instagram: '@trattoriabella',
+  email: 'reservas@trattoriabella.es',
 };
 
 export const CAFE_PROFILE: BusinessProfile = {
@@ -742,12 +820,13 @@ export function detectVariant(prompt: string): BusinessVariant {
   if (/barber[ií]a|barbershop|\bbarber\b|afeitad|grooming masculin/i.test(prompt)) return 'default';
   if (/peluquer|sal[oó]n\s+de\s+belleza|elite\s+beauty|estilo\s+de\s+belleza|hair\s+salon|manicur|uñas/i.test(prompt)) return 'beauty';
   if (/recetas|blog de comida|blog gastron|food blog|comida casera|blog culin|publicaciones.*receta|stanton|libro de recetas/i.test(prompt)) return 'foodblog';
+  if (/trattoria|italian[o]?|pizzer[ií]a|pizza|pasta|risotto|cocina italiana|nonna|antipast|carbonara|bolognese|tiramis/i.test(prompt)) return 'italian';
   if (/rest art|art caf[ée]|mes[oó]n|taberna|caf[ée]|restaurante|terraza|c[óo]ctel|brunch|tapas|comida\s+español/i.test(prompt)) return 'cafe';
   return 'default';
 }
 
 function menuCta(variant: BusinessVariant): string {
-  if (variant === 'cafe') return 'Reservar mesa';
+  if (variant === 'cafe' || variant === 'italian') return 'Reservar mesa';
   if (variant === 'tattoo' || variant === 'beauty') return 'Reservar cita';
   if (variant === 'corporate') return 'Solicitar consulta';
   if (variant === 'automotive') return 'Pedir cita';
@@ -779,7 +858,7 @@ function applyListingToProfile(base: BusinessProfile, listing: ParsedGoogleListi
       es: menuEs,
       en: menuEs.map((p) => ({ ...p, cta: base.variant === 'cafe' ? 'Book a table' : 'Book appointment' })),
     },
-    reviews: ['cafe', 'beauty', 'corporate', 'automotive', 'luxury', 'nonprofit', 'foodblog'].includes(base.variant)
+    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'luxury', 'nonprofit', 'foodblog'].includes(base.variant)
       ? { es: base.reviews.es, en: base.reviews.en }
       : { es: listing.reviews, en: listing.reviews },
     badgeEs: listing.serviceOptions?.slice(0, 40) ?? base.badgeEs,
@@ -795,7 +874,8 @@ export function getBusinessProfile(
     variant === 'kebab' ? KEBAB_PROFILE
       : variant === 'tattoo' ? TATTOO_PROFILE
         : variant === 'cafe' ? CAFE_PROFILE
-          : variant === 'foodblog' ? FOOD_BLOG_PROFILE
+          : variant === 'italian' ? ITALIAN_PROFILE
+            : variant === 'foodblog' ? FOOD_BLOG_PROFILE
             : variant === 'beauty' ? BEAUTY_PROFILE
             : variant === 'corporate' ? CORPORATE_PROFILE
               : variant === 'automotive' ? AUTOMOTIVE_PROFILE
