@@ -19,6 +19,6 @@ export const FEATURED_CLIENTS = [
     catEs: 'Tatuajes & Piercing',
     catEn: 'Tattoos & Piercing',
     href: '/demos/clientes/royal-bang/index.html',
-    img: '/images/showcase/royal-bang.jpg',
+    img: 'https://images.pexels.com/photos/955938/pexels-photo-955938.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
   },
 ] as const;

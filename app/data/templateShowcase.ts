@@ -149,7 +149,7 @@ const portfolioProjects: TemplateShowcaseItem[] = [
       'Tattoo and piercing studio: visual portfolio, artists, booking and dark editorial aesthetic.',
     demoPath: '/demos/clientes/royal-bang/index.html',
     previewImage:
-      'https://images.unsplash.com/photo-1590246814880-486cccb8392e?w=900&h=600&fit=crop&q=80',
+      'https://images.pexels.com/photos/955938/pexels-photo-955938.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
     categoryKey: 'creative',
     categoryLabelEs: 'Tatuaje & piercing',
     categoryLabelEn: 'Tattoo & piercing',
