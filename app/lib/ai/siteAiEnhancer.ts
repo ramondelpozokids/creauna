@@ -44,6 +44,7 @@ const VARIANT_DESIGN: Partial<Record<BusinessVariant, string>> = {
   kebab: 'Kebab premium urbano: fotos apetitosas, carta real, ambiente Vallecas.',
   luxury: 'Fine dining (La Maison Dorée): negro #1a1a1a + oro #c8a97e, script decorativo, cinematográfico, alta cocina.',
   jewelry: 'Joyería/relojería lujo (Rolex/Cartier): negro #0a0a0a, marfil, champagne, oro cepillado, font-serif editorial, mucho espacio en blanco, hero cinematográfico, mega menú, marcas suizas, galería premium, cita privada. PROHIBIDO estilo restaurante o plantilla genérica.',
+  fashion: 'Tienda moda eCommerce élite (Zara/COS/Massimo Dutti): Playfair+Inter, champagne #C4A484, fondo #FAFAFA, SPA con carrito funcional, checkout Stripe, lookbook editorial, grid productos 8+, barra confianza, newsletter. Una sola página cohesiva — PROHIBIDO secciones sueltas tipo corporativo o restaurante.',
   nonprofit: 'ONG/accesibilidad (InfoSordos): azul #0a3bf6, misión clara, inclusivo, recursos LSE, subtítulos.',
   renewable: 'Empresa energías renovables premium (referencia ritest.es): hero oscuro con parque solar, verde energético #16a34a, azul tech #0f172a, grid sutil, stats confianza, tarjetas servicios fotovoltaica/baterías/EV, proceso 5 pasos, proyectos reales, FAQ acordeón, footer corporativo. PROHIBIDO spa, masajes, hotel, piscina, belleza, restaurante.',
   default: 'Web de agencia premium: Playfair + sans, mucho aire, sombras suaves, rounded-[2rem]. Cero placeholders genéricos.',

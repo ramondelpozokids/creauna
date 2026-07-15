@@ -31,6 +31,7 @@ const BUILD_TESTS = [
   'Royal Bang tattoo studio en Madrid con galería portfolio',
   'Empresa solar Helios con instalaciones fotovoltaicas y baterías',
   'Gestoría Campón asesoría fiscal laboral y contable',
+  'Tienda online de moda premium con carrito Stripe checkout lookbook Zara Massimo Dutti',
 ];
 
 async function main() {
@@ -70,7 +71,8 @@ async function main() {
       const sectionCount = result.previewSections.length;
       const hasHero = result.previewSections.some((s) => s.type === 'hero' || s.html.includes('<h1'));
 
-      if (sectionCount >= 3 && hasHero && validation.ok) {
+      const isFullPage = result.previewSections.some((s) => s.type === 'fullpage');
+      if ((isFullPage || sectionCount >= 3) && hasHero && validation.ok) {
         console.log(
           `OK  build «${prompt.slice(0, 45)}…» → ${result.templateSlug} (${sectionCount} secciones, ${result.source})`
         );

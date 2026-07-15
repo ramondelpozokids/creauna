@@ -1,7 +1,6 @@
 import { chatCompletion, type MotorId } from './providers';
 import { generateInitialSite, generateInitialSiteFromDiscovery } from './siteGenerator';
 import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
-import { detectVariant } from './businessProfiles';
 import { applyVisualEnhancement, applyStrongVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
 import { validateSectionHtml } from '../studio/sectionValidator';
 import { planStudioChange, executeDirectorPlan } from '../studio/studioDirector';
@@ -94,18 +93,11 @@ function targetSection(input: StudioGenerateInput): PreviewSection {
   return input.previewSections.find((s) => s.type === 'hero') ?? input.previewSections[0];
 }
 
-function enrichPromptFromSections(prompt: string, sections: PreviewSection[]): string {
+function enrichPromptFromSections(prompt: string, sections: PreviewSection[], forInitial = false): string {
+  if (forInitial) return prompt;
   const blob = sections.map((s) => s.html).join(' ');
   const name = blob.match(/<h1[^>]*>([^<]+)/)?.[1]?.trim();
-  const variant = detectVariant(blob + ' ' + prompt);
-  const variantHint =
-    variant === 'tattoo' ? 'tattoo piercing royal bang'
-      : variant === 'cafe' ? 'rest art café restaurante terraza'
-        : variant === 'foodblog' ? 'blog recetas comida casera stanton'
-          : variant === 'kebab' ? 'kebab döner vallecas'
-          : '';
-  const hints = [prompt, name, variantHint].filter(Boolean);
-  return hints.join(' ');
+  return [prompt, name].filter(Boolean).join(' ');
 }
 
 function applyStyleTransform(html: string, style: 'elegante' | 'minimal' | 'moderno'): string {

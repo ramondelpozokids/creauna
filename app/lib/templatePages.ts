@@ -114,9 +114,14 @@ export function buildTemplateSections(
 }
 
 export function toStudioSections(sections: TemplatePageSection[]): StudioPreviewSection[] {
-  return sections.map((s, i) => ({
-    id: 100 + i,
-    type: s.type,
-    html: wrapSectionHtml(s.html),
-  }));
+  return sections.map((s, i) => {
+    const raw = s.html.trimStart();
+    const isFullDoc =
+      s.type === 'fullpage' || raw.startsWith('<!DOCTYPE') || raw.startsWith('<html');
+    return {
+      id: 100 + i,
+      type: s.type,
+      html: isFullDoc ? s.html : wrapSectionHtml(s.html),
+    };
+  });
 }

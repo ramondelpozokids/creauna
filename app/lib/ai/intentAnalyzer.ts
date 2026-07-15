@@ -1,6 +1,6 @@
 import type { TemplateCategory } from '../../data/templates';
 import { matchSectorFromPrompt } from '../../data/sectorLibrary';
-import { detectVariant, type BusinessVariant } from './businessProfiles';
+import { detectVariant, isFashionEcommercePrompt, stripIntentScoringNoise, type BusinessVariant } from './businessProfiles';
 import { isGoogleListingPrompt, parseGoogleListing } from './googleListingParser';
 
 export interface SiteFeatures {
@@ -67,12 +67,12 @@ const INTENT_RULES: IntentRule[] = [
   { slug: 'haven', categoryKey: 'luxury', keywords: /casa rural|turismo rural|apartamento tur[ií]stic|camping|agencia de viajes|actividades tur[ií]stic|alquiler vacacional/i, typeEs: 'Alojamiento Turístico', typeEn: 'Tourism Lodging', defaultNameEs: 'Haven Rural', defaultNameEn: 'Haven Rural' },
   { slug: 'serene', categoryKey: 'luxury', keywords: /\bspa\b|wellness de lujo|\bmasaje/i, typeEs: 'Spa de Lujo', typeEn: 'Luxury Spa', defaultNameEs: 'Serene Spa', defaultNameEn: 'Serene Spa' },
   { slug: 'atelier', categoryKey: 'luxury', keywords: /joyer[ií]a|jewelry|reloj|watch/i, typeEs: 'Joyería & Relojería', typeEn: 'Jewelry & Watches', defaultNameEs: 'Atelier Joyas', defaultNameEn: 'Atelier Jewelry' },
-  { slug: 'maison', categoryKey: 'luxury', keywords: /moda boutique|fashion|ropa|tienda de ropa/i, typeEs: 'Moda Boutique', typeEn: 'Fashion Boutique', defaultNameEs: 'Maison Mode', defaultNameEn: 'Maison Mode' },
+  { slug: 'maison', categoryKey: 'luxury', keywords: /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de moda|fashion brand|marca de moda|stripe|woocommerce|shopify|checkout|carrito de compra|lookbook|colecci[oó]n premium|moda boutique|fashion|ropa premium|zara|massimo dutti|nike|adidas|gymshark|luxury fashion/i, typeEs: 'Moda & eCommerce Premium', typeEn: 'Premium Fashion eCommerce', defaultNameEs: 'Maison Mode', defaultNameEn: 'Maison Mode' },
   { slug: 'vows', categoryKey: 'luxury', keywords: /boda|wedding|matrimonio|event planner/i, typeEs: 'Wedding Planner', typeEn: 'Wedding Planner', defaultNameEs: 'Vows Events', defaultNameEn: 'Vows Events' },
   { slug: 'nexus', categoryKey: 'corporate', keywords: /consultor[ií]a|consulting|b2b|asesor[ií]a empres/i, typeEs: 'Consultoría B2B', typeEn: 'B2B Consulting', defaultNameEs: 'Nexus Consulting', defaultNameEn: 'Nexus Consulting' },
   { slug: 'vanguard', categoryKey: 'corporate', keywords: /marketing|publicidad|agencia creativa|social media/i, typeEs: 'Agencia de Marketing', typeEn: 'Marketing Agency', defaultNameEs: 'Vanguard Agency', defaultNameEn: 'Vanguard Agency' },
   { slug: 'habitat', categoryKey: 'corporate', keywords: /inmobiliaria|real estate|propiedad|vivienda|promotora|gesti[oó]n patrimonial/i, typeEs: 'Inmobiliaria', typeEn: 'Real Estate', defaultNameEs: 'Habitat Inmobiliaria', defaultNameEn: 'Habitat Real Estate' },
-  { slug: 'blueprint', categoryKey: 'corporate', keywords: /arquitect|interiorismo|estudio de arquitect|urbanismo|proyecto arquitect|diseño de interiores/i, typeEs: 'Estudio de Arquitectura', typeEn: 'Architecture Studio', defaultNameEs: 'Blueprint Arquitectos', defaultNameEn: 'Blueprint Architects' },
+  { slug: 'blueprint', categoryKey: 'corporate', keywords: /estudio de arquitectura|arquitectura contempor|proyecto arquitect|\barquitectura\b|interiorismo profesional|urbanismo|diseño de interiores/i, typeEs: 'Estudio de Arquitectura', typeEn: 'Architecture Studio', defaultNameEs: 'Blueprint Arquitectos', defaultNameEn: 'Blueprint Architects' },
   { slug: 'care', categoryKey: 'corporate', keywords: /cl[ií]nica dental|odontolog|ortodon|fisioter|fisio|psicolog|nutrici|medicina est[eé]tica|[óo]ptic|farmacia|cl[ií]nica m[eé]d|rehabilitaci[oó]n/i, typeEs: 'Clínica de Salud', typeEn: 'Health Clinic', defaultNameEs: 'Care Salud', defaultNameEn: 'Care Health' },
   { slug: 'lex', categoryKey: 'corporate', keywords: /abogad|law firm|despacho de abog|bufete|notar[ií]a|jur[ií]dic/i, typeEs: 'Despacho de Abogados', typeEn: 'Law Firm', defaultNameEs: 'Lex Abogados', defaultNameEn: 'Lex Law Firm' },
   { slug: 'ledger', categoryKey: 'corporate', keywords: /gestor[ií]a|asesor[ií]a|fiscal|contabil|tax|finanzas corpor|laboral/i, typeEs: 'Asesoría Fiscal', typeEn: 'Tax Advisory', defaultNameEs: 'Ledger Asesores', defaultNameEn: 'Ledger Advisors' },
@@ -130,6 +130,7 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
   const isGestoria = /gestor[ií]a|asesor[ií]a/i.test(lower);
   const isRenewable = /energ[ií]as?\s+renov|fotovolta|placas\s+solares|autoconsumo|energ[ií]a\s+solar|ritest/i.test(lower);
   const isFoodBlog = /recetas|blog de comida|blog gastron|food blog|comida casera|stanton/i.test(lower);
+  const isFashion = isFashionEcommercePrompt(prompt);
   const isJewelry =
     /joyer[ií]a|relojer[ií]a|jewelry|watchmaker|rolex|cartier|patek|omega|bulgari|tiffany|audemars|alta relojer/i.test(
       lower
@@ -141,6 +142,28 @@ export function parseSiteFeatures(prompt: string): SiteFeatures {
       (mentioned(/carta|producto|men[uú]\s+(del|degustaci)/) ||
         (mentioned(/men[uú]|menu/) && !navMenu) ||
         listing));
+
+  if (isFashion) {
+    return {
+      menu: true,
+      services: true,
+      about: true,
+      blog: mentioned(/blog|noticias|news|tendencias|gu[ií]as|moda/),
+      gallery: true,
+      reviews: true,
+      location: mentioned(/mapa|ubicaci|contacto|tienda f[ií]sica/),
+      contact: true,
+      reservation: false,
+      calendar: false,
+      legalFooter: true,
+      social: true,
+      whatsapp: mentioned(/whatsapp|wa\.me/) || true,
+      scrollUp: true,
+      sidebar: false,
+      documentUpload: false,
+      vividColors: false,
+    };
+  }
 
   if (isJewelry) {
     return {
@@ -255,7 +278,7 @@ const TEMPLATE_VARIANT: Partial<Record<string, BusinessVariant>> = {
   retreat: 'luxury',
   serene: 'luxury',
   atelier: 'jewelry',
-  maison: 'luxury',
+  maison: 'fashion',
   vows: 'luxury',
   essence: 'luxury',
   chronicle: 'luxury',
@@ -374,33 +397,41 @@ function mergeSiteFeatures(defaults: SiteFeatures, parsed: SiteFeatures): SiteFe
 export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
   const parsedFeatures = parseSiteFeatures(prompt);
   const variant = detectVariant(prompt);
-  const normalized = stripLegalPageNoise(prompt).toLowerCase();
+  const fashion = isFashionEcommercePrompt(prompt);
+  const normalized = stripLegalPageNoise(stripIntentScoringNoise(prompt)).toLowerCase();
 
   let bestRule = INTENT_RULES.find((r) => r.slug === 'vesper')!;
   let bestScore = 0;
 
-  for (const rule of INTENT_RULES) {
-    const score = scoreRule(rule, normalized);
-    if (score > bestScore) {
-      bestScore = score;
-      bestRule = rule;
+  if (fashion) {
+    bestRule = INTENT_RULES.find((r) => r.slug === 'maison')!;
+    bestScore = 9999;
+  } else {
+    for (const rule of INTENT_RULES) {
+      const score = scoreRule(rule, normalized);
+      if (score > bestScore) {
+        bestScore = score;
+        bestRule = rule;
+      }
     }
-  }
 
-  const sectorMatch = matchSectorFromPrompt(prompt);
-  if (sectorMatch) {
-    const sectorRule = INTENT_RULES.find((r) => r.slug === sectorMatch.templateSlug);
-    if (sectorRule) {
-      const boosted = scoreRule(sectorRule, normalized) + (sectorMatch.tier === 'priority' ? 20 : 5);
-      if (boosted > bestScore) {
-        bestScore = boosted;
-        bestRule = sectorRule;
+    const sectorMatch = matchSectorFromPrompt(stripIntentScoringNoise(prompt));
+    if (sectorMatch && !isFashionEcommercePrompt(prompt)) {
+      const sectorRule = INTENT_RULES.find((r) => r.slug === sectorMatch.templateSlug);
+      if (sectorRule) {
+        const boosted = scoreRule(sectorRule, normalized) + (sectorMatch.tier === 'priority' ? 20 : 5);
+        if (boosted > bestScore) {
+          bestScore = boosted;
+          bestRule = sectorRule;
+        }
       }
     }
   }
 
   const profileRule =
-    variant === 'kebab'
+    variant === 'fashion'
+      ? INTENT_RULES.find((r) => r.slug === 'maison')!
+      : variant === 'kebab'
       ? INTENT_RULES.find((r) => r.slug === 'kebab')!
       : variant === 'tattoo'
         ? INTENT_RULES.find((r) => r.slug === 'iron-ink')!
@@ -416,7 +447,9 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
                 ? INTENT_RULES.find((r) => r.slug === 'torque')!
                 : variant === 'luxury'
                   ? INTENT_RULES.find((r) => r.slug === 'vesper')!
-                  : variant === 'nonprofit'
+                  : variant === 'jewelry'
+                    ? INTENT_RULES.find((r) => r.slug === 'atelier')!
+                    : variant === 'nonprofit'
                     ? INTENT_RULES.find((r) => r.slug === 'arc')!
                     : variant === 'renewable'
                       ? INTENT_RULES.find((r) => r.slug === 'volt')!
@@ -434,7 +467,9 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
     templateSlug: profileRule.slug,
     businessName,
     businessType:
-      variant === 'kebab'
+      variant === 'fashion'
+        ? (lang === 'es' ? 'Moda & eCommerce Premium' : 'Premium Fashion eCommerce')
+        : variant === 'kebab'
         ? (lang === 'es' ? 'Restaurante Kebab' : 'Kebab Restaurant')
         : variant === 'tattoo'
           ? (lang === 'es' ? 'Estudio de Tatuajes & Piercing' : 'Tattoo & Piercing Studio')

@@ -1,7 +1,29 @@
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 
-export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'jewelry' | 'nonprofit' | 'renewable' | 'default';
+export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'jewelry' | 'fashion' | 'nonprofit' | 'renewable' | 'default';
+
+/** Brief de tienda online / moda premium (evita confundir con arquitectura por «Arquitecto UX/UI»). */
+export function isFashionEcommercePrompt(prompt: string): boolean {
+  const lower = prompt.toLowerCase();
+  return (
+    /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de moda|carrito de compra|carrito persistente|checkout|pasarela|stripe|woocommerce|shopify|lookbook|productos destacados|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos/i.test(
+      lower
+    ) ||
+    /zara|massimo dutti|\bcos\b|mango|gymshark|balenciaga|dior|gucci|nike|adidas|hugo boss|tommy hilfiger|calvin klein|lacoste|ralph lauren|louis vuitton|uniqlo|alo yoga/i.test(
+      lower
+    )
+  );
+}
+
+/** Quita roles de equipo del brief antes de puntuar sectores (Arquitecto UX/UI ≠ estudio arquitectura). */
+export function stripIntentScoringNoise(prompt: string): string {
+  return prompt
+    .replace(/#\s*PROYECTO[\s\S]*?(?=#\s|$)/gi, ' ')
+    .replace(/(?:director|desarrollador|especialista|copywriter|fot[oó]grafo)\s[^\n•\-#]+/gi, ' ')
+    .replace(/arquitecto\s+(?:ux\/ui|backend|frontend)/gi, ' ')
+    .replace(/-\s*arquitecto\s+ux\/ui[^\n]*/gi, ' ');
+}
 
 export type AccentColor = 'red' | 'indigo' | 'gold' | 'blue' | 'rose';
 
@@ -690,6 +712,80 @@ const JEWELRY_IMAGES = {
   p6: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
 };
 
+const FASHION_IMAGES = {
+  hero: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop',
+  p1: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  p2: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  p3: 'https://images.pexels.com/photos/1485237471/pexels-photo-1485237471.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  p4: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  p5: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  p6: 'https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  gal1: 'https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+  gal2: 'https://images.pexels.com/photos/157675/fashion-men-s-individuality-black-and-white-157675.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+  gal3: 'https://images.pexels.com/photos/2983468/pexels-photo-2983468.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+};
+
+export const FASHION_PROFILE: BusinessProfile = {
+  variant: 'fashion',
+  heroImage: FASHION_IMAGES.hero,
+  galleryImages: [FASHION_IMAGES.gal1, FASHION_IMAGES.gal2, FASHION_IMAGES.gal3, FASHION_IMAGES.p1, FASHION_IMAGES.p2, FASHION_IMAGES.p3],
+  taglineEs: 'Moda internacional con diseño editorial, envíos premium y checkout seguro.',
+  taglineEn: 'International fashion with editorial design, premium shipping and secure checkout.',
+  typeEs: 'Moda & eCommerce Premium',
+  typeEn: 'Premium Fashion eCommerce',
+  badgeEs: 'Nueva colección · Envío express',
+  badgeEn: 'New collection · Express shipping',
+  ctaPrimaryEs: 'Comprar ahora',
+  ctaPrimaryEn: 'Shop now',
+  ctaSecondaryEs: 'Nueva colección',
+  ctaSecondaryEn: 'New collection',
+  menuItems: {
+    es: [
+      { title: 'Abrigo lana premium', price: '289 €', image: FASHION_IMAGES.p1, cta: 'Añadir al carrito' },
+      { title: 'Vestido satinado negro', price: '195 €', image: FASHION_IMAGES.p2, cta: 'Añadir al carrito' },
+      { title: 'Blazer estructura arena', price: '245 €', image: FASHION_IMAGES.p3, cta: 'Añadir al carrito' },
+      { title: 'Pantalón wide leg', price: '129 €', image: FASHION_IMAGES.p4, cta: 'Añadir al carrito' },
+      { title: 'Bolso piel champagne', price: '420 €', image: FASHION_IMAGES.p5, cta: 'Añadir al carrito' },
+      { title: 'Zapatillas cuero blanco', price: '165 €', image: FASHION_IMAGES.p6, cta: 'Añadir al carrito' },
+    ],
+    en: [
+      { title: 'Premium wool coat', price: '€289', image: FASHION_IMAGES.p1, cta: 'Add to bag' },
+      { title: 'Black satin dress', price: '€195', image: FASHION_IMAGES.p2, cta: 'Add to bag' },
+      { title: 'Sand structured blazer', price: '€245', image: FASHION_IMAGES.p3, cta: 'Add to bag' },
+      { title: 'Wide leg trousers', price: '€129', image: FASHION_IMAGES.p4, cta: 'Add to bag' },
+      { title: 'Champagne leather bag', price: '€420', image: FASHION_IMAGES.p5, cta: 'Add to bag' },
+      { title: 'White leather sneakers', price: '€165', image: FASHION_IMAGES.p6, cta: 'Add to bag' },
+    ],
+  },
+  reviews: {
+    es: [
+      { name: 'Lucía M.', text: 'Calidad excepcional y entrega en 24h. La experiencia de compra se siente de lujo.', stars: 5 },
+      { name: 'Carlos R.', text: 'Diseño impecable y checkout rapidísimo con Stripe. Repetiré sin duda.', stars: 5 },
+      { name: 'Elena S.', text: 'Por fin una tienda online que transmite confianza y exclusividad.', stars: 5 },
+    ],
+    en: [
+      { name: 'Lucía M.', text: 'Exceptional quality and 24h delivery. The shopping experience feels luxurious.', stars: 5 },
+      { name: 'Carlos R.', text: 'Impeccable design and lightning-fast Stripe checkout. Will shop again.', stars: 5 },
+      { name: 'Elena S.', text: 'Finally an online store that conveys trust and exclusivity.', stars: 5 },
+    ],
+  },
+  addressEs: 'Madrid · Envíos internacionales',
+  addressEn: 'Madrid · International shipping',
+  hoursEs: 'Atención online 24/7',
+  hoursEn: 'Online support 24/7',
+  infoEs: 'Devoluciones 30 días · Pago seguro Stripe',
+  infoEn: '30-day returns · Secure Stripe payments',
+  phone: '910 00 00 00',
+  ratingLabelEs: '4.9 · 2.400+ reseñas',
+  ratingLabelEn: '4.9 · 2,400+ reviews',
+  aboutEs:
+    'Maison de moda internacional con estética editorial minimalista. Curamos piezas atemporales con la precisión de las grandes firmas, combinando fotografía de campaña, UX de conversión y tecnología de pago de nivel enterprise.',
+  aboutEn:
+    'International fashion maison with minimalist editorial aesthetics. We curate timeless pieces with the precision of global luxury houses, combining campaign photography, conversion UX and enterprise-grade payments.',
+  accent: 'gold',
+  email: 'hello@maisonmode.com',
+};
+
 export const JEWELRY_PROFILE: BusinessProfile = {
   variant: 'jewelry',
   heroImage: JEWELRY_IMAGES.hero,
@@ -885,6 +981,7 @@ export const NONPROFIT_PROFILE: BusinessProfile = {
 };
 
 export function detectVariant(prompt: string): BusinessVariant {
+  if (isFashionEcommercePrompt(prompt)) return 'fashion';
   if (/tatuaje|tattoo|piercing|royal bang|gemas dentales|iron.?ink|tinta/i.test(prompt)) return 'tattoo';
   if (/kebab|d[öo]ner|doner|durum|falafel/i.test(prompt)) return 'kebab';
   if (/infosordos|lengua de signos|\blse\b|sordos|accesibilidad auditiva|comunicaci[oó]n sin barreras/i.test(prompt)) return 'nonprofit';
@@ -919,7 +1016,7 @@ function menuCta(variant: BusinessVariant): string {
   if (variant === 'tattoo' || variant === 'beauty') return 'Reservar cita';
   if (variant === 'corporate') return 'Solicitar consulta';
   if (variant === 'automotive') return 'Pedir cita';
-  if (variant === 'jewelry') return 'Descubrir';
+  if (variant === 'jewelry' || variant === 'fashion') return 'Descubrir';
   return 'Ver más';
 }
 
@@ -948,7 +1045,7 @@ function applyListingToProfile(base: BusinessProfile, listing: ParsedGoogleListi
       es: menuEs,
       en: menuEs.map((p) => ({ ...p, cta: base.variant === 'cafe' ? 'Book a table' : 'Book appointment' })),
     },
-    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'luxury', 'jewelry', 'nonprofit', 'foodblog'].includes(base.variant)
+    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'luxury', 'jewelry', 'fashion', 'nonprofit', 'foodblog'].includes(base.variant)
       ? { es: base.reviews.es, en: base.reviews.en }
       : { es: listing.reviews, en: listing.reviews },
     badgeEs: listing.serviceOptions?.slice(0, 40) ?? base.badgeEs,
@@ -970,6 +1067,7 @@ export function getBusinessProfile(
             : variant === 'corporate' ? CORPORATE_PROFILE
               : variant === 'automotive' ? AUTOMOTIVE_PROFILE
                 : variant === 'luxury' ? LUXURY_PROFILE
+                  : variant === 'fashion' ? FASHION_PROFILE
                   : variant === 'jewelry' ? JEWELRY_PROFILE
                   : variant === 'nonprofit' ? NONPROFIT_PROFILE
                     : variant === 'renewable' ? RENEWABLE_PROFILE

@@ -15,6 +15,7 @@ import StudioDiscoveryWizard from '../components/StudioDiscoveryWizard';
 import StudioPremiumStarterForm from '../components/StudioPremiumStarterForm';
 import StudioPremiumContentEditor, { type PremiumEditorTab } from '../components/StudioPremiumContentEditor';
 import StudioSectionPreview from '../components/StudioSectionPreview';
+import StudioGenerationProgress from '../components/StudioGenerationProgress';
 import type { StudioDiscoveryAnswers } from '../lib/studio/discoveryTypes';
 import type { PremiumStarterPersonalization } from '../data/premiumStarters';
 import { getPremiumStarterBySlug } from '../data/premiumStarters';
@@ -241,6 +242,8 @@ function StudioContent() {
   const [changeLog, setChangeLog] = useState<ChangeEntry[]>([]);
   const [snapshots, setSnapshots] = useState<SnapshotRow[]>([]);
   const [previewPulse, setPreviewPulse] = useState(false);
+  const [generationStartedAt, setGenerationStartedAt] = useState<number | null>(null);
+  const [generationElapsed, setGenerationElapsed] = useState(0);
   const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
   const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
   const [selectedSectorLabel, setSelectedSectorLabel] = useState<string | null>(null);
@@ -272,6 +275,24 @@ function StudioContent() {
 
   const inputPlaceholder =
     studioPhase === 'describe' ? t.placeholderDescribe : t.placeholder;
+
+  useEffect(() => {
+    if (isThinking) {
+      setGenerationStartedAt(Date.now());
+    } else {
+      setGenerationStartedAt(null);
+      setGenerationElapsed(0);
+    }
+  }, [isThinking]);
+
+  useEffect(() => {
+    if (!isThinking || !generationStartedAt) return;
+    setGenerationElapsed(Math.floor((Date.now() - generationStartedAt) / 1000));
+    const tick = window.setInterval(() => {
+      setGenerationElapsed(Math.floor((Date.now() - generationStartedAt) / 1000));
+    }, 1000);
+    return () => window.clearInterval(tick);
+  }, [isThinking, generationStartedAt]);
 
   useEffect(() => {
     chatScrollRef.current?.scrollTo({ top: chatScrollRef.current.scrollHeight, behavior: 'smooth' });
@@ -1306,17 +1327,20 @@ function StudioContent() {
             )}
 
             {isThinking && (
-              <div className="flex items-center gap-2 px-1 text-sm text-slate-400 shrink-0">
-                <Sparkles className="w-4 h-4 text-indigo-500 animate-pulse" />
-                <span>{t.thinking}</span>
+              <div className="flex items-center gap-2 px-1 text-sm text-indigo-600 shrink-0 font-medium">
+                <Sparkles className="w-4 h-4 animate-pulse" />
+                <span>
+                  {t.thinking}
+                  {isThinking ? ` · ${generationElapsed}s` : ''}
+                </span>
               </div>
             )}
 
             {studioPhase === 'onboarding' && (
               <p className="text-xs text-slate-400 text-center py-4">
                 {lang === 'es'
-                  ? 'Elige muestra profesional, plantilla o asistente en el panel derecho.'
-                  : 'Pick professional sample, template or assistant in the right panel.'}
+                  ? 'Describe tu proyecto abajo o elige asistente / plantilla.'
+                  : 'Describe your project below or pick assistant / template.'}
               </p>
             )}
 
@@ -1414,8 +1438,11 @@ function StudioContent() {
 
             <motion.div
               animate={previewPulse ? { boxShadow: '0 0 0 4px rgba(99,102,241,0.45)' } : { boxShadow: '0 25px 50px -12px rgba(0,0,0,0.18)' }}
-              className={`mx-auto bg-white transition-all border border-slate-200 flex-1 w-full overflow-hidden ${viewMode === 'mobile' ? 'max-w-[390px] rounded-[2.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
+              className={`relative mx-auto bg-white transition-all border border-slate-200 flex-1 w-full overflow-hidden ${viewMode === 'mobile' ? 'max-w-[390px] rounded-[2.5rem]' : 'max-w-full rounded-[2.5rem]'} ${isThinking ? 'ring-2 ring-indigo-300 ring-offset-2' : ''}`}
             >
+              {isThinking && generationStartedAt && (
+                <StudioGenerationProgress lang={lang} startedAt={generationStartedAt} />
+              )}
               {studioPhase === 'onboarding' ? (
                 <StudioOnboarding
                   lang={lang}
@@ -1440,7 +1467,7 @@ function StudioContent() {
                   onFreeText={handleChooseFreeText}
                   isGenerating={isThinking}
                 />
-              ) : studioPhase === 'describe' && previewSections.length === 1 && (previewSections[0]?.html.includes('Tu web aparecerá') || previewSections[0]?.html.includes('Your site will appear')) ? (
+              ) : studioPhase === 'describe' && !isThinking && previewSections.length === 1 && (previewSections[0]?.html.includes('Tu web aparecerá') || previewSections[0]?.html.includes('Your site will appear')) ? (
                 <div className="p-6 md:p-10">
                   <div dangerouslySetInnerHTML={{ __html: previewSections[0].html }} />
                 </div>

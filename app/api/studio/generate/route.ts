@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const prompt = sanitizeText(body.prompt, 2000);
+    const prompt = sanitizeText(body.prompt, 15000);
     const lang = body.lang === 'en' ? 'en' : 'es';
     const action = body.action || 'change';
     const style = body.style;

@@ -11,6 +11,7 @@ import { IMAGE_BANK } from './imageBank';
 import { wrapSectionHtml } from './siteSectionWrap';
 import { galleryImg } from './imageFallback';
 import { buildJewelryWatchSite } from './jewelrySiteBuilder';
+import { buildFashionFullPageHtml } from './fashionFullPageBuilder';
 
 const GALLERY_BY_CATEGORY: Record<string, string[]> = {
   gastronomy: [
@@ -1225,6 +1226,20 @@ function buildAbout(ctx: BuildCtx): TemplatePageSection {
   };
 }
 
+function gallerySubtitle(ctx: BuildCtx): string {
+  const es = ctx.lang === 'es';
+  if (ctx.profile?.variant === 'fashion') {
+    return es ? 'Campañas editoriales y lookbook de temporada.' : 'Editorial campaigns and seasonal lookbook.';
+  }
+  if (ctx.profile?.variant === 'jewelry') {
+    return es ? 'Detalle de piezas, boutique y artesanía.' : 'Piece details, boutique and craftsmanship.';
+  }
+  if (/arquitect|interior/i.test(ctx.businessType)) {
+    return es ? 'Proyectos, espacios y detalle de obra.' : 'Projects, spaces and build details.';
+  }
+  return es ? 'Imágenes de nuestro trabajo y espacio.' : 'Images of our work and space.';
+}
+
 function buildGallery(ctx: BuildCtx): TemplatePageSection {
   const { images, lang } = ctx;
   const es = lang === 'es';
@@ -1233,7 +1248,7 @@ function buildGallery(ctx: BuildCtx): TemplatePageSection {
   return {
     id: 'gallery', type: 'gallery', navLabelEs: 'Galería', navLabelEn: 'Gallery',
     html: `<div class="bg-slate-50 border border-slate-200 rounded-[2rem] p-10 md:p-16">
-      <div class="text-center"><h2 class="text-4xl font-bold font-serif tracking-tight text-slate-900">${title}</h2><p class="mt-3 text-lg text-slate-600">${es ? 'Fotografías reales de nuestros platos.' : 'Real photos of our dishes.'}</p></div>
+      <div class="text-center"><h2 class="text-4xl font-bold font-serif tracking-tight text-slate-900">${title}</h2><p class="mt-3 text-lg text-slate-600">${gallerySubtitle(ctx)}</p></div>
       <div class="mt-10 max-w-4xl mx-auto rounded-2xl overflow-hidden border border-slate-200 shadow-lg"><img src="${main}" alt="${title}" class="w-full aspect-[16/10] object-cover" loading="lazy" referrerpolicy="no-referrer" /></div>
       <div class="mt-6 grid grid-cols-3 gap-4 max-w-4xl mx-auto">${images.slice(1, 4).map((img) => `<div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm"><img src="${img}" alt="" class="w-full aspect-square object-cover" loading="lazy" referrerpolicy="no-referrer" /></div>`).join('')}</div>
     </div>`,
@@ -1346,7 +1361,9 @@ function buildLegalFooter(ctx: BuildCtx): TemplatePageSection {
   const socialBtn = profile?.accent === 'red' ? 'bg-red-600' : 'bg-indigo-600';
   const desc = profile?.variant === 'tattoo'
     ? (es ? 'Estudio de tatuajes, piercings y gemas dentales en Puente de Vallecas. Arte único, sin plantillas genéricas.' : 'Tattoo, piercing and tooth gem studio in Puente de Vallecas. Unique art, no generic flash.')
-    : (es ? 'Sabores auténticos, ingredientes frescos y ambiente urbano.' : 'Authentic flavors, fresh ingredients, urban vibe.');
+    : profile
+      ? (es ? profile.taglineEs : profile.taglineEn)
+      : (es ? 'Experiencia premium adaptada a las necesidades de tu negocio.' : 'Premium experience tailored to your business needs.');
   return {
     id: 'footer', type: 'footer', navLabelEs: 'Footer', navLabelEn: 'Footer',
     html: `<div class="bg-slate-950 text-slate-400 rounded-[2rem] p-10 md:p-16">
@@ -2370,6 +2387,26 @@ export function buildCustomSite(
 
   if (profile?.variant === 'automotive') {
     return finalizeSiteSections(buildAutomotiveSite(ctx, features));
+  }
+
+  if (profile?.variant === 'fashion') {
+    const html = buildFashionFullPageHtml({
+      brandName: ctx.name,
+      tagline: ctx.tagline,
+      badge: ctx.badge,
+      heroImage: ctx.heroImage,
+      lang: ctx.lang,
+      profile: ctx.profile,
+    });
+    return [
+      {
+        id: 'maison-store',
+        type: 'fullpage',
+        navLabelEs: 'Tienda completa',
+        navLabelEn: 'Full store',
+        html,
+      },
+    ];
   }
 
   if (profile?.variant === 'jewelry') {
