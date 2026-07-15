@@ -65,7 +65,7 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'Diseño con IA',
     welcome: 'Hola. Soy tu director de diseño. Los 4 motores de IA trabajan en equipo para crear tu web. ¿Qué quieres diseñar hoy?',
-    welcomeOnboarding: 'Bienvenido al Studio. Elige una plantilla del catálogo o crea tu web con el asistente guiado.',
+    welcomeOnboarding: 'Bienvenido al Studio. Describe en lenguaje natural qué web quieres — la IA la genera contigo.',
     welcomeDiscovery: 'Te guiaré paso a paso: sector, secciones, colores, menú y más. Al final genero tu web profesional completa.',
     welcomeDescribe: 'Cuéntame tu negocio en texto libre y crearé tu primera versión.',
     welcomePremium: (name: string) =>
@@ -116,7 +116,7 @@ const translations = {
     title: 'CREAUNA Studio',
     subtitle: 'AI Design',
     welcome: 'Hello. Your design director here. 4 AI engines work as a team to build your site. What shall we design today?',
-    welcomeOnboarding: 'Welcome to the Studio. Pick a catalog template or create your site with the guided assistant.',
+    welcomeOnboarding: 'Welcome to the Studio. Describe in natural language what site you want — AI builds it with you.',
     welcomeDiscovery: 'I will guide you step by step: sector, sections, colors, menu and more. Then I generate your full professional site.',
     welcomeDescribe: 'Tell me about your business in free text and I will create your first version.',
     welcomePremium: (name: string) =>
@@ -193,7 +193,6 @@ function StudioContent() {
   const searchParams = useSearchParams();
   const { lang: globalLang, setLang: setGlobalLang } = useLanguage();
   const templateParam = searchParams.get('template');
-  const starterParam = searchParams.get('starter');
   const projectParam = searchParams.get('project');
   const langParam = searchParams.get('lang') as Language | null;
 
@@ -219,11 +218,7 @@ function StudioContent() {
   const [studioPhase, setStudioPhase] = useState<
     'onboarding' | 'discovery' | 'describe' | 'premium-starter' | 'active'
   >(
-    starterParam
-      ? 'premium-starter'
-      : templateParam || projectParam
-        ? 'active'
-        : 'onboarding'
+    templateParam || projectParam ? 'active' : 'onboarding'
   );
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -239,9 +234,7 @@ function StudioContent() {
   const [premiumPersonalization, setPremiumPersonalization] = useState<
     Partial<PremiumStarterPersonalization>
   >({});
-  const [pendingPremiumStarterSlug, setPendingPremiumStarterSlug] = useState<string | undefined>(
-    starterParam ?? undefined
-  );
+  const [pendingPremiumStarterSlug, setPendingPremiumStarterSlug] = useState<string | undefined>();
   const premiumBaseHtmlRef = useRef<string | null>(null);
   const [premiumContent, setPremiumContent] = useState<PremiumStarterContent | null>(null);
   const [contentEditorTab, setContentEditorTab] = useState<PremiumEditorTab | null>(null);
@@ -343,22 +336,6 @@ function StudioContent() {
       return;
     }
     if (!mounted || templateLoadedRef.current) return;
-    if (starterParam && getPremiumStarterBySlug(starterParam)) {
-      templateLoadedRef.current = true;
-      setPendingPremiumStarterSlug(starterParam);
-      setStudioPhase('premium-starter');
-      setMessages([
-        {
-          id: 1,
-          role: 'ai',
-          content:
-            lang === 'es'
-              ? 'Personaliza los datos de tu negocio. Partimos de la muestra Mesón La Colonia — diseño profesional ya terminado.'
-              : 'Customize your business details. We start from the Mesón La Colonia sample — professional design already finished.',
-        },
-      ]);
-      return;
-    }
     if (templateParam) {
       const tpl = getTemplateBySlug(templateParam);
       if (tpl) {
@@ -412,7 +389,7 @@ function StudioContent() {
       setMessages([{ id: 1, role: 'ai', content: t.welcomeDescribe }]);
       setPreviewSections([{ id: 101, type: 'hero', html: buildDescribePlaceholder(lang) }]);
     }
-  }, [mounted, templateParam, starterParam, projectParam, lang, studioPhase, t.welcomeOnboarding, t.welcomeDescribe, t.welcomeTemplate]);
+  }, [mounted, templateParam, projectParam, lang, studioPhase, t.welcomeOnboarding, t.welcomeDescribe, t.welcomeTemplate]);
 
   const handleChoosePremiumStarter = (slug: string) => {
     setPendingPremiumStarterSlug(slug);
@@ -1442,8 +1419,8 @@ function StudioContent() {
               {studioPhase === 'onboarding' ? (
                 <StudioOnboarding
                   lang={lang}
-                  onChooseDescribe={handleChooseDiscovery}
-                  onChoosePremiumStarter={handleChoosePremiumStarter}
+                  onChoosePrompt={handleChooseFreeText}
+                  onChooseWizard={handleChooseDiscovery}
                 />
               ) : studioPhase === 'premium-starter' && pendingPremiumStarterSlug ? (
                 <StudioPremiumStarterForm

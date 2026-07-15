@@ -1,167 +1,113 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  Building2,
-  Dumbbell,
-  Flower2,
-  Gem,
-  HeartPulse,
-  Hotel,
-  Landmark,
-  LayoutGrid,
-  PenLine,
-  Sparkles,
-  Stethoscope,
-  UtensilsCrossed,
-} from 'lucide-react';
-import { premiumStarters, type PremiumStarterItem } from '../data/premiumStarters';
+import { LayoutGrid, MessageSquareText, PenLine, Sparkles } from 'lucide-react';
 
 type Lang = 'es' | 'en';
 
 const copy = {
   es: {
-    title: '¿Cómo quieres empezar?',
+    title: '¿Qué quieres crear?',
     subtitle:
-      'Elige una muestra profesional terminada, una plantilla del catálogo o crea tu web con el asistente guiado.',
-    step1: 'Paso 1 · Elige tu punto de partida',
-    premiumTitle: 'Muestras profesionales',
-    premiumDesc:
-      'Webs reales terminadas por sector. Solo cambias nombre, teléfono, textos clave y fotos.',
-    premiumCta: 'Elegir muestra',
-    catalogTitle: 'Ver plantillas demo',
-    catalogDesc: '15 webs profesionales terminadas — solo para ver cómo trabajamos. Sin personalización.',
-    catalogCta: 'Ver plantillas',
-    describeTitle: 'Crear mi web',
-    describeDesc: 'Asistente guiado: sector, secciones, colores, menú y generación completa.',
-    describeCta: 'Empezar asistente',
-    hint: 'Las muestras profesionales son la opción más rápida para un resultado listo para mercado.',
+      'CREAUNA es una plataforma de desarrollo web con IA. Escribe en lenguaje natural qué necesitas — sitio web, secciones, estilo — y la construimos contigo.',
+    step1: 'Paso 1 · Empieza con tus palabras',
+    promptTitle: 'Escribir un prompt',
+    promptDesc:
+      'Describe tu negocio o tu idea como se lo contarías a una persona. La IA genera la primera versión al instante.',
+    promptCta: 'Empezar con prompt',
+    promptExample: 'Ej: «Web elegante para mi clínica dental en Madrid, con citas online y equipo médico»',
+    wizardTitle: 'Asistente guiado',
+    wizardDesc: 'Prefieres preguntas paso a paso: sector, secciones, colores y menú antes de generar.',
+    wizardCta: 'Usar asistente',
+    catalogTitle: 'Ver ejemplos de calidad',
+    catalogDesc: '15 demos en /templates — solo para inspirarte, no para editar desde ahí.',
+    catalogCta: 'Ver plantillas demo',
+    hint: 'No partimos de plantillas prehechas: tu web nace de tu descripción.',
   },
   en: {
-    title: 'How do you want to start?',
+    title: 'What do you want to create?',
     subtitle:
-      'Pick a finished professional sample, a catalog template, or create your site with the guided assistant.',
-    step1: 'Step 1 · Choose your starting point',
-    premiumTitle: 'Professional samples',
-    premiumDesc:
-      'Real finished sites by industry. Just change name, phone, key copy and photos.',
-    premiumCta: 'Choose sample',
-    catalogTitle: 'View demo templates',
-    catalogDesc: '15 finished professional sites — browse our work. View only, no customization.',
-    catalogCta: 'View templates',
-    describeTitle: 'Create my website',
-    describeDesc: 'Guided assistant: sector, sections, colors, menu and full generation.',
-    describeCta: 'Start assistant',
-    hint: 'Professional samples are the fastest path to a market-ready result.',
+      'CREAUNA is an AI web development platform. Write in natural language what you need — website, sections, style — and we build it with you.',
+    step1: 'Step 1 · Start with your words',
+    promptTitle: 'Write a prompt',
+    promptDesc:
+      'Describe your business or idea as you would to a person. AI generates the first version instantly.',
+    promptCta: 'Start with a prompt',
+    promptExample: 'E.g. «Elegant site for my dental clinic in Madrid, with online booking and medical team»',
+    wizardTitle: 'Guided assistant',
+    wizardDesc: 'Prefer step-by-step questions: sector, sections, colors and menu before generating.',
+    wizardCta: 'Use assistant',
+    catalogTitle: 'Browse quality examples',
+    catalogDesc: '15 demos at /templates — for inspiration only, not editable from there.',
+    catalogCta: 'View demo templates',
+    hint: 'We do not start from pre-built templates: your site is born from your description.',
   },
 } as const;
 
-const starterIcons: Record<string, typeof UtensilsCrossed> = {
-  'meson-la-colonia': UtensilsCrossed,
-  'lumina-dental': Stethoscope,
-  'aura-estates': Building2,
-  'aura-sanctuary': Hotel,
-  'apex-athletics': Dumbbell,
-  'aeterna-co': Gem,
-  'vitalis-fisio': HeartPulse,
-  'armonia-vital': Flower2,
-  'aura-architects': Landmark,
-};
-
-function starterLabel(starter: PremiumStarterItem, lang: Lang): string {
-  return lang === 'es' ? starter.nameEs : starter.nameEn;
-}
-
 type Props = {
   lang: Lang;
-  onChooseDescribe: () => void;
-  onChoosePremiumStarter: (slug: string) => void;
+  onChoosePrompt: () => void;
+  onChooseWizard: () => void;
 };
 
-export default function StudioOnboarding({ lang, onChooseDescribe, onChoosePremiumStarter }: Props) {
+export default function StudioOnboarding({ lang, onChoosePrompt, onChooseWizard }: Props) {
   const t = copy[lang];
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[420px] p-8 md:p-14 text-center">
       <p className="text-[10px] font-bold tracking-[0.25em] text-indigo-600 uppercase mb-3">{t.step1}</p>
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 max-w-lg">{t.title}</h2>
-      <p className="mt-4 text-slate-600 max-w-md leading-relaxed">{t.subtitle}</p>
+      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 max-w-xl">{t.title}</h2>
+      <p className="mt-4 text-slate-600 max-w-lg leading-relaxed">{t.subtitle}</p>
 
-      <div className="grid md:grid-cols-3 gap-4 mt-10 w-full max-w-4xl text-left">
-        <div className="rounded-3xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-white p-6">
-          <div className="w-12 h-12 rounded-2xl bg-amber-200 text-amber-900 flex items-center justify-center mb-4">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <h3 className="font-semibold text-lg text-slate-900">{t.premiumTitle}</h3>
-          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.premiumDesc}</p>
-
-          <div className="mt-4 space-y-2 max-h-56 overflow-y-auto pr-1">
-            {premiumStarters.map((starter) => {
-              const Icon = starterIcons[starter.slug] ?? Sparkles;
-              return (
-                <button
-                  key={starter.slug}
-                  type="button"
-                  onClick={() => onChoosePremiumStarter(starter.slug)}
-                  className="group w-full flex items-center gap-3 rounded-2xl border border-amber-200/80 bg-white/80 px-3 py-2.5 hover:border-amber-500 hover:bg-white hover:shadow-sm transition-all text-left cursor-pointer"
-                >
-                  <div
-                    className="w-10 h-10 rounded-xl bg-cover bg-center shrink-0 border border-amber-100"
-                    style={{ backgroundImage: `url(${starter.previewImage})` }}
-                    aria-hidden
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <Icon className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-                      <span className="font-semibold text-sm text-slate-900 truncate">
-                        {starterLabel(starter, lang)}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                      {lang === 'es' ? starter.descEs : starter.descEn}
-                    </p>
-                  </div>
-                  <span className="text-xs font-semibold text-amber-800 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                    →
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <Link
-          href="/templates"
-          className="group rounded-3xl border-2 border-slate-200 bg-white p-6 hover:border-indigo-400 hover:shadow-lg transition-all"
+      <div className="grid md:grid-cols-2 gap-4 mt-10 w-full max-w-3xl text-left">
+        <button
+          type="button"
+          onClick={onChoosePrompt}
+          className="group rounded-3xl border-2 border-indigo-500 bg-gradient-to-br from-indigo-50 to-white p-6 hover:shadow-lg transition-all text-left cursor-pointer md:col-span-2"
         >
-          <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-4">
-            <LayoutGrid className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-4">
+            <MessageSquareText className="w-6 h-6" />
           </div>
-          <h3 className="font-semibold text-lg text-slate-900">{t.catalogTitle}</h3>
-          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.catalogDesc}</p>
-          <span className="inline-block mt-4 text-sm font-semibold text-indigo-600 group-hover:underline">
-            {t.catalogCta} →
+          <h3 className="font-semibold text-lg text-slate-900">{t.promptTitle}</h3>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.promptDesc}</p>
+          <p className="mt-3 text-xs text-slate-500 italic">{t.promptExample}</p>
+          <span className="inline-block mt-4 text-sm font-semibold text-indigo-700 group-hover:underline">
+            {t.promptCta} →
           </span>
-        </Link>
+        </button>
 
         <button
           type="button"
-          onClick={onChooseDescribe}
+          onClick={onChooseWizard}
           className="group rounded-3xl border-2 border-slate-200 bg-white p-6 hover:border-slate-900 hover:shadow-lg transition-all text-left cursor-pointer"
         >
           <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-4">
             <PenLine className="w-6 h-6" />
           </div>
-          <h3 className="font-semibold text-lg text-slate-900">{t.describeTitle}</h3>
-          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.describeDesc}</p>
+          <h3 className="font-semibold text-lg text-slate-900">{t.wizardTitle}</h3>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.wizardDesc}</p>
           <span className="inline-block mt-4 text-sm font-semibold text-slate-900 group-hover:underline">
-            {t.describeCta} →
+            {t.wizardCta} →
           </span>
         </button>
+
+        <Link
+          href="/templates"
+          className="group rounded-3xl border-2 border-slate-200 bg-white p-6 hover:border-slate-400 hover:shadow-lg transition-all"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center mb-4">
+            <LayoutGrid className="w-6 h-6" />
+          </div>
+          <h3 className="font-semibold text-lg text-slate-900">{t.catalogTitle}</h3>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t.catalogDesc}</p>
+          <span className="inline-block mt-4 text-sm font-semibold text-slate-600 group-hover:underline">
+            {t.catalogCta} →
+          </span>
+        </Link>
       </div>
 
-      <p className="mt-8 text-xs text-slate-400 flex items-center gap-2">
-        <Sparkles className="w-3.5 h-3.5" /> {t.hint}
+      <p className="mt-8 text-xs text-slate-400 flex items-center gap-2 max-w-md">
+        <Sparkles className="w-3.5 h-3.5 shrink-0" /> {t.hint}
       </p>
     </div>
   );
