@@ -44,17 +44,17 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'how-it-works',
     keywords: ['cómo funciona', 'como funciona', 'crear web', 'crear mi web', 'empezar', 'primeros pasos', 'proceso', 'pasos'],
-    answer: 'El proceso es sencillo:\n\n1. Abre el Studio (/studio)\n2. Describe tu negocio o elige una plantilla (/templates)\n3. La IA genera tu web en minutos\n4. Refina con cambios (cada uno = 1 crédito)\n5. Cuando estés satisfecho, exporta o solicita entrega\n\nGuía paso a paso en /guia',
+    answer: 'CREAUNA es una plataforma de desarrollo web con IA. El proceso:\n\n1. Abre el Studio (/studio)\n2. Escribe en lenguaje natural lo que quieres (negocio, secciones, estilo)\n3. La IA genera tu web en minutos\n4. Refina con prompts por chat (1 crédito = 1 cambio)\n5. Exporta los archivos o pídenos la entrega en /contacto\n\nEjemplos de calidad en /templates (solo demo). Guía: /guia',
   },
   {
     id: 'studio',
     keywords: ['studio', 'editor', 'editar', 'diseñar', 'generar', 'preview', 'vista previa', 'demo'],
-    answer: 'El Studio es el motor de CREAUNA. Describes lo que quieres y ves una preview en tiempo real. Cada cambio es instantáneo y consume 1 crédito. Accede gratis en /studio',
+    answer: 'El Studio es el corazón de CREAUNA: escribes prompts en lenguaje natural y la IA construye y modifica tu web en tiempo real. Cada cambio = 1 crédito. Empieza gratis en /studio',
   },
   {
     id: 'templates',
     keywords: ['plantilla', 'plantillas', 'template', 'templates', 'catálogo', 'catalogo', 'diseños', 'modelos'],
-    answer: 'Tenemos 9 muestras profesionales terminadas por sector: restaurante, clínica dental, inmobiliaria, hotel, gimnasio, joyería, fisioterapia, acupuntura y arquitectura. Demo en vivo y personalización en /templates o /studio',
+    answer: '18 ejemplos demo en /templates (9 plantillas + 9 proyectos reales). Solo vitrina — para ver calidad CREAUNA. Para crear la tuya: describe tu idea con prompts en /studio o pide presupuesto en /contacto',
   },
   {
     id: 'ai-tech',

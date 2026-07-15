@@ -12,7 +12,7 @@ export const faqPageI18n = {
     items: [
       {
         q: '¿Qué es CREAUNA exactamente?',
-        a: 'CREAUNA es una plataforma de IA que coordina agentes especializados en diseño, contenido, código y optimización. Describes tu negocio, el Studio genera tu web y puedes refinarla por chat. No es una agencia tradicional: es una herramienta para crear y publicar webs profesionales tú mismo.',
+        a: 'CREAUNA es una plataforma de desarrollo web impulsada por IA. Describes en lenguaje natural lo que quieres — sitio web, secciones, estilo — y el Studio lo genera y lo refinas por chat. No es una agencia tradicional: es una herramienta para crear aplicaciones y webs completas con prompts.',
       },
       {
         q: '¿Puedo empezar sin pagar ni poner tarjeta?',
@@ -71,7 +71,7 @@ export const faqPageI18n = {
     items: [
       {
         q: 'What is CREAUNA exactly?',
-        a: 'CREAUNA is an AI platform that coordinates specialized agents for design, content, code and optimization. You describe your business, the Studio builds your site and you refine it by chat. It is not a traditional agency — it is a tool to create and publish professional websites yourself.',
+        a: 'CREAUNA is an AI-powered web development platform. You describe what you want in natural language — website, sections, style — and Studio generates and refines it by chat. Not a traditional agency: a tool to build complete apps and sites with prompts.',
       },
       {
         q: 'Can I start without paying or adding a card?',
