@@ -54,7 +54,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'templates',
     keywords: ['plantilla', 'plantillas', 'template', 'templates', 'catálogo', 'catalogo', 'diseños', 'modelos'],
-    answer: 'Tenemos 60 plantillas premium organizadas en 5 categorías: Gastronomía (12), Servicios (12), Lujo & Estilo (12), Corporativo (12) y Tecnología (12). Cada una con imagen acorde al sector. Explóralas en /templates',
+    answer: 'Tenemos 9 muestras profesionales terminadas por sector: restaurante, clínica dental, inmobiliaria, hotel, gimnasio, joyería, fisioterapia, acupuntura y arquitectura. Demo en vivo y personalización en /templates o /studio',
   },
   {
     id: 'ai-tech',

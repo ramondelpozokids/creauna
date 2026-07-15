@@ -1,103 +1,74 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../components/LanguageProvider';
-import { LayoutGrid, ExternalLink } from 'lucide-react';
+import { LayoutGrid, ExternalLink, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import TemplatePreviewFrame from '../components/TemplatePreviewFrame';
-import TemplateThumbnail from '../components/TemplateThumbnail';
-import { getPublishedTemplates, getTemplateBySlug, type TemplateItem, type TemplateCategory } from '../data/templates';
+import PremiumStarterPreviewFrame from '../components/PremiumStarterPreviewFrame';
+import {
+  premiumStarters,
+  premiumCatalogCategories,
+  type PremiumStarterItem,
+  type PremiumCatalogCategory,
+} from '../data/premiumStarters';
 
 const translations = {
   es: {
-    title: "Plantillas espectaculares",
-    subtitle: "36 diseños premium — 6 por categoría (12 en Servicios). Cada imagen coincide con el negocio que representa.",
-    all: "Todos",
-    gastronomy: "Gastronomía",
-    services: "Servicios",
-    luxury: "Lujo & Estilo",
-    corporate: "Corporativo",
-    tech: "Tecnología",
-    useTemplate: "Usar esta plantilla",
-    close: "Cerrar",
-    previewTitle: "Representación en tiempo real",
-    previewSubtitle: "Vista previa interactiva. Cárgala en el Studio para editar cada detalle.",
-    visitStudio: "Abrir en el Studio",
-    countLabel: "plantillas premium",
-    previewLink: "Ver previsualización en vivo",
+    title: 'Muestras profesionales',
+    subtitle:
+      '9 webs terminadas por sector — diseño real, secciones completas y listas para personalizar con tu nombre, teléfono y fotos.',
+    useSample: 'Personalizar en Studio',
+    viewDemo: 'Ver demo en vivo',
+    close: 'Cerrar',
+    previewLink: 'Ver previsualización',
+    badge: 'MUESTRAS CREAUNA 2026',
+    countLabel: 'muestras terminadas por sector',
+    finished: 'Web terminada',
   },
   en: {
-    title: "Spectacular Templates",
-    subtitle: "36 premium designs — 6 per category (12 in Services). Every image matches the business it represents.",
-    all: "All",
-    gastronomy: "Gastronomy",
-    services: "Services",
-    luxury: "Luxury & Style",
-    corporate: "Corporate",
-    tech: "Technology",
-    useTemplate: "Use this template",
-    close: "Close",
-    previewTitle: "Real-time Representation",
-    previewSubtitle: "Interactive preview. Load it into the Studio to customize every detail.",
-    visitStudio: "Open in Studio",
-    countLabel: "premium templates",
-    previewLink: "See live preview",
-  }
+    title: 'Professional samples',
+    subtitle:
+      '9 finished sites by industry — real design, complete sections, ready to customize with your name, phone and photos.',
+    useSample: 'Customize in Studio',
+    viewDemo: 'View live demo',
+    close: 'Close',
+    previewLink: 'View preview',
+    badge: 'CREAUNA SAMPLES 2026',
+    countLabel: 'finished samples by industry',
+    finished: 'Finished site',
+  },
 };
 
-type DisplayTemplate = {
-  id: number;
-  slug: string;
-  name: string;
-  categoryKey: string;
-  category: string;
-  image: string;
-  preview: string;
-  description: string;
-};
-
-function toDisplayTemplate(tpl: TemplateItem, lang: 'es' | 'en'): DisplayTemplate {
-  return {
-    id: tpl.id,
-    slug: tpl.slug,
-    name: lang === 'es' ? tpl.nameEs : tpl.nameEn,
-    categoryKey: tpl.categoryKey,
-    category: lang === 'es' ? tpl.categoryEs : tpl.categoryEn,
-    image: tpl.image,
-    preview: tpl.image,
-    description: lang === 'es' ? tpl.descEs : tpl.descEn,
-  };
-}
+type CategoryKey = 'all' | PremiumCatalogCategory;
 
 export default function Templates() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedTemplate, setSelectedTemplate] = useState<DisplayTemplate | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('all');
+  const [selectedStarter, setSelectedStarter] = useState<PremiumStarterItem | null>(null);
   const [previewFullscreen, setPreviewFullscreen] = useState(false);
   const { lang } = useLanguage();
   const t = translations[lang];
 
-  const templatesList = useMemo(
-    () => getPublishedTemplates().map(tpl => toDisplayTemplate(tpl, lang)),
-    [lang]
+  const samplesList = useMemo(() => premiumStarters, []);
+
+  const categories = useMemo(
+    () =>
+      premiumCatalogCategories.map((cat) => ({
+        key: cat.key,
+        label: lang === 'es' ? cat.labelEs : cat.labelEn,
+        count:
+          cat.key === 'all'
+            ? samplesList.length
+            : samplesList.filter((s) => s.catalogCategoryKey === cat.key).length,
+      })),
+    [lang, samplesList]
   );
 
-  const selectedTemplateItem = selectedTemplate
-    ? getTemplateBySlug(selectedTemplate.slug)
-    : undefined;
-
-  const categories = [
-    { key: 'all', label: t.all, count: templatesList.length },
-    { key: 'gastronomy', label: t.gastronomy, count: templatesList.filter(i => i.categoryKey === 'gastronomy').length },
-    { key: 'services', label: t.services, count: templatesList.filter(i => i.categoryKey === 'services').length },
-    { key: 'luxury', label: t.luxury, count: templatesList.filter(i => i.categoryKey === 'luxury').length },
-    { key: 'corporate', label: t.corporate, count: templatesList.filter(i => i.categoryKey === 'corporate').length },
-    { key: 'tech', label: t.tech, count: templatesList.filter(i => i.categoryKey === 'tech').length },
-  ];
-
-  const filteredTemplates = selectedCategory === 'all'
-    ? templatesList
-    : templatesList.filter(item => item.categoryKey === selectedCategory);
+  const filteredSamples =
+    selectedCategory === 'all'
+      ? samplesList
+      : samplesList.filter((s) => s.catalogCategoryKey === selectedCategory);
 
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-900 font-sans antialiased">
@@ -105,9 +76,9 @@ export default function Templates() {
 
       <div className="container pt-20 pb-16">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs px-4 py-1.5 rounded-full font-semibold tracking-wider uppercase mb-4 animate-fade-in">
+          <div className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 text-xs px-4 py-1.5 rounded-full font-semibold tracking-wider uppercase mb-4 animate-fade-in">
             <LayoutGrid className="w-3.5 h-3.5" />
-            CATÁLOGO PREMIUM 2026 • {templatesList.length} {t.countLabel}
+            {t.badge} • {samplesList.length} {t.countLabel}
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-950 mt-2 leading-[1.08] text-gradient">
             {t.title}
@@ -121,8 +92,9 @@ export default function Templates() {
           {categories.map((cat) => (
             <button
               key={cat.key}
-              onClick={() => setSelectedCategory(cat.key)}
-              className={`px-5 py-2.5 rounded-2xl text-xs font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+              type="button"
+              onClick={() => setSelectedCategory(cat.key as CategoryKey)}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer ${
                 selectedCategory === cat.key
                   ? 'bg-slate-900 text-white shadow-sm'
                   : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -136,82 +108,111 @@ export default function Templates() {
           ))}
         </div>
 
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
-        >
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <AnimatePresence mode="popLayout">
-            {filteredTemplates.map((tpl) => (
-              <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                key={tpl.id}
-                onClick={() => setSelectedTemplate(tpl)}
-                className="card-luxe group cursor-pointer overflow-hidden rounded-[2rem] border border-slate-200 bg-white"
-              >
-                <div className="relative h-72 overflow-hidden">
-                  <TemplateThumbnail
-                    slug={tpl.slug}
-                    name={tpl.name}
-                    categoryKey={tpl.categoryKey as TemplateCategory}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent opacity-65" />
-                  <div className="absolute bottom-5 left-6 text-white z-10">
-                    <span className="bg-white/20 backdrop-blur-md text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-white/20">
-                      {tpl.category}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6.5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-2xl tracking-tight text-slate-950">{tpl.name}</h3>
-                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-300">
-                      <ExternalLink className="w-4 h-4" />
+            {filteredSamples.map((starter) => {
+              const name = lang === 'es' ? starter.nameEs : starter.nameEn;
+              const category = lang === 'es' ? starter.categoryLabelEs : starter.categoryLabelEn;
+              const description = lang === 'es' ? starter.descEs : starter.descEn;
+              const studioHref = `/studio?starter=${starter.slug}&lang=${lang}`;
+
+              return (
+                <motion.article
+                  layout
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.3 }}
+                  key={starter.slug}
+                  className="card-luxe group overflow-hidden rounded-[2rem] border border-slate-200 bg-white flex flex-col"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStarter(starter)}
+                    className="relative h-72 overflow-hidden w-full text-left cursor-pointer"
+                  >
+                    <img
+                      src={starter.previewImage}
+                      alt={name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent" />
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-amber-500/90 text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full">
+                        {t.finished}
+                      </span>
                     </div>
+                    <div className="absolute bottom-5 left-6 right-6 text-white z-10">
+                      <span className="bg-white/20 backdrop-blur-md text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-white/20">
+                        {category}
+                      </span>
+                    </div>
+                  </button>
+
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="font-bold text-2xl tracking-tight text-slate-950">{name}</h3>
+                    <p className="mt-3 text-sm text-slate-600 leading-relaxed line-clamp-3 flex-1">
+                      {description}
+                    </p>
+                    <div className="h-px bg-slate-100 my-5" />
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Link
+                        href={studioHref}
+                        className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-2xl btn-gradient text-white text-xs font-semibold shadow-sm hover:scale-[1.01] transition-transform"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        {t.useSample}
+                      </Link>
+                      <a
+                        href={starter.demoPath}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        {t.viewDemo}
+                      </a>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStarter(starter)}
+                      className="mt-3 text-xs font-semibold text-indigo-600 flex items-center gap-1 hover:translate-x-0.5 transition-transform cursor-pointer"
+                    >
+                      {t.previewLink} <span>→</span>
+                    </button>
                   </div>
-                  <p className="mt-3 text-sm text-slate-600 leading-relaxed line-clamp-3 min-h-[60px]">
-                    {tpl.description}
-                  </p>
-                  <div className="h-px bg-slate-100 my-5" />
-                  <div className="text-xs font-semibold text-indigo-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    {t.previewLink} <span>→</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.article>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
       </div>
 
       <AnimatePresence>
-        {selectedTemplate && selectedTemplateItem && (
+        {selectedStarter && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={`${previewFullscreen ? '' : 'fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex items-center justify-center p-4'}`}
-            onClick={() => !previewFullscreen && setSelectedTemplate(null)}
+            onClick={() => !previewFullscreen && setSelectedStarter(null)}
           >
             <motion.div
               initial={{ scale: 0.95, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 30 }}
-              transition={{ type: "spring", damping: 25, stiffness: 250 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
               className={`${previewFullscreen ? 'fixed inset-0 z-[300]' : 'max-w-6xl w-full rounded-[2.5rem] shadow-2xl border border-slate-200 max-h-[90vh]'} bg-white overflow-hidden flex flex-col`}
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
-              <TemplatePreviewFrame
-                template={selectedTemplateItem}
+              <PremiumStarterPreviewFrame
+                starter={selectedStarter}
                 lang={lang}
                 fullscreen={previewFullscreen}
                 onToggleFullscreen={() => setPreviewFullscreen((v) => !v)}
                 onClose={() => {
                   setPreviewFullscreen(false);
-                  setSelectedTemplate(null);
+                  setSelectedStarter(null);
                 }}
               />
             </motion.div>

@@ -29,8 +29,8 @@ const copy = {
     premiumDesc:
       'Webs reales terminadas por sector. Solo cambias nombre, teléfono, textos clave y fotos.',
     premiumCta: 'Elegir muestra',
-    catalogTitle: 'Plantillas del catálogo',
-    catalogDesc: '36 diseños de inspiración por sector. Previsualiza y edítala en el Studio.',
+    catalogTitle: 'Ver muestras en el catálogo',
+    catalogDesc: 'Explora las 9 webs terminadas por sector con demo en vivo y previsualización.',
     catalogCta: 'Ver catálogo',
     describeTitle: 'Crear mi web',
     describeDesc: 'Asistente guiado: sector, secciones, colores, menú y generación completa.',
@@ -46,9 +46,9 @@ const copy = {
     premiumDesc:
       'Real finished sites by industry. Just change name, phone, key copy and photos.',
     premiumCta: 'Choose sample',
-    catalogTitle: 'Catalog templates',
-    catalogDesc: '36 inspirational designs by industry. Preview and edit in Studio.',
-    catalogCta: 'Browse catalog',
+    catalogTitle: 'Browse samples in the catalog',
+    catalogDesc: 'Explore 9 finished sites by industry with live demo and preview.',
+    catalogCta: 'View catalog',
     describeTitle: 'Create my website',
     describeDesc: 'Guided assistant: sector, sections, colors, menu and full generation.',
     describeCta: 'Start assistant',

@@ -1,5 +1,30 @@
 export type PremiumStarterSector = 'gastronomy' | 'services' | 'retail' | 'corporate';
 
+/** Filtro del catálogo público /templates */
+export type PremiumCatalogCategory =
+  | 'gastronomy'
+  | 'health'
+  | 'realestate'
+  | 'hospitality'
+  | 'sport'
+  | 'luxury'
+  | 'architecture';
+
+export const premiumCatalogCategories: {
+  key: 'all' | PremiumCatalogCategory;
+  labelEs: string;
+  labelEn: string;
+}[] = [
+  { key: 'all', labelEs: 'Todos', labelEn: 'All' },
+  { key: 'gastronomy', labelEs: 'Gastronomía', labelEn: 'Dining' },
+  { key: 'health', labelEs: 'Salud', labelEn: 'Health' },
+  { key: 'realestate', labelEs: 'Inmobiliaria', labelEn: 'Real estate' },
+  { key: 'hospitality', labelEs: 'Hotel', labelEn: 'Hotel' },
+  { key: 'sport', labelEs: 'Deporte', labelEn: 'Sport' },
+  { key: 'luxury', labelEs: 'Joyería & lujo', labelEn: 'Jewelry & luxury' },
+  { key: 'architecture', labelEs: 'Arquitectura', labelEn: 'Architecture' },
+];
+
 /** Campos que el cliente suele cambiar sobre una muestra premium. */
 export interface PremiumStarterPersonalization {
   businessName: string;
@@ -31,6 +56,9 @@ export interface PremiumStarterItem {
   /** Plantilla catálogo más cercana (metadatos / sector). */
   catalogTemplateSlug: string;
   sectorId: string;
+  catalogCategoryKey: PremiumCatalogCategory;
+  categoryLabelEs: string;
+  categoryLabelEn: string;
   customizableFields: (keyof PremiumStarterPersonalization)[];
 }
 
@@ -49,6 +77,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
     catalogTemplateSlug: 'tapas',
     sectorId: 'restaurante',
+    catalogCategoryKey: 'gastronomy',
+    categoryLabelEs: 'Restauración',
+    categoryLabelEn: 'Restaurant',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -89,6 +120,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'care',
     sectorId: 'dental',
+    catalogCategoryKey: 'health',
+    categoryLabelEs: 'Clínica dental',
+    categoryLabelEn: 'Dental clinic',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -128,6 +162,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'habitat',
     sectorId: 'inmobiliaria',
+    catalogCategoryKey: 'realestate',
+    categoryLabelEs: 'Inmobiliaria',
+    categoryLabelEn: 'Real estate',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -167,6 +204,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'haven',
     sectorId: 'turismo-rural',
+    catalogCategoryKey: 'hospitality',
+    categoryLabelEs: 'Hotel 5 estrellas',
+    categoryLabelEn: '5-star hotel',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -206,6 +246,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'forge',
     sectorId: 'gimnasio',
+    catalogCategoryKey: 'sport',
+    categoryLabelEs: 'Gimnasio',
+    categoryLabelEn: 'Gym',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -245,6 +288,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'atelier',
     sectorId: 'joyeria',
+    catalogCategoryKey: 'luxury',
+    categoryLabelEs: 'Joyería & relojería',
+    categoryLabelEn: 'Jewelry & watches',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -284,6 +330,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'care',
     sectorId: 'fisioterapia',
+    catalogCategoryKey: 'health',
+    categoryLabelEs: 'Fisioterapia',
+    categoryLabelEn: 'Physiotherapy',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -322,7 +371,10 @@ export const premiumStarters: PremiumStarterItem[] = [
     previewImage:
       'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'care',
-    sectorId: 'fisioterapia',
+    sectorId: 'acupuntura',
+    catalogCategoryKey: 'health',
+    categoryLabelEs: 'Acupuntura / MTC',
+    categoryLabelEn: 'Acupuncture / TCM',
     customizableFields: [
       'businessName',
       'subtitle',
@@ -362,6 +414,9 @@ export const premiumStarters: PremiumStarterItem[] = [
       'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=900&h=600&auto=format&fit=crop',
     catalogTemplateSlug: 'blueprint',
     sectorId: 'arquitectura',
+    catalogCategoryKey: 'architecture',
+    categoryLabelEs: 'Arquitectura',
+    categoryLabelEn: 'Architecture',
     customizableFields: [
       'businessName',
       'subtitle',
