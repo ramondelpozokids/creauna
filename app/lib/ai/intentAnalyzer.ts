@@ -293,6 +293,7 @@ function defaultFeaturesForTemplateCategory(category: TemplateCategory, slug: st
         ...base,
         services: true,
         about: true,
+        reservation: ['care', 'lex'].includes(slug),
         documentUpload: slug === 'ledger',
       };
     case 'tech':
@@ -361,8 +362,17 @@ function scoreRule(rule: IntentRule, normalized: string): number {
   return matches.length * 10;
 }
 
+function mergeSiteFeatures(defaults: SiteFeatures, parsed: SiteFeatures): SiteFeatures {
+  const keys = Object.keys(defaults) as (keyof SiteFeatures)[];
+  const merged = { ...defaults };
+  for (const key of keys) {
+    merged[key] = defaults[key] || parsed[key];
+  }
+  return merged;
+}
+
 export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
-  const features = parseSiteFeatures(prompt);
+  const parsedFeatures = parseSiteFeatures(prompt);
   const variant = detectVariant(prompt);
   const normalized = stripLegalPageNoise(prompt).toLowerCase();
 
@@ -414,6 +424,11 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
 
   const listing = parseGoogleListing(prompt);
   const businessName = listing?.businessName ?? extractBusinessName(prompt, profileRule, lang);
+  const templateSlug = resolveTemplateSlug(profileRule.slug);
+  const features = mergeSiteFeatures(
+    defaultFeaturesForTemplateCategory(profileRule.categoryKey, templateSlug),
+    parsedFeatures
+  );
 
   return {
     templateSlug: profileRule.slug,

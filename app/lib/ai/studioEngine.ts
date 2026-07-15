@@ -16,6 +16,10 @@ import {
 } from '../studio/studioContextLock';
 import type { StudioDiscoveryAnswers } from '../studio/discoveryTypes';
 import type { PremiumStarterPersonalization } from '../../data/premiumStarters';
+import type { AiSkippedReason, PipelineStage } from './engineHealth';
+import { getEngineHealth } from './engineHealth';
+import type { OrchestraManifest } from './orchestra';
+import { SECTION_MOTOR } from './orchestra';
 import type { PremiumStarterContent } from '../studio/premiumContentTypes';
 
 export interface PreviewSection {
@@ -59,6 +63,16 @@ export interface StudioGenerateResult {
   businessName?: string;
   sectorId?: string;
   sectorLabel?: string;
+  /** Etapa del pipeline que produjo el resultado (diagnóstico). */
+  pipelineStage?: PipelineStage;
+  /** Por qué no intervino IA cuando se esperaba. */
+  aiSkippedReason?: AiSkippedReason;
+  /** Partitura del director: qué motor tocó cada sección. */
+  orchestra?: OrchestraManifest;
+  /** Proveedores IA que intervinieron en esta generación. */
+  providersUsed?: string[];
+  /** Imágenes generadas por fal.ai bajo Motor Visual. */
+  falImages?: number;
 }
 
 function cloneSections(sections: PreviewSection[]): PreviewSection[] {
@@ -396,21 +410,6 @@ function previewBlob(sections: PreviewSection[]): string {
   return sections.map((s) => s.html).join(' ');
 }
 
-const SECTION_MOTOR: Record<string, MotorId> = {
-  hero: 'visual',
-  gallery: 'visual',
-  about: 'copy',
-  reviews: 'copy',
-  blog: 'copy',
-  menu: 'code',
-  services: 'code',
-  carta: 'code',
-  reservation: 'ux',
-  location: 'ux',
-  contact: 'ux',
-  footer: 'code',
-};
-
 function pickMotorForSection(prompt: string, sectionType: string): MotorId {
   const lower = prompt.toLowerCase();
   if (/testimonio|texto|copy|redacci|about|sobre/i.test(lower)) return 'copy';
@@ -483,6 +482,7 @@ Action: ${input.action || 'change'}`,
       motorsUsed: [motor],
       source: 'ai',
       changedSectionIds: [target.id],
+      pipelineStage: 'ai_section',
     };
   } catch {
     return null;
@@ -502,12 +502,16 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       businessName: result.businessName,
       sectorId: result.sectorId,
       sectorLabel: result.sectorLabel,
+      pipelineStage: result.pipelineStage ?? 'discovery_initial',
+      aiSkippedReason: result.aiSkippedReason,
+      falImages: result.falImages,
     };
   }
 
   if (shouldGenerateFullSite(input.prompt, input.action, input.previewSections)) {
     if (isTemplateContextLocked(input)) {
-      return regenerateFromLockedTemplate(input, input.lang);
+      const locked = regenerateFromLockedTemplate(input, input.lang);
+      return { ...locked, pipelineStage: 'rules' };
     }
     const result = await generateInitialSite(input.prompt, input.lang, input.sectorId);
     return {
@@ -520,11 +524,15 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       businessName: result.businessName,
       sectorId: result.sectorId,
       sectorLabel: result.sectorLabel,
+      pipelineStage: result.pipelineStage ?? 'full_site_generate',
+      aiSkippedReason: result.aiSkippedReason,
+      falImages: result.falImages,
     };
   }
 
   if (isPremiumStarterContextLocked(input) && input.action === 'change') {
-    return personalizeFromPremiumStarter(input, input.lang);
+    const premium = personalizeFromPremiumStarter(input, input.lang);
+    return { ...premium, pipelineStage: 'premium_personalize' };
   }
 
   if (input.action === 'change' && isTemplateContextLocked(input) && isCosmeticPrompt(input.prompt)) {
@@ -539,32 +547,56 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
 
   const ruleResult = await applyPromptRules(input);
   if (ruleResult && ruleResult.changedSectionIds.length > 0) {
-    return ruleResult;
+    return { ...ruleResult, pipelineStage: 'rules' };
   }
 
   const plan = planStudioChange(input);
   const directorResult = await executeDirectorPlan(input, plan);
   if (directorResult) {
-    return directorResult;
+    return { ...directorResult, pipelineStage: 'director' };
   }
 
   const aiResult = await applyAIChange(input);
   if (aiResult) return aiResult;
 
+  const health = getEngineHealth();
   const target = targetSection(input);
-  const sections = patchSection(
-    cloneSections(input.previewSections),
-    target.id,
-    applyStrongVisualEnhancement(target.html, 'elegante')
-  );
+  const enhanced = applyStrongVisualEnhancement(target.html, 'elegante');
+  const sections = patchSection(cloneSections(input.previewSections), target.id, enhanced);
+
+  if (enhanced === target.html) {
+    return {
+      message:
+        input.lang === 'es'
+          ? health.aiEnabled
+            ? 'La IA no pudo aplicar tu cambio. Prueba ser más específico (sección, color, texto) o reformula el prompt.'
+            : 'Motor en modo reglas: configura GEMINI, ANTHROPIC, OPENAI o GROQ para refinamiento IA. Describe el cambio con más detalle.'
+          : health.aiEnabled
+            ? 'AI could not apply your change. Be more specific (section, color, copy) or rephrase.'
+            : 'Rules-only mode: configure AI API keys for refinement. Describe the change in more detail.',
+      previewSections: cloneSections(input.previewSections),
+      motorsUsed: health.aiEnabled ? [] : ['visual'],
+      source: 'rules',
+      changedSectionIds: [],
+      pipelineStage: health.aiEnabled ? 'rules_fallback' : 'rules_only',
+      aiSkippedReason: health.aiEnabled ? 'ai_parse_failed' : 'no_api_keys',
+    };
+  }
 
   return {
-    message: input.lang === 'es'
-      ? `Cambio aplicado — «${input.prompt.slice(0, 50)}»`
-      : `Change applied — «${input.prompt.slice(0, 50)}»`,
+    message:
+      input.lang === 'es'
+        ? health.aiEnabled
+          ? `Ajuste visual aplicado (reglas) — «${input.prompt.slice(0, 50)}». La IA no respondió; prueba de nuevo si necesitas más precisión.`
+          : `Ajuste visual básico (sin IA) — «${input.prompt.slice(0, 50)}». Añade claves IA para cambios avanzados.`
+        : health.aiEnabled
+          ? `Visual tweak applied (rules) — «${input.prompt.slice(0, 50)}». AI did not respond; retry for precision.`
+          : `Basic visual tweak (no AI) — «${input.prompt.slice(0, 50)}». Add AI keys for advanced edits.`,
     previewSections: sections,
-    motorsUsed: ['visual', 'copy', 'code', 'ux'],
+    motorsUsed: ['visual'],
     source: 'rules',
     changedSectionIds: [target.id],
+    pipelineStage: health.aiEnabled ? 'rules_fallback' : 'rules_only',
+    aiSkippedReason: health.aiEnabled ? 'ai_parse_failed' : 'no_api_keys',
   };
 }

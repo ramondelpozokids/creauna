@@ -43,13 +43,13 @@ export const PROVIDER_META: Record<
   },
   fal: {
     label: 'fal.ai',
-    bestFor: ['portadas con título (Ideogram 4)', 'interiores Flux', 'Editorial'],
+    bestFor: ['imágenes hero/galería', 'Flux schnell', 'Ideogram portadas', 'Motor Visual CREAUNA'],
   },
 };
 
 const ALL_PROVIDERS: AiProvider[] = ['gemini', 'claude', 'openai', 'groq', 'manus', 'fal'];
 
-const FAL_EDITORIAL_MOTORS = ['editorial', 'portada', 'interiores'];
+const FAL_EDITORIAL_MOTORS = ['visual', 'visual-images'];
 
 function motorsForPingProvider(provider: AiProvider): string[] {
   if (provider === 'fal') return FAL_EDITORIAL_MOTORS;

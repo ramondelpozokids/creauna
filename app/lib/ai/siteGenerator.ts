@@ -7,6 +7,7 @@ import { parseGoogleListing } from './googleListingParser';
 import { getBusinessProfile } from './businessProfiles';
 import { buildSiteBrief, enhanceSiteWithAgents } from './siteAiEnhancer';
 import type { PreviewSection } from './studioEngine';
+import type { AiSkippedReason, PipelineStage } from './engineHealth';
 import { resolveStudioSector, buildSectorAgentPlaybook } from '../studio/sectorAgentPlaybook';
 import { buildIntentFromDiscovery, synthesizeDiscoveryPrompt } from '../studio/buildIntentFromDiscovery';
 import type { StudioDiscoveryAnswers } from '../studio/discoveryTypes';
@@ -21,6 +22,9 @@ export interface InitialSiteResult {
   source: 'rules' | 'ai' | 'hybrid';
   sectorId?: string;
   sectorLabel?: string;
+  pipelineStage?: PipelineStage;
+  aiSkippedReason?: AiSkippedReason;
+  falImages?: number;
 }
 
 export async function generateInitialSite(
@@ -53,18 +57,24 @@ export async function generateInitialSite(
       }
     : undefined;
   const brief = buildSiteBrief(intent, profile, listing, lang, prompt, sectorMeta);
-  const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason } = await enhanceSiteWithAgents(ruleSections, brief);
+  const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason, falImages } = await enhanceSiteWithAgents(ruleSections, brief);
 
   const previewSections = toStudioSections(sections);
   const created = describeCreatedSections(intent.features, lang);
   const businessName = listing?.businessName ?? intent.businessName;
 
   let motorNote = '';
+  if (falImages && falImages > 0) {
+    motorNote +=
+      lang === 'es'
+        ? ` Motor Visual (fal.ai): ${falImages} imagen${falImages > 1 ? 'es' : ''} generada${falImages > 1 ? 's' : ''}.`
+        : ` Visual engine (fal.ai): ${falImages} image${falImages > 1 ? 's' : ''} generated.`;
+  }
   if (providersUsed.length) {
-    motorNote = lang === 'es'
+    motorNote += lang === 'es'
       ? ` Motores IA activos (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`
       : ` AI engines active (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`;
-  } else if (aiSkippedReason === 'no_api_keys') {
+  } else if (aiSkippedReason === 'no_api_keys' && !falImages) {
     motorNote = lang === 'es'
       ? ' Añade GEMINI/ANTHROPIC/OPENAI/GROQ en .env.local (local) o Vercel → Settings → Environment Variables (producción).'
       : ' Add GEMINI/ANTHROPIC/OPENAI/GROQ to .env.local (local) or Vercel env vars (production).';
@@ -85,9 +95,12 @@ export async function generateInitialSite(
     businessName,
     changedSectionIds: previewSections.map((s) => s.id),
     motorsUsed: providersUsed.length ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
-    source: providersUsed.length ? (aiEnhanced ? 'hybrid' : 'hybrid') : 'rules',
+    source: providersUsed.length || falImages ? 'hybrid' : 'rules',
     sectorId: sector?.id,
     sectorLabel: sectorMeta?.label,
+    pipelineStage: 'full_site_generate',
+    aiSkippedReason: aiSkippedReason as AiSkippedReason | undefined,
+    falImages,
   };
 }
 
@@ -113,7 +126,7 @@ export async function generateInitialSiteFromDiscovery(
       }
     : undefined;
   const brief = buildSiteBrief(intent, profile, null, lang, prompt, sectorMeta);
-  const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason } =
+  const { sections, motorsUsed, aiEnhanced, providersUsed, aiSkippedReason, falImages } =
     await enhanceSiteWithAgents(ruleSections, brief);
 
   const previewSections = toStudioSections(sections);
@@ -121,12 +134,18 @@ export async function generateInitialSiteFromDiscovery(
   const businessName = intent.businessName;
 
   let motorNote = '';
+  if (falImages && falImages > 0) {
+    motorNote +=
+      lang === 'es'
+        ? ` Motor Visual (fal.ai): ${falImages} imagen${falImages > 1 ? 'es' : ''} generada${falImages > 1 ? 's' : ''}.`
+        : ` Visual engine (fal.ai): ${falImages} image${falImages > 1 ? 's' : ''} generated.`;
+  }
   if (providersUsed.length) {
-    motorNote =
+    motorNote +=
       lang === 'es'
         ? ` Motores IA activos (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`
         : ` AI engines active (${providersUsed.join(', ')}${motorsUsed.length ? ` → ${motorsUsed.join(', ')}` : ''}).`;
-  } else if (aiSkippedReason === 'no_api_keys') {
+  } else if (aiSkippedReason === 'no_api_keys' && !falImages) {
     motorNote =
       lang === 'es'
         ? ' Añade GEMINI/ANTHROPIC/OPENAI/GROQ en .env.local o Vercel env vars.'
@@ -145,8 +164,11 @@ export async function generateInitialSiteFromDiscovery(
     businessName,
     changedSectionIds: previewSections.map((s) => s.id),
     motorsUsed: providersUsed.length ? motorsUsed : ['visual', 'copy', 'ux', 'code'],
-    source: providersUsed.length ? (aiEnhanced ? 'hybrid' : 'hybrid') : 'rules',
+    source: providersUsed.length || falImages ? 'hybrid' : 'rules',
     sectorId: sector?.id ?? discovery.sectorId,
     sectorLabel: sectorMeta?.label,
+    pipelineStage: 'discovery_initial',
+    aiSkippedReason: aiSkippedReason as AiSkippedReason | undefined,
+    falImages,
   };
 }

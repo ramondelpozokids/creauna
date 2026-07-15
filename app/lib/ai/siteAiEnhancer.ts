@@ -9,8 +9,14 @@ import {
   MOTOR_PROVIDER,
   type AiProvider,
 } from './providers';
+import { SECTION_MOTOR } from './orchestra';
 import { imageBriefForVariant } from './imageBank';
 import { validateSectionHtml } from '../studio/sectionValidator';
+import {
+  applyFalVisualAssets,
+  isFalImagesEnabled,
+  shouldRegenerateFalImages,
+} from './falImages';
 
 export interface SiteBrief {
   businessName: string;
@@ -41,20 +47,6 @@ const VARIANT_DESIGN: Partial<Record<BusinessVariant, string>> = {
   nonprofit: 'ONG/accesibilidad (InfoSordos): azul #0a3bf6, misión clara, inclusivo, recursos LSE, subtítulos.',
   renewable: 'Empresa energías renovables premium (referencia ritest.es): hero oscuro con parque solar, verde energético #16a34a, azul tech #0f172a, grid sutil, stats confianza, tarjetas servicios fotovoltaica/baterías/EV, proceso 5 pasos, proyectos reales, FAQ acordeón, footer corporativo. PROHIBIDO spa, masajes, hotel, piscina, belleza, restaurante.',
   default: 'Web de agencia premium: Playfair + sans, mucho aire, sombras suaves, rounded-[2rem]. Cero placeholders genéricos.',
-};
-
-const SECTION_MOTOR: Record<string, MotorId> = {
-  hero: 'visual',
-  gallery: 'visual',
-  about: 'copy',
-  reviews: 'copy',
-  menu: 'code',
-  services: 'code',
-  carta: 'code',
-  reservation: 'ux',
-  location: 'ux',
-  contact: 'ux',
-  footer: 'code',
 };
 
 const ENHANCE_TYPES = new Set(['hero', 'menu', 'services', 'carta', 'about', 'reviews', 'gallery', 'blog']);
@@ -110,6 +102,9 @@ function extractImageUrls(html: string): string[] {
 }
 
 function looksLikeWrongSector(html: string, brief: SiteBrief): boolean {
+  if (brief.variant === 'jewelry') {
+    return /kebab|d[öo]ner|restaurante|men[uú]|chef|gourmet|spa|masaje|hotel|piscina|sal[oó]n de belleza|fisioter|dental/i.test(html);
+  }
   if (brief.variant === 'renewable') {
     return /\bspa\b|masaje|sauna|wellness|hotel|piscina|balayage|sal[oó]n de belleza|trattoria|kebab|gourmet|chef|men[uú] degustaci|restaurante kebab/i.test(html);
   }
@@ -158,9 +153,10 @@ Devuelve SOLO JSON válido: {"html":"..."}`;
 
 async function enhanceSection(
   section: TemplatePageSection,
-  brief: SiteBrief
+  brief: SiteBrief,
+  motorOverride?: MotorId
 ): Promise<{ section: TemplatePageSection; motor?: string; provider?: AiProvider | 'rules'; changed: boolean }> {
-  const motor = SECTION_MOTOR[section.type] ?? 'code';
+  const motor = motorOverride ?? SECTION_MOTOR[section.type] ?? 'code';
   const imageUrls = extractImageUrls(section.html);
 
   const result = await chatCompletion(
@@ -184,7 +180,7 @@ async function enhanceSection(
       if (!validation.ok) {
         return { section, changed: false };
       }
-      const motorUsed = providerToMotor(result.provider);
+      const motorUsed = result.motor ?? providerToMotor(result.provider);
       return {
         section: { ...section, html: parsed.html },
         motor: motorUsed,
@@ -200,26 +196,47 @@ async function enhanceSection(
 export async function enhanceSiteWithAgents(
   sections: TemplatePageSection[],
   brief: SiteBrief
-): Promise<{ sections: TemplatePageSection[]; motorsUsed: string[]; aiEnhanced: boolean; providersUsed: string[]; aiSkippedReason?: string }> {
+): Promise<{ sections: TemplatePageSection[]; motorsUsed: string[]; aiEnhanced: boolean; providersUsed: string[]; aiSkippedReason?: string; falImages?: number }> {
+  let workingSections = sections;
+  let falImages = 0;
+
+  if (isFalImagesEnabled()) {
+    const falResult = await applyFalVisualAssets(workingSections, brief);
+    workingSections = falResult.sections;
+    falImages = falResult.falImages;
+  }
+
   const configured = getConfiguredProviders();
   if (configured.length === 0) {
     return {
-      sections,
-      motorsUsed: [],
-      aiEnhanced: false,
-      providersUsed: [],
+      sections: workingSections,
+      motorsUsed: falImages > 0 ? ['visual'] : [],
+      aiEnhanced: falImages > 0,
+      providersUsed: falImages > 0 ? ['fal'] : [],
       aiSkippedReason: 'no_api_keys',
+      falImages,
     };
   }
 
-  const targets = sections.filter((s) => ENHANCE_TYPES.has(s.type));
+  const targets = workingSections.filter((s) => ENHANCE_TYPES.has(s.type));
   if (targets.length === 0) {
-    return { sections, motorsUsed: [], aiEnhanced: false, providersUsed: [], aiSkippedReason: 'no_targets' };
+    return {
+      sections: workingSections,
+      motorsUsed: falImages > 0 ? ['visual'] : [],
+      aiEnhanced: falImages > 0,
+      providersUsed: falImages > 0 ? ['fal'] : [],
+      aiSkippedReason: falImages > 0 ? undefined : 'no_targets',
+      falImages,
+    };
   }
 
   const motorsUsed = new Set<string>();
   const providersUsed = new Set<string>();
-  const byId = new Map(sections.map((s) => [s.id, { ...s }]));
+  if (falImages > 0) {
+    motorsUsed.add('visual');
+    providersUsed.add('fal');
+  }
+  const byId = new Map(workingSections.map((s) => [s.id, { ...s }]));
   let anyChanged = false;
   let anyCalled = false;
 
@@ -239,11 +256,12 @@ export async function enhanceSiteWithAgents(
   }
 
   return {
-    sections: sections.map((s) => byId.get(s.id) ?? s),
+    sections: workingSections.map((s) => byId.get(s.id) ?? s),
     motorsUsed: [...motorsUsed],
     providersUsed: [...providersUsed],
-    aiEnhanced: anyChanged || anyCalled,
-    aiSkippedReason: anyCalled ? undefined : 'ai_parse_failed',
+    aiEnhanced: anyChanged || anyCalled || falImages > 0,
+    aiSkippedReason: anyCalled ? undefined : falImages > 0 ? undefined : 'ai_parse_failed',
+    falImages,
   };
 }
 
@@ -251,28 +269,65 @@ export async function enhanceSiteWithAgents(
 export async function enhanceSelectedSections(
   sections: TemplatePageSection[],
   brief: SiteBrief,
-  targetTypes: Set<string>
-): Promise<{ sections: TemplatePageSection[]; motorsUsed: string[]; aiEnhanced: boolean; providersUsed: string[]; aiSkippedReason?: string }> {
-  const configured = getConfiguredProviders();
-  if (configured.length === 0) {
-    return { sections, motorsUsed: [], aiEnhanced: false, providersUsed: [], aiSkippedReason: 'no_api_keys' };
+  targetTypes: Set<string>,
+  resolveMotor?: (sectionType: string) => MotorId
+): Promise<{ sections: TemplatePageSection[]; motorsUsed: string[]; aiEnhanced: boolean; providersUsed: string[]; aiSkippedReason?: string; falImages?: number }> {
+  let workingSections = sections;
+  let falImages = 0;
+
+  const visualTargets = new Set(
+    [...targetTypes].filter((t) => t === 'hero' || t === 'gallery')
+  );
+  const runFal =
+    isFalImagesEnabled() &&
+    (visualTargets.size > 0 || shouldRegenerateFalImages(brief.userPrompt));
+
+  if (runFal) {
+    const falResult = await applyFalVisualAssets(workingSections, brief, visualTargets.size ? visualTargets : undefined);
+    workingSections = falResult.sections;
+    falImages = falResult.falImages;
   }
 
-  const targets = sections.filter((s) => targetTypes.has(s.type) && ENHANCE_TYPES.has(s.type));
+  const configured = getConfiguredProviders();
+  if (configured.length === 0) {
+    return {
+      sections: workingSections,
+      motorsUsed: falImages > 0 ? ['visual'] : [],
+      aiEnhanced: falImages > 0,
+      providersUsed: falImages > 0 ? ['fal'] : [],
+      aiSkippedReason: 'no_api_keys',
+      falImages,
+    };
+  }
+
+  const targets = workingSections.filter((s) => targetTypes.has(s.type) && ENHANCE_TYPES.has(s.type));
   if (targets.length === 0) {
-    return { sections, motorsUsed: [], aiEnhanced: false, providersUsed: [], aiSkippedReason: 'no_targets' };
+    return {
+      sections: workingSections,
+      motorsUsed: falImages > 0 ? ['visual'] : [],
+      aiEnhanced: falImages > 0,
+      providersUsed: falImages > 0 ? ['fal'] : [],
+      aiSkippedReason: falImages > 0 ? undefined : 'no_targets',
+      falImages,
+    };
   }
 
   const motorsUsed = new Set<string>();
   const providersUsed = new Set<string>();
-  const byId = new Map(sections.map((s) => [s.id, { ...s }]));
+  if (falImages > 0) {
+    motorsUsed.add('visual');
+    providersUsed.add('fal');
+  }
+  const byId = new Map(workingSections.map((s) => [s.id, { ...s }]));
   let anyChanged = false;
   let anyCalled = false;
 
   const BATCH = 2;
   for (let i = 0; i < targets.length; i += BATCH) {
     const batch = targets.slice(i, i + BATCH);
-    const results = await Promise.all(batch.map((s) => enhanceSection(s, brief)));
+    const results = await Promise.all(
+      batch.map((s) => enhanceSection(s, brief, resolveMotor?.(s.type)))
+    );
     for (const r of results) {
       byId.set(r.section.id, r.section);
       if (r.motor) motorsUsed.add(r.motor);
@@ -285,10 +340,11 @@ export async function enhanceSelectedSections(
   }
 
   return {
-    sections: sections.map((s) => byId.get(s.id) ?? s),
+    sections: workingSections.map((s) => byId.get(s.id) ?? s),
     motorsUsed: [...motorsUsed],
     providersUsed: [...providersUsed],
-    aiEnhanced: anyChanged || anyCalled,
-    aiSkippedReason: anyCalled ? undefined : 'ai_parse_failed',
+    aiEnhanced: anyChanged || anyCalled || falImages > 0,
+    aiSkippedReason: anyCalled ? undefined : falImages > 0 ? undefined : 'ai_parse_failed',
+    falImages,
   };
 }

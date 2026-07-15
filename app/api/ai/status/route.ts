@@ -1,4 +1,5 @@
 import { getConfiguredProviders, isProviderConfigured, MOTOR_PROVIDER } from '../../../lib/ai/providers';
+import { getEngineHealth } from '../../../lib/ai/engineHealth';
 
 function keyStatus(name: string, minLen = 20): 'ok' | 'missing' | 'invalid' {
   const raw = process.env[name]?.trim() ?? '';
@@ -17,7 +18,17 @@ export async function GET() {
     FAL_KEY: keyStatus('FAL_KEY', 10),
   };
 
+  const engine = getEngineHealth();
+
   return Response.json({
+    engine,
+    orchestra: {
+      conductor: 'creauna_director',
+      instruments: engine.orchestra,
+      orchestraReady: engine.orchestraReady,
+      note:
+        'Visual→Gemini (layout) + fal.ai (imágenes hero/galería). Copy→Claude · Código→OpenAI · UX→Groq. Manus=tareas pesadas async.',
+    },
     motors: {
       visual: { provider: MOTOR_PROVIDER.visual, configured: isProviderConfigured(MOTOR_PROVIDER.visual) },
       copy: { provider: MOTOR_PROVIDER.copy, configured: isProviderConfigured(MOTOR_PROVIDER.copy) },

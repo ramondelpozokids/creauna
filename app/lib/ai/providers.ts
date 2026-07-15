@@ -12,27 +12,34 @@ export interface AiCompletionResult {
   motor?: MotorId;
 }
 
-/** Cada motor usa un proveedor distinto — sin revelar marcas al usuario */
+/** Cada motor = un instrumento de la orquesta CREAUNA (proveedor distinto). */
 export const MOTOR_PROVIDER: Record<MotorId, AiProvider> = {
   visual: 'gemini',
   copy: 'claude',
-  code: 'openai',   // Motor de Código (rol tipo Composer)
-  ux: 'claude',
+  code: 'openai',
+  ux: 'groq',
 };
 
 export function isProviderConfigured(provider: AiProvider): boolean {
   const minLen = 20;
+  const isPlaceholder = (key: string | undefined) => {
+    const v = key?.trim() ?? '';
+    if (!v) return true;
+    if (v.length < minLen) return true;
+    if (/^(your_|tu_api_key|sk-xxxxx|xxx)/i.test(v)) return true;
+    return false;
+  };
   switch (provider) {
     case 'gemini':
-      return (process.env.GEMINI_API_KEY?.trim().length ?? 0) >= minLen;
+      return !isPlaceholder(process.env.GEMINI_API_KEY);
     case 'claude':
-      return (process.env.ANTHROPIC_API_KEY?.trim().length ?? 0) >= minLen;
+      return !isPlaceholder(process.env.ANTHROPIC_API_KEY);
     case 'openai':
-      return (process.env.OPENAI_API_KEY?.trim().length ?? 0) >= minLen;
+      return !isPlaceholder(process.env.OPENAI_API_KEY);
     case 'groq':
-      return (process.env.GROQ_API_KEY?.trim().length ?? 0) >= minLen;
+      return !isPlaceholder(process.env.GROQ_API_KEY);
     case 'manus':
-      return (process.env.MANUS_API_KEY?.trim().length ?? 0) >= minLen;
+      return !isPlaceholder(process.env.MANUS_API_KEY);
     case 'fal':
       return (process.env.FAL_KEY?.trim().length ?? 0) >= 10;
     default:
@@ -52,7 +59,7 @@ function pickMotorForPrompt(prompt: string): MotorId {
   return 'visual';
 }
 
-async function callGemini(messages: AiMessage[], maxTokens: number): Promise<string | null> {
+async function callGemini(messages: AiMessage[], maxTokens: number, temperature = 0.6): Promise<string | null> {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) return null;
 
@@ -70,7 +77,7 @@ async function callGemini(messages: AiMessage[], maxTokens: number): Promise<str
         body: JSON.stringify({
           systemInstruction: system ? { parts: [{ text: system }] } : undefined,
           contents: [{ role: 'user', parts: [{ text: userParts }] }],
-          generationConfig: { temperature: 0.6, maxOutputTokens: maxTokens },
+          generationConfig: { temperature, maxOutputTokens: maxTokens },
         }),
       }
     );
@@ -92,7 +99,7 @@ async function callGemini(messages: AiMessage[], maxTokens: number): Promise<str
   return null;
 }
 
-async function callClaude(messages: AiMessage[], maxTokens: number): Promise<string | null> {
+async function callClaude(messages: AiMessage[], maxTokens: number, temperature = 0.6): Promise<string | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) return null;
 
@@ -112,6 +119,7 @@ async function callClaude(messages: AiMessage[], maxTokens: number): Promise<str
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
+      temperature,
       system: system || undefined,
       messages: chatMessages,
     }),
@@ -127,7 +135,7 @@ async function callClaude(messages: AiMessage[], maxTokens: number): Promise<str
   return block?.text?.trim() || null;
 }
 
-async function callOpenAI(messages: AiMessage[], maxTokens: number): Promise<string | null> {
+async function callOpenAI(messages: AiMessage[], maxTokens: number, temperature = 0.6): Promise<string | null> {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) return null;
 
@@ -142,7 +150,7 @@ async function callOpenAI(messages: AiMessage[], maxTokens: number): Promise<str
     body: JSON.stringify({
       model,
       messages,
-      temperature: 0.6,
+      temperature,
       max_tokens: maxTokens,
     }),
   });
@@ -156,7 +164,7 @@ async function callOpenAI(messages: AiMessage[], maxTokens: number): Promise<str
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
-async function callGroq(messages: AiMessage[], maxTokens: number): Promise<string | null> {
+async function callGroq(messages: AiMessage[], maxTokens: number, temperature = 0.6): Promise<string | null> {
   const apiKey = process.env.GROQ_API_KEY?.trim();
   if (!apiKey) return null;
 
@@ -171,7 +179,7 @@ async function callGroq(messages: AiMessage[], maxTokens: number): Promise<strin
     body: JSON.stringify({
       model,
       messages,
-      temperature: 0.6,
+      temperature,
       max_tokens: maxTokens,
     }),
   });
@@ -188,24 +196,38 @@ async function callGroq(messages: AiMessage[], maxTokens: number): Promise<strin
 async function callProvider(
   provider: AiProvider,
   messages: AiMessage[],
-  maxTokens: number
+  maxTokens: number,
+  temperature = 0.6
 ): Promise<string | null> {
   switch (provider) {
     case 'gemini':
-      return callGemini(messages, maxTokens);
+      return callGemini(messages, maxTokens, temperature);
     case 'claude':
-      return callClaude(messages, maxTokens);
+      return callClaude(messages, maxTokens, temperature);
     case 'openai':
-      return callOpenAI(messages, maxTokens);
+      return callOpenAI(messages, maxTokens, temperature);
     case 'groq':
-      return callGroq(messages, maxTokens);
+      return callGroq(messages, maxTokens, temperature);
     case 'manus':
-      return null; // Manus es agente async — no para cambios instantáneos del Studio
+      return null;
     case 'fal':
-      return null; // fal.ai — imágenes Editorial, no chat del Studio
+      return null;
     default:
       return null;
   }
+}
+
+
+async function callProviderWithRetry(
+  provider: AiProvider,
+  messages: AiMessage[],
+  maxTokens: number,
+  temperature: number
+): Promise<string | null> {
+  const content = await callProvider(provider, messages, maxTokens, temperature);
+  if (content) return content;
+  await new Promise((r) => setTimeout(r, 600));
+  return callProvider(provider, messages, maxTokens, temperature);
 }
 
 const FALLBACK_ORDER: AiProvider[] = ['gemini', 'claude', 'openai', 'groq'];
@@ -215,6 +237,7 @@ export async function chatCompletion(
   options?: { temperature?: number; maxTokens?: number; motor?: MotorId; prompt?: string }
 ): Promise<AiCompletionResult> {
   const maxTokens = options?.maxTokens ?? 1200;
+  const temperature = options?.temperature ?? 0.6;
   const motor = options?.motor || pickMotorForPrompt(options?.prompt || messages.at(-1)?.content || '');
   const primary = MOTOR_PROVIDER[motor];
 
@@ -222,7 +245,7 @@ export async function chatCompletion(
 
   for (const provider of tryOrder) {
     if (!isProviderConfigured(provider)) continue;
-    const content = await callProvider(provider, messages, maxTokens);
+    const content = await callProviderWithRetry(provider, messages, maxTokens, temperature);
     if (content) return { content, provider, motor };
   }
 

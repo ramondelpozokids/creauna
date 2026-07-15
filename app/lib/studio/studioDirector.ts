@@ -13,6 +13,12 @@ import {
   regenerateFromLockedTemplate,
   resolveStudioBusinessName,
 } from './studioContextLock';
+import {
+  buildOrchestraManifest,
+  resolveMotorForSection,
+  orchestraSummary,
+  type OrchestraManifest,
+} from '../ai/orchestra';
 
 export type DirectorStrategy =
   | 'full_regenerate'
@@ -306,6 +312,7 @@ export async function executeDirectorPlan(
       businessName: result.businessName,
       sectorId: result.sectorId,
       sectorLabel: result.sectorLabel,
+      falImages: result.falImages,
     };
   }
 
@@ -327,10 +334,13 @@ export async function executeDirectorPlan(
 
   const templateSections = previewToTemplate(previewSections);
   const targetSet = new Set(plan.targetTypes);
-  const { sections, motorsUsed, providersUsed, aiEnhanced } = await enhanceSelectedSections(
+  const orchestra = buildOrchestraManifest(plan, plan.targetTypes);
+
+  const { sections, motorsUsed, providersUsed, aiEnhanced, falImages } = await enhanceSelectedSections(
     templateSections,
     brief,
-    targetSet
+    targetSet,
+    (sectionType) => resolveMotorForSection(sectionType, plan)
   );
 
   if (!aiEnhanced && providersUsed.length === 0) {
@@ -345,20 +355,20 @@ export async function executeDirectorPlan(
   }
 
   const sector = resolveStudioSector(input.prompt, input.sectorId);
-  const motorNote =
-    motorsUsed.length > 0
-      ? lang === 'es'
-        ? ` Motores: ${motorsUsed.join(', ')}.`
-        : ` Engines: ${motorsUsed.join(', ')}.`
-      : '';
+  const orchestraResult: OrchestraManifest = {
+    ...orchestra,
+    motorsUsed: [...new Set(motorsUsed.length ? (motorsUsed as OrchestraManifest['motorsUsed']) : orchestra.motorsUsed)],
+    providersUsed: providersUsed.length
+      ? ([...new Set(providersUsed)] as OrchestraManifest['providersUsed'])
+      : orchestra.providersUsed,
+  };
 
   return {
     message:
       (lang === 'es' ? plan.reasonEs : plan.reasonEn) +
-      motorNote +
       (lang === 'es'
-        ? ` Secciones actualizadas: ${ids.length}.`
-        : ` Sections updated: ${ids.length}.`),
+        ? ` ${orchestraSummary(orchestraResult, lang)}. Secciones: ${ids.length}.`
+        : ` ${orchestraSummary(orchestraResult, lang)}. Sections: ${ids.length}.`),
     previewSections: updated,
     motorsUsed: motorsUsed.length ? motorsUsed : plan.motorLabels,
     source: 'hybrid',
@@ -367,5 +377,8 @@ export async function executeDirectorPlan(
     businessName: resolveStudioBusinessName(input),
     sectorId: sector?.id,
     sectorLabel: sector ? (lang === 'es' ? sector.labelEs : sector.labelEn) : undefined,
+    orchestra: orchestraResult,
+    providersUsed: orchestraResult.providersUsed,
+    falImages,
   };
 }
