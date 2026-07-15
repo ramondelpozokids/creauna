@@ -19,7 +19,7 @@ const translations = {
   es: {
     title: 'Plantillas CREAUNA',
     subtitle:
-      'CREAUNA es una plataforma de IA: describes tu web en lenguaje natural y la construye contigo. Aquí solo ves 18 ejemplos reales de lo que somos capaces de entregar — demos en vivo, sin personalizar desde esta página.',
+      'CREAUNA es una plataforma de IA: describes tu web en lenguaje natural y la construye contigo. Aquí solo ves 15 ejemplos reales de lo que somos capaces de entregar — demos en vivo, sin personalizar desde esta página.',
     viewDemo: 'Ver demo en vivo',
     previewLink: 'Ver en pantalla',
     badge: 'EJEMPLOS CREAUNA',
@@ -35,7 +35,7 @@ const translations = {
   en: {
     title: 'CREAUNA Templates',
     subtitle:
-      'CREAUNA is an AI platform: describe your site in natural language and it builds with you. This page shows 18 real examples of what we deliver — live demos only, not customizable from here.',
+      'CREAUNA is an AI platform: describe your site in natural language and it builds with you. This page shows 15 real examples of what we deliver — live demos only, not customizable from here.',
     viewDemo: 'View live demo',
     previewLink: 'View on screen',
     badge: 'CREAUNA EXAMPLES',

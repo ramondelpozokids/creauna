@@ -48,7 +48,7 @@ export const guiaI18n = {
         id: 'plantillas', icon: LayoutGrid, color: 'text-violet-600 bg-violet-50',
         title: '2. Ver plantillas demo',
         paragraphs: [
-          'En /templates puedes ver 18 webs profesionales terminadas: 9 plantillas de referencia CREAUNA y 9 proyectos reales.',
+          'En /templates puedes ver 15 webs profesionales terminadas: 9 plantillas de referencia CREAUNA y 6 proyectos reales, sin duplicados.',
           'Es solo una vitrina — demos en vivo para que veas cómo trabajamos. No se personalizan desde el catálogo.',
         ],
         categories: [
@@ -173,7 +173,7 @@ export const guiaI18n = {
         id: 'plantillas', icon: LayoutGrid, color: 'text-violet-600 bg-violet-50',
         title: '2. View demo templates',
         paragraphs: [
-          'At /templates you can browse 18 finished professional sites: 9 CREAUNA reference templates and 9 real projects.',
+          'At /templates you can browse 15 finished professional sites: 9 CREAUNA reference templates and 6 real projects, no duplicates.',
           'Showcase only — live demos so you see how we work. Not customizable from the catalog.',
         ],
         categories: [

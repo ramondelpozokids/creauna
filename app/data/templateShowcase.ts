@@ -73,7 +73,7 @@ function mapPremiumCategory(
   return 'gastronomy';
 }
 
-/** 9 proyectos reales — ampliación del catálogo demo. */
+/** 6 proyectos reales — sin duplicados ni subpáginas sueltas. */
 const portfolioProjects: TemplateShowcaseItem[] = [
   {
     slug: 'rest-art-cafe',
@@ -140,22 +140,6 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     kind: 'project',
   },
   {
-    slug: 'verum-gestoria',
-    nameEs: 'VERUM Gestoría',
-    nameEn: 'VERUM Tax Advisory',
-    descEs:
-      'Modernización completa de web de gestoría: diseño premium, servicios detallados y captación de leads.',
-    descEn:
-      'Full modernization of an accounting firm site: premium design, detailed services and lead capture.',
-    demoPath: '/demos/modernizacion/gestoria/index1.html',
-    previewImage:
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&h=600&fit=crop&q=80',
-    categoryKey: 'services',
-    categoryLabelEs: 'Modernización',
-    categoryLabelEn: 'Modernization',
-    kind: 'project',
-  },
-  {
     slug: 'royal-bang',
     nameEs: 'Royal Bang Tattoo',
     nameEn: 'Royal Bang Tattoo',
@@ -185,38 +169,6 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryKey: 'creative',
     categoryLabelEs: 'Arte contemporáneo',
     categoryLabelEn: 'Contemporary art',
-    kind: 'project',
-  },
-  {
-    slug: 'rest-art-carta',
-    nameEs: 'Rest Art — Carta digital',
-    nameEn: 'Rest Art — Digital menu',
-    descEs:
-      'Carta interactiva optimizada para móvil: categorías, platos y diseño gastronómico coherente con la web principal.',
-    descEn:
-      'Mobile-optimized interactive menu: categories, dishes and gastronomy design aligned with the main site.',
-    demoPath: '/demos/clientes/rest-art-cafe/carta.html',
-    previewImage:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&h=600&fit=crop&q=80',
-    categoryKey: 'gastronomy',
-    categoryLabelEs: 'Carta digital',
-    categoryLabelEn: 'Digital menu',
-    kind: 'project',
-  },
-  {
-    slug: 'campon-servicios',
-    nameEs: 'Campón — Servicios',
-    nameEn: 'Campón — Services',
-    descEs:
-      'Página de servicios detallada: fiscal, laboral, contable y mercantil con estructura clara para conversión.',
-    descEn:
-      'Detailed services page: tax, payroll, accounting and corporate with clear conversion structure.',
-    demoPath: '/demos/clientes/campon-asesores/servicios.html',
-    previewImage:
-      'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&h=600&fit=crop&q=80',
-    categoryKey: 'services',
-    categoryLabelEs: 'Página de servicios',
-    categoryLabelEn: 'Services page',
     kind: 'project',
   },
 ];

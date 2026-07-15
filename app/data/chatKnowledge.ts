@@ -54,7 +54,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'templates',
     keywords: ['plantilla', 'plantillas', 'template', 'templates', 'catálogo', 'catalogo', 'diseños', 'modelos'],
-    answer: '18 ejemplos demo en /templates (9 plantillas + 9 proyectos reales). Solo vitrina — para ver calidad CREAUNA. Para crear la tuya: describe tu idea con prompts en /studio o pide presupuesto en /contacto',
+    answer: '15 ejemplos demo en /templates (9 plantillas + 6 proyectos reales, sin duplicados). Solo vitrina — para ver calidad CREAUNA. Para crear la tuya: describe tu idea con prompts en /studio o pide presupuesto en /contacto',
   },
   {
     id: 'ai-tech',
