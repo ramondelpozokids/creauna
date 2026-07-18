@@ -143,6 +143,10 @@ function detectSections(prompt: string): string[] {
   if (/ubicaci|mapa|direcci[oó]n|location|contacto/i.test(lower)) sections.push('location');
   if (/cta|preparado|ven a visit|descubrir ahora/i.test(lower)) sections.push('cta');
   if (/carrito|checkout|comprar/i.test(lower)) sections.push('cart');
+  if (/aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|legales/i.test(lower)) {
+    sections.push('legal', 'sitemap');
+  }
+  if (/whatsapp|scroll\s*up|redes\s+sociales/i.test(lower)) sections.push('widgets');
   sections.push('footer');
   return [...new Set(sections)];
 }
@@ -230,6 +234,20 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
     styleNotes.push(lang === 'es' ? 'Hero full-bleed con vídeo o foto campaña + poster' : 'Full-bleed hero video or campaign still');
     styleNotes.push(lang === 'es' ? 'Productos con hover swap de imagen + Comprar' : 'Product cards with hover image swap + Buy');
   }
+  if (/aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap/i.test(prompt)) {
+    styleNotes.push(
+      lang === 'es'
+        ? 'Páginas/secciones: Aviso legal, Privacidad, Cookies, Mapa del sitio + enlaces en footer'
+        : 'Legal notice, Privacy, Cookies, Sitemap + footer links'
+    );
+  }
+  if (/whatsapp|scroll|redes\s+sociales/i.test(prompt)) {
+    styleNotes.push(
+      lang === 'es'
+        ? 'Botón WhatsApp flotante (verde oficial), scroll-up y redes con iconos de marca (Instagram, Facebook, TikTok, X, Pinterest, YouTube)'
+        : 'WhatsApp FAB, scroll-up, brand social icon buttons'
+    );
+  }
 
   const sections = detectSections(prompt);
 
@@ -292,11 +310,12 @@ REGLAS DURAS:
 - PROHIBIDO hero de color sólido sin foto; PROHIBIDO zoom extremo / crop absurdo de la imagen.
 - Si hay lookbook/colección/productos: fotos grandes, hover swap donde el brief lo pida, botones Comprar.
 - Si hay carrito: icono + panel/carrito funcional básico (localStorage).
+- Si el plan incluye legales/widgets: secciones #aviso-legal #privacidad #cookies #mapa-sitio, botón WhatsApp #25D366, scroll-up y redes con colores oficiales.
 - HTML completo denso (>25KB ideal).
 - Devuelve SOLO el HTML.`
     : `BUILD PLAN (mandatory):
 ${JSON.stringify(plan, null, 2)}
-Build from brief only. No templates. Full dense HTML. Photo hero with object-cover required. H1 must be marketing headline not size adjectives. Return ONLY HTML.`;
+Build from brief only. No templates. Full dense HTML. Photo hero with object-cover required. H1 must be marketing headline not size adjectives. Legal + WhatsApp + scroll-up + brand socials if in plan. Return ONLY HTML.`;
 }
 
 async function callBuild(
@@ -542,6 +561,8 @@ HTML previo (referencia, mejóralo):\n${html.slice(0, 22000)}`
   // Imágenes + pulido hero (titular + foto + altura)
   const imaged = await applyImages(html, prompt, lang, pack);
   html = polishHeroHtml(imaged.html, plan, pack);
+  const { injectSiteChrome } = await import('./siteChrome');
+  html = injectSiteChrome(html, { prompt, lang, businessName });
 
   // Verify final — solo bloquear esqueletos; si hay HTML denso, entregar con aviso
   const finalIssues = verifyDeterministic(html, plan, prompt);

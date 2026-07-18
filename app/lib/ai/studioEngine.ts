@@ -165,6 +165,15 @@ function isFullPagePreview(sections: PreviewSection[]): boolean {
  */
 function needsRealRedesign(prompt: string, sections: PreviewSection[]): boolean {
   if (!isFullPagePreview(sections)) return false;
+  // Legales/WhatsApp/scroll/redes solos → inyección determinista (no reescribir toda la web)
+  if (
+    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll\s*up|redes\s+sociales/i.test(
+      prompt
+    ) &&
+    !/hero|lookbook|colecci[oó]n|rediseñ|regenera|m[aá]s\s+elegante|tipograf|galer[ií]a/i.test(prompt)
+  ) {
+    return false;
+  }
   return corporateUpgradePrompt(prompt.toLowerCase());
 }
 
@@ -532,6 +541,38 @@ Action: ${input.action || 'change'}`,
 }
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
+  // Pedido de legales / WhatsApp / scroll / redes → inyección rápida sobre fullpage
+  if (
+    input.action === 'change' &&
+    isFullPagePreview(input.previewSections) &&
+    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll\s*up|redes\s+sociales|bot[oó]n\s+de\s+whatsapp/i.test(
+      input.prompt
+    )
+  ) {
+    const { injectSiteChrome, promptWantsSiteChrome } = await import('./siteChrome');
+    if (promptWantsSiteChrome(input.prompt)) {
+      const full = input.previewSections.find((s) => s.type === 'fullpage') ?? input.previewSections[0];
+      const nextHtml = injectSiteChrome(full.html, {
+        prompt: input.prompt,
+        lang: input.lang,
+        businessName: input.businessName,
+      });
+      if (nextHtml !== full.html) {
+        return {
+          message:
+            input.lang === 'es'
+              ? 'He añadido aviso legal, privacidad, cookies, mapa del sitio, botón WhatsApp, scroll arriba y redes con iconos de marca.'
+              : 'Added legal pages, WhatsApp, scroll-up and brand social buttons.',
+          previewSections: patchSection(cloneSections(input.previewSections), full.id, nextHtml),
+          motorsUsed: ['ux', 'code'],
+          source: 'rules',
+          changedSectionIds: [full.id],
+          pipelineStage: 'rules',
+        };
+      }
+    }
+  }
+
   if (input.discovery && input.action === 'initial') {
     const result = await generateInitialSiteFromDiscovery(input.discovery, input.lang);
     return {
