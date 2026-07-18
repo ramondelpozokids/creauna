@@ -73,6 +73,8 @@ export interface StudioGenerateResult {
   providersUsed?: string[];
   /** Imágenes generadas por fal.ai bajo Motor Visual. */
   falImages?: number;
+  /** Pedido fuera de alcance (Stripe/SaaS/hosting…) → /contacto, sin gastar crédito. */
+  quoteRedirect?: boolean;
 }
 
 function cloneSections(sections: PreviewSection[]): PreviewSection[] {
@@ -541,6 +543,46 @@ Action: ${input.action || 'change'}`,
 }
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
+  // Stripe / carrito real / SaaS / hosting / API keys → formulario de presupuesto (/contacto)
+  {
+    const { isCustomQuoteRequest, customQuoteStudioMessage } = await import('./customQuoteGate');
+    if (isCustomQuoteRequest(input.prompt)) {
+      const isChangeOnExisting =
+        input.action === 'change' && input.previewSections.length > 0;
+      const isShortOrAddonAsk =
+        input.prompt.length < 700 ||
+        /^(quiero|necesito|añade|agrega|ponme|pon|activa|integr|implementa|mete)/i.test(
+          input.prompt.trim()
+        );
+      const redesignOnly =
+        /redise[nñ]a|regenera|cambia\s+el\s+hero|m[aá]s\s+elegante|tipograf|paleta|colores/i.test(
+          input.prompt
+        ) && !/stripe|pasarela|carrito\s+de\s+compra|saas|hosting|alojamiento|api\s*keys?/i.test(input.prompt);
+
+      if ((isChangeOnExisting || isShortOrAddonAsk || input.action === 'initial') && !redesignOnly) {
+        // En briefs largos de web que mencionan Stripe de pasada, seguimos generando la web
+        // y el mensaje de entrega puede apuntar a /contacto; aquí cortamos pedidos claros de extras.
+        const longWebBrief =
+          input.action === 'initial' &&
+          input.prompt.length > 700 &&
+          /(hero|lookbook|secci[oó]n|dise[nñ]o|tipograf|galer[ií]a|web\s+(para|de)|landing)/i.test(
+            input.prompt
+          );
+        if (!longWebBrief || isChangeOnExisting || isShortOrAddonAsk) {
+          return {
+            message: customQuoteStudioMessage(input.prompt, input.lang),
+            previewSections: cloneSections(input.previewSections),
+            motorsUsed: ['ux'],
+            source: 'rules',
+            changedSectionIds: [],
+            pipelineStage: 'rules',
+            quoteRedirect: true,
+          };
+        }
+      }
+    }
+  }
+
   // Módulos pedidos (legales, WhatsApp, blog, buscador, carrusel, chat…) → inyección determinista
   if (input.action === 'change' && input.previewSections.length > 0) {
     const { injectSiteChrome, promptWantsSiteChrome, describeAppliedModules, detectRequestedModules } =

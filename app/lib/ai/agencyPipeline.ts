@@ -309,7 +309,7 @@ REGLAS DURAS:
 - El H1 es el titular de marketing («${plan.heroTitle}»). NUNCA uses como H1 palabras de tamaño (enorme, huge, impactante, full-bleed).
 - PROHIBIDO hero de color sólido sin foto; PROHIBIDO zoom extremo / crop absurdo de la imagen.
 - Si hay lookbook/colección/productos: fotos grandes, hover swap donde el brief lo pida, botones Comprar.
-- Si hay carrito: icono + panel/carrito funcional básico (localStorage).
+- NO implementes Stripe ni carrito de pago real. Catálogo visual sí; cobros = presupuesto en /contacto.
 - Si el plan incluye legales/widgets: secciones #aviso-legal #privacidad #cookies #mapa-sitio, botón WhatsApp #25D366, scroll-up y redes con colores oficiales.
 - HTML completo denso (>25KB ideal).
 - Devuelve SOLO el HTML.`

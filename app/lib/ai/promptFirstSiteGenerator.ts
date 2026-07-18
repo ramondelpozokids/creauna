@@ -52,7 +52,7 @@ CALIDAD DE EJECUCIÓN (obligatoria — cobrable como agencia):
 - Si pide redes y legales: enlaces sociales + footer con privacidad/términos.
 - Espaciado generoso, jerarquía tipográfica clara, 2–3 animaciones CSS sutiles (fade-in / hover zoom).
 - Imágenes: USA ÚNICAMENTE las URLs del bloque «Assets de imagen» (Unsplash + Pexels curados, licencia comercial). PROHIBIDO inventar IDs, placehold.co o source.unsplash.com.
-- Si piden eCommerce/carrito/Stripe: JS funcional (localStorage).
+- NO implementes Stripe, pasarela real ni carrito de pago. Si lo piden: la web puede mostrar productos; el cobro va a presupuesto vía /contacto.
 - Cero lorem ipsum. Devuelve SOLO el HTML, sin markdown.`
     : `You are CREAUNA, an elite web studio. Build the site EXCLUSIVELY from the client brief.
 
@@ -106,7 +106,8 @@ export function extractBusinessNameFromPrompt(prompt: string, lang: 'es' | 'en')
 function summarizeBriefFeatures(prompt: string, lang: 'es' | 'en'): string {
   const lower = prompt.toLowerCase();
   const bits: string[] = [];
-  if (/carrito|checkout|stripe|woocommerce|shopify/i.test(lower)) bits.push(lang === 'es' ? 'tienda con carrito' : 'store with cart');
+  if (/tienda|lookbook|productos|moda|fashion/i.test(lower))
+    bits.push(lang === 'es' ? 'catálogo / lookbook premium' : 'premium catalog / lookbook');
   if (/lookbook|colecci/i.test(lower)) bits.push('lookbook');
   if (/blog|noticias/i.test(lower)) bits.push('blog');
   if (/galer/i.test(lower)) bits.push(lang === 'es' ? 'galería' : 'gallery');

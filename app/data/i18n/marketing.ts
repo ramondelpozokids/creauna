@@ -25,7 +25,7 @@ export const contactoI18n = {
       otro: 'Otro',
     },
     toastSuccess: 'Solicitud enviada correctamente',
-    toastSuccessDesc: 'Ramón del Pozo Rott te contactará en menos de 24h.',
+    toastSuccessDesc: 'Te contactaremos en menos de 24h con tu presupuesto.',
     toastError: 'No se pudo enviar la solicitud',
   },
   en: {
@@ -54,7 +54,7 @@ export const contactoI18n = {
       otro: 'Other',
     },
     toastSuccess: 'Request sent successfully',
-    toastSuccessDesc: 'Ramón del Pozo Rott will contact you within 24h.',
+    toastSuccessDesc: 'We’ll contact you within 24h with your quote.',
     toastError: 'Could not send request',
   },
 } as const;

@@ -34,6 +34,36 @@ interface Message {
   content: string;
 }
 
+function ChatText({ text, isUser, lang }: { text: string; isUser?: boolean; lang?: 'es' | 'en' }) {
+  const parts = text.split(/(https?:\/\/[^\s]+|\/contacto\?[^\s]+)/g);
+  const formLabel =
+    lang === 'en' ? 'Open quote form →' : 'Abrir formulario de presupuesto →';
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (/^(https?:\/\/|\/contacto\?)/.test(part)) {
+          return (
+            <a
+              key={i}
+              href={part}
+              target={part.startsWith('http') ? '_blank' : undefined}
+              rel={part.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className={
+                isUser
+                  ? 'underline underline-offset-2 font-semibold'
+                  : 'text-indigo-600 underline underline-offset-2 font-semibold break-all'
+              }
+            >
+              {part.startsWith('/contacto') ? formLabel : part}
+            </a>
+          );
+        }
+        return <span key={i} className="whitespace-pre-wrap">{part}</span>;
+      })}
+    </>
+  );
+}
+
 interface PreviewSection {
   id: number;
   type: string;
@@ -1261,7 +1291,9 @@ function StudioContent() {
                     </button>
                   </div>
                 )}
-                <p className="text-[14px] leading-relaxed text-slate-700 whitespace-pre-wrap">{composerHint}</p>
+                <p className="text-[14px] leading-relaxed text-slate-700 whitespace-pre-wrap">
+                  <ChatText text={composerHint} lang={lang} />
+                </p>
                 <textarea
                   ref={inlineInputRef}
                   value={input}
@@ -1336,7 +1368,7 @@ function StudioContent() {
                               : 'max-w-[95%] rounded-2xl rounded-bl-md bg-slate-100 text-slate-800 px-4 py-3 text-[14px] leading-relaxed'
                           }
                         >
-                          {msg.content}
+                          <ChatText text={msg.content} isUser={msg.role === 'user'} lang={lang} />
                         </div>
                       </div>
                     ))}

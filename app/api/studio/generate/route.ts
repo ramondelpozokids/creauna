@@ -212,6 +212,19 @@ export async function POST(req: Request) {
       result.changedSectionIds
     );
 
+    // Extras fuera de alcance (Stripe, SaaS, hosting…) → mensaje + /contacto, sin cobrar crédito
+    if (result.quoteRedirect) {
+      await refundCredit(session?.id ?? null, ip, 'studio_refund_quote_redirect', session?.email);
+      return NextResponse.json({
+        message: sanitizeClientFacingMessage(result.message),
+        previewSections: result.previewSections,
+        changedSectionIds: [],
+        credits: spent.credits + (unlimited ? 0 : 1),
+        quoteRedirect: true,
+        source: result.source,
+      });
+    }
+
     const meaningful = hasMeaningfulSectionChanges(
       previewSections,
       result.previewSections,
