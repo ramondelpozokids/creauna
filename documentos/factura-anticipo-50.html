@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Factura anticipo 50% — CREAUNA</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --accent: #4f46e5;
+      --bg: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+      padding: 0.75rem 1rem; background: #fff; border-bottom: 1px solid var(--line);
+    }
+    .toolbar button {
+      appearance: none; border: 1px solid var(--line); background: #fff; color: var(--ink);
+      border-radius: 0.6rem; padding: 0.45rem 0.85rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    }
+    .toolbar button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .toolbar .hint { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
+    .sheet {
+      max-width: 820px; margin: 1.5rem auto 3rem; background: #fff;
+      border: 1px solid var(--line); border-radius: 1rem; padding: 2rem 2.25rem;
+      box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+    }
+    header.doc {
+      display: flex; justify-content: space-between; gap: 1.5rem;
+      padding-bottom: 1.25rem; border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; gap: 0.75rem; align-items: center; }
+    .brand img {
+      width: 52px; height: 52px; border-radius: 0.75rem; object-fit: cover; border: 1px solid var(--line);
+    }
+    .brand h1 { margin: 0; font-size: 1.35rem; letter-spacing: -0.02em; }
+    .brand .meta { font-size: 0.8rem; color: var(--muted); }
+    .doc-meta { text-align: right; }
+    .doc-meta .label {
+      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .doc-meta .num { font-size: 1.15rem; font-weight: 700; margin-top: 0.2rem; }
+    .doc-meta .dates { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; }
+    .badge {
+      display: inline-block; margin-top: 0.45rem; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.5rem;
+      border-radius: 0.4rem; background: #eef2ff; color: #4338ca;
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; padding: 1.25rem 0; }
+    .block h3 {
+      margin: 0 0 0.4rem; font-size: 0.68rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #94a3b8;
+    }
+    [contenteditable="true"] { outline: none; border-radius: 0.35rem; min-height: 1.2em; }
+    [contenteditable="true"]:focus { box-shadow: 0 0 0 2px rgb(79 70 229 / 25%); background: #f5f3ff; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    thead th {
+      text-align: left; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #94a3b8; padding: 0.7rem 0.4rem; border-bottom: 1px solid var(--line);
+    }
+    thead th.r, td.r { text-align: right; }
+    tbody td { padding: 0.75rem 0.4rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    td .desc { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .actions { width: 2rem; }
+    .actions button {
+      border: none; background: transparent; color: #94a3b8; cursor: pointer; font-size: 1rem; padding: 0.2rem;
+    }
+    .actions button:hover { color: #dc2626; }
+    .totals { margin-top: 1.25rem; margin-left: auto; width: 100%; max-width: 280px; font-size: 0.9rem; }
+    .totals .row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.25rem 0; color: var(--muted); }
+    .totals .row.strong {
+      font-weight: 700; color: var(--ink); font-size: 1.05rem;
+      border-top: 1px solid var(--line); margin-top: 0.4rem; padding-top: 0.55rem;
+    }
+    .totals .charge {
+      margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--line);
+      display: flex; justify-content: space-between; font-weight: 800; color: #4338ca;
+    }
+    footer.doc {
+      margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line);
+      font-size: 0.8rem; color: var(--muted);
+    }
+    footer.doc h3 {
+      margin: 0 0 0.35rem; font-size: 0.68rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #94a3b8;
+    }
+    @media print {
+      body { background: #fff; }
+      .toolbar, .actions { display: none !important; }
+      .sheet { margin: 0; border: none; box-shadow: none; border-radius: 0; max-width: none; padding: 0; }
+      [contenteditable="true"]:focus { box-shadow: none; background: transparent; }
+    }
+    @media (max-width: 640px) {
+      .grid2 { grid-template-columns: 1fr; }
+      header.doc { flex-direction: column; }
+      .doc-meta { text-align: left; }
+      .sheet { margin: 0.75rem; padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button type="button" class="primary" onclick="window.print()">Imprimir / Guardar PDF</button>
+    <button type="button" onclick="addLine()">+ Añadir partida</button>
+    <span class="hint">Factura de anticipo (50%) · Edita textos y partidas · Ctrl+P → PDF</span>
+  </div>
+
+  <article class="sheet">
+    <header class="doc">
+      <div class="brand">
+        <img src="logo.png" alt="CREAUNA" />
+        <div>
+          <h1>CREAUNA</h1>
+          <div class="meta" contenteditable="true">Ramón del Pozo Rott</div>
+          <div class="meta" contenteditable="true">NIF/CIF: (rellenar)</div>
+          <div class="meta" contenteditable="true">info@ramondelpozorott.es · +34 656 398 640</div>
+          <div class="meta" contenteditable="true">(dirección fiscal)</div>
+        </div>
+      </div>
+      <div class="doc-meta">
+        <div class="label">Factura</div>
+        <div class="num" contenteditable="true">FAC-2026-A01</div>
+        <div class="dates">
+          Fecha: <span contenteditable="true" id="docDate"></span><br />
+          Vencimiento: <span contenteditable="true" id="dueDate"></span>
+        </div>
+        <div class="badge">Anticipo 50%</div>
+      </div>
+    </header>
+
+    <div class="grid2">
+      <div class="block">
+        <h3>Cliente</h3>
+        <div contenteditable="true"><strong>Nombre del cliente</strong></div>
+        <div contenteditable="true">NIF/CIF:</div>
+        <div contenteditable="true">email@cliente.com</div>
+        <div contenteditable="true">Teléfono</div>
+        <div contenteditable="true">Dirección</div>
+      </div>
+      <div class="block">
+        <h3>Referencia</h3>
+        <div contenteditable="true">
+          Anticipo 50% según presupuesto PRE-2026-01.<br />
+          El 50% restante se facturará a la entrega final.
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          <th class="r" style="width:4.5rem">Cant.</th>
+          <th class="r" style="width:6rem">Precio</th>
+          <th class="r" style="width:6.5rem">Importe</th>
+          <th class="actions"></th>
+        </tr>
+      </thead>
+      <tbody id="lines"></tbody>
+    </table>
+
+    <div class="totals">
+      <div class="row"><span>Base imponible</span><span id="subtotal">0,00 €</span></div>
+      <div class="row"><span>IVA (21%)</span><span id="iva">0,00 €</span></div>
+      <div class="row strong"><span>Total proyecto</span><span id="total">0,00 €</span></div>
+      <div class="charge"><span>A cobrar ahora (50%)</span><span id="charge">0,00 €</span></div>
+    </div>
+
+    <footer class="doc">
+      <h3>Datos de pago</h3>
+      <div contenteditable="true">
+        Titular: Ramón del Pozo Rott<br />
+        IBAN: (rellenar)<br />
+        BIC: (opcional)<br />
+        Concepto: nº de factura + nombre del cliente
+      </div>
+    </footer>
+  </article>
+
+  <script>
+    const IVA = 0.21;
+    function money(n) {
+      return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n || 0);
+    }
+    function parseMoney(text) {
+      const n = String(text).replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.');
+      return Number(n) || 0;
+    }
+    function addLine(data) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div class="concept" contenteditable="true">${data?.concept || 'Nueva partida'}</div>
+          <div class="desc" contenteditable="true">${data?.desc || 'Descripción'}</div>
+        </td>
+        <td class="r qty" contenteditable="true">${data?.qty ?? 1}</td>
+        <td class="r price" contenteditable="true">${money(data?.price ?? 0)}</td>
+        <td class="r amount">0,00 €</td>
+        <td class="actions"><button type="button" onclick="this.closest('tr').remove(); recalc()">×</button></td>
+      `;
+      document.getElementById('lines').appendChild(tr);
+      tr.querySelectorAll('[contenteditable]').forEach((el) => {
+        el.addEventListener('input', recalc);
+        el.addEventListener('blur', recalc);
+      });
+      recalc();
+    }
+    function recalc() {
+      let sub = 0;
+      document.querySelectorAll('#lines tr').forEach((tr) => {
+        const qty = parseMoney(tr.querySelector('.qty').textContent);
+        const price = parseMoney(tr.querySelector('.price').textContent);
+        const amount = qty * price;
+        tr.querySelector('.amount').textContent = money(amount);
+        sub += amount;
+      });
+      const iva = sub * IVA;
+      const total = sub + iva;
+      document.getElementById('subtotal').textContent = money(sub);
+      document.getElementById('iva').textContent = money(iva);
+      document.getElementById('total').textContent = money(total);
+      document.getElementById('charge').textContent = money(total / 2);
+    }
+    const today = new Date();
+    document.getElementById('docDate').textContent = today.toISOString().slice(0, 10);
+    const due = new Date(today); due.setDate(due.getDate() + 7);
+    document.getElementById('dueDate').textContent = due.toISOString().slice(0, 10);
+    addLine({
+      concept: 'Web a medida (diseño exclusivo)',
+      desc: 'Diseño premium, desarrollo responsive, SEO on-page, entrega o publicación.',
+      qty: 1, price: 1790
+    });
+  </script>
+</body>
+</html>
