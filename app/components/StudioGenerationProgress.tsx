@@ -3,26 +3,30 @@
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
+/**
+ * Progreso al estilo Emergent/Lovable: fases de construcción.
+ * Sin revelar proveedores ni stack interno.
+ */
 const STAGES = {
   es: [
     'Analizando tu brief…',
-    'Director CREAUNA asignando motores…',
-    'Motor Visual · diseño e imágenes…',
-    'fal.ai generando fotografías premium…',
-    'Motor Copy · textos persuasivos…',
-    'Motor Código · estructura HTML…',
-    'Motor UX · formularios y conversión…',
-    'Ensamblando tu web…',
+    'Cerrando el plan de la web…',
+    'Construyendo la base y tipografía…',
+    'Diseñando el hero impactante…',
+    'Montando secciones y contenido…',
+    'Integrando fotografía e identidad…',
+    'Verificando calidad de agencia…',
+    'Corrigiendo detalles y ensamblando…',
   ],
   en: [
     'Analyzing your brief…',
-    'CREAUNA Director assigning engines…',
-    'Visual engine · design & images…',
-    'fal.ai generating premium photos…',
-    'Copy engine · persuasive text…',
-    'Code engine · HTML structure…',
-    'UX engine · forms & conversion…',
-    'Assembling your site…',
+    'Locking the site plan…',
+    'Building foundation and typography…',
+    'Designing the impactful hero…',
+    'Assembling sections and content…',
+    'Integrating photography and identity…',
+    'Running agency quality checks…',
+    'Fixing details and assembling…',
   ],
 } as const;
 
@@ -42,15 +46,15 @@ export default function StudioGenerationProgress({ lang, startedAt }: Props) {
       setElapsed(Math.floor((Date.now() - startedAt) / 1000));
     }, 1000);
     const stage = window.setInterval(() => {
-      setStageIndex((i) => (i + 1) % stages.length);
-    }, 4500);
+      setStageIndex((i) => Math.min(i + 1, stages.length - 1));
+    }, 5500);
     return () => {
       window.clearInterval(tick);
       window.clearInterval(stage);
     };
   }, [startedAt, stages.length]);
 
-  const progress = Math.min(92, 8 + elapsed * 1.2);
+  const progress = Math.min(94, 6 + elapsed * 1.05 + stageIndex * 4);
 
   return (
     <div
@@ -65,8 +69,8 @@ export default function StudioGenerationProgress({ lang, startedAt }: Props) {
       </p>
       <p className="mt-3 text-sm text-slate-500 text-center">
         {lang === 'es'
-          ? `${elapsed}s · Construyendo tu web con IA — no cierres esta pestaña`
-          : `${elapsed}s · Building your site with AI — keep this tab open`}
+          ? `${elapsed}s · Plan → construcción → verificación — no cierres esta pestaña`
+          : `${elapsed}s · Plan → build → verify — keep this tab open`}
       </p>
       <div className="mt-8 w-full max-w-xs h-2 bg-slate-200 rounded-full overflow-hidden">
         <div

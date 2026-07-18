@@ -5,6 +5,7 @@ import { getPremiumStarterBySlug } from '../../../data/premiumStarters';
 import { buildPedirPageHtml } from '../../../lib/studio/mesonContentBridge';
 import { mergePersonalization } from '../../../lib/studio/personalizePremiumStarter';
 import { normalizePremiumContent, type PremiumStarterContent } from '../../../lib/studio/premiumContentTypes';
+import { injectClientProtection } from '../../../lib/securityLayers';
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
     const premiumContent = body.premiumContent as PremiumStarterContent | undefined;
 
     const fullpage = sections.find((s: { type?: string; html?: string }) => s.type === 'fullpage');
-    const indexHtml =
+    const indexHtmlRaw =
       fullpage?.html ??
       `<!DOCTYPE html>
 <html lang="es">
@@ -37,7 +38,9 @@ export async function POST(req: Request) {
 </body>
 </html>`;
 
-    const files: Record<string, string> = { 'index.html': indexHtml };
+    const files: Record<string, string> = {
+      'index.html': injectClientProtection(indexHtmlRaw, { mode: 'delivery' }),
+    };
 
     if (premiumStarterSlug === 'meson-la-colonia' && premiumContent) {
       const starter = getPremiumStarterBySlug('meson-la-colonia');
@@ -45,10 +48,9 @@ export async function POST(req: Request) {
         const personalization = mergePersonalization(starter, body.premiumPersonalization);
         const content = normalizePremiumContent(premiumContent);
         if (content.digital.orderingEnabled && content.menu.length > 0) {
-          files['pedir.html'] = buildPedirPageHtml(
-            content,
-            personalization.businessName,
-            personalization.phoneE164
+          files['pedir.html'] = injectClientProtection(
+            buildPedirPageHtml(content, personalization.businessName, personalization.phoneE164),
+            { mode: 'delivery' }
           );
         }
       }

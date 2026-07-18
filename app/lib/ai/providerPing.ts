@@ -33,6 +33,10 @@ export const PROVIDER_META: Record<
     label: 'OpenAI',
     bestFor: ['código', 'HTML/CSS', 'estructura', 'refactors', 'tools'],
   },
+  qwen: {
+    label: 'Qwen',
+    bestFor: ['HTML largo', 'calidad tipo agencia', 'briefs densos', 'código'],
+  },
   groq: {
     label: 'Groq',
     bestFor: ['fallback rápido', 'baja latencia', 'borradores baratos'],
@@ -47,7 +51,7 @@ export const PROVIDER_META: Record<
   },
 };
 
-const ALL_PROVIDERS: AiProvider[] = ['gemini', 'claude', 'openai', 'groq', 'manus', 'fal'];
+const ALL_PROVIDERS: AiProvider[] = ['qwen', 'gemini', 'claude', 'openai', 'groq', 'manus', 'fal'];
 
 const FAL_EDITORIAL_MOTORS = ['visual', 'visual-images'];
 
@@ -211,6 +215,55 @@ async function pingOpenAI(): Promise<Omit<ProviderPingResult, 'provider' | 'labe
     return { configured: true, status: sample ? 'ok' : 'error', model, latencyMs, sample, httpStatus: res.status, error: sample ? null : 'Respuesta vacía del modelo' };
   } catch {
     return { configured: true, status: 'error', model, latencyMs, sample: null, httpStatus: res.status, error: 'JSON inválido en respuesta OpenAI' };
+  }
+}
+
+async function pingQwen(): Promise<Omit<ProviderPingResult, 'provider' | 'label' | 'bestFor' | 'motors'>> {
+  const apiKey = (process.env.QWEN_API_KEY || process.env.DASHSCOPE_API_KEY)?.trim();
+  const model = process.env.QWEN_MODEL?.trim() || 'qwen-plus';
+  const base =
+    process.env.QWEN_BASE_URL?.trim() ||
+    process.env.DASHSCOPE_BASE_URL?.trim() ||
+    'https://dashscope-intl.aliyuncs.com/compatible-mode/v1';
+  if (!apiKey) {
+    return {
+      configured: false,
+      status: 'missing',
+      model,
+      latencyMs: null,
+      sample: null,
+      httpStatus: null,
+      error: 'QWEN_API_KEY / DASHSCOPE_API_KEY no configurada',
+    };
+  }
+
+  const started = Date.now();
+  const res = await fetch(`${base.replace(/\/$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: 'user', content: 'Responde solo: OK' }],
+      temperature: 0,
+      max_tokens: 8,
+    }),
+  });
+  const latencyMs = Date.now() - started;
+  const body = await res.text();
+
+  if (!res.ok) {
+    return { configured: true, status: 'error', model, latencyMs, sample: null, httpStatus: res.status, error: parseApiError(res.status, body) };
+  }
+
+  try {
+    const data = JSON.parse(body) as { choices?: { message?: { content?: string } }[] };
+    const sample = data?.choices?.[0]?.message?.content?.trim() || null;
+    return { configured: true, status: sample ? 'ok' : 'error', model, latencyMs, sample, httpStatus: res.status, error: sample ? null : 'Respuesta vacía del modelo' };
+  } catch {
+    return { configured: true, status: 'error', model, latencyMs, sample: null, httpStatus: res.status, error: 'JSON inválido en respuesta Qwen' };
   }
 }
 
@@ -397,6 +450,9 @@ async function pingOne(provider: AiProvider): Promise<ProviderPingResult> {
         break;
       case 'openai':
         result = await pingOpenAI();
+        break;
+      case 'qwen':
+        result = await pingQwen();
         break;
       case 'groq':
         result = await pingGroq();

@@ -1,0 +1,34 @@
+﻿TIENDA DE ROPA PREMIUM
+Nombre
+VELORA
+Eslogan
+Moda que habla antes que tú.
+Título
+La elegancia nunca pasa de moda.
+Subtítulo
+Descubre colecciones diseñadas para quienes entienden que vestir bien es una forma de expresarse.
+Botón principal
+Explorar colección
+Botón secundario
+Nueva temporada
+LOOKBOOK
+CATEGORÍAS
+Hombre
+Mujer
+Calzado
+Accesorios
+PRODUCTOS DESTACADOS
+NUEVA COLECCIÓN
+NEWSLETTER
+INSTAGRAM
+CONTACTO
+Calle Serrano 118
+28006 Madrid
+Playfair Display
+Inter
+carrito
+lookbook
+moda premium
+Zara Massimo Dutti
+no quiero una plantilla
+Sin Bootstrap

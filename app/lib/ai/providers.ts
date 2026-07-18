@@ -1,4 +1,4 @@
-export type AiProvider = 'gemini' | 'claude' | 'openai' | 'groq' | 'manus' | 'fal';
+export type AiProvider = 'gemini' | 'claude' | 'openai' | 'qwen' | 'groq' | 'manus' | 'fal';
 export type MotorId = 'visual' | 'copy' | 'code' | 'ux';
 
 export interface AiMessage {
@@ -16,7 +16,7 @@ export interface AiCompletionResult {
 export const MOTOR_PROVIDER: Record<MotorId, AiProvider> = {
   visual: 'gemini',
   copy: 'claude',
-  code: 'openai',
+  code: 'qwen',
   ux: 'groq',
 };
 
@@ -36,6 +36,8 @@ export function isProviderConfigured(provider: AiProvider): boolean {
       return !isPlaceholder(process.env.ANTHROPIC_API_KEY);
     case 'openai':
       return !isPlaceholder(process.env.OPENAI_API_KEY);
+    case 'qwen':
+      return !isPlaceholder(process.env.QWEN_API_KEY || process.env.DASHSCOPE_API_KEY);
     case 'groq':
       return !isPlaceholder(process.env.GROQ_API_KEY);
     case 'manus':
@@ -48,7 +50,9 @@ export function isProviderConfigured(provider: AiProvider): boolean {
 }
 
 export function getConfiguredProviders(): AiProvider[] {
-  return (['gemini', 'claude', 'openai', 'groq', 'manus', 'fal'] as AiProvider[]).filter(isProviderConfigured);
+  return (['qwen', 'gemini', 'claude', 'openai', 'groq', 'manus', 'fal'] as AiProvider[]).filter(
+    isProviderConfigured
+  );
 }
 
 function pickMotorForPrompt(prompt: string): MotorId {
@@ -139,7 +143,9 @@ async function callOpenAI(messages: AiMessage[], maxTokens: number, temperature 
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) return null;
 
-  const model = process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini';
+  const model =
+    process.env.OPENAI_MODEL?.trim() ||
+    (maxTokens >= 8000 ? 'gpt-4o' : 'gpt-4o-mini');
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -193,6 +199,42 @@ async function callGroq(messages: AiMessage[], maxTokens: number, temperature = 
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
+/** Qwen vía DashScope (compatible OpenAI). Ideal para HTML largo de calidad. */
+async function callQwen(messages: AiMessage[], maxTokens: number, temperature = 0.6): Promise<string | null> {
+  const apiKey = (process.env.QWEN_API_KEY || process.env.DASHSCOPE_API_KEY)?.trim();
+  if (!apiKey) return null;
+
+  const base =
+    process.env.QWEN_BASE_URL?.trim() ||
+    process.env.DASHSCOPE_BASE_URL?.trim() ||
+    'https://dashscope-intl.aliyuncs.com/compatible-mode/v1';
+  const model =
+    process.env.QWEN_MODEL?.trim() ||
+    (maxTokens >= 8000 ? 'qwen3.7-plus' : 'qwen-plus');
+
+  const res = await fetch(`${base.replace(/\/$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      temperature,
+      max_tokens: maxTokens,
+    }),
+  });
+
+  if (!res.ok) {
+    console.error('qwen error:', res.status, await res.text());
+    return null;
+  }
+
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content?.trim() || null;
+}
+
 async function callProvider(
   provider: AiProvider,
   messages: AiMessage[],
@@ -206,6 +248,8 @@ async function callProvider(
       return callClaude(messages, maxTokens, temperature);
     case 'openai':
       return callOpenAI(messages, maxTokens, temperature);
+    case 'qwen':
+      return callQwen(messages, maxTokens, temperature);
     case 'groq':
       return callGroq(messages, maxTokens, temperature);
     case 'manus':
@@ -230,16 +274,16 @@ async function callProviderWithRetry(
   return callProvider(provider, messages, maxTokens, temperature);
 }
 
-const FALLBACK_ORDER: AiProvider[] = ['gemini', 'claude', 'openai', 'groq'];
+const FALLBACK_ORDER: AiProvider[] = ['qwen', 'openai', 'gemini', 'claude', 'groq'];
 
 export async function chatCompletion(
   messages: AiMessage[],
-  options?: { temperature?: number; maxTokens?: number; motor?: MotorId; prompt?: string }
+  options?: { temperature?: number; maxTokens?: number; motor?: MotorId; prompt?: string; preferProvider?: AiProvider }
 ): Promise<AiCompletionResult> {
   const maxTokens = options?.maxTokens ?? 1200;
   const temperature = options?.temperature ?? 0.6;
   const motor = options?.motor || pickMotorForPrompt(options?.prompt || messages.at(-1)?.content || '');
-  const primary = MOTOR_PROVIDER[motor];
+  const primary = options?.preferProvider || MOTOR_PROVIDER[motor];
 
   const tryOrder = [primary, ...FALLBACK_ORDER.filter((p) => p !== primary)];
 

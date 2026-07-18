@@ -1,5 +1,6 @@
 import { chatCompletion, type MotorId } from './providers';
 import { generateInitialSite, generateInitialSiteFromDiscovery } from './siteGenerator';
+import { rewriteFullPageFromRequest } from './promptFirstSiteGenerator';
 import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
 import { applyVisualEnhancement, applyStrongVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
 import { validateSectionHtml } from '../studio/sectionValidator';
@@ -143,8 +144,28 @@ function corporateUpgradePrompt(lower: string): boolean {
     lower.includes('sofisticad') ||
     lower.includes('luminosa') ||
     lower.includes('clara') ||
-    lower.includes('bonit')
+    lower.includes('bonit') ||
+    lower.includes('galer') ||
+    lower.includes('imagen') ||
+    lower.includes('foto') ||
+    lower.includes('gallery')
   );
+}
+
+/** Sitio generado desde brief (HTML completo) — los cambios cosméticos por regex mienten al cliente. */
+function isFullPagePreview(sections: PreviewSection[]): boolean {
+  if (sections.length === 1 && (sections[0].type === 'fullpage' || sections[0].html.includes('<!DOCTYPE'))) {
+    return true;
+  }
+  return sections.some((s) => s.type === 'fullpage' || /<!DOCTYPE\s+html/i.test(s.html));
+}
+
+/**
+ * Pedidos de rediseño real: no aplicar swaps de clases; reescribir con IA sobre el HTML del cliente.
+ */
+function needsRealRedesign(prompt: string, sections: PreviewSection[]): boolean {
+  if (!isFullPagePreview(sections)) return false;
+  return corporateUpgradePrompt(prompt.toLowerCase());
 }
 
 async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
@@ -160,7 +181,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       html: applyStyleTransform(s.html, 'moderno'),
     }));
     return {
-      message: lang === 'es' ? 'Motor Visual: diseño regenerado con nueva paleta y ritmo.' : 'Visual engine: design regenerated with new palette and rhythm.',
+      message: lang === 'es' ? 'Diseño regenerado con nueva paleta y ritmo.' : 'Design regenerated with new palette and rhythm.',
       previewSections: sections,
       motorsUsed: ['visual', 'ux'],
       source: 'rules',
@@ -190,12 +211,17 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       return { ...s, html: applyStyleTransform(s.html, style) };
     });
     return {
-      message: lang === 'es' ? `Motor de Experiencia: estilo «${style}» aplicado a toda la vista.` : `UX engine: «${style}» style applied to the full view.`,
+      message: lang === 'es' ? `Estilo «${style}» aplicado a toda la vista.` : `«${style}» style applied to the full view.`,
       previewSections: sections,
       motorsUsed: ['ux', 'visual'],
       source: 'rules',
       changedSectionIds: changedIds,
     };
+  }
+
+  // Fullpage desde brief: no mentir con swaps de clases ("más elegante", "hero", "galería"…)
+  if (needsRealRedesign(prompt, previewSections)) {
+    return null;
   }
 
   if (
@@ -255,8 +281,8 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
     const upgraded = rebuildCorporatePreviewSections(previewSections, lang);
     return {
       message: lang === 'es'
-        ? 'Motor Visual: sitio reconstruido con diseño premium — hero Madrid, servicios glassmorphism, carrusel, stats y footer con enlaces legales.'
-        : 'Visual engine: site rebuilt with premium design — Madrid hero, glassmorphism services, carousel, stats and legal footer links.',
+        ? 'Sitio reconstruido con diseño premium — hero, servicios, carrusel, stats y footer con enlaces legales.'
+        : 'Site rebuilt with premium design — hero, services, carousel, stats and legal footer links.',
       previewSections: upgraded,
       motorsUsed: ['visual', 'ux'],
       source: 'rules',
@@ -270,7 +296,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       return { ...s, html: applyStrongVisualEnhancement(applyStyleTransform(s.html, 'elegante'), 'elegante') };
     });
     return {
-      message: lang === 'es' ? 'Motor Visual + UX: más espacio, tipografía refinada y detalles premium.' : 'Visual + UX: more space, refined typography and premium details.',
+      message: lang === 'es' ? 'Más espacio, tipografía refinada y detalles premium.' : 'More space, refined typography and premium details.',
       previewSections: sections,
       motorsUsed: ['visual', 'ux'],
       source: 'rules',
@@ -303,7 +329,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       return { ...s, html: applyStrongVisualEnhancement(s.html, 'luminosa') };
     });
     return {
-      message: lang === 'es' ? 'Motor de Experiencia: versión más clara y luminosa.' : 'UX engine: brighter, lighter version.',
+      message: lang === 'es' ? 'Versión más clara y luminosa.' : 'Brighter, lighter version.',
       previewSections: sections,
       motorsUsed: ['ux'],
       source: 'rules',
@@ -324,7 +350,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       };
     });
     return {
-      message: lang === 'es' ? 'Motor Visual: paleta tierra y beige aplicada.' : 'Visual engine: earth and beige palette applied.',
+      message: lang === 'es' ? 'Paleta tierra y beige aplicada.' : 'Earth and beige palette applied.',
       previewSections: sections,
       motorsUsed: ['visual', 'ux'],
       source: 'rules',
@@ -352,7 +378,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
       return { ...s, html: applyStrongVisualEnhancement(s.html, 'tipografia') };
     });
     return {
-      message: lang === 'es' ? 'Motor Visual: tipografía más sofisticada.' : 'Visual engine: more sophisticated typography.',
+      message: lang === 'es' ? 'Tipografía más sofisticada.' : 'More sophisticated typography.',
       previewSections: sections,
       motorsUsed: ['visual'],
       source: 'rules',
@@ -387,7 +413,7 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
     );
     changedIds.push(contact.id);
     return {
-      message: lang === 'es' ? 'Motor UX: formulario de contacto más visible.' : 'UX engine: contact form more visible.',
+      message: lang === 'es' ? 'Formulario de contacto más visible.' : 'Contact form more visible.',
       previewSections: sections,
       motorsUsed: ['ux'],
       source: 'rules',
@@ -413,6 +439,28 @@ function pickMotorForSection(prompt: string, sectionType: string): MotorId {
 
 async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
   if (isPremiumStarterContextLocked(input)) return null;
+
+  if (isFullPagePreview(input.previewSections)) {
+    const full = input.previewSections.find((s) => s.type === 'fullpage') ?? input.previewSections[0];
+    const rewritten = await rewriteFullPageFromRequest(full.html, input.prompt, input.lang);
+    if (!rewritten.html) return null;
+    const validation = validateSectionHtml(rewritten.html, full.id, full.type);
+    if (!validation.ok) return null;
+    return {
+      message:
+        input.lang === 'es'
+          ? 'Cambio aplicado sobre tu diseño, según tu pedido.'
+          : 'Change applied on your design, per your request.',
+      previewSections: patchSection(cloneSections(input.previewSections), full.id, rewritten.html),
+      motorsUsed: ['visual', 'code'],
+      source: rewritten.falImages ? 'hybrid' : 'ai',
+      changedSectionIds: [full.id],
+      pipelineStage: 'prompt_first',
+      falImages: rewritten.falImages,
+      providersUsed: [rewritten.provider],
+    };
+  }
+
   const target = targetSection(input);
   if (!target) return null;
 
@@ -506,6 +554,26 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       return { ...locked, pipelineStage: 'rules' };
     }
     const result = await generateInitialSite(input.prompt, input.lang, input.sectorId);
+    // Rechazo de calidad: no sustituir la preview por vacío ni colar plantilla
+    if (!result.previewSections.length) {
+      return {
+        message:
+          result.message ||
+          (input.lang === 'es'
+            ? 'No entregué la web: calidad insuficiente o IA no disponible. Sin plantillas.'
+            : 'Did not deliver the site: insufficient quality or AI unavailable. No templates.'),
+        previewSections: cloneSections(input.previewSections),
+        motorsUsed: result.motorsUsed ?? [],
+        source: 'rules',
+        changedSectionIds: [],
+        templateSlug: result.templateSlug,
+        businessName: result.businessName,
+        sectorId: result.sectorId,
+        sectorLabel: result.sectorLabel,
+        pipelineStage: result.pipelineStage ?? 'prompt_first',
+        aiSkippedReason: result.aiSkippedReason,
+      };
+    }
     return {
       message: result.message,
       previewSections: result.previewSections,
@@ -525,6 +593,12 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
   if (isPremiumStarterContextLocked(input) && input.action === 'change') {
     const premium = personalizeFromPremiumStarter(input, input.lang);
     return { ...premium, pipelineStage: 'premium_personalize' };
+  }
+
+  // Brief fullpage: rediseños reales ANTES de reglas cosméticas (que solo cambian clases)
+  if (input.action === 'change' && needsRealRedesign(input.prompt, input.previewSections)) {
+    const aiFull = await applyAIChange(input);
+    if (aiFull) return aiFull;
   }
 
   if (input.action === 'change' && isTemplateContextLocked(input) && isCosmeticPrompt(input.prompt)) {
@@ -560,12 +634,8 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
     return {
       message:
         input.lang === 'es'
-          ? health.aiEnabled
-            ? 'La IA no pudo aplicar tu cambio. Prueba ser más específico (sección, color, texto) o reformula el prompt.'
-            : 'Motor en modo reglas: configura GEMINI, ANTHROPIC, OPENAI o GROQ para refinamiento IA. Describe el cambio con más detalle.'
-          : health.aiEnabled
-            ? 'AI could not apply your change. Be more specific (section, color, copy) or rephrase.'
-            : 'Rules-only mode: configure AI API keys for refinement. Describe the change in more detail.',
+          ? 'No se pudo aplicar tu cambio. Sé más específico (sección, color, texto) o reformula.'
+          : 'Could not apply your change. Be more specific (section, color, copy) or rephrase.',
       previewSections: cloneSections(input.previewSections),
       motorsUsed: health.aiEnabled ? [] : ['visual'],
       source: 'rules',
@@ -578,12 +648,8 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
   return {
     message:
       input.lang === 'es'
-        ? health.aiEnabled
-          ? `Ajuste visual aplicado (reglas) — «${input.prompt.slice(0, 50)}». La IA no respondió; prueba de nuevo si necesitas más precisión.`
-          : `Ajuste visual básico (sin IA) — «${input.prompt.slice(0, 50)}». Añade claves IA para cambios avanzados.`
-        : health.aiEnabled
-          ? `Visual tweak applied (rules) — «${input.prompt.slice(0, 50)}». AI did not respond; retry for precision.`
-          : `Basic visual tweak (no AI) — «${input.prompt.slice(0, 50)}». Add AI keys for advanced edits.`,
+        ? `Ajuste aplicado — «${input.prompt.slice(0, 50)}». Si necesitas más precisión, reformula el pedido.`
+        : `Update applied — «${input.prompt.slice(0, 50)}». Rephrase if you need more precision.`,
     previewSections: sections,
     motorsUsed: ['visual'],
     source: 'rules',

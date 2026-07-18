@@ -213,22 +213,18 @@ export async function generateVisualAssetPack(
   return { hero, gallery };
 }
 
-/** Sustituye src de <img> y la primera background-image https. */
+/** Sustituye src de <img> (no scripts CDN) y la primera background-image https. */
 export function injectImageUrls(html: string, urls: string[]): string {
   if (!urls.length) return html;
   let i = 0;
-  let out = html.replace(/src="(https:\/\/[^"]+)"/g, (match) => {
-    if (i >= urls.length) return match;
-    const safe = urls[i++].replace(/"/g, '%22');
-    return `src="${safe}"`;
+  let out = html.replace(/<img\b([^>]*?)>/gi, (full, attrs: string) => {
+    if (i >= urls.length) return full;
+    const url = urls[i++].replace(/"/g, '%22');
+    if (/\bsrc\s*=/i.test(attrs)) {
+      return `<img${attrs.replace(/\bsrc\s*=\s*("([^"]*)"|'([^']*)')/i, `src="${url}"`)}>`;
+    }
+    return `<img src="${url}"${attrs}>`;
   });
-  if (i === 0 && urls[0]) {
-    out = out.replace(
-      /(<img[^>]+src=")(https:\/\/[^"]+)(")/,
-      `$1${urls[0].replace(/"/g, '%22')}$3`
-    );
-    i = 1;
-  }
   if (urls[0]) {
     out = out.replace(
       /background-image:\s*url\(['"]?(https:\/\/[^'")\s]+)['"]?\)/i,

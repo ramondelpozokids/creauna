@@ -74,19 +74,20 @@ export function buildOrchestraManifest(plan: DirectorPlan, targetTypes: string[]
 }
 
 export function orchestraSummary(manifest: OrchestraManifest, lang: 'es' | 'en'): string {
-  const parts = manifest.assignments.map((a) => `${a.sectionType}→${a.motor}`);
+  const parts = manifest.assignments.map((a) => motorLabel(a.motor, lang));
+  const unique = [...new Set(parts)];
   if (lang === 'es') {
-    return `Director CREAUNA (${manifest.strategy}): ${parts.join(', ')}`;
+    return `Ajustes aplicados: ${unique.join(', ')}.`;
   }
-  return `CREAUNA Director (${manifest.strategy}): ${parts.join(', ')}`;
+  return `Updates applied: ${unique.join(', ')}.`;
 }
 
 export function motorLabel(motor: MotorId, lang: 'es' | 'en'): string {
   const labels: Record<MotorId, { es: string; en: string }> = {
-    visual: { es: 'Motor Visual', en: 'Visual engine' },
-    copy: { es: 'Motor Copy', en: 'Copy engine' },
-    code: { es: 'Motor Código', en: 'Code engine' },
-    ux: { es: 'Motor UX', en: 'UX engine' },
+    visual: { es: 'diseño visual', en: 'visual design' },
+    copy: { es: 'redacción', en: 'copywriting' },
+    code: { es: 'estructura', en: 'structure' },
+    ux: { es: 'experiencia', en: 'experience' },
   };
   return labels[motor][lang];
 }

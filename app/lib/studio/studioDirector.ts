@@ -131,8 +131,8 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
       strategy: 'code',
       targetTypes: filterExisting(CODE_TYPES, types),
       motorLabels: ['code'],
-      reasonEs: 'Motor Código: servicios, menú o estructura de secciones.',
-      reasonEn: 'Code engine: services, menu or section structure.',
+      reasonEs: 'Servicios, menú o estructura de secciones.',
+      reasonEn: 'Services, menu or section structure.',
     };
   }
 
@@ -147,8 +147,8 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
         strategy: 'ux',
         targetTypes: targets,
         motorLabels: ['ux'],
-        reasonEs: 'Motor UX: contacto, mapa, formularios y conversión.',
-        reasonEn: 'UX engine: contact, map, forms and conversion.',
+        reasonEs: 'Contacto, mapa, formularios y conversión.',
+        reasonEn: 'Contact, map, forms and conversion.',
       };
     }
   }
@@ -160,8 +160,8 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
         strategy: 'copy',
         targetTypes: targets,
         motorLabels: ['copy'],
-        reasonEs: 'Motor Copy: textos, testimonios y contenido persuasivo.',
-        reasonEn: 'Copy engine: copy, testimonials and persuasive content.',
+        reasonEs: 'Textos, testimonios y contenido persuasivo.',
+        reasonEn: 'Copy, testimonials and persuasive content.',
       };
     }
   }
@@ -177,8 +177,8 @@ export function planStudioChange(input: StudioGenerateInput): DirectorPlan {
         strategy: 'visual',
         targetTypes: targets.length ? targets : ['hero'],
         motorLabels: ['visual'],
-        reasonEs: 'Motor Visual: hero, imágenes y acabado premium.',
-        reasonEn: 'Visual engine: hero, imagery and premium finish.',
+        reasonEs: 'Hero, imágenes y acabado premium.',
+        reasonEn: 'Hero, imagery and premium finish.',
       };
     }
   }

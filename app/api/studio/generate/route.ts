@@ -4,6 +4,7 @@ import type { PremiumStarterContent } from '../../../lib/studio/premiumContentTy
 import { shouldGenerateFullSite } from '../../../lib/ai/intentAnalyzer';
 import { applyRateLimit, getClientIp } from '../../../lib/api/rateLimit';
 import { sanitizeText } from '../../../lib/api/validate';
+import { sanitizeClientFacingMessage } from '../../../lib/ai/clientFacingCopy';
 import { getSessionUser } from '../../../lib/auth/session';
 import { consumeCredit, refundCredit, resolveCredits } from '../../../lib/credits';
 import { createProjectSnapshot } from '../../../lib/studio/snapshotService';
@@ -303,11 +304,19 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
-      ...result,
+      message: sanitizeClientFacingMessage(result.message),
+      previewSections: result.previewSections,
+      changedSectionIds: result.changedSectionIds,
+      source: result.source,
+      templateSlug: result.templateSlug,
+      businessName: result.businessName,
+      sectorId: result.sectorId,
+      sectorLabel: result.sectorLabel,
       credits: spent.credits,
       unlimited,
       snapshotId,
       diffSummary,
+      // Interno solo en logs/audit — no exponer stack al cliente
     });
   } catch (error) {
     console.error('api/studio/generate:', error);

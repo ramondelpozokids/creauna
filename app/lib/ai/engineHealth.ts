@@ -19,7 +19,8 @@ export type PipelineStage =
   | 'fal_visual'
   | 'rules_fallback'
   | 'rules_only'
-  | 'prompt_first';
+  | 'prompt_first'
+  | 'agency_pipeline';
 
 export interface EngineHealthStatus {
   ready: boolean;

@@ -7,10 +7,10 @@ export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblo
 export function isFashionEcommercePrompt(prompt: string): boolean {
   const lower = prompt.toLowerCase();
   return (
-    /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de moda|carrito de compra|carrito persistente|checkout|pasarela|stripe|woocommerce|shopify|lookbook|productos destacados|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos/i.test(
+    /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de (moda|ropa)|boutique de moda|carrito|checkout|pasarela|stripe|woocommerce|shopify|lookbook|productos destacados|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos|nueva colecci[oó]n|explorar colecci[oó]n/i.test(
       lower
     ) ||
-    /zara|massimo dutti|\bcos\b|mango|gymshark|balenciaga|dior|gucci|nike|adidas|hugo boss|tommy hilfiger|calvin klein|lacoste|ralph lauren|louis vuitton|uniqlo|alo yoga/i.test(
+    /zara|massimo dutti|\bcos\b|mango|gymshark|balenciaga|dior|gucci|nike|adidas|hugo boss|tommy hilfiger|calvin klein|lacoste|ralph lauren|louis vuitton|uniqlo|alo yoga|sandro|armani exchange|velora/i.test(
       lower
     )
   );
@@ -713,15 +713,15 @@ const JEWELRY_IMAGES = {
 };
 
 const FASHION_IMAGES = {
-  hero: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop',
+  hero: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1920&h=1080&q=80',
   p1: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
   p2: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
-  p3: 'https://images.pexels.com/photos/1485237471/pexels-photo-1485237471.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
+  p3: 'https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
   p4: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
   p5: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
   p6: 'https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop',
-  gal1: 'https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
-  gal2: 'https://images.pexels.com/photos/157675/fashion-men-s-individuality-black-and-white-157675.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
+  gal1: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&h=1000&q=80',
+  gal2: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&h=1000&q=80',
   gal3: 'https://images.pexels.com/photos/2983468/pexels-photo-2983468.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
 };
 

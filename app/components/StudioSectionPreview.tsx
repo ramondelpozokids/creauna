@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Zap } from 'lucide-react';
 import { CUA_SITE_RESPONSIVE_CSS, buildMobilePreviewDocument } from '../lib/ai/responsiveSiteCss';
 import { wrapSectionHtml } from '../lib/ai/siteSectionWrap';
+import { injectClientProtection } from '../lib/securityLayers';
 
 export type PreviewSection = { id: number; type: string; html: string };
 
@@ -32,7 +33,7 @@ function FullPagePreview({
   isThinking: boolean;
 }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const srcDoc = useMemo(() => html, [html]);
+  const srcDoc = useMemo(() => injectClientProtection(html, { mode: 'preview' }), [html]);
 
   useEffect(() => {
     const iframe = iframeRef.current;

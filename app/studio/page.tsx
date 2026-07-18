@@ -1053,7 +1053,7 @@ function StudioContent() {
               <Eye className="w-3 h-3" />
               {lang === 'es' ? 'Muestra premium' : 'Premium sample'}
             </a>
-          ) : activeTemplateSlug ? (
+          ) : activeTemplateSlug && activeTemplateSlug !== 'prompt-first' ? (
             <Link
               href={`/templates/preview/${activeTemplateSlug}`}
               className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-semibold text-indigo-700"
@@ -1061,6 +1061,11 @@ function StudioContent() {
               <Eye className="w-3 h-3" />
               {t.templateLoaded}
             </Link>
+          ) : activeTemplateSlug === 'prompt-first' ? (
+            <span className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-xs font-semibold text-emerald-800">
+              <Eye className="w-3 h-3" />
+              {lang === 'es' ? 'Diseño desde brief' : 'Built from brief'}
+            </span>
           ) : null}
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-800">
             <Coins className="w-3.5 h-3.5" />

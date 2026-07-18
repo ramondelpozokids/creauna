@@ -12,6 +12,7 @@
     "db:push": "dotenv -e .env.local -- prisma db push",
     "seed:admin": "dotenv -e .env.local -- node scripts/seed-admin.mjs",
     "ping:ai": "dotenv -e .env.local -- npx tsx scripts/ping-ai.ts",
+    "test:kebab-local": "dotenv -e .env.local -- npx tsx scripts/local-kebab-hut-test.ts",
     "verify:engine": "npx tsx scripts/verify-engine.ts",
     "verify:starters": "npx tsx scripts/verify-premium-starters.ts",
     "sync:ai-arsenal": "powershell -ExecutionPolicy Bypass -File scripts/sync-ai-arsenal.ps1"

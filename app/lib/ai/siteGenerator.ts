@@ -12,6 +12,7 @@ import { resolveStudioSector, buildSectorAgentPlaybook } from '../studio/sectorA
 import { buildIntentFromDiscovery, synthesizeDiscoveryPrompt } from '../studio/buildIntentFromDiscovery';
 import type { StudioDiscoveryAnswers } from '../studio/discoveryTypes';
 import { generateSiteFromUserPrompt } from './promptFirstSiteGenerator';
+import { clientRejectsTemplates } from './promptFirstQuality';
 
 export interface InitialSiteResult {
   message: string;
@@ -111,6 +112,25 @@ export async function generateInitialSite(
       pipelineStage: promptFirst.pipelineStage,
       aiSkippedReason: promptFirst.aiSkippedReason,
       falImages: promptFirst.falImages,
+    };
+  }
+
+  // El cliente pidió construir, no plantilla — no hacer trampas con fallback de catálogo
+  if (clientRejectsTemplates(prompt) || prompt.length > 1200) {
+    return {
+      message:
+        promptFirst.message ||
+        (lang === 'es'
+          ? 'No pude construir una web de calidad desde tu brief. No uso plantillas. Vuelve a intentarlo.'
+          : 'Could not build a quality site from your brief. No templates. Please retry.'),
+      previewSections: [],
+      templateSlug: 'prompt-first',
+      businessName: promptFirst.businessName,
+      changedSectionIds: [],
+      motorsUsed: promptFirst.motorsUsed,
+      source: 'rules',
+      pipelineStage: 'prompt_first',
+      aiSkippedReason: promptFirst.aiSkippedReason ?? 'ai_parse_failed',
     };
   }
 

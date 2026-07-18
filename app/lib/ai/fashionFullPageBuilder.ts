@@ -20,17 +20,17 @@ type FashionProduct = {
   sizes: string[];
 };
 
-const UNSPLASH = {
-  hero: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop',
-  p1: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop',
-  p2: 'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=1000&auto=format&fit=crop',
-  p3: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop',
-  p4: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
-  p5: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=1000&auto=format&fit=crop',
-  p6: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1000&auto=format&fit=crop',
-  look1: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop',
-  look2: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop',
-  look3: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop',
+const PEXELS = {
+  hero: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1920&h=1080&q=80',
+  p1: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=1000&h=1200&fit=crop',
+  p2: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1000&h=1200&fit=crop',
+  p3: 'https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1000&h=1200&fit=crop',
+  p4: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1000&h=1200&fit=crop',
+  p5: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1000&h=1200&fit=crop',
+  p6: 'https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?auto=compress&cs=tinysrgb&w=1000&h=1200&fit=crop',
+  look1: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&h=900&q=80',
+  look2: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&h=1000&q=80',
+  look3: 'https://images.pexels.com/photos/2983468/pexels-photo-2983468.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop',
 };
 
 function esc(text: string): string {
@@ -49,7 +49,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Abrigo de Lana Estructurado' : 'Structured Wool Coat',
       category: es ? 'Mujer' : 'Women',
       price: 450,
-      image: UNSPLASH.p1,
+      image: PEXELS.p1,
       desc: es
         ? 'Lana italiana de origen sostenible. Corte oversize, solapas anchas y forro de seda.'
         : 'Sustainable Italian wool. Oversize cut, wide lapels and silk lining.',
@@ -60,7 +60,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Blusa de Seda Natural' : 'Natural Silk Blouse',
       category: es ? 'Mujer' : 'Women',
       price: 185,
-      image: UNSPLASH.p2,
+      image: PEXELS.p2,
       desc: es
         ? 'Seda 100% natural con caída fluida. Cuello lazo y puños con botón de nácar.'
         : '100% natural silk with fluid drape. Tie neck and mother-of-pearl cuffs.',
@@ -72,7 +72,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       category: es ? 'Hombre' : 'Men',
       price: 480,
       oldPrice: 600,
-      image: UNSPLASH.p3,
+      image: PEXELS.p3,
       desc: es
         ? 'Cuero de cordero grabado, acabado mate. Forro acolchado y cremalleras de latón.'
         : 'Embossed lamb leather, matte finish. Quilted lining and aged brass zips.',
@@ -83,7 +83,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Bolso Tote de Piel' : 'Leather Tote Bag',
       category: es ? 'Accesorios' : 'Accessories',
       price: 320,
-      image: UNSPLASH.p4,
+      image: PEXELS.p4,
       desc: es
         ? 'Piel de becerro granulada. Compartimento para portátil y color champagne.'
         : 'Grained calfskin. Laptop compartment and champagne tone.',
@@ -94,7 +94,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Jersey de Cachemira' : 'Cashmere Sweater',
       category: es ? 'Hombre' : 'Men',
       price: 295,
-      image: UNSPLASH.p5,
+      image: PEXELS.p5,
       desc: es
         ? 'Cachemira grado A hilada en Escocia. Cuello de pico y acabado en canalé.'
         : 'Grade-A cashmere spun in Scotland. V-neck and ribbed finish.',
@@ -105,7 +105,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Vestido Midi Plisado' : 'Pleated Midi Dress',
       category: es ? 'Mujer' : 'Women',
       price: 210,
-      image: UNSPLASH.p6,
+      image: PEXELS.p6,
       desc: es
         ? 'Tejido premium con plisado permanente. Cintura elástica y caída hasta la pantorrilla.'
         : 'Premium fabric with permanent pleats. Elastic waist and calf-length hem.',
@@ -116,7 +116,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Blazer Estructura Arena' : 'Sand Structured Blazer',
       category: es ? 'Mujer' : 'Women',
       price: 245,
-      image: UNSPLASH.p2,
+      image: PEXELS.p2,
       desc: es ? 'Silueta entallada con hombro definido. Perfecto para capas editoriales.'
         : 'Tailored silhouette with defined shoulder. Perfect for editorial layering.',
       sizes: ['XS', 'S', 'M', 'L'],
@@ -126,7 +126,7 @@ function productsForLang(lang: 'es' | 'en'): FashionProduct[] {
       name: es ? 'Zapatillas Cuero Blanco' : 'White Leather Sneakers',
       category: es ? 'Calzado' : 'Footwear',
       price: 165,
-      image: UNSPLASH.p5,
+      image: PEXELS.p5,
       desc: es ? 'Cuero italiano y suela de goma premium. Minimalismo atemporal.'
         : 'Italian leather and premium rubber sole. Timeless minimalism.',
       sizes: ['39', '40', '41', '42', '43', '44'],
@@ -140,7 +140,7 @@ export function buildFashionFullPageHtml(ctx: FashionFullPageCtx): string {
   const brand = esc(ctx.brandName.toUpperCase().slice(0, 24) || 'MAISON');
   const tagline = esc(ctx.tagline);
   const badge = esc(ctx.badge);
-  const heroImg = esc(ctx.heroImage || UNSPLASH.hero);
+  const heroImg = esc(ctx.heroImage || PEXELS.hero);
   const productsJson = JSON.stringify(productsForLang(ctx.lang)).replace(/</g, '\\u003c');
   const cartKey = `maison_cart_${brand.replace(/\W/g, '').toLowerCase() || 'default'}`;
 
@@ -260,7 +260,7 @@ export function buildFashionFullPageHtml(ctx: FashionFullPageCtx): string {
   <main class="flex-grow">
     <div id="view-home" class="view-section active">
       <section class="relative h-[88vh] min-h-[520px] w-full overflow-hidden flex items-center justify-center bg-gray-900">
-        <img src="${heroImg}" class="absolute inset-0 w-full h-full object-cover opacity-70" alt="${brand}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${UNSPLASH.hero}'">
+        <img src="${heroImg}" class="absolute inset-0 w-full h-full object-cover opacity-70" alt="${brand}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${PEXELS.hero}'">
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
         <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto animate-slide-up">
           <p class="text-[10px] font-medium tracking-[0.35em] uppercase mb-6 text-maison-accent">${badge}</p>
@@ -284,11 +284,11 @@ export function buildFashionFullPageHtml(ctx: FashionFullPageCtx): string {
         </div>
         <div class="grid md:grid-cols-12 gap-4">
           <div class="md:col-span-7 rounded-sm overflow-hidden bg-gray-100 aspect-[4/5] md:aspect-auto md:min-h-[520px]">
-            <img src="${UNSPLASH.look1}" class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-700" alt="" loading="lazy" referrerpolicy="no-referrer">
+            <img src="${PEXELS.look1}" class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-700" alt="" loading="lazy" referrerpolicy="no-referrer">
           </div>
           <div class="md:col-span-5 grid gap-4">
-            <div class="rounded-sm overflow-hidden bg-gray-100 aspect-square"><img src="${UNSPLASH.look2}" class="w-full h-full object-cover" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
-            <div class="rounded-sm overflow-hidden bg-gray-100 aspect-square"><img src="${UNSPLASH.look3}" class="w-full h-full object-cover" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+            <div class="rounded-sm overflow-hidden bg-gray-100 aspect-square"><img src="${PEXELS.look2}" class="w-full h-full object-cover" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+            <div class="rounded-sm overflow-hidden bg-gray-100 aspect-square"><img src="${PEXELS.look3}" class="w-full h-full object-cover" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
           </div>
         </div>
       </section>
