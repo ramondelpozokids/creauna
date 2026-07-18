@@ -7,6 +7,7 @@ import { chatCompletion, getConfiguredProviders, type AiProvider } from './provi
 import {
   buildBriefImagePack,
   extractBriefMustHaves,
+  isSkeletonLanding,
   isUnacceptableAgencyHtml,
   missingBriefRequirements,
   type BriefImagePack,
@@ -447,17 +448,24 @@ HTML previo (referencia, mejóralo):\n${html.slice(0, 22000)}`
   const imaged = await applyImages(html, prompt, lang, pack);
   html = imaged.html;
 
-  // Verify final — NO entregar basura
+  // Verify final — solo bloquear esqueletos; si hay HTML denso, entregar con aviso
   const finalIssues = verifyDeterministic(html, plan, prompt);
-  if (finalIssues.length > 0 || isUnacceptableAgencyHtml(html, prompt)) {
+  const unacceptable = isUnacceptableAgencyHtml(html, prompt);
+  const isJunk =
+    !html ||
+    html.length < 12000 ||
+    isSkeletonLanding(html) ||
+    (unacceptable && finalIssues.length >= 4);
+
+  if (isJunk && (finalIssues.length > 0 || unacceptable)) {
     return {
       ok: false,
       previewSections: [],
       businessName,
       message:
         lang === 'es'
-          ? 'He construido y verificado tu web, pero no alcanzó el nivel de calidad que exigimos (como en una agencia). No entrego ese resultado. Pulsa generar de nuevo.'
-          : 'Built and verified, but it did not meet our agency quality bar. Not delivering. Please regenerate.',
+          ? 'He construido y verificado tu web, pero no alcanzó el nivel de calidad que exigimos (como en una agencia). No entrego ese resultado. Pulsa Regenerar para un nuevo intento.'
+          : 'Built and verified, but it did not meet our agency quality bar. Not delivering. Press Regenerate for a new attempt.',
       source: 'ai',
       motorsUsed: ['code', 'visual'],
       providersUsed: provider !== 'rules' ? [provider] : [],
@@ -467,14 +475,22 @@ HTML previo (referencia, mejóralo):\n${html.slice(0, 22000)}`
     };
   }
 
+  const qualityNote =
+    finalIssues.length > 0 || unacceptable
+      ? lang === 'es'
+        ? ' Hay detalles por pulir: pide cambios concretos (hero, lookbook, tipografía…) y los aplico.'
+        : ' Some polish may remain: ask for specific changes and I will apply them.'
+      : '';
+
+
   return {
     ok: true,
     previewSections: [{ id: 101, type: 'fullpage', html }],
     businessName,
     message:
       lang === 'es'
-        ? `He construido tu web desde tu brief (plan → construcción → verificación). ${plan.summaryEs}. Pide cambios concretos y los aplico sobre este diseño.`
-        : `Built your site from your brief (plan → build → verify). Ask for specific changes.`,
+        ? `He construido tu web desde tu brief (plan → construcción → verificación). ${plan.summaryEs}.${qualityNote} Pide cambios concretos y los aplico sobre este diseño.`
+        : `Built your site from your brief (plan → build → verify).${qualityNote} Ask for specific changes.`,
     source: imaged.falImages ? 'hybrid' : 'ai',
     motorsUsed: ['code', 'visual', 'copy', 'ux'],
     providersUsed: provider !== 'rules' ? [provider] : [],

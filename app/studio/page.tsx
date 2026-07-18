@@ -930,19 +930,33 @@ function StudioContent() {
   const regenerate = async () => {
     if (studioPhase === 'onboarding') return;
     if (!(await ensureCredits())) return;
-    const impact = await previewImpact({ prompt: 'regenerar', action: 'regenerate' });
+    // Reconstruir desde el brief del cliente (no el literal «regenerar»)
+    const userBriefs = messages.filter((m) => m.role === 'user' && m.content.trim().length > 40);
+    const lastBrief =
+      [...userBriefs].sort((a, b) => b.content.length - a.content.length)[0]?.content ||
+      projectName ||
+      (lang === 'es' ? 'Regenera la web premium completa según el brief anterior' : 'Regenerate the full premium site from the previous brief');
+    const impact = await previewImpact({ prompt: lastBrief.slice(0, 500), action: 'regenerate' });
     if (!(await confirmImpactIfNeeded(impact))) return;
     setIsThinking(true);
     try {
-      const data = await callStudioApi({ prompt: 'regenerar', action: 'regenerate' });
+      const data = await callStudioApi({ prompt: lastBrief, action: 'regenerate' });
+      if (data.message) {
+        setMessages((prev) => [...prev, { id: Date.now(), role: 'ai', content: data.message }]);
+      }
       setPreviewSections(data.previewSections);
+      if (data.templateSlug) setActiveTemplateSlug(data.templateSlug);
       applyCreditFromResponse(data.credits);
       const summary = lang === 'es' ? 'Regeneración completa' : 'Full regeneration';
       const nextLog = addChange(summary);
       scheduleSave(data.previewSections, nextLog, projectName);
       loadSnapshots();
-      flashSections(data.changedSectionIds ?? data.previewSections.map((s) => s.id));
-      toast.success(lang === 'es' ? 'Nuevas variaciones' : 'New variations', { description: t.creditUsed });
+      flashSections(data.changedSectionIds ?? data.previewSections.map((s: { id: number }) => s.id));
+      if (data.previewSections?.length) {
+        toast.success(lang === 'es' ? 'Web regenerada' : 'Site regenerated', { description: t.creditUsed });
+      } else {
+        toast.message(data.message || (lang === 'es' ? 'Sin entrega: calidad insuficiente' : 'Not delivered: quality bar'));
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');
     } finally {

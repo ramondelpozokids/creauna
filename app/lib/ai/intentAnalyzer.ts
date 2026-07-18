@@ -366,7 +366,7 @@ export function shouldGenerateFullSite(
   action: string | undefined,
   previewSections: { type: string; html?: string }[]
 ): boolean {
-  if (action === 'initial') return true;
+  if (action === 'initial' || action === 'regenerate') return true;
   if (action !== 'change') return false;
   if (!isSiteBuildPrompt(prompt)) return false;
   return !isExistingSiteSections(previewSections);

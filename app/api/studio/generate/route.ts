@@ -218,7 +218,7 @@ export async function POST(req: Request) {
       result.changedSectionIds
     );
 
-    if (!meaningful && action !== 'initial') {
+    if (!meaningful && action !== 'initial' && action !== 'regenerate') {
       await refundCredit(session?.id ?? null, ip, 'studio_refund_no_change', session?.email);
       await logProjectChangeAudit({
         projectId,

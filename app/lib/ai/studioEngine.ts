@@ -176,6 +176,8 @@ async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGener
   const changedIds: number[] = [];
 
   if (action === 'regenerate') {
+    // Cosmético solo si ya hay HTML; la reconstrucción real va por shouldGenerateFullSite
+    if (!sections.length) return null;
     sections = sections.map((s) => ({
       ...s,
       html: applyStyleTransform(s.html, 'moderno'),
@@ -549,11 +551,16 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
   }
 
   if (shouldGenerateFullSite(input.prompt, input.action, input.previewSections)) {
-    if (isTemplateContextLocked(input)) {
+    if (isTemplateContextLocked(input) && input.action !== 'regenerate' && input.action !== 'initial') {
       const locked = regenerateFromLockedTemplate(input, input.lang);
       return { ...locked, pipelineStage: 'rules' };
     }
-    const result = await generateInitialSite(input.prompt, input.lang, input.sectorId);
+    // Regenerar = nuevo build desde brief (no plantilla bloqueada)
+    const buildPrompt =
+      input.action === 'regenerate' && input.prompt.length < 120
+        ? enrichPromptFromSections(input.prompt, input.previewSections) || input.prompt
+        : input.prompt;
+    const result = await generateInitialSite(buildPrompt, input.lang, input.sectorId);
     // Rechazo de calidad: no sustituir la preview por vacío ni colar plantilla
     if (!result.previewSections.length) {
       return {
