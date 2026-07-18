@@ -167,10 +167,10 @@ function needsRealRedesign(prompt: string, sections: PreviewSection[]): boolean 
   if (!isFullPagePreview(sections)) return false;
   // Legales/WhatsApp/scroll/redes solos → inyección determinista (no reescribir toda la web)
   if (
-    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll\s*up|redes\s+sociales/i.test(
+    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll|scoll|redes\s+sociales|blog|noticias|servicios|buscador|carrusel|carousel|chat|asistente/i.test(
       prompt
     ) &&
-    !/hero|lookbook|colecci[oó]n|rediseñ|regenera|m[aá]s\s+elegante|tipograf|galer[ií]a/i.test(prompt)
+    !/hero|lookbook|colecci[oó]n|rediseñ|regenera|m[aá]s\s+elegante|tipograf/i.test(prompt)
   ) {
     return false;
   }
@@ -541,34 +541,32 @@ Action: ${input.action || 'change'}`,
 }
 
 export async function generateStudioChange(input: StudioGenerateInput): Promise<StudioGenerateResult> {
-  // Pedido de legales / WhatsApp / scroll / redes → inyección rápida sobre fullpage
-  if (
-    input.action === 'change' &&
-    isFullPagePreview(input.previewSections) &&
-    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll\s*up|redes\s+sociales|bot[oó]n\s+de\s+whatsapp/i.test(
-      input.prompt
-    )
-  ) {
-    const { injectSiteChrome, promptWantsSiteChrome } = await import('./siteChrome');
+  // Módulos pedidos (legales, WhatsApp, blog, buscador, carrusel, chat…) → inyección determinista
+  if (input.action === 'change' && input.previewSections.length > 0) {
+    const { injectSiteChrome, promptWantsSiteChrome, describeAppliedModules, detectRequestedModules } =
+      await import('./siteChrome');
     if (promptWantsSiteChrome(input.prompt)) {
-      const full = input.previewSections.find((s) => s.type === 'fullpage') ?? input.previewSections[0];
-      const nextHtml = injectSiteChrome(full.html, {
-        prompt: input.prompt,
-        lang: input.lang,
-        businessName: input.businessName,
-      });
-      if (nextHtml !== full.html) {
-        return {
-          message:
-            input.lang === 'es'
-              ? 'He añadido aviso legal, privacidad, cookies, mapa del sitio, botón WhatsApp, scroll arriba y redes con iconos de marca.'
-              : 'Added legal pages, WhatsApp, scroll-up and brand social buttons.',
-          previewSections: patchSection(cloneSections(input.previewSections), full.id, nextHtml),
-          motorsUsed: ['ux', 'code'],
-          source: 'rules',
-          changedSectionIds: [full.id],
-          pipelineStage: 'rules',
-        };
+      const full =
+        input.previewSections.find((s) => s.type === 'fullpage') ||
+        input.previewSections.find((s) => /<!DOCTYPE\s+html/i.test(s.html)) ||
+        [...input.previewSections].sort((a, b) => b.html.length - a.html.length)[0];
+      if (full && full.html.length > 500) {
+        const nextHtml = injectSiteChrome(full.html, {
+          prompt: input.prompt,
+          lang: input.lang,
+          businessName: input.businessName,
+        });
+        if (nextHtml.length !== full.html.length || /cua-modules:/i.test(nextHtml)) {
+          return {
+            message: describeAppliedModules(input.prompt, input.lang),
+            previewSections: patchSection(cloneSections(input.previewSections), full.id, nextHtml),
+            motorsUsed: ['ux', 'code'],
+            source: 'rules',
+            changedSectionIds: [full.id],
+            pipelineStage: 'rules',
+            providersUsed: detectRequestedModules(input.prompt),
+          };
+        }
       }
     }
   }

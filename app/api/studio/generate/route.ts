@@ -217,8 +217,9 @@ export async function POST(req: Request) {
       result.previewSections,
       result.changedSectionIds
     );
+    const modulesApplied = result.previewSections.some((s) => /cua-modules:|data-cua-mod=/i.test(s.html));
 
-    if (!meaningful && action !== 'initial' && action !== 'regenerate') {
+    if (!meaningful && !modulesApplied && action !== 'initial' && action !== 'regenerate') {
       await refundCredit(session?.id ?? null, ip, 'studio_refund_no_change', session?.email);
       await logProjectChangeAudit({
         projectId,
