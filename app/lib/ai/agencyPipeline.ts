@@ -83,20 +83,43 @@ const PROVIDERS: AiProvider[] = ['qwen', 'openai', 'gemini', 'claude'];
 function nextLineAfter(prompt: string, label: RegExp): string | undefined {
   const lines = prompt.split(/\r?\n/);
   const sectionHeaders =
-    /^(contexto|datos|objetivo|identidad|paleta|tipograf|hero|sobre|especialidad|galer|por\s+qu|experiencia|rese[nñ]|ubicaci|cta|footer|efectos|responsive|seo|rendimiento|accesibilidad|calidad|horario|nombre|categor|direcci|google|precio)/i;
+    /^(contexto|datos|objetivo|identidad|paleta|tipograf|hero|sobre|especialidad|galer|por\s+qu|experiencia|rese[nñ]|ubicaci|cta|footer|efectos|responsive|seo|rendimiento|accesibilidad|calidad|horario|nombre|categor|direcci|google|precio|t[ií]tulo|subt[ií]tulo|eslogan|badge|bot[oó]n)/i;
 
   for (let i = 0; i < lines.length; i++) {
     if (!label.test(lines[i].trim())) continue;
     const same = lines[i].replace(label, '').replace(/^[:\s]+/, '').trim();
-    if (same.length >= 3) return same.replace(/^["«]+|["»]+$/g, '').trim();
+    if (same.length >= 3 && !isMetaHeroPhrase(same)) return same.replace(/^["«]+|["»]+$/g, '').trim();
     for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
       const t = lines[j].trim().replace(/^["«]+|["»]+$/g, '').trim();
       if (!t) continue;
       if (sectionHeaders.test(t) && t.length < 40) continue;
+      if (isMetaHeroPhrase(t)) continue;
       if (t.length >= 3) return t;
     }
   }
   return undefined;
+}
+
+/** Evita que "hero enorme / impactante / full bleed" se convierta en el H1. */
+function isMetaHeroPhrase(text: string): boolean {
+  const t = text.trim().replace(/[.!…]+$/g, '');
+  if (t.length < 8) return true;
+  return /^(enorme|huge|impactante|full[\s-]?bleed|full[\s-]?screen|pantalla\s+completa|min-h|overlay|fotograf[ií]a|imagen|v[ií]deo|video|hero|foto|banner|campa[nñ]a)(\s|$)/i.test(
+    t
+  ) || /^(hero|imagen|foto|v[ií]deo)\b.{0,20}\b(enorme|huge|grande|impactante)/i.test(t);
+}
+
+function sanitizeHeroTitle(
+  raw: string | undefined,
+  prompt: string,
+  slogan: string | undefined,
+  lang: 'es' | 'en'
+): string {
+  const elegancia = prompt.match(/La elegancia nunca pasa de moda\.?/i)?.[0]?.replace(/\.$/, '');
+  if (elegancia) return elegancia;
+  if (raw && !isMetaHeroPhrase(raw) && raw.length >= 8 && !/^descubre\b/i.test(raw)) return raw;
+  if (slogan && slogan.length >= 8) return slogan;
+  return lang === 'es' ? 'La elegancia nunca pasa de moda' : 'Elegance never goes out of style';
 }
 
 function detectSections(prompt: string): string[] {
@@ -156,9 +179,9 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
   const businessName = extractBusinessNameFromPrompt(prompt, lang);
   const nameField = nextLineAfter(prompt, /^nombre\b/i);
   const badge = nextLineAfter(prompt, /^badge\b/i);
-  const heroTitle = nextLineAfter(prompt, /^t[ií]tulo\b/i);
-  const heroSubtitle = nextLineAfter(prompt, /^subt[ií]tulo\b/i);
   const slogan = nextLineAfter(prompt, /^eslogan\b/i);
+  const heroTitle = sanitizeHeroTitle(nextLineAfter(prompt, /^t[ií]tulo\b/i), prompt, slogan, lang);
+  const heroSubtitle = nextLineAfter(prompt, /^subt[ií]tulo\b/i);
   const primaryCta =
     nextLineAfter(prompt, /^bot[oó]n\s+principal\b/i) ||
     (lang === 'es' ? 'Ver Menú' : 'View Menu');
@@ -264,15 +287,16 @@ Notas de estilo: ${plan.styleNotes.join('; ') || '—'}
 
 REGLAS DURAS:
 - CONSTRUIR desde el brief, NO plantilla, NO Bootstrap, NO esqueleto.
-- Hero min-h-[85vh] con fotografía real (o vídeo + poster) + overlay + badge/eslogan + H1 + subtítulo + 2 CTAs.
-- PROHIBIDO hero gris vacío.
+- Hero: min-h-[78vh] max-h-[100vh] con <img> full-bleed (object-cover) usando la URL hero del pack de assets + overlay oscuro + H1 BLANCO (text-white) + subtítulo + 2 CTAs.
+- El H1 es el titular de marketing («${plan.heroTitle}»). NUNCA uses como H1 palabras de tamaño (enorme, huge, impactante, full-bleed).
+- PROHIBIDO hero de color sólido sin foto; PROHIBIDO zoom extremo / crop absurdo de la imagen.
 - Si hay lookbook/colección/productos: fotos grandes, hover swap donde el brief lo pida, botones Comprar.
 - Si hay carrito: icono + panel/carrito funcional básico (localStorage).
 - HTML completo denso (>25KB ideal).
 - Devuelve SOLO el HTML.`
     : `BUILD PLAN (mandatory):
 ${JSON.stringify(plan, null, 2)}
-Build from brief only. No templates. Full dense HTML. Photo hero required. Return ONLY HTML.`;
+Build from brief only. No templates. Full dense HTML. Photo hero with object-cover required. H1 must be marketing headline not size adjectives. Return ONLY HTML.`;
 }
 
 async function callBuild(
@@ -341,6 +365,77 @@ async function applyImages(html: string, prompt: string, lang: 'es' | 'en', pack
   const { ensureVisibleSiteImages } = await import('./ensureVisibleSiteImages');
   const ensured = await ensureVisibleSiteImages(html, pack.urls, brief, { maxAiImages: 4 });
   return { html: ensured.html, falImages: ensured.aiImages };
+}
+
+/** Corrige H1 basura («Enorme.») y asegura foto hero del pack con altura controlada. */
+function polishHeroHtml(html: string, plan: AgencySitePlan, pack: BriefImagePack): string {
+  let out = html;
+  const title = plan.heroTitle || 'La elegancia nunca pasa de moda';
+  const heroUrl = (pack.urls[0] || '').replace(/"/g, '%22');
+
+  // Sustituir H1 meta (enorme / huge / una sola palabra corta)
+  out = out.replace(/<h1\b([^>]*)>([\s\S]*?)<\/h1>/i, (_m, attrs: string, inner: string) => {
+    const text = inner.replace(/<[^>]+>/g, '').trim();
+    if (isMetaHeroPhrase(text) || /^enorme\.?$/i.test(text)) {
+      let a = attrs;
+      if (!/text-white/i.test(a)) {
+        if (/class="/i.test(a)) a = a.replace(/class="/i, 'class="text-white drop-shadow-lg ');
+        else a += ' class="text-white drop-shadow-lg"';
+      }
+      return `<h1${a}>${title}</h1>`;
+    }
+    let a = attrs;
+    if (!/text-white|text-\[#f/i.test(a)) {
+      if (/class="/i.test(a)) a = a.replace(/class="/i, 'class="text-white ');
+      else a += ' class="text-white"';
+    }
+    return `<h1${a}>${inner}</h1>`;
+  });
+
+  if (!heroUrl) return out;
+
+  // Si el hero no tiene img de stock/fal, inyectar capa de fondo
+  const heroChunk = out.match(/<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>[\s\S]{0,2500}/i);
+  const heroHasImg = heroChunk ? /<img\b/i.test(heroChunk[0]) : /min-h-\[(?:7|8|9|100)|h-screen[\s\S]{0,800}<img\b/i.test(out);
+  if (!heroHasImg || /background(?:-color)?:\s*(?:#|rgb|olive|khaki|solid)/i.test(heroChunk?.[0] || '')) {
+    const layer = `<div class="absolute inset-0 -z-10 overflow-hidden" data-cua-hero-fix>
+  <img src="${heroUrl}" alt="" class="w-full h-full object-cover object-center" fetchpriority="high" referrerpolicy="no-referrer" />
+  <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/65"></div>
+</div>`;
+    if (/<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>/i.test(out)) {
+      out = out.replace(
+        /(<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>)/i,
+        `$1\n${layer}`
+      );
+      // relative positioning
+      out = out.replace(
+        /(<section)([^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>)/i,
+        (_m, tag: string, rest: string) => {
+          if (/relative/i.test(rest)) return `${tag}${rest}`;
+          if (/class="/i.test(rest)) return `${tag}${rest.replace(/class="/i, 'class="relative overflow-hidden ')}`;
+          return `${tag} class="relative overflow-hidden"${rest.replace(/^/, '')}`;
+        }
+      );
+    }
+  }
+
+  // Limitar altura monstruosa
+  out = out.replace(/min-h-\[(?:95|100|110|120)vh\]/gi, 'min-h-[82vh]');
+  out = out.replace(/min-h-screen/gi, 'min-h-[82vh]');
+  // Imágenes hero: object-cover + max height
+  out = out.replace(
+    /(<section[^>]*(?:hero|inicio)[^>]*>[\s\S]*?<img\b)([^>]*?)(>)/i,
+    (_m, pre: string, attrs: string, close: string) => {
+      let a = attrs;
+      if (!/object-cover/i.test(a)) {
+        if (/class="/i.test(a)) a = a.replace(/class="/i, 'class="object-cover object-center ');
+        else a += ' class="object-cover object-center w-full h-full"';
+      }
+      return `${pre}${a}${close}`;
+    }
+  );
+
+  return out;
 }
 
 /**
@@ -444,9 +539,9 @@ HTML previo (referencia, mejóralo):\n${html.slice(0, 22000)}`
     }
   }
 
-  // Imágenes
+  // Imágenes + pulido hero (titular + foto + altura)
   const imaged = await applyImages(html, prompt, lang, pack);
-  html = imaged.html;
+  html = polishHeroHtml(imaged.html, plan, pack);
 
   // Verify final — solo bloquear esqueletos; si hay HTML denso, entregar con aviso
   const finalIssues = verifyDeterministic(html, plan, prompt);
