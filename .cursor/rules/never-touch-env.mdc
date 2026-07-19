@@ -1,0 +1,16 @@
+---
+description: PROHIBIDO tocar .env / .env.local sin permiso explícito del dueño
+alwaysApply: true
+---
+
+# Nunca tocar `.env` ni `.env.local`
+
+Orden dura del dueño de CREAUNA:
+
+1. **No** crear, editar, sobrescribir, vaciar, renombrar ni borrar `.env`, `.env.local` u otros `.env.*` con secretos salvo que el usuario lo pida **explícitamente en ese mensaje**.
+2. **No** ejecutar `vercel env pull` (ni equivalentes) hacia `.env.local` — pisa claves.
+3. **No** hacer commit ni push de secretos. GitHub solo lleva plantillas (`env.example`) y esta regla.
+4. Backup real con secretos: solo en `Desktop\Clave\` (fuera del repo o gitignored).
+5. Si falta una clave: di el **nombre**, no inventes valores ni reescribas el archivo.
+
+Incumplir esto es un fallo grave.

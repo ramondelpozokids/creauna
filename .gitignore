@@ -31,8 +31,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — NUNCA subir secretos (ver AGENTS.md / docs/ENV-PROTECCION.md)
 .env*
+!.env.example
+!env.example
+*.env.local.backup*
+*env.local.backup*
 
 # vercel
 .vercel
@@ -49,4 +53,3 @@ next-env.d.ts
 /prisma/*.db-journal
 **/*.db
 **/*.db-journal
-.env*
