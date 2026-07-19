@@ -16,6 +16,16 @@ export interface StudioDiscoveryAnswers {
   features: SiteFeatures;
   navPages: string[];
   extraNotes?: string;
+  /** Contacto real del cliente (motor-ready; la UI puede rellenarlos más adelante). */
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  address?: string;
+  legalName?: string;
+  cif?: string;
+  instagram?: string;
+  facebook?: string;
+  tiktok?: string;
 }
 
 export type NavPageId =

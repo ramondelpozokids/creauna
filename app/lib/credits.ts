@@ -3,7 +3,9 @@ import { FREE_CREDITS, hashIp } from './auth/users';
 import { UNLIMITED_CREDITS, isAdminEmail } from './auth/admin';
 
 function isDbConfigured(): boolean {
-  return Boolean(process.env.DATABASE_URL?.trim());
+  const url = process.env.DATABASE_URL?.trim() ?? '';
+  // Prisma de CREAUNA es PostgreSQL (Neon). Una URL mongodb+srv (p. ej. de otro proyecto) no cuenta.
+  return /^postgres(ql)?:\/\//i.test(url);
 }
 
 /** Créditos guest en memoria cuando no hay Postgres (desarrollo local). */

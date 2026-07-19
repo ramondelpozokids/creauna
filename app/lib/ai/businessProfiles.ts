@@ -1,16 +1,43 @@
 import type { ParsedGoogleListing } from './googleListingParser';
 import { IMAGE_BANK } from './imageBank';
 
-export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'luxury' | 'jewelry' | 'fashion' | 'nonprofit' | 'renewable' | 'default';
+export type BusinessVariant = 'kebab' | 'tattoo' | 'cafe' | 'bakery' | 'italian' | 'foodblog' | 'beauty' | 'corporate' | 'automotive' | 'bike' | 'luxury' | 'jewelry' | 'fashion' | 'nonprofit' | 'renewable' | 'default';
+
+/** Tienda / catálogo de bicicletas (NO moda, NO motos). */
+export function isBikeShopPrompt(prompt: string): boolean {
+  return /bicicleta|bicicletas|\bbicis?\b|ciclismo|\bmtb\b|e-?bike|ebike|mountain\s*bike|bicicleta\s+el[eé]ctrica|tienda\s+de\s+bicis|ciclismo\s+de\s+(monta[nñ]a|carretera)|orbea|specialized|trek\b|canyon|scott\b|giant\b|cannondale|rockshox/i.test(
+    prompt
+  );
+}
+
+/** Panadería / pastelería artesanal (NO restaurante gourmet genérico). */
+export function isBakeryShopPrompt(prompt: string): boolean {
+  return /panader[ií]a|panaderia|bollería|bolleria|pasteler[ií]a|bakery|bread\s+shop|trigo\s+dorado|masa\s+madre|pan\s+reci[eé]n|horneado|croissants?|magdalenas?|\bpanes?\b.*\bprecios|\bpan\b.*artesanal/i.test(
+    prompt
+  );
+}
 
 /** Brief de tienda online / moda premium (evita confundir con arquitectura por «Arquitecto UX/UI»). */
 export function isFashionEcommercePrompt(prompt: string): boolean {
+  if (isBikeShopPrompt(prompt)) return false;
   const lower = prompt.toLowerCase();
+  // «sin carrito» / «no carrito» no es ecommerce
+  const rejectsCart =
+    /sin\s+carrito|no\s+(debe\s+existir\s+)?(?:\w+\s+){0,4}carrito|no\s+proceso\s+de\s+compra|no\s+pago\s+online|sin\s+compra\s+online|no\s+es\s+una\s+tienda\s+online/i.test(
+      lower
+    );
+  const wantsCart =
+    !rejectsCart &&
+    /\bcarrito\b|checkout|pasarela\s+de\s+pago|\bstripe\b|woocommerce|shopify/i.test(lower);
   return (
-    /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de (moda|ropa)|boutique de moda|carrito|checkout|pasarela|stripe|woocommerce|shopify|lookbook|productos destacados|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos|nueva colecci[oó]n|explorar colecci[oó]n/i.test(
+    wantsCart ||
+    /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de (moda|ropa)|boutique de moda|lookbook|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos|nueva colecci[oó]n|explorar colecci[oó]n|productos destacados/i.test(
       lower
     ) ||
-    /zara|massimo dutti|\bcos\b|mango|gymshark|balenciaga|dior|gucci|nike|adidas|hugo boss|tommy hilfiger|calvin klein|lacoste|ralph lauren|louis vuitton|uniqlo|alo yoga|sandro|armani exchange|velora/i.test(
+    /zara|massimo dutti|\bcos\b|mango|gymshark|balenciaga|dior|gucci|hugo boss|tommy hilfiger|calvin klein|lacoste|ralph lauren|louis vuitton|uniqlo|alo yoga|sandro|armani exchange|velora|chanel|loewe|aesop/i.test(
+      lower
+    ) ||
+    /wig|peluca|pelucas|women'?s?\s+fashion|moda\s+femenina|fashion\s+accessor|accesorios\s+de\s+moda|ultra-?premium.*(?:wig|fashion|moda|boutique)/i.test(
       lower
     )
   );
@@ -636,6 +663,75 @@ export const AUTOMOTIVE_PROFILE: BusinessProfile = {
   email: 'info@motoscortes.com',
 };
 
+const BIKE_IMAGES = {
+  hero: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&h=900&fit=crop&q=80',
+  gal1: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=900&h=600&fit=crop&q=80',
+  gal2: 'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=900&h=600&fit=crop&q=80',
+  gal3: 'https://images.unsplash.com/photo-1511994298241-608b331cdf63?w=900&h=600&fit=crop&q=80',
+  gal4: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&h=600&fit=crop&q=80',
+  gal5: 'https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  gal6: 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop',
+  s1: 'https://images.unsplash.com/photo-1571333250630-f0230c320b6d?w=600&h=400&fit=crop&q=80',
+  s2: 'https://images.unsplash.com/photo-1505705694340-019e1e335916?w=600&h=400&fit=crop&q=80',
+  s3: 'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600&h=400&fit=crop&q=80',
+  s4: 'https://images.unsplash.com/photo-1471506480208-7e4859c702a9?w=600&h=400&fit=crop&q=80',
+};
+
+export const BIKE_PROFILE: BusinessProfile = {
+  variant: 'bike',
+  heroImage: BIKE_IMAGES.hero,
+  galleryImages: [BIKE_IMAGES.gal1, BIKE_IMAGES.gal2, BIKE_IMAGES.gal3, BIKE_IMAGES.gal4, BIKE_IMAGES.gal5, BIKE_IMAGES.gal6],
+  taglineEs: 'Catálogo profesional · Taller · WhatsApp',
+  taglineEn: 'Professional catalogue · Workshop · WhatsApp',
+  typeEs: 'Tienda de bicicletas',
+  typeEn: 'Bicycle shop',
+  badgeEs: 'Especialistas en ciclismo',
+  badgeEn: 'Cycling specialists',
+  ctaPrimaryEs: 'Ver bicicletas',
+  ctaPrimaryEn: 'View bikes',
+  ctaSecondaryEs: 'WhatsApp',
+  ctaSecondaryEn: 'WhatsApp',
+  menuItems: {
+    es: [
+      { title: 'MTB', price: 'Montaña', image: BIKE_IMAGES.s1, cta: 'Ver modelos' },
+      { title: 'Carretera', price: 'Rendimiento', image: BIKE_IMAGES.s2, cta: 'Ver modelos' },
+      { title: 'E-Bike', price: 'Asistencia', image: BIKE_IMAGES.s3, cta: 'Ver modelos' },
+      { title: 'Accesorios', price: 'Equipamiento', image: BIKE_IMAGES.s4, cta: 'Ver catálogo' },
+    ],
+    en: [
+      { title: 'MTB', price: 'Mountain', image: BIKE_IMAGES.s1, cta: 'View models' },
+      { title: 'Road', price: 'Performance', image: BIKE_IMAGES.s2, cta: 'View models' },
+      { title: 'E-Bike', price: 'Assisted', image: BIKE_IMAGES.s3, cta: 'View models' },
+      { title: 'Accessories', price: 'Gear', image: BIKE_IMAGES.s4, cta: 'View catalogue' },
+    ],
+  },
+  reviews: {
+    es: [
+      { name: 'Carlos M.', text: 'Excelente atención desde el primer momento. El mejor taller de la zona.', stars: 5 },
+      { name: 'Laura P.', text: 'Grandes profesionales. La bicicleta llegó perfectamente ajustada.', stars: 5 },
+      { name: 'Jorge R.', text: 'Volvería sin dudarlo. Asesoramiento real de ciclistas.', stars: 5 },
+    ],
+    en: [
+      { name: 'Carlos M.', text: 'Excellent service from the first moment. Best workshop in the area.', stars: 5 },
+      { name: 'Laura P.', text: 'True professionals. Bike arrived perfectly tuned.', stars: 5 },
+      { name: 'Jorge R.', text: 'Would return without hesitation. Real cyclist advice.', stars: 5 },
+    ],
+  },
+  addressEs: 'España',
+  addressEn: 'Spain',
+  hoursEs: 'Lunes – Sábado: consulta en tienda',
+  hoursEn: 'Mon – Sat: in-store',
+  infoEs: 'Catálogo · Taller · Accesorios · Sin carrito online',
+  infoEn: 'Catalogue · Workshop · Accessories · No online cart',
+  phone: '',
+  ratingLabelEs: 'Especialistas en ciclismo',
+  ratingLabelEn: 'Cycling specialists',
+  aboutEs: 'Pasión por el ciclismo. Catálogo con precios claros y contacto por WhatsApp. Visita la tienda física.',
+  aboutEn: 'Passion for cycling. Clear-price catalogue and WhatsApp contact. Visit the physical store.',
+  accent: 'indigo',
+  email: 'info@bikeshop.es',
+};
+
 const LUXURY_IMAGES = {
   hero: 'https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1400&h=800&fit=crop',
   gal1: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
@@ -981,6 +1077,8 @@ export const NONPROFIT_PROFILE: BusinessProfile = {
 };
 
 export function detectVariant(prompt: string): BusinessVariant {
+  // Bicicletas ANTES que moda (colección/accesorios/carrito disparaban fashion)
+  if (isBikeShopPrompt(prompt)) return 'bike';
   if (isFashionEcommercePrompt(prompt)) return 'fashion';
   if (/tatuaje|tattoo|piercing|royal bang|gemas dentales|iron.?ink|tinta/i.test(prompt)) return 'tattoo';
   if (/kebab|d[öo]ner|doner|durum|falafel/i.test(prompt)) return 'kebab';
@@ -1007,6 +1105,13 @@ export function detectVariant(prompt: string): BusinessVariant {
   if (/peluquer|sal[oó]n\s+de\s+belleza|elite\s+beauty|estilo\s+de\s+belleza|hair\s+salon|manicur|uñas/i.test(prompt)) return 'beauty';
   if (/recetas|blog de comida|blog gastron|food blog|comida casera|blog culin|publicaciones.*receta|stanton|libro de recetas/i.test(prompt)) return 'foodblog';
   if (/trattoria|italian[o]?|pizzer[ií]a|pizza|pasta|risotto|cocina italiana|nonna|antipast|carbonara|bolognese|tiramis/i.test(prompt)) return 'italian';
+  if (
+    /panader[ií]a|panaderia|horno|bollería|bolleria|pasteler[ií]a|pastelera|bakery|bread\s+shop|trigo|pan\s+reci[eé]n|panes?\b|croissants?|magdalenas?/i.test(
+      prompt
+    )
+  ) {
+    return 'bakery';
+  }
   if (/rest art|art caf[ée]|mes[oó]n|taberna|caf[ée]|restaurante|terraza|c[óo]ctel|brunch|tapas|comida\s+español/i.test(prompt)) return 'cafe';
   return 'default';
 }
@@ -1015,7 +1120,7 @@ function menuCta(variant: BusinessVariant): string {
   if (variant === 'cafe' || variant === 'italian') return 'Reservar mesa';
   if (variant === 'tattoo' || variant === 'beauty') return 'Reservar cita';
   if (variant === 'corporate') return 'Solicitar consulta';
-  if (variant === 'automotive') return 'Pedir cita';
+  if (variant === 'automotive' || variant === 'bike') return 'Pedir cita';
   if (variant === 'jewelry' || variant === 'fashion') return 'Descubrir';
   return 'Ver más';
 }
@@ -1045,7 +1150,7 @@ function applyListingToProfile(base: BusinessProfile, listing: ParsedGoogleListi
       es: menuEs,
       en: menuEs.map((p) => ({ ...p, cta: base.variant === 'cafe' ? 'Book a table' : 'Book appointment' })),
     },
-    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'luxury', 'jewelry', 'fashion', 'nonprofit', 'foodblog'].includes(base.variant)
+    reviews: ['cafe', 'italian', 'beauty', 'corporate', 'automotive', 'bike', 'luxury', 'jewelry', 'fashion', 'nonprofit', 'foodblog'].includes(base.variant)
       ? { es: base.reviews.es, en: base.reviews.en }
       : { es: listing.reviews, en: listing.reviews },
     badgeEs: listing.serviceOptions?.slice(0, 40) ?? base.badgeEs,
@@ -1061,11 +1166,57 @@ export function getBusinessProfile(
     variant === 'kebab' ? KEBAB_PROFILE
       : variant === 'tattoo' ? TATTOO_PROFILE
         : variant === 'cafe' ? CAFE_PROFILE
+          : variant === 'bakery' ? {
+              ...CAFE_PROFILE,
+              variant: 'bakery' as const,
+              typeEs: 'Panadería artesanal',
+              typeEn: 'Artisan bakery',
+              taglineEs: 'Pan de masa madre · Bollería · Encargos',
+              taglineEn: 'Sourdough · Pastries · Orders',
+              badgeEs: 'Horneado diario · Masa madre',
+              badgeEn: 'Daily bake · Sourdough',
+              heroImage: IMAGE_BANK.bakery.hero,
+              galleryImages: [...IMAGE_BANK.bakery.gallery].slice(0, 9),
+              aboutEs: 'Panadería artesanal con masa madre, bollería y pasteles. Catálogo con precios y contacto por WhatsApp.',
+              aboutEn: 'Artisan bakery with sourdough, pastries and cakes. Priced catalogue and WhatsApp contact.',
+              accent: 'gold' as const,
+              menuItems: {
+                es: [
+                  { title: 'Pan de Masa Madre', price: '3,50 €', image: IMAGE_BANK.bakery.bread[0], cta: 'Solicitar información' },
+                  { title: 'Baguette Rústica', price: '1,80 €', image: IMAGE_BANK.bakery.bread[1], cta: 'Solicitar información' },
+                  { title: 'Pan de Centeno', price: '4,20 €', image: IMAGE_BANK.bakery.bread[2], cta: 'Solicitar información' },
+                  { title: 'Croissant Artesanal', price: '1,50 €', image: IMAGE_BANK.bakery.pastry[0], cta: 'Solicitar información' },
+                  { title: 'Napolitana de Chocolate', price: '1,80 €', image: IMAGE_BANK.bakery.pastry[1], cta: 'Solicitar información' },
+                  { title: 'Tarta de Queso Casera', price: '18,00 €', image: IMAGE_BANK.bakery.cakes[0], cta: 'Solicitar información' },
+                ],
+                en: [
+                  { title: 'Sourdough Bread', price: '€3.50', image: IMAGE_BANK.bakery.bread[0], cta: 'Request info' },
+                  { title: 'Rustic Baguette', price: '€1.80', image: IMAGE_BANK.bakery.bread[1], cta: 'Request info' },
+                  { title: 'Rye Bread', price: '€4.20', image: IMAGE_BANK.bakery.bread[2], cta: 'Request info' },
+                  { title: 'Artisan Croissant', price: '€1.50', image: IMAGE_BANK.bakery.pastry[0], cta: 'Request info' },
+                  { title: 'Chocolate Pastry', price: '€1.80', image: IMAGE_BANK.bakery.pastry[1], cta: 'Request info' },
+                  { title: 'Homemade Cheesecake', price: '€18.00', image: IMAGE_BANK.bakery.cakes[0], cta: 'Request info' },
+                ],
+              },
+              reviews: {
+                es: [
+                  { name: 'María G.', text: 'El mejor pan de masa madre que he probado en años. Cada mañana es un placer.', stars: 5 },
+                  { name: 'Carlos R.', text: 'Sus tartas son una delicia. Frescura y sabor inigualables.', stars: 5 },
+                  { name: 'Ana P.', text: 'La bollería es espectacular, especialmente los croissants.', stars: 5 },
+                ],
+                en: [
+                  { name: 'Maria G.', text: 'Best sourdough I have tasted in years.', stars: 5 },
+                  { name: 'Carlos R.', text: 'Their cakes are a delight — unmatched freshness.', stars: 5 },
+                  { name: 'Ana P.', text: 'Pastries are spectacular, especially the croissants.', stars: 5 },
+                ],
+              },
+            }
           : variant === 'italian' ? ITALIAN_PROFILE
             : variant === 'foodblog' ? FOOD_BLOG_PROFILE
             : variant === 'beauty' ? BEAUTY_PROFILE
             : variant === 'corporate' ? CORPORATE_PROFILE
               : variant === 'automotive' ? AUTOMOTIVE_PROFILE
+                : variant === 'bike' ? BIKE_PROFILE
                 : variant === 'luxury' ? LUXURY_PROFILE
                   : variant === 'fashion' ? FASHION_PROFILE
                   : variant === 'jewelry' ? JEWELRY_PROFILE

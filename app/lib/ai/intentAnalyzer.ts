@@ -443,7 +443,7 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
             ? INTENT_RULES.find((r) => r.slug === 'lumen')!
             : variant === 'corporate'
               ? INTENT_RULES.find((r) => r.slug === 'ledger')!
-              : variant === 'automotive'
+              : variant === 'automotive' || variant === 'bike'
                 ? INTENT_RULES.find((r) => r.slug === 'torque')!
                 : variant === 'luxury'
                   ? INTENT_RULES.find((r) => r.slug === 'vesper')!
@@ -483,6 +483,8 @@ export function analyzeIntent(prompt: string, lang: 'es' | 'en'): ParsedIntent {
                 ? (lang === 'es' ? 'Asesoría Fiscal & Contable' : 'Tax & Accounting Advisory')
                 : variant === 'automotive'
                   ? (lang === 'es' ? 'Concesionario de Motos' : 'Motorcycle Dealer')
+                  : variant === 'bike'
+                    ? (lang === 'es' ? 'Tienda de Bicicletas' : 'Bicycle Shop')
                   : variant === 'luxury'
                     ? (lang === 'es' ? 'Restaurante Gourmet' : 'Fine Dining Restaurant')
                     : variant === 'nonprofit'

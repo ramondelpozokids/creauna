@@ -74,8 +74,19 @@ export function synthesizeDiscoveryPrompt(discovery: StudioDiscoveryAnswers, lan
       `Estilo visual: ${style}. Paleta: ${palette}. ${hero}.`,
       `Menú de navegación con: ${navLabels}.`,
       `Secciones activas: ${sectionParts.join(', ')}.`,
+      discovery.phone || discovery.whatsapp
+        ? `WhatsApp/teléfono: ${discovery.whatsapp || discovery.phone}.`
+        : '',
+      discovery.email ? `Email: ${discovery.email}.` : '',
+      discovery.address ? `Dirección: ${discovery.address}.` : '',
+      discovery.instagram ? `Instagram: ${discovery.instagram}.` : '',
+      discovery.facebook ? `Facebook: ${discovery.facebook}.` : '',
+      discovery.tiktok ? `TikTok: ${discovery.tiktok}.` : '',
+      discovery.legalName || discovery.cif
+        ? `Titular legal: ${discovery.legalName || discovery.businessName}${discovery.cif ? `, CIF ${discovery.cif}` : ''}.`
+        : '',
       discovery.extraNotes ? `Notas del cliente: ${discovery.extraNotes}` : '',
-      'Calidad de agencia premium (€1.500–3.000). Imágenes profesionales. Diseño responsive.',
+      'Calidad de agencia premium (€1.500–3.000). Imágenes profesionales. Diseño responsive. Hero full-bleed min-h-[85vh].',
     ]
       .filter(Boolean)
       .join(' ');
@@ -88,8 +99,19 @@ export function synthesizeDiscoveryPrompt(discovery: StudioDiscoveryAnswers, lan
     `Visual style: ${style}. Palette: ${palette}. ${hero}.`,
     `Navigation menu: ${navLabels}.`,
     `Active sections: ${sectionParts.join(', ')}.`,
+    discovery.phone || discovery.whatsapp
+      ? `WhatsApp/phone: ${discovery.whatsapp || discovery.phone}.`
+      : '',
+    discovery.email ? `Email: ${discovery.email}.` : '',
+    discovery.address ? `Address: ${discovery.address}.` : '',
+    discovery.instagram ? `Instagram: ${discovery.instagram}.` : '',
+    discovery.facebook ? `Facebook: ${discovery.facebook}.` : '',
+    discovery.tiktok ? `TikTok: ${discovery.tiktok}.` : '',
+    discovery.legalName || discovery.cif
+      ? `Legal entity: ${discovery.legalName || discovery.businessName}${discovery.cif ? `, tax ID ${discovery.cif}` : ''}.`
+      : '',
     discovery.extraNotes ? `Client notes: ${discovery.extraNotes}` : '',
-    'Agency-grade quality. Professional images. Responsive design.',
+    'Agency-grade quality. Professional images. Responsive design. Full-bleed hero min-h-[85vh].',
   ]
     .filter(Boolean)
     .join(' ');

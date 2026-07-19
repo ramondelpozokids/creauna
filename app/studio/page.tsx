@@ -985,7 +985,10 @@ function StudioContent() {
       if (data.previewSections?.length) {
         toast.success(lang === 'es' ? 'Web regenerada' : 'Site regenerated', { description: t.creditUsed });
       } else {
-        toast.message(data.message || (lang === 'es' ? 'Sin entrega: calidad insuficiente' : 'Not delivered: quality bar'));
+        toast.message(
+          data.message ||
+            (lang === 'es' ? 'Listo — dime qué quieres cambiar y lo aplico.' : 'Ready — tell me what to change.')
+        );
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error');

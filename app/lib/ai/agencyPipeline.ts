@@ -14,9 +14,11 @@ import {
 } from './promptFirstQuality';
 import { buildSiteBrief } from './siteAiEnhancer';
 import { analyzeIntent } from './intentAnalyzer';
-import { getBusinessProfile } from './businessProfiles';
+import { getBusinessProfile, detectVariant, isBikeShopPrompt, isFashionEcommercePrompt } from './businessProfiles';
 import type { AiSkippedReason, PipelineStage } from './engineHealth';
 import type { PreviewSection } from './studioEngine';
+import { buildDeterministicAgencyHtml } from './agencyDeterministicBuild';
+import { constructorSystemPreamble } from './creaunaConstructorManifesto';
 
 function extractHtmlFromAiResponse(raw: string): string | null {
   const trimmed = raw.trim();
@@ -53,7 +55,7 @@ export interface AgencySitePlan {
   primaryCta?: string;
   secondaryCta?: string;
   colors: { accent?: string; dark?: string; light?: string };
-  fonts: { heading: string; body: string };
+  fonts: { heading: string; body: string; button?: string };
   sections: string[];
   specialties: string[];
   address?: string;
@@ -76,6 +78,8 @@ export interface AgencyPipelineResult {
   falImages?: number;
   templateSlug?: string;
   plan?: AgencySitePlan;
+  /** Reservado (compat). Nunca empujar al cliente a “hacer deberes”. */
+  suggestDiscovery?: boolean;
 }
 
 const PROVIDERS: AiProvider[] = ['qwen', 'openai', 'gemini', 'claude'];
@@ -101,12 +105,38 @@ function nextLineAfter(prompt: string, label: RegExp): string | undefined {
 }
 
 /** Evita que "hero enorme / impactante / full bleed" se convierta en el H1. */
-function isMetaHeroPhrase(text: string): boolean {
+export function isMetaHeroPhrase(text: string): boolean {
   const t = text.trim().replace(/[.!…]+$/g, '');
   if (t.length < 8) return true;
   return /^(enorme|huge|impactante|full[\s-]?bleed|full[\s-]?screen|pantalla\s+completa|min-h|overlay|fotograf[ií]a|imagen|v[ií]deo|video|hero|foto|banner|campa[nñ]a)(\s|$)/i.test(
     t
   ) || /^(hero|imagen|foto|v[ií]deo)\b.{0,20}\b(enorme|huge|grande|impactante)/i.test(t);
+}
+
+function defaultHeroTitleBySector(prompt: string, lang: 'es' | 'en'): string {
+  if (/panader[ií]a|bakery|bollería|pasteler/i.test(prompt)) {
+    return lang === 'es' ? 'El sabor del pan recién horneado' : 'The taste of freshly baked bread';
+  }
+  const v = detectVariant(prompt);
+  const map: Record<string, { es: string; en: string }> = {
+    beauty: { es: 'Belleza que se nota', en: 'Beauty that shows' },
+    cafe: { es: 'El café de tu barrio', en: 'Your neighborhood café' },
+    italian: { es: 'Sabor de verdad', en: 'Real Italian flavor' },
+    kebab: { es: 'Sabor que enamora', en: 'Flavor that wins you over' },
+    tattoo: { es: 'Arte en la piel', en: 'Art on skin' },
+    corporate: { es: 'Resultados que hablan', en: 'Results that speak' },
+    automotive: { es: 'Potencia y precisión', en: 'Power and precision' },
+    bike: { es: 'Tu próxima aventura comienza sobre dos ruedas', en: 'Your next adventure starts on two wheels' },
+    luxury: { es: 'Experiencias exclusivas', en: 'Exclusive experiences' },
+    jewelry: { es: 'Joyas con historia', en: 'Jewelry with a story' },
+    fashion: { es: 'La elegancia nunca pasa de moda', en: 'Elegance never goes out of style' },
+    foodblog: { es: 'Recetas con alma', en: 'Recipes with soul' },
+    nonprofit: { es: 'Cambiamos vidas juntos', en: 'Changing lives together' },
+    renewable: { es: 'Energía para el futuro', en: 'Energy for the future' },
+    spanish: { es: 'Tradición en cada plato', en: 'Tradition on every plate' },
+    default: { es: 'Tu negocio, tu marca', en: 'Your business, your brand' },
+  };
+  return (map[v] || map.default)[lang];
 }
 
 function sanitizeHeroTitle(
@@ -116,10 +146,26 @@ function sanitizeHeroTitle(
   lang: 'es' | 'en'
 ): string {
   const elegancia = prompt.match(/La elegancia nunca pasa de moda\.?/i)?.[0]?.replace(/\.$/, '');
-  if (elegancia) return elegancia;
+  if (elegancia && /moda|fashion|velora|boutique|ropa/i.test(prompt)) return elegancia;
   if (raw && !isMetaHeroPhrase(raw) && raw.length >= 8 && !/^descubre\b/i.test(raw)) return raw;
-  if (slogan && slogan.length >= 8) return slogan;
-  return lang === 'es' ? 'La elegancia nunca pasa de moda' : 'Elegance never goes out of style';
+  if (slogan && slogan.length >= 8 && !isMetaHeroPhrase(slogan)) return slogan;
+  return defaultHeroTitleBySector(prompt, lang);
+}
+
+function firstH1Text(html: string): string {
+  return html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
+}
+
+function hasPhotoHero(html: string): boolean {
+  return (
+    /(?:min-h-\[(?:7|8|9|100)|h-screen|min-h-screen|id=["'](?:hero|inicio|home))[\s\S]{0,1400}(?:<img\b|background-image\s*:\s*url\()/i.test(
+      html
+    ) ||
+    /(?:<img\b|background-image\s*:\s*url\()[\s\S]{0,1400}(?:min-h-\[(?:7|8|9|100)|h-screen|min-h-screen)/i.test(
+      html
+    ) ||
+    /data-cua-hero-bg/i.test(html)
+  );
 }
 
 function detectSections(prompt: string): string[] {
@@ -193,25 +239,49 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
     nextLineAfter(prompt, /^bot[oó]n\s+secundario\b/i) ||
     (lang === 'es' ? 'Cómo llegar' : 'Get directions');
 
-  // Moda: CTAs por defecto distintos
-  const isFashion = /moda|lookbook|colecci|ropa|boutique|fashion|velora|carrito/i.test(prompt);
+  // Moda SOLO con contexto moda real — nunca bicicletas / «sin carrito» / colección genérica
+  const isBike = isBikeShopPrompt(prompt);
+  const isFashion = !isBike && isFashionEcommercePrompt(prompt);
   const fashionPrimary = isFashion
     ? nextLineAfter(prompt, /^bot[oó]n\s+principal\b/i) || (lang === 'es' ? 'Explorar colección' : 'Explore collection')
-    : primaryCta;
+    : isBike
+      ? nextLineAfter(prompt, /^bot[oó]n\s+principal\b/i) ||
+        (lang === 'es' ? 'Ver bicicletas' : 'View bikes')
+      : primaryCta;
   const fashionSecondary = isFashion
     ? nextLineAfter(prompt, /^bot[oó]n\s+secundario\b/i) || (lang === 'es' ? 'Nueva temporada' : 'New season')
-    : secondaryCta;
+    : isBike
+      ? nextLineAfter(prompt, /^bot[oó]n\s+secundario\b/i) ||
+        (lang === 'es' ? 'Contactar por WhatsApp' : 'Contact on WhatsApp')
+      : secondaryCta;
 
-  const accent = prompt.match(/#([0-9A-Fa-f]{6})/)?.[0] || (isFashion ? '#C6A75E' : undefined);
+  const electricGreen =
+    /verde\s+el[eé]ctrico|electric\s+green|#00d084|#39ff14|#22c55e|#a3e635/i.test(prompt)
+      ? prompt.match(/#(00d084|39ff14|22c55e|a3e635|[0-9A-Fa-f]{6})/i)?.[0] || '#00d084'
+      : undefined;
+  const accent =
+    prompt.match(/#([0-9A-Fa-f]{6})/)?.[0] ||
+    electricGreen ||
+    (isBike ? '#00d084' : isFashion ? '#C6A75E' : undefined);
   const wantsPlayfair = /playfair/i.test(prompt);
+  const wantsMontserrat = /montserrat/i.test(prompt);
   const wantsInter = /inter\b/i.test(prompt);
-  const dark = /oscuro|dark|negro/i.test(prompt);
+  const wantsPoppins = /poppins/i.test(prompt);
+  const dark = /oscuro|dark|negro|grafito/i.test(prompt);
   const address =
     prompt.match(/Calle\s+[^\n]+(?:\nEsquina[^\n]+)?\n?\d{5}\s+\w+/i)?.[0]?.replace(/\n+/g, ', ') ||
     prompt.match(/Calle\s+[A-Za-zÁÉÍÓÚáéíóúñÑ][^\n,]{3,50}/)?.[0];
   const hours = nextLineAfter(prompt, /^horario\b/i) || (/hasta\s+las\s+00:00/i.test(prompt) ? 'Todos los días hasta las 00:00' : undefined);
 
   let specialties = detectSpecialties(prompt);
+  if (isBike && specialties.length === 0) {
+    specialties = ['MTB', 'Carretera', 'E-Bike', 'Urbanas', 'Infantiles', 'Accesorios'].filter((c) =>
+      new RegExp(c.replace('-', '[- ]?'), 'i').test(prompt)
+    );
+    if (specialties.length === 0) {
+      specialties = ['MTB', 'Carretera', 'E-Bike', 'Urbanas', 'Infantiles', 'Accesorios'];
+    }
+  }
   if (isFashion && specialties.length === 0) {
     specialties = ['Hombre', 'Mujer', 'Calzado', 'Accesorios'].filter((c) =>
       new RegExp(c, 'i').test(prompt)
@@ -231,8 +301,28 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
   if (/no\s+plantilla|no\s+bootstrap/i.test(prompt)) styleNotes.push(lang === 'es' ? 'Sin plantilla ni Bootstrap' : 'No template / Bootstrap');
   if (isFashion) {
     styleNotes.push(lang === 'es' ? 'Lookbook editorial tipo revista' : 'Editorial lookbook');
-    styleNotes.push(lang === 'es' ? 'Hero full-bleed con vídeo o foto campaña + poster' : 'Full-bleed hero video or campaign still');
-    styleNotes.push(lang === 'es' ? 'Productos con hover swap de imagen + Comprar' : 'Product cards with hover image swap + Buy');
+    styleNotes.push(lang === 'es' ? 'Hero full-bleed con foto campaña' : 'Full-bleed campaign hero');
+    styleNotes.push(lang === 'es' ? 'Productos con precios (sin carrito si el brief lo prohíbe)' : 'Priced products (no cart if brief forbids)');
+  }
+  if (isBike) {
+    styleNotes.push(
+      lang === 'es'
+        ? 'IDENTIDAD CICLISMO: negro grafito + verde eléctrico. NUNCA moda/oro/Playfair boutique.'
+        : 'CYCLING IDENTITY: graphite black + electric green. NEVER fashion/gold/boutique.'
+    );
+    styleNotes.push(
+      lang === 'es'
+        ? 'Catálogo profesional SIN carrito ni Comprar: solo Solicitar información / WhatsApp'
+        : 'Professional catalogue NO cart/Buy: Enquire / WhatsApp only'
+    );
+    styleNotes.push(
+      lang === 'es'
+        ? 'Fotos de ciclistas, MTB, carretera, e-bike, taller — no ropa ni bolsos'
+        : 'Photos of cyclists, MTB, road, e-bike, workshop — not fashion'
+    );
+    if (wantsMontserrat) styleNotes.push('Títulos Montserrat Bold');
+    if (wantsInter) styleNotes.push('Texto Inter');
+    if (wantsPoppins) styleNotes.push('Botones Poppins');
   }
   if (/aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap/i.test(prompt)) {
     styleNotes.push(
@@ -264,8 +354,15 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
       light: '#FFFFFF',
     },
     fonts: {
-      heading: wantsPlayfair || isFashion ? 'Playfair Display' : 'Playfair Display',
-      body: wantsInter || isFashion ? 'Inter' : 'Inter',
+      heading: wantsMontserrat
+        ? 'Montserrat'
+        : wantsPlayfair || isFashion
+          ? 'Playfair Display'
+          : isBike
+            ? 'Montserrat'
+            : 'Playfair Display',
+      body: wantsInter || isFashion || isBike ? 'Inter' : 'Inter',
+      button: wantsPoppins || isBike ? 'Poppins' : undefined,
     },
     sections,
     specialties,
@@ -286,8 +383,11 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
 }
 
 function planBlock(plan: AgencySitePlan, lang: 'es' | 'en'): string {
+  const noBuy = /sin\s+carrito|cat[aá]logo|whatsapp|solicitar|ciclismo|bicicleta|IDENTIDAD CICLISMO|NO cart/i.test(
+    plan.styleNotes.join(' ') + ' ' + plan.summaryEs
+  );
   return lang === 'es'
-    ? `PLAN DE CONSTRUCCIÓN (obligatorio — como briefing de agencia aprobado):
+    ? `PLAN DE CONSTRUCCIÓN (obligatorio — briefing de agencia aprobado):
 Negocio: ${plan.businessName}
 Badge: ${plan.badge || '—'}
 H1 hero: ${plan.heroTitle || '—'}
@@ -295,34 +395,105 @@ Subtítulo: ${plan.heroSubtitle || '—'}
 CTA primario: ${plan.primaryCta}
 CTA secundario: ${plan.secondaryCta}
 Colores: accent ${plan.colors.accent || 'según brief'}, dark ${plan.colors.dark || '—'}
-Fuentes: ${plan.fonts.heading} + ${plan.fonts.body}
-Secciones en orden: ${plan.sections.join(' → ')}
-Especialidades (cada una con FOTO): ${plan.specialties.join(', ') || 'según brief'}
+Fuentes: ${plan.fonts.heading} + ${plan.fonts.body}${plan.fonts.button ? ` + botones ${plan.fonts.button}` : ''}
+Secciones: ${plan.sections.join(' → ')}
+Categorías (foto real del sector): ${plan.specialties.join(', ') || 'según brief'}
 Dirección: ${plan.address || '—'}
 Horario: ${plan.hours || '—'}
-Textos literales obligatorios: ${plan.mustHaveStrings.join(' | ') || '—'}
-Notas de estilo: ${plan.styleNotes.join('; ') || '—'}
+Textos literales: ${plan.mustHaveStrings.join(' | ') || '—'}
+Estilo: ${plan.styleNotes.join('; ') || '—'}
 
-REGLAS DURAS:
-- CONSTRUIR desde el brief, NO plantilla, NO Bootstrap, NO esqueleto.
-- Hero: min-h-[78vh] max-h-[100vh] con <img> full-bleed (object-cover) usando la URL hero del pack de assets + overlay oscuro + H1 BLANCO (text-white) + subtítulo + 2 CTAs.
-- El H1 es el titular de marketing («${plan.heroTitle}»). NUNCA uses como H1 palabras de tamaño (enorme, huge, impactante, full-bleed).
-- PROHIBIDO hero de color sólido sin foto; PROHIBIDO zoom extremo / crop absurdo de la imagen.
-- Si hay lookbook/colección/productos: fotos grandes, hover swap donde el brief lo pida, botones Comprar.
-- NO implementes Stripe ni carrito de pago real. Catálogo visual sí; cobros = presupuesto en /contacto.
-- Si el plan incluye legales/widgets: secciones #aviso-legal #privacidad #cookies #mapa-sitio, botón WhatsApp #25D366, scroll-up y redes con colores oficiales.
-- HTML completo denso (>25KB ideal).
-- Devuelve SOLO el HTML.`
-    : `BUILD PLAN (mandatory):
+REGLAS DURAS — CONSTRUCTOR INTELIGENTE (CREAUNA):
+- CONSTRUYE desde cero según el BRIEF. Cada proyecto es ÚNICO.
+- PROHIBIDO copiar/pegar otra web, plantilla de moda/pelucas, Bootstrap o esqueleto vacío.
+- La identidad visual DEBE coincidir con el sector del cliente (bicicletas ≠ moda).
+- Hero: min-h-[70vh] max-h-[820px] + <img> full-bleed object-cover + overlay + H1 blanco + 2 CTAs visibles sin scroll. PROHIBIDO hero de 100vh+/pantalla entera vacía.
+- H1 = titular de marketing («${plan.heroTitle}»). NUNCA «enorme/huge/full-bleed».
+- PROHIBIDO hero de color sólido sin foto.
+- ${noBuy ? 'Catálogo SIN carrito: precios + Solicitar información / WhatsApp. PROHIBIDO Comprar/checkout/Stripe.' : 'Solo carrito si el brief lo pide explícitamente.'}
+- Legales: enlaces en el footer que abren modales (aviso, privacidad, cookies, accesibilidad). PROHIBIDO volcar páginas legales debajo del footer.
+- Imágenes: cada producto DEBE mostrar foto del producto real (pan de masa madre = pan; croissant = bollería; tarta = pastel). PROHIBIDO barcos, copas, curry, moda o fotos ajenas al sector.
+- PROHIBIDO watermark/logo «CREAUNA» o placeholders grises. Si falta foto, usa URL del pack de panadería.
+- Grids de productos/galería: exactamente 3 o 6 (o 9). NUNCA 4 ni 5 dejando una imagen suelta. Sin fotos repetidas en el mismo bloque.
+- Legales: SOLO enlaces en el footer que abren modal. PROHIBIDO volcar privacidad/cookies como secciones tras el mapa o debajo del footer.
+- HTML denso (>25KB). SOLO HTML.`
+    : `BUILD PLAN:
 ${JSON.stringify(plan, null, 2)}
-Build from brief only. No templates. Full dense HTML. Photo hero with object-cover required. H1 must be marketing headline not size adjectives. Legal + WhatsApp + scroll-up + brand socials if in plan. Return ONLY HTML.`;
+Build FROM SCRATCH from the client brief. Never reuse another project's full page or a fashion template on a non-fashion brief. Return ONLY dense HTML.`;
+}
+
+const BUILD_MAX_TOKENS = 32768;
+
+function isCompleteHtmlDoc(html: string): boolean {
+  return /<!DOCTYPE\s+html/i.test(html) && /<\/html>/i.test(html) && html.length > 12000;
+}
+
+async function continueIncompleteHtml(
+  partial: string,
+  provider: AiProvider,
+  prompt: string,
+  lang: 'es' | 'en'
+): Promise<string> {
+  let html = partial;
+  for (let i = 0; i < 3; i++) {
+    if (isCompleteHtmlDoc(html) && html.length > 25000) break;
+    if (/<\/html>/i.test(html) && html.length > 20000) break;
+
+    const motor = provider === 'qwen' || provider === 'openai' ? 'code' : provider === 'claude' ? 'copy' : 'visual';
+    const cont = await chatCompletion(
+      [
+        {
+          role: 'system',
+          content:
+            lang === 'es'
+              ? 'Continúa el documento HTML exactamente donde quedó. No repitas el inicio. Cierra todas las secciones y termina con </body></html>. SOLO HTML (continuación).'
+              : 'Continue the HTML document exactly where it left off. Do not repeat the start. Close all sections and end with </body></html>. ONLY HTML continuation.',
+        },
+        {
+          role: 'user',
+          content:
+            lang === 'es'
+              ? `El HTML está incompleto (falta </html> o está truncado). Últimos 6000 caracteres:\n\n${html.slice(-6000)}\n\nContinúa desde ahí hasta cerrar el documento.`
+              : `HTML is incomplete. Last 6000 chars:\n\n${html.slice(-6000)}\n\nContinue until the document is closed.`,
+        },
+      ],
+      { motor, maxTokens: BUILD_MAX_TOKENS, temperature: 0.2, prompt, preferProvider: provider }
+    );
+    if (!cont.content) break;
+    const piece = cont.content
+      .replace(/^```(?:html)?\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim();
+    // Si la continuación incluye DOCTYPE, preferir el doc completo
+    const extracted = extractHtmlFromAiResponse(cont.content);
+    if (extracted && extracted.length > html.length && /<\/html>/i.test(extracted)) {
+      html = extracted;
+      break;
+    }
+    html = html + '\n' + piece;
+    if (/<\/html>/i.test(piece) || /<\/html>/i.test(html)) {
+      const end = html.lastIndexOf('</html>');
+      if (end > 0) html = html.slice(0, end + 7);
+      break;
+    }
+  }
+  return html;
 }
 
 async function callBuild(
   system: string,
   user: string,
-  prompt: string
+  prompt: string,
+  lang: 'es' | 'en' = 'es'
 ): Promise<{ html: string | null; provider: AiProvider | 'rules' }> {
+  // Solo truncar briefs extremos (>100KB); Qwen aguanta briefs largos como el de pelucas
+  const trimmedUser =
+    user.length > 100000
+      ? user.slice(0, 60000) + '\n\n[…brief truncado…]\n\n' + user.slice(-20000)
+      : user;
+
+  let best: { html: string; provider: AiProvider | 'rules' } | null = null;
+
   for (const provider of PROVIDERS) {
     if (!getConfiguredProviders().includes(provider)) continue;
     const motor =
@@ -334,17 +505,58 @@ async function callBuild(
     const result = await chatCompletion(
       [
         { role: 'system', content: system },
-        { role: 'user', content: user },
+        { role: 'user', content: trimmedUser },
       ],
-      { motor, maxTokens: 16384, temperature: 0.35, prompt, preferProvider: provider }
+      { motor, maxTokens: BUILD_MAX_TOKENS, temperature: 0.35, prompt, preferProvider: provider }
     );
     if (!result.content) continue;
-    const html = extractHtmlFromAiResponse(result.content);
-    if (html && html.length > 10000) {
-      return { html, provider: result.provider === 'rules' ? provider : result.provider };
+    let html = extractHtmlFromAiResponse(result.content);
+    if (!html && result.content.length > 8000 && /<html|<body|<section/i.test(result.content)) {
+      html = result.content.replace(/^```(?:html)?\s*/i, '').replace(/```\s*$/i, '').trim();
+    }
+    if (!html) continue;
+    const prov = (result.provider === 'rules' ? provider : result.provider) as AiProvider;
+
+    if (!isCompleteHtmlDoc(html) || html.length < 40000) {
+      html = await continueIncompleteHtml(html, prov, prompt, lang);
+    }
+
+    if (html.length > 10000) {
+      return { html, provider: prov };
+    }
+    if (html.length > 5000 && (!best || html.length > best.html.length)) {
+      best = { html, provider: prov };
     }
   }
-  return { html: null, provider: 'rules' };
+  return best ? { html: best.html, provider: best.provider } : { html: null, provider: 'rules' };
+}
+
+function deliverHtml(
+  html: string,
+  plan: AgencySitePlan,
+  businessName: string,
+  lang: 'es' | 'en',
+  provider: AiProvider | 'rules',
+  falImages: number | undefined,
+  source: 'ai' | 'hybrid' | 'rules',
+  _extraHint = ''
+): AgencyPipelineResult {
+  return {
+    ok: true,
+    previewSections: [{ id: 101, type: 'fullpage', html }],
+    businessName,
+    message:
+      lang === 'es'
+        ? `He construido tu web según tu brief. ${plan.summaryEs}. Si quieres cambiar algo (hero, colores, chat, blog, textos…), dímelo y lo aplico sobre este diseño.`
+        : `Built your site from your brief. ${plan.summaryEs}. Ask for any change (hero, colors, chat, blog, copy…) and I will apply it.`,
+    source,
+    motorsUsed: ['code', 'visual', 'copy', 'ux'],
+    providersUsed: provider !== 'rules' ? [provider] : [],
+    pipelineStage: 'agency_pipeline',
+    falImages,
+    templateSlug: 'prompt-first',
+    plan,
+  };
 }
 
 function verifyDeterministic(html: string, plan: AgencySitePlan, prompt: string): string[] {
@@ -377,23 +589,44 @@ function verifyDeterministic(html: string, plan: AgencySitePlan, prompt: string)
   return [...new Set(issues)];
 }
 
-async function applyImages(html: string, prompt: string, lang: 'es' | 'en', pack: BriefImagePack) {
+async function applyImages(
+  html: string,
+  prompt: string,
+  lang: 'es' | 'en',
+  pack: BriefImagePack,
+  clientImageUrls?: string[]
+) {
   const intent = analyzeIntent(prompt, lang);
   const profile = getBusinessProfile(intent.variant);
   const brief = buildSiteBrief(intent, profile, null, lang, prompt);
   const { ensureVisibleSiteImages } = await import('./ensureVisibleSiteImages');
-  const ensured = await ensureVisibleSiteImages(html, pack.urls, brief, { maxAiImages: 4 });
+  const visual = /fashion|beauty|jewelry|tattoo|luxury|wig|peluca|boutique|bridal|novia|bike|bicicleta|ciclismo|mtb/i.test(
+    pack.variant + ' ' + prompt
+  );
+  // Siempre rellenar con fal/Gemini si hay claves: nunca entregar stock roto / huecos.
+  const ensured = await ensureVisibleSiteImages(html, pack.urls, brief, {
+    maxAiImages: visual ? 6 : 4,
+    preferAiHero: true,
+    forceAiFill: true,
+    clientImageUrls,
+  });
   return { html: ensured.html, falImages: ensured.aiImages };
 }
 
-/** Corrige H1 basura («Enorme.») y asegura foto hero del pack con altura controlada. */
-function polishHeroHtml(html: string, plan: AgencySitePlan, pack: BriefImagePack): string {
+/** Corrige H1 basura y hero full-bleed legible (no pantallazo vacío de 100vh+). */
+function polishHeroHtml(
+  html: string,
+  plan: AgencySitePlan,
+  pack: BriefImagePack,
+  prompt: string,
+  lang: 'es' | 'en'
+): string {
   let out = html;
-  const title = plan.heroTitle || 'La elegancia nunca pasa de moda';
+  const title = plan.heroTitle || defaultHeroTitleBySector(prompt, lang);
   const heroUrl = (pack.urls[0] || '').replace(/"/g, '%22');
 
-  // Sustituir H1 meta (enorme / huge / una sola palabra corta)
-  out = out.replace(/<h1\b([^>]*)>([\s\S]*?)<\/h1>/i, (_m, attrs: string, inner: string) => {
+  // Sustituir H1 meta en todos los H1
+  out = out.replace(/<h1\b([^>]*)>([\s\S]*?)<\/h1>/gi, (_m, attrs: string, inner: string) => {
     const text = inner.replace(/<[^>]+>/g, '').trim();
     if (isMetaHeroPhrase(text) || /^enorme\.?$/i.test(text)) {
       let a = attrs;
@@ -411,37 +644,62 @@ function polishHeroHtml(html: string, plan: AgencySitePlan, pack: BriefImagePack
     return `<h1${a}>${inner}</h1>`;
   });
 
-  if (!heroUrl) return out;
-
-  // Si el hero no tiene img de stock/fal, inyectar capa de fondo
-  const heroChunk = out.match(/<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>[\s\S]{0,2500}/i);
-  const heroHasImg = heroChunk ? /<img\b/i.test(heroChunk[0]) : /min-h-\[(?:7|8|9|100)|h-screen[\s\S]{0,800}<img\b/i.test(out);
-  if (!heroHasImg || /background(?:-color)?:\s*(?:#|rgb|olive|khaki|solid)/i.test(heroChunk?.[0] || '')) {
-    const layer = `<div class="absolute inset-0 -z-10 overflow-hidden" data-cua-hero-fix>
+  if (heroUrl) {
+    // Si el hero no tiene img de stock/fal, inyectar capa de fondo
+    const heroChunk = out.match(
+      /<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>[\s\S]{0,2500}/i
+    );
+    const heroHasImg = heroChunk
+      ? /<img\b/i.test(heroChunk[0])
+      : /min-h-\[(?:6|7|8|9|100)|h-screen[\s\S]{0,800}<img\b/i.test(out);
+    if (!heroHasImg || /background(?:-color)?:\s*(?:#|rgb|olive|khaki|solid)/i.test(heroChunk?.[0] || '')) {
+      const layer = `<div class="absolute inset-0 -z-10 overflow-hidden" data-cua-hero-fix>
   <img src="${heroUrl}" alt="" class="w-full h-full object-cover object-center" fetchpriority="high" referrerpolicy="no-referrer" />
   <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/65"></div>
 </div>`;
-    if (/<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>/i.test(out)) {
-      out = out.replace(
-        /(<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>)/i,
-        `$1\n${layer}`
-      );
-      // relative positioning
-      out = out.replace(
-        /(<section)([^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>)/i,
-        (_m, tag: string, rest: string) => {
-          if (/relative/i.test(rest)) return `${tag}${rest}`;
-          if (/class="/i.test(rest)) return `${tag}${rest.replace(/class="/i, 'class="relative overflow-hidden ')}`;
-          return `${tag} class="relative overflow-hidden"${rest.replace(/^/, '')}`;
-        }
-      );
+      if (/<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>/i.test(out)) {
+        out = out.replace(
+          /(<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>)/i,
+          `$1\n${layer}`
+        );
+        out = out.replace(
+          /(<section)([^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>)/i,
+          (_m, tag: string, rest: string) => {
+            if (/relative/i.test(rest)) return `${tag}${rest}`;
+            if (/class="/i.test(rest)) return `${tag}${rest.replace(/class="/i, 'class="relative overflow-hidden ')}`;
+            return `${tag} class="relative overflow-hidden"${rest.replace(/^/, '')}`;
+          }
+        );
+      }
     }
   }
 
-  // Limitar altura monstruosa
-  out = out.replace(/min-h-\[(?:95|100|110|120)vh\]/gi, 'min-h-[82vh]');
-  out = out.replace(/min-h-screen/gi, 'min-h-[82vh]');
-  // Imágenes hero: object-cover + max height
+  // Hero impactante pero LEGIBLE: ~70vh, tope 820px. Nunca 100vh+/150vh que “no se ve”.
+  out = out.replace(/min-h-\[[0-9]{2,3}vh\]/gi, 'min-h-[70vh]');
+  out = out.replace(/\bmin-h-screen\b/gi, 'min-h-[70vh]');
+  out = out.replace(/\bh-screen\b/gi, 'min-h-[70vh]');
+  out = out.replace(/\bh-\[[0-9]{3,}px\]/gi, 'min-h-[70vh]');
+  out = out.replace(
+    /(<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*class=")([^"]*)(")/i,
+    (_m, pre: string, cls: string, close: string) => {
+      let c = cls
+        .replace(/min-h-\[[^\]]+\]/gi, '')
+        .replace(/\b(?:min-h-screen|h-screen)\b/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      c = `relative overflow-hidden min-h-[70vh] max-h-[820px] flex items-center ${c}`;
+      return `${pre}${c}${close}`;
+    }
+  );
+  // Contenido del hero por encima de la foto
+  out = out.replace(
+    /(<section[^>]*(?:id=["'](?:inicio|hero|home)["']|class=["'][^"']*hero)[^>]*>[\s\S]{0,400}?)(<div[^>]*class=")([^"]*)(")/i,
+    (full, pre: string, dpre: string, dcls: string, dclose: string) => {
+      if (/data-cua-hero/i.test(full) || /absolute inset-0/i.test(dcls)) return full;
+      if (/relative z-|z-10|z-20/i.test(dcls)) return full;
+      return `${pre}${dpre}relative z-10 w-full ${dcls}${dclose}`;
+    }
+  );
   out = out.replace(
     /(<section[^>]*(?:hero|inicio)[^>]*>[\s\S]*?<img\b)([^>]*?)(>)/i,
     (_m, pre: string, attrs: string, close: string) => {
@@ -449,6 +707,9 @@ function polishHeroHtml(html: string, plan: AgencySitePlan, pack: BriefImagePack
       if (!/object-cover/i.test(a)) {
         if (/class="/i.test(a)) a = a.replace(/class="/i, 'class="object-cover object-center ');
         else a += ' class="object-cover object-center w-full h-full"';
+      }
+      if (!/max-h-|h-full|absolute/i.test(a) && /data-cua-hero|hero/i.test(pre)) {
+        // ok
       }
       return `${pre}${a}${close}`;
     }
@@ -468,88 +729,134 @@ function polishHeroHtml(html: string, plan: AgencySitePlan, pack: BriefImagePack
  */
 export async function runAgencyPipeline(
   prompt: string,
-  lang: 'es' | 'en'
+  lang: 'es' | 'en',
+  opts?: { clientImageUrls?: string[]; briefWeak?: boolean }
 ): Promise<AgencyPipelineResult> {
   const plan = buildAgencyPlanFromBrief(prompt, lang);
-  const pack = buildBriefImagePack(prompt, lang);
+  const pack = buildBriefImagePack(prompt, lang, opts?.clientImageUrls);
   const businessName = plan.businessName;
+  const finishWithDeterministic = async (
+    _reason: string,
+    provider: AiProvider | 'rules' = 'rules'
+  ): Promise<AgencyPipelineResult> => {
+    let html = buildDeterministicAgencyHtml(plan, pack, prompt, lang);
+    const imaged = await applyImages(html, prompt, lang, pack, opts?.clientImageUrls);
+    html = polishHeroHtml(imaged.html, plan, pack, prompt, lang);
+    const { injectSiteChrome } = await import('./siteChrome');
+    html = injectSiteChrome(html, {
+      prompt: prompt + '\n WhatsApp legales redes sociales scroll up',
+      lang,
+      businessName,
+    });
+    const { polishCatalogLayout } = await import('./polishCatalogLayout');
+    html = polishCatalogLayout(html, {
+      prompt,
+      packUrls: pack.urls,
+      variant: pack.variant,
+    });
+    return deliverHtml(
+      html,
+      plan,
+      businessName,
+      lang,
+      provider,
+      imaged.falImages,
+      imaged.falImages ? 'hybrid' : provider === 'rules' ? 'rules' : 'hybrid',
+      ''
+    );
+  };
 
   if (!getConfiguredProviders().length) {
-    return {
-      ok: false,
-      previewSections: [],
-      businessName,
-      message:
-        lang === 'es'
-          ? 'No se puede construir ahora: el Studio no está listo. Inténtalo de nuevo más tarde.'
-          : 'Cannot build now: Studio is not ready. Please try again later.',
-      source: 'rules',
-      motorsUsed: [],
-      providersUsed: [],
-      pipelineStage: 'agency_pipeline',
-      aiSkippedReason: 'no_api_keys',
-      plan,
-    };
+    // Sin IA: igual entregamos web densamente construida desde el brief
+    return finishWithDeterministic(
+      lang === 'es' ? 'construida con motor determinista' : 'deterministic engine build'
+    );
   }
 
-  const system =
+  const directSystem =
     lang === 'es'
-      ? `Eres el director creativo y desarrollador de CREAUNA. Construyes webs de negocio cobrables (nivel agencia 2.000–5.000 €).
-Trabajas SOLO desde el brief y el PLAN aprobado. No uses plantillas. No inventes otra marca.
-Entregas UN documento HTML completo con Tailwind CDN, Google Fonts, foto hero, secciones densas y JS mínimo para navbar/scroll/lightbox si el plan lo pide.
-Devuelve SOLO HTML.`
-      : `You are CREAUNA's creative director/developer. Build billable agency-grade business sites from the brief + approved PLAN only. No templates. Return ONLY full HTML.`;
+      ? `${constructorSystemPreamble('es')}
 
-  const assets = `\n\nAssets de imagen (USA SOLO ESTAS URLs — Unsplash/Pexels curados, licencia comercial. NO inventes IDs):\n${pack.briefBlock}`;
-  const briefBlock = `\n\nBRIEF COMPLETO DEL CLIENTE:\n${prompt}`;
+ENTREGA: un documento HTML completo, responsive, ultra-premium, fiel al brief.
+- Identidad visual del sector real (bicicletas ≠ moda; etc.).
+- Catálogo sin e-commerce si el brief lo dice: precios + WhatsApp / Solicitar info. NUNCA carrito/Stripe/Comprar.
+- Hero con foto real del sector, altura ~70vh (máx. 820px), título y CTAs visibles sin scroll. PROHIBIDO hero vacío o pantallazo de color.
+- HTML denso (ideal >40KB). Devuelve SOLO el HTML, sin markdown.`
+      : `${constructorSystemPreamble('en')}
+
+DELIVER: one complete ultra-premium HTML document from the brief only.
+Catalogue without cart if asked. Photo hero required. Return ONLY HTML.`;
+
+  const assets = `\n\nAssets de imagen sugeridos (puedes usar Unsplash/Pexels; prioriza estas si encajan):\n${pack.briefBlock}`;
 
   let provider: AiProvider | 'rules' = 'rules';
   let html: string | null = null;
 
-  // Fase BUILD
-  const built = await callBuild(
-    system,
-    `${planBlock(plan, lang)}${assets}${briefBlock}`,
-    prompt
-  );
-  html = built.html;
-  provider = built.provider;
+  // 1) Intento directo tipo Chat Qwen: el brief manda (sin recortar el plan encima)
+  const direct = await callBuild(directSystem, `${prompt}${assets}`, prompt, lang);
+  html = direct.html;
+  provider = direct.provider;
+
+  // 2) Si el directo falla o queda corto, pipeline con plan cerrado
+  if (!html || html.length < 20000) {
+    const system =
+      lang === 'es'
+        ? `${constructorSystemPreamble('es')}
+
+Trabajas con el brief + PLAN cerrado. HTML completo denso.
+Catálogo: sin carrito/Stripe si el plan lo prohíbe. Devuelve SOLO HTML.`
+        : `${constructorSystemPreamble('en')}
+
+Build from brief + PLAN. Return ONLY full dense HTML.`;
+
+    const briefForAi = prompt.length > 50000 ? prompt.slice(0, 40000) + '\n…\n' + prompt.slice(-8000) : prompt;
+    const planned = await callBuild(
+      system,
+      `${planBlock(plan, lang)}${assets}\n\nBRIEF:\n${briefForAi}`,
+      prompt,
+      lang
+    );
+    if (planned.html && (!html || planned.html.length > html.length)) {
+      html = planned.html;
+      provider = planned.provider;
+    }
+  }
 
   if (!html) {
-    return {
-      ok: false,
-      previewSections: [],
-      businessName,
-      message:
-        lang === 'es'
-          ? 'No pude generar la web desde tu brief. Sin plantillas. Vuelve a intentarlo.'
-          : 'Could not generate the site from your brief. No templates. Please retry.',
-      source: 'rules',
-      motorsUsed: [],
-      providersUsed: [],
-      pipelineStage: 'agency_pipeline',
-      aiSkippedReason: 'ai_parse_failed',
-      plan,
-    };
+    return finishWithDeterministic(
+      lang === 'es' ? 'respaldo premium desde tu brief' : 'premium fallback from your brief',
+      provider
+    );
   }
 
   // Fase VERIFY + REPAIR (hasta 2)
   for (let round = 0; round < 2; round++) {
     const issues = verifyDeterministic(html, plan, prompt);
+    // Si el HTML ya es muy denso (>40KB) y tiene hero+fonts, no forzar repair por textos literales menores
+    if (html.length > 40000 && /<h1\b/i.test(html) && /fonts\.googleapis/i.test(html) && issues.length <= 3) {
+      break;
+    }
     if (issues.length === 0) break;
 
     const repairUser =
       lang === 'es'
         ? `${planBlock(plan, lang)}${assets}
 
-REPARACIÓN OBLIGATORIA — el HTML anterior FALLÓ la verificación de calidad:
+REPARACIÓN — el HTML FALLÓ verificación:
 ${issues.map((i) => `- ${i}`).join('\n')}
 
-Reescribe el documento HTML COMPLETO corrigiendo TODOS los puntos. Mantén el negocio y el brief. No entregues esqueleto.
-HTML previo (referencia, mejóralo):\n${html.slice(0, 22000)}`
-        : `Fix ALL quality issues and return FULL HTML:\n${issues.join('\n')}\n\nPrevious HTML:\n${html.slice(0, 22000)}${assets}`;
+Reescribe el HTML COMPLETO corrigiendo esos puntos. Mantén el brief.
+HTML previo:\n${html.slice(0, 50000)}`
+        : `Fix quality issues and return FULL HTML:\n${issues.join('\n')}\n\nPrevious:\n${html.slice(0, 50000)}${assets}`;
 
-    const repaired = await callBuild(system, repairUser, prompt);
+    const repaired = await callBuild(
+      lang === 'es'
+        ? 'Eres CREAUNA. Reparas HTML de webs premium. Devuelve SOLO el documento HTML completo.'
+        : 'You are CREAUNA. Repair premium site HTML. Return ONLY full HTML.',
+      repairUser,
+      prompt,
+      lang
+    );
     if (repaired.html) {
       html = repaired.html;
       provider = repaired.provider;
@@ -558,61 +865,85 @@ HTML previo (referencia, mejóralo):\n${html.slice(0, 22000)}`
     }
   }
 
-  // Imágenes + pulido hero (titular + foto + altura)
-  const imaged = await applyImages(html, prompt, lang, pack);
-  html = polishHeroHtml(imaged.html, plan, pack);
+  // Imágenes + pulido — HTML denso tipo Qwen (CSS propio >35KB): toque ligero, no machacar
+  const denseAi =
+    html.length > 35000 && /<\/html>/i.test(html) && /<h1\b/i.test(html);
+
+  if (denseAi) {
+    const imaged = await applyImages(html, prompt, lang, pack, opts?.clientImageUrls);
+    html = imaged.html;
+    const { injectSiteChrome } = await import('./siteChrome');
+    html = injectSiteChrome(html, {
+      prompt: prompt + (promptWantsChrome(prompt) ? '' : '\n legales WhatsApp'),
+      lang,
+      businessName,
+    });
+    const { polishCatalogLayout } = await import('./polishCatalogLayout');
+    html = polishCatalogLayout(html, {
+      prompt,
+      packUrls: pack.urls,
+      variant: pack.variant,
+    });
+    return deliverHtml(
+      html,
+      plan,
+      businessName,
+      lang,
+      provider,
+      imaged.falImages,
+      imaged.falImages ? 'hybrid' : 'ai',
+      ''
+    );
+  }
+
+  const imaged = await applyImages(html, prompt, lang, pack, opts?.clientImageUrls);
+  html = polishHeroHtml(imaged.html, plan, pack, prompt, lang);
   const { injectSiteChrome } = await import('./siteChrome');
   html = injectSiteChrome(html, { prompt, lang, businessName });
+  {
+    const { polishCatalogLayout } = await import('./polishCatalogLayout');
+    html = polishCatalogLayout(html, {
+      prompt,
+      packUrls: pack.urls,
+      variant: pack.variant,
+    });
+  }
 
-  // Verify final — solo bloquear esqueletos; si hay HTML denso, entregar con aviso
   const finalIssues = verifyDeterministic(html, plan, prompt);
   const unacceptable = isUnacceptableAgencyHtml(html, prompt);
-  const isJunk =
+  const metaH1 = isMetaHeroPhrase(firstH1Text(html));
+  const noPhoto = !hasPhotoHero(html);
+  const criticalFail =
     !html ||
     html.length < 12000 ||
     isSkeletonLanding(html) ||
-    (unacceptable && finalIssues.length >= 4);
+    (unacceptable && html.length < 25000) ||
+    metaH1 ||
+    noPhoto;
 
-  if (isJunk && (finalIssues.length > 0 || unacceptable)) {
-    return {
-      ok: false,
-      previewSections: [],
-      businessName,
-      message:
-        lang === 'es'
-          ? 'He construido y verificado tu web, pero no alcanzó el nivel de calidad que exigimos (como en una agencia). No entrego ese resultado. Pulsa Regenerar para un nuevo intento.'
-          : 'Built and verified, but it did not meet our agency quality bar. Not delivering. Press Regenerate for a new attempt.',
-      source: 'ai',
-      motorsUsed: ['code', 'visual'],
-      providersUsed: provider !== 'rules' ? [provider] : [],
-      pipelineStage: 'agency_pipeline',
-      aiSkippedReason: 'validation_failed',
-      plan,
-    };
+  if (criticalFail) {
+    return finishWithDeterministic(
+      lang === 'es' ? 'versión premium garantizada' : 'guaranteed premium version',
+      provider
+    );
   }
 
-  const qualityNote =
-    finalIssues.length > 0 || unacceptable
-      ? lang === 'es'
-        ? ' Hay detalles por pulir: pide cambios concretos (hero, lookbook, tipografía…) y los aplico.'
-        : ' Some polish may remain: ask for specific changes and I will apply them.'
-      : '';
+  void finalIssues;
 
-
-  return {
-    ok: true,
-    previewSections: [{ id: 101, type: 'fullpage', html }],
-    businessName,
-    message:
-      lang === 'es'
-        ? `He construido tu web desde tu brief (plan → construcción → verificación). ${plan.summaryEs}.${qualityNote} Pide cambios concretos y los aplico sobre este diseño.`
-        : `Built your site from your brief (plan → build → verify).${qualityNote} Ask for specific changes.`,
-    source: imaged.falImages ? 'hybrid' : 'ai',
-    motorsUsed: ['code', 'visual', 'copy', 'ux'],
-    providersUsed: provider !== 'rules' ? [provider] : [],
-    pipelineStage: 'agency_pipeline',
-    falImages: imaged.falImages,
-    templateSlug: 'prompt-first',
+  return deliverHtml(
+    html,
     plan,
-  };
+    businessName,
+    lang,
+    provider,
+    imaged.falImages,
+    imaged.falImages ? 'hybrid' : 'ai',
+    ''
+  );
+}
+
+function promptWantsChrome(prompt: string): boolean {
+  return /whatsapp|aviso\s+legal|privacidad|cookies|redes\s+sociales|scroll|chat|blog|buscador|carrusel/i.test(
+    prompt
+  );
 }

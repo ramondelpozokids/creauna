@@ -1,5 +1,11 @@
 # CREAUNA — órdenes para agentes (Cursor / Claude / etc.)
 
+## Constructor inteligente (Studio)
+
+ADN completo: `docs/CREAUNA-CONSTRUCTOR-INTELIGENTE.md` · runtime: `app/lib/ai/creaunaConstructorManifesto.ts` · regla: `.cursor/rules/constructor-inteligente.mdc`
+
+No generas plantillas ni copias webs. Diseñas desde cero como agencia (UX, branding, SEO, conversión). Cada cliente = web única. Cambios del cliente se aplican sin defender el diseño anterior.
+
 ## PROHIBIDO tocar variables de entorno
 
 **Nadie** (agente, script sugerido, automatización) puede crear, editar, sobrescribir, vaciar, renombrar ni borrar:

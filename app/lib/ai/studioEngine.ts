@@ -51,6 +51,8 @@ export interface StudioGenerateInput {
   discovery?: StudioDiscoveryAnswers;
   recentMessages?: { role: 'user' | 'ai'; content: string }[];
   sectionOutline?: string;
+  /** Fotos del cliente (URLs) — se anteponen al pack de sector. */
+  clientImageUrls?: string[];
 }
 
 export interface StudioGenerateResult {
@@ -75,6 +77,8 @@ export interface StudioGenerateResult {
   falImages?: number;
   /** Pedido fuera de alcance (Stripe/SaaS/hosting…) → /contacto, sin gastar crédito. */
   quoteRedirect?: boolean;
+  /** Reservado (compat). No empujar al cliente a wizard/deberes. */
+  suggestDiscovery?: boolean;
 }
 
 function cloneSections(sections: PreviewSection[]): PreviewSection[] {
@@ -150,7 +154,30 @@ function corporateUpgradePrompt(lower: string): boolean {
     lower.includes('galer') ||
     lower.includes('imagen') ||
     lower.includes('foto') ||
-    lower.includes('gallery')
+    lower.includes('gallery') ||
+    lower.includes('color') ||
+    lower.includes('fondo') ||
+    lower.includes('background') ||
+    lower.includes('escritur') ||
+    lower.includes('fuente') ||
+    lower.includes('font') ||
+    lower.includes('natural') ||
+    lower.includes('cambiar') ||
+    lower.includes('cambio') ||
+    lower.includes('quiero') ||
+    lower.includes('añade') ||
+    lower.includes('añadir') ||
+    lower.includes('agrega') ||
+    lower.includes('pon') ||
+    lower.includes('haz') ||
+    lower.includes('modifica') ||
+    lower.includes('actualiza') ||
+    lower.includes('blog') ||
+    lower.includes('chat') ||
+    lower.includes('asistente') ||
+    lower.includes('newsletter') ||
+    lower.includes('sección') ||
+    lower.includes('seccion')
   );
 }
 
@@ -163,20 +190,24 @@ function isFullPagePreview(sections: PreviewSection[]): boolean {
 }
 
 /**
- * Pedidos de rediseño real: no aplicar swaps de clases; reescribir con IA sobre el HTML del cliente.
+ * Pedidos de cambio sobre fullpage: reescribir con IA.
+ * Solo módulos chrome puros (sin otras palabras de diseño) → inyección determinista.
  */
 function needsRealRedesign(prompt: string, sections: PreviewSection[]): boolean {
   if (!isFullPagePreview(sections)) return false;
-  // Legales/WhatsApp/scroll/redes solos → inyección determinista (no reescribir toda la web)
-  if (
-    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll|scoll|redes\s+sociales|blog|noticias|servicios|buscador|carrusel|carousel|chat|asistente/i.test(
+  const lower = prompt.toLowerCase();
+  const chromeOnly =
+    /aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|whatsapp|scroll[\s_-]*up|redes\s+sociales/i.test(
       prompt
     ) &&
-    !/hero|lookbook|colecci[oó]n|rediseñ|regenera|m[aá]s\s+elegante|tipograf/i.test(prompt)
-  ) {
-    return false;
-  }
-  return corporateUpgradePrompt(prompt.toLowerCase());
+    !corporateUpgradePrompt(lower) &&
+    prompt.trim().length < 120;
+  if (chromeOnly) return false;
+  // Cualquier pedido de cambio sobre web fullpage → rewrite (CREAUNA sirve para construir Y refinar)
+  return (
+    corporateUpgradePrompt(lower) ||
+    /chat|blog|buscador|carrusel|newsletter|hero|color|fondo|tipograf/i.test(prompt)
+  );
 }
 
 async function applyPromptRules(input: StudioGenerateInput): Promise<StudioGenerateResult | null> {
@@ -455,7 +486,9 @@ async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerate
 
   if (isFullPagePreview(input.previewSections)) {
     const full = input.previewSections.find((s) => s.type === 'fullpage') ?? input.previewSections[0];
-    const rewritten = await rewriteFullPageFromRequest(full.html, input.prompt, input.lang);
+    const rewritten = await rewriteFullPageFromRequest(full.html, input.prompt, input.lang, {
+      clientImageUrls: input.clientImageUrls,
+    });
     if (!rewritten.html) return null;
     const validation = validateSectionHtml(rewritten.html, full.id, full.type);
     if (!validation.ok) return null;
@@ -628,6 +661,7 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       pipelineStage: result.pipelineStage ?? 'discovery_initial',
       aiSkippedReason: result.aiSkippedReason,
       falImages: result.falImages,
+      suggestDiscovery: result.suggestDiscovery,
     };
   }
 
@@ -641,15 +675,17 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       input.action === 'regenerate' && input.prompt.length < 120
         ? enrichPromptFromSections(input.prompt, input.previewSections) || input.prompt
         : input.prompt;
-    const result = await generateInitialSite(buildPrompt, input.lang, input.sectorId);
+    const result = await generateInitialSite(buildPrompt, input.lang, input.sectorId, {
+      clientImageUrls: input.clientImageUrls,
+    });
     // Rechazo de calidad: no sustituir la preview por vacío ni colar plantilla
     if (!result.previewSections.length) {
       return {
         message:
           result.message ||
           (input.lang === 'es'
-            ? 'No entregué la web: calidad insuficiente o IA no disponible. Sin plantillas.'
-            : 'Did not deliver the site: insufficient quality or AI unavailable. No templates.'),
+            ? 'Estoy listo para construir o ajustar tu web. Dime qué necesitas.'
+            : 'Ready to build or adjust your site. Tell me what you need.'),
         previewSections: cloneSections(input.previewSections),
         motorsUsed: result.motorsUsed ?? [],
         source: 'rules',
@@ -660,6 +696,7 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
         sectorLabel: result.sectorLabel,
         pipelineStage: result.pipelineStage ?? 'prompt_first',
         aiSkippedReason: result.aiSkippedReason,
+        suggestDiscovery: false,
       };
     }
     return {
@@ -675,6 +712,7 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
       pipelineStage: result.pipelineStage ?? 'full_site_generate',
       aiSkippedReason: result.aiSkippedReason,
       falImages: result.falImages,
+      suggestDiscovery: result.suggestDiscovery,
     };
   }
 
@@ -684,24 +722,38 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
   }
 
   // Brief fullpage: rediseños reales ANTES de reglas cosméticas (que solo cambian clases)
-  if (input.action === 'change' && needsRealRedesign(input.prompt, input.previewSections)) {
+  if (input.action === 'change' && isFullPagePreview(input.previewSections)) {
+    if (needsRealRedesign(input.prompt, input.previewSections)) {
+      const aiFull = await applyAIChange(input);
+      if (aiFull) return aiFull;
+    }
+  }
+
+  // Fullpage: NUNCA cosméticos por regex (mienten al cliente en CSS propio)
+  if (input.action === 'change' && isFullPagePreview(input.previewSections)) {
     const aiFull = await applyAIChange(input);
     if (aiFull) return aiFull;
   }
 
   if (input.action === 'change' && isTemplateContextLocked(input) && isCosmeticPrompt(input.prompt)) {
-    const ruleResult = await applyPromptRules(input);
-    if (ruleResult) return ruleResult;
+    if (!isFullPagePreview(input.previewSections)) {
+      const ruleResult = await applyPromptRules(input);
+      if (ruleResult) return ruleResult;
+    }
   }
 
   if (input.action === 'change' && (isCosmeticPrompt(input.prompt) || isSiteBuildPrompt(input.prompt))) {
-    const ruleResult = await applyPromptRules(input);
-    if (ruleResult) return ruleResult;
+    if (!isFullPagePreview(input.previewSections)) {
+      const ruleResult = await applyPromptRules(input);
+      if (ruleResult) return ruleResult;
+    }
   }
 
-  const ruleResult = await applyPromptRules(input);
-  if (ruleResult && ruleResult.changedSectionIds.length > 0) {
-    return { ...ruleResult, pipelineStage: 'rules' };
+  if (!isFullPagePreview(input.previewSections)) {
+    const ruleResult = await applyPromptRules(input);
+    if (ruleResult && ruleResult.changedSectionIds.length > 0) {
+      return { ...ruleResult, pipelineStage: 'rules' };
+    }
   }
 
   const plan = planStudioChange(input);

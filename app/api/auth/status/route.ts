@@ -3,7 +3,8 @@ import { prisma } from '../../../lib/db';
 import { getAdminEmail } from '../../../lib/auth/admin';
 
 function isDbConfigured(): boolean {
-  return Boolean(process.env.DATABASE_URL?.trim());
+  const url = process.env.DATABASE_URL?.trim() ?? '';
+  return /^postgres(ql)?:\/\//i.test(url);
 }
 
 /** Estado público de auth (sin secretos). Útil para comprobar producción. */

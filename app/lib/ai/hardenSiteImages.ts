@@ -18,10 +18,9 @@ const LAST_RESORT_SVG =
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
       <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#1a1a1a"/><stop offset="100%" stop-color="#3d3d3d"/>
+        <stop offset="0%" stop-color="#3E2723"/><stop offset="100%" stop-color="#8B6F4E"/>
       </linearGradient></defs>
       <rect width="1200" height="800" fill="url(#g)"/>
-      <text x="600" y="410" text-anchor="middle" fill="#c5a059" font-family="Georgia,serif" font-size="42">CREAUNA</text>
     </svg>`
   );
 
@@ -69,7 +68,7 @@ export function hardenSiteImages(html: string, urls: string[]): string {
       a = ` src="${url.replace(/"/g, '%22')}"` + a;
     }
     if (!/\bonerror\s*=/i.test(a)) {
-      const fb = pool[(cursor.n + 3) % pool.length].replace(/'/g, '%27');
+      const fb = LAST_RESORT_SVG.replace(/'/g, '%27');
       a += ` onerror="this.onerror=null;this.src='${fb}'"`;
     }
     if (!/\breferrerpolicy\s*=/i.test(a)) {
@@ -107,16 +106,17 @@ export function hardenSiteImages(html: string, urls: string[]): string {
   );
 
   if (!out.includes('__CUA_IMG_GUARD__') && pool.length > 0) {
-    const json = JSON.stringify(pool.slice(0, 24));
+    const json = JSON.stringify([...pool.slice(0, 23), LAST_RESORT_SVG]);
     const script = `<script>/*__CUA_IMG_GUARD__*/
 (function(){
   var P=${json};
   if(!P||!P.length)return;
   var i=0;
   function rescue(el){
-    if(!el||el.getAttribute('data-cua-rescued'))return;
-    el.setAttribute('data-cua-rescued','1');
-    el.src=P[i++%P.length];
+    if(!el||el.getAttribute('data-cua-rescued')==='2')return;
+    var n=el.getAttribute('data-cua-rescued')==='1'?'2':'1';
+    el.setAttribute('data-cua-rescued',n);
+    el.src=n==='2'?P[P.length-1]:P[i++%Math.max(1,P.length-1)];
   }
   document.addEventListener('error',function(e){
     var t=e.target;

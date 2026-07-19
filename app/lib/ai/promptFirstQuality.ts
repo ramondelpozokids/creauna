@@ -13,11 +13,74 @@ export interface BriefImagePack {
   urls: string[];
 }
 
+export interface BriefQualityAssessment {
+  score: number;
+  weak: boolean;
+  reasons: string[];
+  hasBusinessName: boolean;
+  hasContact: boolean;
+  hasSections: boolean;
+}
+
+/**
+ * Puntúa el brief de entrada (no el HTML).
+ * Débil → el motor igual construye con agency, pero el gate puede guiar al asistente.
+ */
+export function assessBriefQuality(prompt: string): BriefQualityAssessment {
+  const p = prompt.trim();
+  let score = 0;
+  const reasons: string[] = [];
+
+  if (p.length >= 80) score += 15;
+  else reasons.push('brief_corto');
+  if (p.length >= 200) score += 15;
+  if (p.length >= 400) score += 20;
+
+  const hasBusinessName =
+    /(?:marca|negocio|tienda|peluquer|restaurante|cafeter[ií]a|cl[ií]nica|estudio|atelier|boutique|se\s+llama|named|brand|nombre|caf[eé]|joyer|tattoo|tatto)\b/i.test(
+      p
+    ) ||
+    /«[^»]{2,40}»|"[A-ZÁÉÍÓÚÑ][^"]{1,40}"/.test(p) ||
+    /^#\s*\S+/m.test(p) ||
+    /^[A-ZÁÉÍÓÚÑ][\wÁÉÍÓÚáéíóúñÑ&' -]{2,40}\s*[—–-]/m.test(p);
+  if (hasBusinessName) score += 15;
+  else reasons.push('sin_nombre');
+
+  const hasSections =
+    /hero|galer|servicio|men[uú]|carta|contacto|sobre\s+nosotros|about|blog|reserv|lookbook|ubicaci|portfolio|productos?/i.test(
+      p
+    );
+  if (hasSections) score += 15;
+  else reasons.push('sin_secciones');
+
+  const hasContact =
+    /whatsapp|tel[eé]fono|\+34\b|[6789]\d{2}[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2}|instagram\.com|facebook\.com|@[\w.]{3,}|[\w.+-]+@[\w.-]+\.\w+|calle\s+[a-záéíóúñ]/i.test(
+      p
+    );
+  if (hasContact) score += 10;
+  else reasons.push('sin_contacto');
+
+  if (extractBriefMustHaves(p).length >= 2) score += 10;
+  if (/calidad\s+de\s+agencia|agencia\s+premium|sin\s+plantilla|full-?bleed|google\s+fonts/i.test(p)) {
+    score += 10;
+  }
+
+  // Débil solo si falta sustancia real (no solo por longitud moderada)
+  const weak = score < 40 || (p.length < 80 && score < 55);
+  return { score, weak, reasons, hasBusinessName, hasContact, hasSections };
+}
+
 /** Empaqueta URLs reales según el sector detectado en el brief — assets, no layout. */
-export function buildBriefImagePack(prompt: string, lang: 'es' | 'en'): BriefImagePack {
+export function buildBriefImagePack(
+  prompt: string,
+  lang: 'es' | 'en',
+  clientImageUrls?: string[]
+): BriefImagePack {
   const intent = analyzeIntent(prompt, lang);
   const bank = imagesForVariant(intent.variant);
   const urls: string[] = [];
+  const client = (clientImageUrls || []).filter((u) => /^https?:\/\//i.test(u) || u.startsWith('data:image'));
+  urls.push(...client);
   for (const val of Object.values(bank)) {
     if (typeof val === 'string') urls.push(val);
     else if (Array.isArray(val)) urls.push(...val);
@@ -247,7 +310,7 @@ export function wireframeRejectHint(lang: 'es' | 'en', pack: BriefImagePack, mis
   return lang === 'es'
     ? `RECHAZADO: tu HTML anterior NO es cobrable (hero vacío/gris, sin copy del brief, sin fotos reales o sin tipografía).
 Reconstruye la web COMPLETA desde el brief — CONSTRUIR, no plantilla:
-- Hero min-h-[85vh] con FOTO real + overlay + badge + H1 del brief + subtítulo + botones «Ver Menú» y «Cómo llegar»
+- Hero min-h-[70vh] max-h-[820px] con FOTO real + overlay + H1 del brief + subtítulo + CTAs visibles
 - PROHIBIDO hero gris vacío sin texto
 - Especialidades con imagen en cada tarjeta; galería composición moderna ≥6 fotos
 - Playfair Display + Inter si el brief lo pide; paleta del brief (ej. #D62828)

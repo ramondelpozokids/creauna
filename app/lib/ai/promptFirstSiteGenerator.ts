@@ -1,19 +1,19 @@
 import { chatCompletion, getConfiguredProviders, type AiProvider } from './providers';
-import { validateSectionHtml } from '../studio/sectionValidator';
 import type { PreviewSection } from './studioEngine';
 import type { AiSkippedReason, PipelineStage } from './engineHealth';
 import { getBusinessProfile } from './businessProfiles';
 import { buildSiteBrief } from './siteAiEnhancer';
 import { analyzeIntent } from './intentAnalyzer';
 import {
+  assessBriefQuality,
   buildBriefImagePack,
   ensureBriefImagesInHtml,
   isUnacceptableAgencyHtml,
-  missingBriefRequirements,
   wireframeRejectHint,
   type BriefImagePack,
 } from './promptFirstQuality';
 import { runAgencyPipeline } from './agencyPipeline';
+import { constructorSystemPreamble } from './creaunaConstructorManifesto';
 
 export interface PromptFirstResult {
   ok: boolean;
@@ -27,49 +27,11 @@ export interface PromptFirstResult {
   aiSkippedReason?: AiSkippedReason;
   falImages?: number;
   templateSlug?: string;
+  suggestDiscovery?: boolean;
 }
 
 const PROMPT_FIRST_PROVIDERS: AiProvider[] = ['qwen', 'openai', 'gemini', 'claude'];
-
-function systemPrompt(lang: 'es' | 'en'): string {
-  return lang === 'es'
-    ? `Eres CREAUNA, estudio web de élite. Construyes la web EXCLUSIVAMENTE según el brief del cliente.
-
-FUENTE DE VERDAD (brief):
-- Estructura, secciones, textos, nombre del negocio, funcionalidades y tono: SOLO lo que pide el cliente.
-- NO copies plantillas de otros sectores ni inventes páginas que no haya pedido.
-- NO uses un diseño genérico de "SaaS" o wireframe.
-
-CALIDAD DE EJECUCIÓN (obligatoria — cobrable como agencia):
-- Documento HTML completo <!DOCTYPE html>… con Tailwind CDN.
-- Google Fonts acordes al tono del brief (lujo/belleza: Playfair Display + Inter; moderno: DM Sans + Fraunces; etc.).
-- Hero impactante: min-h-[85vh], fotografía real a pantalla completa (img o background-image), overlay cinematográfico, marca dominante, un titular, una frase, CTAs.
-- Texto del hero SIEMPRE claro sobre la foto (blanco/crema + text-shadow). NUNCA titular negro sobre overlay oscuro.
-- PROHIBIDO: hero de bloque sólido gris/slate sin foto; cards blancas solo texto; tipografía system-ui sin Google Fonts; formularios con aspecto nativo feo.
-- Si el brief pide servicios/blog: cada tarjeta con imagen + título + descripción.
-- Si pide galería o el negocio es visual (peluquería, restaurante, hotel…): grid de ≥6 fotos reales.
-- Si pide reservas/contacto: formulario estilizado (labels, padding, bordes, botón premium).
-- Si pide redes y legales: enlaces sociales + footer con privacidad/términos.
-- Espaciado generoso, jerarquía tipográfica clara, 2–3 animaciones CSS sutiles (fade-in / hover zoom).
-- Imágenes: USA ÚNICAMENTE las URLs del bloque «Assets de imagen» (Unsplash + Pexels curados, licencia comercial). PROHIBIDO inventar IDs, placehold.co o source.unsplash.com.
-- NO implementes Stripe, pasarela real ni carrito de pago. Si lo piden: la web puede mostrar productos; el cobro va a presupuesto vía /contacto.
-- Cero lorem ipsum. Devuelve SOLO el HTML, sin markdown.`
-    : `You are CREAUNA, an elite web studio. Build the site EXCLUSIVELY from the client brief.
-
-BRIEF IS SOURCE OF TRUTH:
-- Structure, sections, copy, business name, features and tone: ONLY what the client asked.
-- Do NOT copy other-sector templates or invent unrequested pages.
-- Do NOT ship a generic SaaS/wireframe look.
-
-BILLABLE EXECUTION QUALITY (mandatory):
-- Full HTML document with Tailwind CDN + Google Fonts matching the brief tone.
-- Impactful hero: min-h-[85vh], real full-bleed photography, cinematic overlay, dominant brand, one headline, one line, CTAs.
-- FORBIDDEN: solid grey hero without photo; text-only white cards; system fonts only; ugly native forms.
-- Services/blog cards include photos; visual businesses get a ≥6-image gallery when relevant.
-- Styled forms; social + legal footer when asked; generous spacing; 2–3 subtle CSS motions.
-- Images: USE ONLY URLs from the «Image assets» block (curated Unsplash + Pexels). FORBIDDEN: inventing IDs, placeholders, source.unsplash.com.
-- eCommerce if asked: working JS cart. No lorem. Return ONLY HTML.`;
-}
+const REWRITE_MAX_TOKENS = 32768;
 
 export function extractHtmlFromAiResponse(raw: string): string | null {
   const trimmed = raw.trim();
@@ -84,7 +46,6 @@ export function extractHtmlFromAiResponse(raw: string): string | null {
   return null;
 }
 
-/** Nombre de marca solo si aparece en el brief — nunca inventar plantilla. */
 export function extractBusinessNameFromPrompt(prompt: string, lang: 'es' | 'en'): string {
   const patterns = [
     /(?:marca|negocio|tienda|llamad[oa]|named|brand)\s*[:\-]?\s*["']?([A-ZÁÉÍÓÚÑ][\wáéíóúñ\s&'-]{2,40})/i,
@@ -95,7 +56,7 @@ export function extractBusinessNameFromPrompt(prompt: string, lang: 'es' | 'en')
     const m = prompt.match(re);
     if (m?.[1] && m[1].trim().length >= 3) return m[1].trim();
   }
-  if (/maison|moda|fashion|ecommerce|e-commerce/i.test(prompt)) {
+  if (/maison|moda|fashion|ecommerce|e-commerce|luxe/i.test(prompt)) {
     return lang === 'es' ? 'Maison' : 'Maison';
   }
   const firstLine = prompt.split('\n').find((l) => l.trim().length > 8 && !l.startsWith('#'));
@@ -103,240 +64,149 @@ export function extractBusinessNameFromPrompt(prompt: string, lang: 'es' | 'en')
   return lang === 'es' ? 'Tu proyecto' : 'Your project';
 }
 
-function summarizeBriefFeatures(prompt: string, lang: 'es' | 'en'): string {
-  const lower = prompt.toLowerCase();
-  const bits: string[] = [];
-  if (/tienda|lookbook|productos|moda|fashion/i.test(lower))
-    bits.push(lang === 'es' ? 'catálogo / lookbook premium' : 'premium catalog / lookbook');
-  if (/lookbook|colecci/i.test(lower)) bits.push('lookbook');
-  if (/blog|noticias/i.test(lower)) bits.push('blog');
-  if (/galer/i.test(lower)) bits.push(lang === 'es' ? 'galería' : 'gallery');
-  if (/reserva|cita|booking/i.test(lower)) bits.push(lang === 'es' ? 'reservas' : 'booking');
-  if (/newsletter/i.test(lower)) bits.push('newsletter');
-  if (/panel admin|administrador/i.test(lower)) bits.push(lang === 'es' ? 'panel admin (UI)' : 'admin panel (UI)');
-  return bits.length ? bits.join(', ') : lang === 'es' ? 'según tu brief' : 'per your brief';
-}
-
-function userBriefContent(prompt: string, lang: 'es' | 'en', pack: BriefImagePack, critique?: string): string {
-  const assetsLabel = lang === 'es' ? 'Assets de imagen (úsalas todas las que necesites)' : 'Image assets (use as needed)';
-  const checklist =
-    lang === 'es'
-      ? `CHECKLIST OBLIGATORIO (si falta uno, el HTML será RECHAZADO):
-1) Hero pantalla completa CON foto real + overlay + badge + H1 + subtítulo + 2 CTAs (texto del brief, no inventado)
-2) PROHIBIDO hero gris vacío sin tipografía
-3) Especialidades/servicios con imagen en cada tarjeta si el brief los lista
-4) Galería visual si el brief la pide (≥6 fotos, no grid aburrido)
-5) Ubicación/dirección literal del brief + footer
-6) Google Fonts y colores del brief
-7) HTML largo y denso (>20KB), no esqueleto`
-      : `MANDATORY CHECKLIST (missing any item = REJECT):
-1) Full-bleed photo hero + overlay + badge + H1 + subtitle + 2 CTAs from brief
-2) No empty grey hero
-3) Photo cards for listed specialties
-4) Gallery if asked
-5) Literal address + footer
-6) Brief fonts/colors
-7) Dense HTML (>20KB), not a skeleton`;
-
-  const head =
-    lang === 'es'
-      ? `Brief del cliente (construye la web EXCLUSIVAMENTE a partir de esto — CONSTRUIR, no plantilla):\n\n${prompt}`
-      : `Client brief (build EXCLUSIVELY from this — BUILD, do not template):\n\n${prompt}`;
-  const assets = `\n\n${assetsLabel} [sector≈${pack.variant}]:\n${pack.briefBlock}`;
-  const crit = critique ? `\n\n${critique}` : '';
-  return `${checklist}\n\n${head}${assets}${crit}`;
-}
-
-async function generateHtmlFromBrief(
+async function applyFalToFullPage(
+  html: string,
   prompt: string,
   lang: 'es' | 'en',
-  pack: BriefImagePack,
-  critique?: string
-): Promise<{ html: string | null; provider: AiProvider | 'rules' }> {
-  const userContent = userBriefContent(prompt, lang, pack, critique);
-
-  for (const provider of PROMPT_FIRST_PROVIDERS) {
-    if (!getConfiguredProviders().includes(provider)) continue;
-    const motor =
-      provider === 'qwen' || provider === 'openai'
-        ? 'code'
-        : provider === 'claude'
-          ? 'copy'
-          : 'visual';
-    const result = await chatCompletion(
-      [
-        { role: 'system', content: systemPrompt(lang) },
-        { role: 'user', content: userContent },
-      ],
-      { motor, maxTokens: 16384, temperature: critique ? 0.3 : 0.4, prompt, preferProvider: provider }
-    );
-    if (!result.content) continue;
-    const html = extractHtmlFromAiResponse(result.content);
-    if (html && html.length > 8000) {
-      return { html, provider: result.provider === 'rules' ? provider : result.provider };
-    }
-  }
-  return { html: null, provider: 'rules' };
-}
-
-async function applyFalToFullPage(html: string, prompt: string, lang: 'es' | 'en'): Promise<{ html: string; falImages: number }> {
+  clientImageUrls?: string[]
+): Promise<{ html: string; falImages: number }> {
   const intent = analyzeIntent(prompt, lang);
   const profile = getBusinessProfile(intent.variant);
   const brief = buildSiteBrief(intent, profile, null, lang, prompt);
-  const pack = buildBriefImagePack(prompt, lang);
+  const pack = buildBriefImagePack(prompt, lang, clientImageUrls);
   const { ensureVisibleSiteImages } = await import('./ensureVisibleSiteImages');
-  const ensured = await ensureVisibleSiteImages(html, pack.urls, brief, { maxAiImages: 4 });
-  return { html: ensured.html, falImages: ensured.aiImages };
+  const ensured = await ensureVisibleSiteImages(html, pack.urls, brief, {
+    maxAiImages: 6,
+    preferAiHero: true,
+    forceAiFill: true,
+    clientImageUrls,
+  });
+  const { polishCatalogLayout } = await import('./polishCatalogLayout');
+  const polished = polishCatalogLayout(ensured.html, {
+    prompt,
+    packUrls: pack.urls,
+    variant: pack.variant,
+  });
+  return { html: polished, falImages: ensured.aiImages };
 }
 
-/**
- * Generación inicial: pipeline tipo Emergent (plan → build → verify → repair).
- * Solo el brief del usuario. Sin plantillas. Sin entregar esqueletos.
- */
-export async function generateSiteFromUserPrompt(
+/** Para HTML grandes: CSS :root + head + hero + pedido, no cortar a 28KB a ciegas. */
+function packHtmlForRewrite(currentHtml: string, maxChars = 70000): string {
+  if (currentHtml.length <= maxChars) return currentHtml;
+  const head = currentHtml.match(/<head[\s\S]*?<\/head>/i)?.[0] ?? currentHtml.slice(0, 8000);
+  const style =
+    currentHtml.match(/<style[\s\S]*?<\/style>/gi)?.join('\n') ??
+    currentHtml.match(/:root\s*\{[\s\S]*?\}/)?.[0] ??
+    '';
+  const hero =
+    currentHtml.match(/<section[^>]*(?:hero|inicio|home)[^>]*>[\s\S]{0,8000}?<\/section>/i)?.[0] ??
+    currentHtml.match(/<header[\s\S]{0,6000}?<\/header>/i)?.[0] ??
+    '';
+  const bodyStart = currentHtml.search(/<body[^>]*>/i);
+  const bodyChunk =
+    bodyStart >= 0 ? currentHtml.slice(bodyStart, bodyStart + Math.floor(maxChars * 0.55)) : currentHtml.slice(0, Math.floor(maxChars * 0.55));
+  const tail = currentHtml.slice(-12000);
+  return `<!-- CREAUNA: HTML original ${currentHtml.length} chars; extracto para edición -->\n${head}\n${style}\n${hero}\n${bodyChunk}\n<!-- …medio omitido… -->\n${tail}`;
+}
+
+async function continueRewriteHtml(
+  partial: string,
+  provider: AiProvider,
   prompt: string,
   lang: 'es' | 'en'
-): Promise<PromptFirstResult> {
-  // Briefs densos / “sin plantilla”: pipeline de agencia completo
-  if (prompt.length > 400 || /no\s+quiero\s+(una\s+)?plantilla|no\s+bootstrap|agencia|premium/i.test(prompt)) {
-    const agency = await runAgencyPipeline(prompt, lang);
-    return {
-      ok: agency.ok,
-      previewSections: agency.previewSections,
-      businessName: agency.businessName,
-      message: agency.message,
-      source: agency.source,
-      motorsUsed: agency.motorsUsed,
-      providersUsed: agency.providersUsed,
-      pipelineStage: agency.pipelineStage,
-      aiSkippedReason: agency.aiSkippedReason,
-      falImages: agency.falImages,
-      templateSlug: agency.templateSlug,
-    };
-  }
-
-  const businessName = extractBusinessNameFromPrompt(prompt, lang);
-  const features = summarizeBriefFeatures(prompt, lang);
-  const pack = buildBriefImagePack(prompt, lang);
-
-  let aiHtml: string | null = null;
-  let provider: AiProvider | 'rules' = 'rules';
-  let critique: string | undefined;
-
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const gen = await generateHtmlFromBrief(prompt, lang, pack, critique);
-    if (!gen.html) break;
-    let html = ensureBriefImagesInHtml(gen.html, pack.urls);
-    if (!isUnacceptableAgencyHtml(html, prompt)) {
-      aiHtml = html;
-      provider = gen.provider;
+): Promise<string> {
+  let html = partial;
+  for (let i = 0; i < 2; i++) {
+    if (/<\/html>/i.test(html) && html.length > 20000) break;
+    const motor = provider === 'qwen' || provider === 'openai' ? 'code' : 'visual';
+    const cont = await chatCompletion(
+      [
+        {
+          role: 'system',
+          content:
+            lang === 'es'
+              ? 'Continúa el HTML donde quedó. No repitas el inicio. Cierra con </body></html>. SOLO continuación HTML.'
+              : 'Continue the HTML where it left off. End with </body></html>. ONLY HTML continuation.',
+        },
+        {
+          role: 'user',
+          content: `Últimos 5000 caracteres:\n${html.slice(-5000)}\n\nContinúa hasta cerrar el documento.`,
+        },
+      ],
+      { motor, maxTokens: REWRITE_MAX_TOKENS, temperature: 0.2, prompt, preferProvider: provider }
+    );
+    if (!cont.content) break;
+    const extracted = extractHtmlFromAiResponse(cont.content);
+    if (extracted && extracted.length > html.length) {
+      html = extracted;
       break;
     }
-    const missing = missingBriefRequirements(html, prompt);
-    critique = wireframeRejectHint(lang, pack, missing);
-    aiHtml = html;
-    provider = gen.provider;
-  }
-
-  if (aiHtml && !isUnacceptableAgencyHtml(aiHtml, prompt)) {
-    const validation = validateSectionHtml(aiHtml, 101, 'fullpage');
-    if (validation.ok) {
-      const { html: finalHtml, falImages } = await applyFalToFullPage(aiHtml, prompt, lang);
-      if (isUnacceptableAgencyHtml(finalHtml, prompt)) {
-        const agency = await runAgencyPipeline(prompt, lang);
-        return {
-          ok: agency.ok,
-          previewSections: agency.previewSections,
-          businessName: agency.businessName,
-          message: agency.message,
-          source: agency.source,
-          motorsUsed: agency.motorsUsed,
-          providersUsed: agency.providersUsed,
-          pipelineStage: agency.pipelineStage,
-          aiSkippedReason: agency.aiSkippedReason,
-          falImages: agency.falImages,
-          templateSlug: agency.templateSlug,
-        };
-      }
-      return {
-        ok: true,
-        previewSections: [{ id: 101, type: 'fullpage', html: finalHtml }],
-        businessName,
-        message:
-          lang === 'es'
-            ? `He construido tu web directamente desde tu brief (${features}). Pide cambios concretos y los aplico sobre este diseño.`
-            : `Built your site directly from your brief (${features}). Ask for specific changes and I will apply them.`,
-        source: falImages ? 'hybrid' : 'ai',
-        motorsUsed: ['code', 'visual'],
-        providersUsed: [provider],
-        pipelineStage: 'prompt_first',
-        falImages,
-        templateSlug: 'prompt-first',
-      };
+    html += '\n' + cont.content.replace(/^```(?:html)?\s*/i, '').replace(/```\s*$/i, '');
+    const end = html.lastIndexOf('</html>');
+    if (end > 0) {
+      html = html.slice(0, end + 7);
+      break;
     }
   }
+  return html;
+}
 
-  // Fallback: pipeline de agencia en lugar de plantilla
-  const agency = await runAgencyPipeline(prompt, lang);
-  if (agency.ok || agency.message) {
-    return {
-      ok: agency.ok,
-      previewSections: agency.previewSections,
-      businessName: agency.businessName,
-      message: agency.message,
-      source: agency.source,
-      motorsUsed: agency.motorsUsed,
-      providersUsed: agency.providersUsed,
-      pipelineStage: agency.pipelineStage,
-      aiSkippedReason: agency.aiSkippedReason,
-      falImages: agency.falImages,
-      templateSlug: agency.templateSlug,
-    };
-  }
+export async function generateSiteFromUserPrompt(
+  prompt: string,
+  lang: 'es' | 'en',
+  opts?: { clientImageUrls?: string[] }
+): Promise<PromptFirstResult> {
+  const quality = assessBriefQuality(prompt);
+  const agency = await runAgencyPipeline(prompt, lang, {
+    clientImageUrls: opts?.clientImageUrls,
+    briefWeak: quality.weak,
+  });
 
   return {
-    ok: false,
-    previewSections: [],
-    businessName,
-    message:
-      lang === 'es'
-        ? 'No pude construir la web desde tu brief con la calidad exigida. No uso plantillas. Inténtalo de nuevo.'
-        : 'Could not build from your brief at the required quality. No templates. Please try again.',
-    source: 'rules',
-    motorsUsed: [],
-    providersUsed: [],
-    pipelineStage: 'prompt_first',
-    aiSkippedReason: getConfiguredProviders().length ? 'ai_parse_failed' : 'no_api_keys',
+    ok: agency.ok,
+    previewSections: agency.previewSections,
+    businessName: agency.businessName,
+    message: agency.message,
+    source: agency.source,
+    motorsUsed: agency.motorsUsed,
+    providersUsed: agency.providersUsed,
+    pipelineStage: agency.pipelineStage,
+    aiSkippedReason: agency.aiSkippedReason,
+    falImages: agency.falImages,
+    templateSlug: agency.templateSlug,
+    suggestDiscovery: agency.suggestDiscovery ?? false,
   };
 }
 
 /**
- * Reescribe el HTML completo (fullpage) según un pedido del cliente.
- * Conserva negocio/contenido del brief implícito en el HTML actual; no usa plantillas.
+ * Aplica el pedido del cliente sobre el HTML actual (refinar, no regenerar de cero).
+ * CREAUNA = construir + iterar según deseos del cliente.
  */
 export async function rewriteFullPageFromRequest(
   currentHtml: string,
   prompt: string,
-  lang: 'es' | 'en'
+  lang: 'es' | 'en',
+  opts?: { clientImageUrls?: string[] }
 ): Promise<{ html: string | null; provider: string; falImages: number }> {
-  const pack = buildBriefImagePack(prompt + '\n' + currentHtml.slice(0, 2000), lang);
+  const pack = buildBriefImagePack(prompt + '\n' + currentHtml.slice(0, 2000), lang, opts?.clientImageUrls);
   const system =
     lang === 'es'
-      ? `Eres el motor de refinamiento de CREAUNA. El cliente ya tiene una web construida desde SU brief.
-Aplica SU pedido de cambio sobre el HTML actual. No copies otra web ni cambies de sector.
-Mantén el nombre del negocio y lo que no haya pedido cambiar.
-Entrega calidad de agencia: hero con foto real, tipografía Google, imágenes del asset pack, formularios estilizados.
-USA SOLO las URLs de imagen del usuario si necesitas fotos nuevas.
-Devuelve SOLO el documento HTML completo.`
-      : `You are CREAUNA's refinement engine. Apply the client's change request to the current HTML.
-Do not copy another site or change sector. Keep the business name and untouched parts.
-Agency quality: photo hero, Google Fonts, asset-pack images, styled forms.
-Return ONLY the full HTML document.`;
+      ? `${constructorSystemPreamble('es')}
 
+MODO CAMBIO: el cliente YA tiene su web. Aplica SOLO su pedido.
+- No justifiques el diseño anterior: entiende el cambio y reconstruye lo necesario.
+- Conserva marca, productos y lo no pedido; si pide sección nueva/colores/hero, hazlo visible.
+- NO inventes otra web ni vacíes el catálogo.
+Devuelve SOLO el HTML completo actualizado.`
+      : `${constructorSystemPreamble('en')}
+
+CHANGE MODE: apply ONLY the client's request to the current HTML. Do not defend the old layout. Return ONLY the full updated HTML.`;
+
+  const htmlPack = packHtmlForRewrite(currentHtml, 70000);
   const user =
     lang === 'es'
-      ? `Pedido del cliente:\n${prompt}\n\nAssets de imagen:\n${pack.briefBlock}\n\nHTML actual (edítalo):\n${currentHtml.slice(0, 28000)}`
-      : `Client request:\n${prompt}\n\nImage assets:\n${pack.briefBlock}\n\nCurrent HTML (edit it):\n${currentHtml.slice(0, 28000)}`;
+      ? `Pedido del cliente (OBLIGATORIO aplicarlo):\n${prompt}\n\nAssets si necesitas fotos nuevas:\n${pack.briefBlock}\n\nHTML actual (edítalo; respeta lo no pedido):\n${htmlPack}`
+      : `Client request (MUST apply):\n${prompt}\n\nImage assets:\n${pack.briefBlock}\n\nCurrent HTML:\n${htmlPack}`;
 
   for (const provider of PROMPT_FIRST_PROVIDERS) {
     if (!getConfiguredProviders().includes(provider)) continue;
@@ -351,29 +221,43 @@ Return ONLY the full HTML document.`;
         { role: 'system', content: system },
         { role: 'user', content: user },
       ],
-      { motor, maxTokens: 16384, temperature: 0.4, prompt, preferProvider: provider }
+      { motor, maxTokens: REWRITE_MAX_TOKENS, temperature: 0.35, prompt, preferProvider: provider }
     );
     if (!result.content) continue;
     let html = extractHtmlFromAiResponse(result.content);
-    if (!html || html.length < 4000) continue;
-    if (isUnacceptableAgencyHtml(html, prompt + '\n' + currentHtml.slice(0, 500))) {
+    if (!html || html.length < 4000) {
+      if (result.content.length > 8000 && /<html|<body/i.test(result.content)) {
+        html = result.content.replace(/^```(?:html)?\s*/i, '').replace(/```\s*$/i, '').trim();
+      } else continue;
+    }
+    const prov = (result.provider === 'rules' ? provider : result.provider) as AiProvider;
+    if (!/<\/html>/i.test(html) || html.length < Math.min(currentHtml.length * 0.5, 30000)) {
+      html = await continueRewriteHtml(html, prov, prompt, lang);
+    }
+    // Si la IA devolvió algo mucho más corto que el original, reintentar con hint
+    if (html.length < currentHtml.length * 0.4 && currentHtml.length > 30000) {
       const retry = await chatCompletion(
         [
           { role: 'system', content: system },
-          { role: 'user', content: `${user}\n\n${wireframeRejectHint(lang, pack)}` },
+          {
+            role: 'user',
+            content: `${user}\n\nIMPORTANTE: el HTML anterior tenía ${currentHtml.length} caracteres. Debes devolver un documento IGUAL de completo, solo con el cambio pedido. No acortes ni borres secciones.`,
+          },
         ],
-        { motor, maxTokens: 16384, temperature: 0.3, prompt, preferProvider: provider }
+        { motor, maxTokens: REWRITE_MAX_TOKENS, temperature: 0.25, prompt, preferProvider: provider }
       );
       const retried = retry.content ? extractHtmlFromAiResponse(retry.content) : null;
-      if (retried && retried.length > 4000) html = retried;
+      if (retried && retried.length > html.length) html = retried;
     }
     html = ensureBriefImagesInHtml(html, pack.urls);
-    const { html: finalHtml, falImages } = await applyFalToFullPage(html, prompt, lang);
-    return {
-      html: finalHtml,
-      provider: result.provider === 'rules' ? provider : result.provider,
-      falImages,
-    };
+    // Siempre rellenar/editar imágenes con IA (hero incluido); no entregar huecos rotos.
+    const { html: finalHtml, falImages } = await applyFalToFullPage(
+      html,
+      prompt,
+      lang,
+      opts?.clientImageUrls
+    );
+    return { html: finalHtml, provider: prov, falImages };
   }
   return { html: null, provider: 'rules', falImages: 0 };
 }
