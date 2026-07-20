@@ -20,7 +20,7 @@ import type { PreviewSection } from './studioEngine';
 import { buildDeterministicAgencyHtml } from './agencyDeterministicBuild';
 import { constructorSystemPreamble } from './creaunaConstructorManifesto';
 import { brieflyRejectsOnlineCheckout } from './customQuoteGate';
-import { withAgencyChromePrompt, promptWantsWhatsApp } from './siteChrome';
+import { withAgencyChromePrompt, promptWantsWhatsApp } from './agencyChromePolicy';
 
 function extractHtmlFromAiResponse(raw: string): string | null {
   const trimmed = raw.trim();

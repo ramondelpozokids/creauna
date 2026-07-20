@@ -3,7 +3,7 @@
  * Prohibido forzar hero 70vh / grid 3cols / Playfair universal.
  */
 
-import { promptWantsWhatsApp } from '../siteChrome';
+import { promptWantsWhatsApp } from '../agencyChromePolicy';
 
 export interface TechnicalGuaranteeOpts {
   prompt: string;
