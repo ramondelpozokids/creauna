@@ -4,7 +4,7 @@
  */
 import { IMAGE_BANK } from './imageBank';
 import { isBakeryShopPrompt, isBarbershopContext } from './businessProfiles';
-import { promptWantsWhatsApp } from './siteChrome';
+import { promptWantsWhatsApp } from './agencyChromePolicy';
 
 const BAKERY_POOL = [
   ...IMAGE_BANK.bakery.bread,
