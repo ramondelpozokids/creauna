@@ -171,6 +171,37 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryLabelEn: 'Contemporary art',
     kind: 'project',
   },
+  {
+    slug: 'peluqueria-caballero-tarik',
+    nameEs: 'Barbería Caballero Tarik',
+    nameEn: 'Tarik Barbershop',
+    descEs:
+      'Barbería en Puente de Vallecas: cortes, barba, galería, WhatsApp, horario y mapa. Estética black & gold premium.',
+    descEn:
+      'Barbershop in Puente de Vallecas: cuts, beard, gallery, WhatsApp, hours and map. Premium black & gold look.',
+    demoPath: '/demos/clientes/peluqueria-caballero-tarik/index.html',
+    previewImage:
+      'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&h=600&fit=crop&q=80',
+    categoryKey: 'services',
+    categoryLabelEs: 'Barbería',
+    categoryLabelEn: 'Barbershop',
+    kind: 'project',
+  },
+  {
+    slug: 'cafeteria-el-paso',
+    nameEs: 'Cafetería El Paso',
+    nameEn: 'Cafetería El Paso',
+    descEs:
+      'Cafetería en Puente de Vallecas: desayunos, comidas caseras, menú del día y galería de platos reales.',
+    descEn:
+      'Café in Puente de Vallecas: breakfasts, homemade meals, daily menu and a real dish gallery.',
+    demoPath: '/demos/clientes/cafeteria-el-paso/index.html',
+    previewImage: '/demos/clientes/cafeteria-el-paso/images/1.png',
+    categoryKey: 'gastronomy',
+    categoryLabelEs: 'Cafetería',
+    categoryLabelEn: 'Café',
+    kind: 'project',
+  },
 ];
 
 export const templateShowcase: TemplateShowcaseItem[] = [...referenceTemplates, ...portfolioProjects];

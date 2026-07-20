@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Play, RotateCcw, Sparkles, ArrowRight, Loader2, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 
-type ScenarioId = 'restArt' | 'kebab' | 'royalBang' | 'campon' | 'laPerla' | 'yana';
+type ScenarioId = 'restArt' | 'kebab' | 'royalBang' | 'campon' | 'laPerla' | 'yana' | 'tarik' | 'elPaso';
 
 type ChatLine = { role: 'ai' | 'user'; text: string };
 type PreviewMode = 'none' | 'draft' | 'full';
@@ -73,6 +73,22 @@ const copy = {
         refine: 'Más galería de obras, sección de exposiciones y bio del artista más completa.',
         ai2: 'Listo. Portfolio completo con obras, exposiciones, noticias y formulario de contacto.',
       },
+      tarik: {
+        label: 'Barbería Tarik',
+        prompt:
+          'Barbería Caballero Tarik en Puente de Vallecas: barbería premium negro/oro, WhatsApp, galería de cortes, horario y mapa. Ultra profesional.',
+        ai1: 'Perfecto. Primera versión con hero de barbería, servicios, CTAs de reserva y contacto en Vallecas.',
+        refine: 'Galería de trabajos, opiniones de Google, legales en modal y mapa de ubicación.',
+        ai2: 'Listo. Web completa con galería, reseñas, legales y mapa — estética black & gold.',
+      },
+      elPaso: {
+        label: 'Cafetería El Paso',
+        prompt:
+          'Cafetería El Paso en Puente de Vallecas: desayunos, comidas caseras, menú del día y ambiente familiar. Galería de platos reales.',
+        ai1: 'Perfecto. Primera versión con hero acogedor, carta y datos de contacto de El Paso.',
+        refine: 'Galería «Nuestros platos» con fotos reales, reseñas y mapa de ubicación.',
+        ai2: 'Listo. Web completa con platos, menú, reseñas y mapa — estilo cálido de cafetería.',
+      },
     },
   },
   en: {
@@ -137,6 +153,22 @@ const copy = {
         refine: 'More artwork gallery, exhibitions section and a fuller artist bio.',
         ai2: 'Done. Full portfolio with works, exhibitions, news and contact form.',
       },
+      tarik: {
+        label: 'Tarik Barbershop',
+        prompt:
+          'Tarik Barbershop in Puente de Vallecas: premium black/gold barbershop, WhatsApp, cuts gallery, hours and map.',
+        ai1: 'Perfect. First version with barbershop hero, services, booking CTAs and Vallecas contact.',
+        refine: 'Work gallery, Google reviews, legal modals and location map.',
+        ai2: 'Done. Full site with gallery, reviews, legal modals and map — black & gold look.',
+      },
+      elPaso: {
+        label: 'Café El Paso',
+        prompt:
+          'Cafetería El Paso in Puente de Vallecas: breakfasts, homemade meals, daily menu and warm family vibe. Real dish gallery.',
+        ai1: 'Perfect. First version with cozy hero, menu and contact for El Paso.',
+        refine: '«Our dishes» gallery with real photos, reviews and location map.',
+        ai2: 'Done. Full site with dishes, menu, reviews and map — warm café style.',
+      },
     },
   },
 } as const;
@@ -180,6 +212,20 @@ const scenarioConfig: Record<
     siteUrl: 'yanayavorskaya.com',
     studioSlug: 'chronicle',
     studioPrompt: 'Yana Yavorskaya pintora contemporánea galería arte',
+  },
+  tarik: {
+    demoPath: '/demos/clientes/peluqueria-caballero-tarik/index.html',
+    siteUrl: 'peluqueriacaballerotarik.es',
+    studioSlug: 'lumen',
+    studioPrompt:
+      'Barbería Caballero Tarik barbería Puente de Vallecas negro oro WhatsApp',
+  },
+  elPaso: {
+    demoPath: '/demos/clientes/cafeteria-el-paso/index.html',
+    siteUrl: 'cafeteriaelpaso.es',
+    studioSlug: 'mokka',
+    studioPrompt:
+      'Cafetería El Paso Puente de Vallecas desayunos comidas menú del día',
   },
 };
 

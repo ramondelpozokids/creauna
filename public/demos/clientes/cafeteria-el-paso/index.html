@@ -1,0 +1,2469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cafetería El Paso en Puente de Vallecas, Madrid. Desayunos, comidas, cafés especiales y el mejor ambiente. Menú del día, comida española y latina. ¡Visítanos!">
+<meta name="keywords" content="cafetería Puente de Vallecas, bar Vallecas, desayunos Vallecas, menú del día Madrid, cafetería cerca de mí, comida española Madrid, comida latina Madrid, Camino de Valderribas">
+<meta name="author" content="Cafetería El Paso">
+<meta name="robots" content="index, follow">
+<meta name="geo.region" content="ES-MD">
+<meta name="geo.placename" content="Puente de Vallecas, Madrid">
+<meta name="geo.position" content="40.3985;-3.6485">
+<meta name="ICBM" content="40.3985, -3.6485">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Cafetería El Paso | Desayunos y Comidas en Puente de Vallecas">
+<meta property="og:description" content="El sabor de cada momento comienza en Cafetería El Paso. Desayunos, comidas, cafés y el mejor ambiente de Puente de Vallecas.">
+<meta property="og:type" content="business.business">
+<meta property="og:url" content="https://cafeteriaelpaso.es">
+<meta property="og:image" content="https://images.unsplash.com/photo-1554118811-1e0d58224f1a?w=1200">
+<meta property="og:locale" content="es_ES">
+<meta property="business:contact_data:street_address" content="Camino de Valderribas, 93">
+<meta property="business:contact_data:locality" content="Madrid">
+<meta property="business:contact_data:region" content="Madrid">
+<meta property="business:contact_data:postal_code" content="28038">
+<meta property="business:contact_data:country_name" content="Spain">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cafetería El Paso | Vallecas">
+<meta name="twitter:description" content="Desayunos, comidas y el mejor café de Puente de Vallecas.">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1554118811-1e0d58224f1a?w=1200">
+
+<title>Cafetería El Paso | Desayunos y Comidas en Puente de Vallecas, Madrid</title>
+
+<style>
+:root {
+  --cafe: #4A3728;
+  --cafe-oscuro: #2C1810;
+  --cafe-claro: #6F4E37;
+  --beige: #D4C4B0;
+  --beige-claro: #E8DDD0;
+  --blanco: #FFFFFF;
+  --negro: #1A1A1A;
+  --cobre: #B87333;
+  --dorado: #C9A961;
+  --gris: #6B6B6B;
+  --transicion: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --sombra: 0 10px 40px rgba(0,0,0,0.1);
+  --sombra-suave: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--blanco);
+  color: var(--negro);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transicion);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* HEADER */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--sombra-suave);
+  transition: var(--transicion);
+}
+
+header.scrolled {
+  background: rgba(255,255,255,0.99);
+  box-shadow: var(--sombra);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--cafe-oscuro);
+  letter-spacing: 1px;
+}
+
+.logo-text span {
+  color: var(--cobre);
+}
+
+.logo-sub {
+  font-size: 0.75rem;
+  color: var(--gris);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: -5px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 35px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--cafe-oscuro);
+  position: relative;
+  padding: 5px 0;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--cobre);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--cobre);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-cta {
+  background: var(--cobre);
+  color: var(--blanco);
+  padding: 12px 28px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transicion);
+}
+
+.nav-cta:hover {
+  background: var(--cafe);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(184,115,51,0.4);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--cafe-oscuro);
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(44,24,16,0.85) 0%, rgba(74,55,40,0.75) 100%), 
+              url('images/8.png') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(44,24,16,0.3) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--blanco);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(201,169,97,0.2);
+  border: 1px solid var(--dorado);
+  color: var(--dorado);
+  padding: 10px 25px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  animation: fadeInDown 1s ease;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  letter-spacing: -1px;
+  animation: fadeInUp 1s ease 0.2s both;
+}
+
+.hero h1 span {
+  color: var(--dorado);
+}
+
+.hero p {
+  font-size: 1.3rem;
+  opacity: 0.95;
+  margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeInUp 1s ease 0.4s both;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease 0.6s both;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 35px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transicion);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--cobre);
+  color: var(--blanco);
+}
+
+.btn-primary:hover {
+  background: var(--dorado);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(184,115,51,0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--blanco);
+  border: 2px solid var(--blanco);
+}
+
+.btn-outline:hover {
+  background: var(--blanco);
+  color: var(--cafe-oscuro);
+  transform: translateY(-3px);
+}
+
+.btn-secondary {
+  background: var(--blanco);
+  color: var(--cafe-oscuro);
+}
+
+.btn-secondary:hover {
+  background: var(--beige);
+  transform: translateY(-3px);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  margin-top: 60px;
+  animation: fadeInUp 1s ease 0.8s both;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dorado);
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* SECCIONES GENERALES */
+section {
+  padding: 100px 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.section-tag {
+  display: inline-block;
+  color: var(--cobre);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  position: relative;
+  padding: 0 20px;
+}
+
+.section-tag::before,
+.section-tag::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 1px;
+  background: var(--cobre);
+}
+
+.section-tag::before {
+  left: 0;
+}
+
+.section-tag::after {
+  right: 0;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--cafe-oscuro);
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.section-header p {
+  color: var(--gris);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* SOBRE NOSOTROS */
+.sobre-nosotros {
+  background: var(--beige-claro);
+}
+
+.sobre-nosotros-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.sobre-nosotros-img {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+
+.sobre-nosotros-img img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+}
+
+.sobre-nosotros-img::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: -20px;
+  bottom: -20px;
+  border: 2px solid var(--cobre);
+  border-radius: 5px;
+  z-index: -1;
+}
+
+.sobre-nosotros-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+  color: var(--cafe-oscuro);
+  line-height: 1.2;
+}
+
+.sobre-nosotros-content h2 span {
+  color: var(--cobre);
+}
+
+.sobre-nosotros-content > p {
+  color: var(--gris);
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  line-height: 1.8;
+}
+
+.sobre-nosotros-features {
+  display: grid;
+  gap: 25px;
+}
+
+.feature {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.feature-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(184,115,51,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(184,115,51,0.3);
+}
+
+.feature h4 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--cafe-oscuro);
+}
+
+.feature p {
+  color: var(--gris);
+  font-size: 0.95rem;
+}
+
+/* SERVICIOS */
+.servicios {
+  background: var(--blanco);
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 900px) {
+  .servicios-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.servicio {
+  background: var(--beige-claro);
+  padding: 40px 35px;
+  border-radius: 5px;
+  text-align: center;
+  transition: var(--transicion);
+  border: 1px solid transparent;
+}
+
+.servicio:hover {
+  transform: translateY(-10px);
+  border-color: var(--cobre);
+  box-shadow: var(--sombra);
+}
+
+.servicio-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--cobre), var(--cafe));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  margin: 0 auto 25px;
+  color: var(--blanco);
+}
+
+.servicio h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: var(--cafe-oscuro);
+}
+
+.servicio p {
+  color: var(--gris);
+  font-size: 0.95rem;
+}
+
+/* CARTA */
+.carta {
+  background: var(--beige-claro);
+}
+
+.carta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 40px;
+}
+
+.carta-categoria {
+  background: var(--blanco);
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: var(--sombra-suave);
+}
+
+.carta-categoria h3 {
+  font-size: 1.5rem;
+  color: var(--cafe-oscuro);
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--cobre);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.carta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dotted var(--beige);
+}
+
+.carta-item:last-child {
+  border-bottom: none;
+}
+
+.carta-item-info h4 {
+  font-size: 1.05rem;
+  color: var(--cafe-oscuro);
+  margin-bottom: 5px;
+}
+
+.carta-item-info p {
+  font-size: 0.85rem;
+  color: var(--gris);
+}
+
+.carta-item-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--cobre);
+  white-space: nowrap;
+  margin-left: 15px;
+}
+
+/* GALERÍA */
+.galeria {
+  background: var(--blanco);
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.galeria-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  aspect-ratio: 1;
+  cursor: pointer;
+  box-shadow: var(--sombra-suave);
+}
+
+.galeria-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.galeria-item:hover img {
+  transform: scale(1.1);
+}
+
+.galeria-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(184,115,51,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.galeria-item:hover .galeria-overlay {
+  opacity: 1;
+}
+
+.galeria-overlay span {
+  color: var(--blanco);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: var(--blanco);
+  font-size: 3rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: var(--transicion);
+}
+
+.lightbox-close:hover {
+  color: var(--cobre);
+  transform: rotate(90deg);
+}
+
+/* POR QUÉ ELEGIRNOS */
+.por-que {
+  background: var(--cafe-oscuro);
+  color: var(--blanco);
+}
+
+.por-que .section-header h2 {
+  color: var(--blanco);
+}
+
+.por-que .section-header p {
+  color: var(--beige);
+}
+
+.por-que-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 900px) {
+  .por-que-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.por-que-card {
+  background: rgba(255,255,255,0.05);
+  padding: 40px 35px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid rgba(201,169,97,0.2);
+  transition: var(--transicion);
+}
+
+.por-que-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.08);
+  border-color: var(--dorado);
+}
+
+.por-que-icon {
+  width: 70px;
+  height: 70px;
+  background: var(--cobre);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 25px;
+  color: var(--blanco);
+}
+
+.por-que-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.por-que-card p {
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* OPINIONES */
+.opiniones {
+  background: var(--beige-claro);
+}
+
+.opiniones-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.google-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  background: var(--blanco);
+  padding: 25px 40px;
+  border-radius: 5px;
+  box-shadow: var(--sombra);
+  margin-bottom: 30px;
+}
+
+.google-rating .stars {
+  font-size: 2rem;
+  color: var(--cobre);
+}
+
+.google-rating .rating {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--cafe-oscuro);
+}
+
+.google-rating .rating span {
+  font-size: 1.5rem;
+  color: var(--gris);
+}
+
+.google-rating p {
+  color: var(--gris);
+  font-size: 1rem;
+}
+
+.opiniones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.opinion {
+  background: var(--blanco);
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: var(--sombra-suave);
+  position: relative;
+}
+
+.opinion::before {
+  content: '"';
+  font-size: 6rem;
+  color: var(--cobre);
+  opacity: 0.2;
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.opinion-stars {
+  color: var(--cobre);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+}
+
+.opinion p {
+  color: var(--gris);
+  font-style: italic;
+  margin-bottom: 25px;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+.opinion-author {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.opinion-avatar {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--cobre), var(--cafe));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blanco);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.opinion-author h4 {
+  font-size: 1.1rem;
+  color: var(--cafe-oscuro);
+}
+
+/* FAQ */
+.faq {
+  background: var(--blanco);
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: var(--beige-claro);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+}
+
+.faq-q {
+  padding: 22px 25px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: var(--cafe-oscuro);
+  font-size: 1.05rem;
+  transition: background 0.2s;
+}
+
+.faq-q:hover {
+  background: var(--beige);
+}
+
+.faq-q::after {
+  content: '+';
+  font-size: 1.5rem;
+  color: var(--cobre);
+  font-weight: 700;
+  transition: transform 0.3s;
+}
+
+.faq-item.active .faq-q::after {
+  transform: rotate(45deg);
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s, padding 0.4s;
+  padding: 0 25px;
+  color: var(--gris);
+}
+
+.faq-item.active .faq-a {
+  max-height: 300px;
+  padding: 0 25px 22px;
+}
+
+/* HORARIO */
+.horario {
+  background: var(--cafe-oscuro);
+  color: var(--blanco);
+}
+
+.horario .section-header h2 {
+  color: var(--blanco);
+}
+
+.horario .section-header p {
+  color: var(--beige);
+}
+
+.horario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.horario-card {
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid rgba(201,169,97,0.2);
+  transition: var(--transicion);
+}
+
+.horario-card:hover {
+  border-color: var(--dorado);
+  transform: translateY(-5px);
+}
+
+.horario-card h3 {
+  color: var(--dorado);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.horario-card .horas {
+  color: var(--blanco);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.horario-card.cerrado .horas {
+  color: var(--beige);
+  opacity: 0.7;
+}
+
+/* CONTACTO */
+.contacto {
+  background: var(--beige-claro);
+}
+
+.contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.contacto-info h3 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--cafe-oscuro);
+}
+
+.contacto-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  align-items: flex-start;
+}
+
+.contacto-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(184,115,51,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(184,115,51,0.3);
+}
+
+.contacto-item h4 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--cobre);
+}
+
+.contacto-item p {
+  color: var(--gris);
+  line-height: 1.6;
+}
+
+.contacto-form {
+  background: var(--blanco);
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: var(--sombra);
+}
+
+.contacto-form h3 {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  color: var(--cafe-oscuro);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--cafe-oscuro);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--beige-claro);
+  border: 1px solid var(--beige);
+  border-radius: 3px;
+  color: var(--negro);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: var(--transicion);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--cobre);
+  box-shadow: 0 0 0 3px rgba(184,115,51,0.1);
+}
+
+.form-group textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.btn-submit {
+  width: 100%;
+  justify-content: center;
+}
+
+.mapa {
+  margin-top: 60px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+
+.mapa iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+}
+
+/* WHATSAPP FLOTANTE */
+.whatsapp-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  z-index: 999;
+  box-shadow: 0 10px 30px rgba(37,211,102,0.4);
+  transition: var(--transicion);
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 40px rgba(37,211,102,0.5);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(37,211,102,0.4);
+  }
+  50% {
+    box-shadow: 0 10px 40px rgba(37,211,102,0.6);
+  }
+}
+
+/* FOOTER */
+footer {
+  background: var(--cafe-oscuro);
+  color: var(--beige);
+  padding: 80px 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 50px;
+  margin-bottom: 60px;
+}
+
+.footer-logo {
+  margin-bottom: 25px;
+}
+
+.footer-logo .logo-text {
+  font-size: 1.5rem;
+  color: var(--blanco);
+}
+
+.footer-col h4 {
+  color: var(--dorado);
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.footer-col p {
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+  color: var(--beige);
+  transition: var(--transicion);
+}
+
+.footer-col ul li a:hover {
+  color: var(--dorado);
+  padding-left: 5px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transicion);
+}
+
+.footer-social a:hover {
+  background: var(--cobre);
+  transform: translateY(-3px);
+}
+
+.footer-social svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--blanco);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 30px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-bottom p {
+  font-size: 0.9rem;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.footer-legal a {
+  color: var(--beige);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.footer-legal a:hover {
+  color: var(--dorado);
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--blanco);
+  border-radius: 5px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 50px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  color: var(--cafe-oscuro);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.modal-close:hover {
+  color: var(--cobre);
+  transform: rotate(90deg);
+}
+
+.modal-content h2 {
+  color: var(--cafe-oscuro);
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--cobre);
+  font-size: 2rem;
+}
+
+.modal-content h3 {
+  color: var(--cafe);
+  margin: 30px 0 15px;
+  font-size: 1.3rem;
+}
+
+.modal-content p,
+.modal-content li {
+  color: var(--gris);
+  margin-bottom: 15px;
+  line-height: 1.8;
+}
+
+.modal-content ul {
+  padding-left: 20px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--blanco);
+    flex-direction: column;
+    padding: 30px;
+    gap: 20px;
+    box-shadow: var(--sombra);
+  }
+  
+  .nav-links.active {
+    display: flex;
+  }
+  
+  .menu-toggle {
+    display: block;
+  }
+  
+  .nav-cta {
+    display: none;
+  }
+  
+  .hero-stats {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .sobre-nosotros-grid,
+  .contacto-grid {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+  .sobre-nosotros-img::before {
+    display: none;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  section {
+    padding: 70px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    padding: 30px 20px;
+  }
+  
+  .opiniones-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .carta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <nav class="nav">
+    <a href="#inicio" class="logo">
+      <div class="logo-text">El <span>Paso</span></div>
+      <div class="logo-sub">Cafetería</div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#carta">Carta</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#opiniones">Opiniones</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="https://wa.me/34913283466?text=Hola,%20me%20gustaría%20reservar%20una%20mesa" class="nav-cta" target="_blank">Reservar</a>
+    <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('active')">☰</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">Bienvenidos a Vallecas</div>
+      <h1>El sabor de cada momento comienza en <span>Cafetería El Paso</span></h1>
+      <p>Desayunos, comidas, cafés y el mejor ambiente de Puente de Vallecas. Disfruta de nuestra cocina española y latina en un entorno acogedor.</p>
+      <div class="hero-buttons">
+        <a href="#carta" class="btn btn-primary">
+          <span>📋</span> Ver Carta
+        </a>
+        <a href="#contacto" class="btn btn-outline">
+          <span>📍</span> Cómo Llegar
+        </a>
+        <a href="https://wa.me/34913283466?text=Hola,%20me%20gustaría%20reservar%20una%20mesa" class="btn btn-secondary" target="_blank">
+          <span>💬</span> Reservar por WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">4.1</span>
+          <span class="stat-label">Valoración Google</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">667+</span>
+          <span class="stat-label">Reseñas</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">15+</span>
+          <span class="stat-label">Años de experiencia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE NOSOTROS -->
+<section class="sobre-nosotros" id="nosotros">
+  <div class="container">
+    <div class="sobre-nosotros-grid">
+      <div class="sobre-nosotros-img">
+        <img src="images/7.png" alt="Terraza de Cafetería El Paso en Puente de Vallecas" loading="lazy">
+      </div>
+      <div class="sobre-nosotros-content">
+        <span class="section-tag" style="text-align: left; padding-left: 0;">Sobre Nosotros</span>
+        <h2>Un lugar donde <span>el tiempo se detiene</span></h2>
+        <p>En Cafetería El Paso llevamos más de 15 años siendo el punto de encuentro de Puente de Vallecas. Ofrecemos un ambiente familiar, un servicio cercano y una amplia variedad de desayunos, comidas y cenas con lo mejor de la cocina española y latina.</p>
+        <p>Nos enorgullece la calidad de nuestros productos, la atención personalizada a cada cliente y la creación de un espacio donde te sientas como en casa.</p>
+        <div class="sobre-nosotros-features">
+          <div class="feature">
+            <div class="feature-icon">☕</div>
+            <div>
+              <h4>Café de Especialidad</h4>
+              <p>Seleccionamos los mejores granos para ofrecerte el café perfecto en cada taza.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🥐</div>
+            <div>
+              <h4>Producto Fresco</h4>
+              <p>Bollería y panadería elaborada diariamente con ingredientes de primera calidad.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">👨‍🍳</div>
+            <div>
+              <h4>Cocina Casera</h4>
+              <p>Recetas tradicionales españolas y latinas preparadas con amor y dedicación.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="servicios" id="servicios">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Nuestros Servicios</span>
+      <h2>Todo lo que necesitas en un solo lugar</h2>
+      <p>Desde el primer café de la mañana hasta la cena con amigos</p>
+    </div>
+    <div class="servicios-grid">
+      <div class="servicio">
+        <div class="servicio-icon">🌅</div>
+        <h3>Desayunos Completos</h3>
+        <p>Empieza el día con energía. Desayunos tradicionales y modernos para todos los gustos.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">☕</div>
+        <h3>Cafés Especiales</h3>
+        <p>Desde un espresso perfecto hasta cappuccinos y especialidades de la casa.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">🥐</div>
+        <h3>Bollería</h3>
+        <p>Cruasanes, napolitanas, magdalenas y mucho más, siempre frescos.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">🥪</div>
+        <h3>Bocadillos</h3>
+        <p>Variedad de bocadillos elaborados con pan fresco y productos de calidad.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">🍽️</div>
+        <h3>Menú del Día</h3>
+        <p>Comida casera y variada cada día. Excelente relación calidad-precio.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">🥘</div>
+        <h3>Comida Española</h3>
+        <p>Platos tradicionales de nuestra gastronomía preparados con mimo.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">🍤</div>
+        <h3>Raciones</h3>
+        <p>Perfectas para compartir. Tapeo variado y raciones generosas.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">☀️</div>
+        <h3>Terraza</h3>
+        <p>Disfruta del buen tiempo en nuestra amplia y acogedora terraza.</p>
+      </div>
+      <div class="servicio">
+        <div class="servicio-icon">🎉</div>
+        <h3>Comidas para Grupos</h3>
+        <p>Celebra cumpleaños, reuniones o eventos especiales con nosotros.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARTA -->
+<section class="carta" id="carta">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Nuestra Carta</span>
+      <h2>Sabores que enamoran</h2>
+      <p>Descubre nuestra selección de platos y bebidas</p>
+    </div>
+    <div class="carta-grid">
+      <div class="carta-categoria">
+        <h3>☕ Desayunos</h3>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Café Solo / Cortado</h4>
+            <p>Espresso o con un toque de leche</p>
+          </div>
+          <div class="carta-item-price">1.20€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Café con Leche</h4>
+            <p>Clásico desayuno español</p>
+          </div>
+          <div class="carta-item-price">1.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Desayuno Completo</h4>
+            <p>Café, zumo, tostadas y mermelada</p>
+          </div>
+          <div class="carta-item-price">5.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Tostada con Tomate</h4>
+            <p>Pan de barra con tomate rallado y aceite</p>
+          </div>
+          <div class="carta-item-price">2.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Cruasán</h4>
+            <p>Recién horneado, solo o relleno</p>
+          </div>
+          <div class="carta-item-price">1.80€</div>
+        </div>
+      </div>
+      
+      <div class="carta-categoria">
+        <h3>🥖 Bocadillos</h3>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Bocadillo de Tortilla</h4>
+            <p>Tortilla española casera</p>
+          </div>
+          <div class="carta-item-price">4.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Bocadillo de Jamón</h4>
+            <p>Jamón serrano o york</p>
+          </div>
+          <div class="carta-item-price">4.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Bocadillo Mixto</h4>
+            <p>Jamón y queso</p>
+          </div>
+          <div class="carta-item-price">4.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Bocadillo de Calamares</h4>
+            <p>Calamares rebozados</p>
+          </div>
+          <div class="carta-item-price">5.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Bocadillo Especial</h4>
+            <p>Consultar especiales del día</p>
+          </div>
+          <div class="carta-item-price">6.00€</div>
+        </div>
+      </div>
+      
+      <div class="carta-categoria">
+        <h3>🍽️ Raciones</h3>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Patatas Bravas</h4>
+            <p>Con salsa brava casera</p>
+          </div>
+          <div class="carta-item-price">6.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Croquetas (6 unidades)</h4>
+            <p>Jamón o pollo</p>
+          </div>
+          <div class="carta-item-price">7.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Calamares a la Romana</h4>
+            <p>Con limón y alioli</p>
+          </div>
+          <div class="carta-item-price">9.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Tabla de Embutidos</h4>
+            <p>Selección de embutidos ibéricos</p>
+          </div>
+          <div class="carta-item-price">12.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Ensalada Mixta</h4>
+            <p>Lechuga, tomate, atún, huevo</p>
+          </div>
+          <div class="carta-item-price">7.50€</div>
+        </div>
+      </div>
+      
+      <div class="carta-categoria">
+        <h3> Platos Combinados</h3>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Filete con Patatas</h4>
+            <p>Filete de ternera con guarnición</p>
+          </div>
+          <div class="carta-item-price">11.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Pollo Asado</h4>
+            <p>Con patatas y ensalada</p>
+          </div>
+          <div class="carta-item-price">10.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Merluza a la Plancha</h4>
+            <p>Con verduras al vapor</p>
+          </div>
+          <div class="carta-item-price">12.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Lentejas Caseras</h4>
+            <p>Plato del día con postre</p>
+          </div>
+          <div class="carta-item-price">9.50€</div>
+        </div>
+      </div>
+      
+      <div class="carta-categoria">
+        <h3>🥤 Bebidas</h3>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Refrescos</h4>
+            <p>Coca-Cola, Fanta, Sprite</p>
+          </div>
+          <div class="carta-item-price">2.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Cerveza</h4>
+            <p>Caña o botella</p>
+          </div>
+          <div class="carta-item-price">2.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Vino</h4>
+            <p>Tinto, blanco o rosado (copa)</p>
+          </div>
+          <div class="carta-item-price">2.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Zumo Natural</h4>
+            <p>Naranja recién exprimido</p>
+          </div>
+          <div class="carta-item-price">3.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Agua</h4>
+            <p>Con o sin gas</p>
+          </div>
+          <div class="carta-item-price">1.50€</div>
+        </div>
+      </div>
+      
+      <div class="carta-categoria">
+        <h3>🍰 Postres</h3>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Tarta del Día</h4>
+            <p>Consultar variedad disponible</p>
+          </div>
+          <div class="carta-item-price">3.50€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Flan Casero</h4>
+            <p>Con nata o caramelo</p>
+          </div>
+          <div class="carta-item-price">3.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Helado</h4>
+            <p>Diferentes sabores</p>
+          </div>
+          <div class="carta-item-price">3.00€</div>
+        </div>
+        <div class="carta-item">
+          <div class="carta-item-info">
+            <h4>Café con Pastel</h4>
+            <p>Combinado especial</p>
+          </div>
+          <div class="carta-item-price">4.50€</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section class="galeria" id="galeria">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Galería</span>
+      <h2>Nuestros platos</h2>
+      <p>Descubre algunos de nuestros platos caseros</p>
+    </div>
+    <div class="galeria-grid">
+      <div class="galeria-item" onclick="openLightbox(this)">
+        <img src="images/1.png" alt="Atún a la plancha con ensalada fresca" loading="lazy">
+        <div class="galeria-overlay"><span>+</span></div>
+      </div>
+      <div class="galeria-item" onclick="openLightbox(this)">
+        <img src="images/2.png" alt="Pescado con patatas al pimentón" loading="lazy">
+        <div class="galeria-overlay"><span>+</span></div>
+      </div>
+      <div class="galeria-item" onclick="openLightbox(this)">
+        <img src="images/3.png" alt="Asado con patatas y cebollas" loading="lazy">
+        <div class="galeria-overlay"><span>+</span></div>
+      </div>
+      <div class="galeria-item" onclick="openLightbox(this)">
+        <img src="images/4.png" alt="Callos a la madrileña" loading="lazy">
+        <div class="galeria-overlay"><span>+</span></div>
+      </div>
+      <div class="galeria-item" onclick="openLightbox(this)">
+        <img src="images/5.png" alt="Codillo asado con guarnición" loading="lazy">
+        <div class="galeria-overlay"><span>+</span></div>
+      </div>
+      <div class="galeria-item" onclick="openLightbox(this)">
+        <img src="images/6.png" alt="Cocido madrileño" loading="lazy">
+        <div class="galeria-overlay"><span>+</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close">&times;</button>
+  <img id="lightbox-img" src="" alt="Imagen ampliada">
+</div>
+
+<!-- POR QUÉ ELEGIRNOS -->
+<section class="por-que" id="por-que">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">¿Por Qué Elegirnos?</span>
+      <h2>La diferencia está en los detalles</h2>
+      <p>Razones por las que somos tu cafetería de confianza en Vallecas</p>
+    </div>
+    <div class="por-que-grid">
+      <div class="por-que-card">
+        <div class="por-que-icon">🤝</div>
+        <h3>Atención Cercana</h3>
+        <p>Te conocemos por tu nombre. Trato familiar y personalizado en cada visita.</p>
+      </div>
+      <div class="por-que-card">
+        <div class="por-que-icon">⭐</div>
+        <h3>Productos de Calidad</h3>
+        <p>Seleccionamos los mejores ingredientes para ofrecerte siempre lo mejor.</p>
+      </div>
+      <div class="por-que-card">
+        <div class="por-que-icon">📍</div>
+        <h3>Excelente Ubicación</h3>
+        <p>En pleno corazón de Puente de Vallecas, fácil acceso y bien comunicado.</p>
+      </div>
+      <div class="por-que-card">
+        <div class="por-que-icon">🌿</div>
+        <h3>Terraza Amplia</h3>
+        <p>Disfruta del buen tiempo en nuestra acogedora terraza exterior.</p>
+      </div>
+      <div class="por-que-card">
+        <div class="por-que-icon">🏠</div>
+        <h3>Ambiente Familiar</h3>
+        <p>Un lugar donde te sentirás como en casa, perfecto para todas las edades.</p>
+      </div>
+      <div class="por-que-card">
+        <div class="por-que-icon">🍴</div>
+        <h3>Cocina Española y Latina</h3>
+        <p>Lo mejor de dos tradiciones culinarias en un solo lugar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPINIONES -->
+<section class="opiniones" id="opiniones">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Opiniones</span>
+      <h2>Lo que dicen nuestros clientes</h2>
+      <p>Tu opinión es importante para nosotros</p>
+    </div>
+    
+    <div class="opiniones-header">
+      <div class="google-rating">
+        <div class="stars">⭐⭐⭐⭐</div>
+        <div class="rating">4.1 <span>/ 5</span></div>
+        <p>Basado en más de 667 opiniones de Google</p>
+      </div>
+    </div>
+    
+    <div class="opiniones-grid">
+      <div class="opinion">
+        <div class="opinion-stars">⭐⭐⭐⭐⭐</div>
+        <p>Muy buena atención y ambiente tranquilo. Ideal para tomar un café o desayunar antes de ir al trabajo. El personal es muy amable.</p>
+        <div class="opinion-author">
+          <div class="opinion-avatar">MR</div>
+          <div>
+            <h4>María R.</h4>
+          </div>
+        </div>
+      </div>
+      <div class="opinion">
+        <div class="opinion-stars">⭐⭐⭐⭐⭐</div>
+        <p>Buenas raciones y excelente terraza. Los precios son muy razonables y la comida está muy buena. Volveré seguro.</p>
+        <div class="opinion-author">
+          <div class="opinion-avatar">JL</div>
+          <div>
+            <h4>José L.</h4>
+          </div>
+        </div>
+      </div>
+      <div class="opinion">
+        <div class="opinion-stars">⭐⭐⭐⭐</div>
+        <p>Ideal para desayunar o comer con amigos. El café es muy bueno y la bollería siempre fresca. Un clásico del barrio.</p>
+        <div class="opinion-author">
+          <div class="opinion-avatar">AP</div>
+          <div>
+            <h4>Ana P.</h4>
+          </div>
+        </div>
+      </div>
+      <div class="opinion">
+        <div class="opinion-stars">⭐⭐⭐⭐</div>
+        <p>Sitio acogedor con buen ambiente. El menú del día es muy completo y la atención es rápida. Recomendable.</p>
+        <div class="opinion-author">
+          <div class="opinion-avatar">CG</div>
+          <div>
+            <h4>Carlos G.</h4>
+          </div>
+        </div>
+      </div>
+      <div class="opinion">
+        <div class="opinion-stars">⭐⭐⭐⭐⭐</div>
+        <p>Me encanta venir aquí los fines de semana. La terraza es perfecta y el trato inmejorable. Se nota que les importa el cliente.</p>
+        <div class="opinion-author">
+          <div class="opinion-avatar">LM</div>
+          <div>
+            <h4>Laura M.</h4>
+          </div>
+        </div>
+      </div>
+      <div class="opinion">
+        <div class="opinion-stars">⭐⭐⭐</div>
+        <p>Buen sitio para tomar algo rápido. A veces hay bastante gente pero merece la pena esperar. Los bocadillos están muy buenos.</p>
+        <div class="opinion-author">
+          <div class="opinion-avatar">RF</div>
+          <div>
+            <h4>Roberto F.</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Preguntas Frecuentes</span>
+      <h2>Resolvemos tus dudas</h2>
+      <p>Todo lo que necesitas saber sobre Cafetería El Paso</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">¿Aceptáis reservas?</div>
+        <div class="faq-a"><p>Sí, aceptamos reservas tanto para la terraza como para el interior. Puedes reservar llamando al 913 28 34 66 o enviándonos un WhatsApp. Para grupos numerosos recomendamos reservar con antelación.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Tenéis menú del día?</div>
+        <div class="faq-a"><p>Sí, ofrecemos menú del día de lunes a viernes con primeros, segundos, postre y bebida. Los platos varían diariamente para ofrecerte siempre variedad. Consulta nuestros especiales del día.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Tiene la cafetería acceso para personas con movilidad reducida?</div>
+        <div class="faq-a"><p>Sí, nuestro local es totalmente accesible. Contamos con acceso sin escaleras y baño adaptado para garantizar la comodidad de todos nuestros clientes.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Hacéis comidas para celebraciones?</div>
+        <div class="faq-a"><p>Por supuesto. Organizamos comidas para cumpleaños, reuniones de trabajo, celebraciones familiares y otros eventos. Contáctanos para informarte sobre menús especiales y presupuestos.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Tenéis opciones vegetarianas?</div>
+        <div class="faq-a"><p>Sí, disponemos de varias opciones vegetarianas tanto en desayunos como en comidas. Consulta con nuestro personal que te asesorará sobre las mejores opciones disponibles cada día.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Cuál es el horario de cocina?</div>
+        <div class="faq-a"><p>Servimos comidas de 13:00 a 16:00 horas de martes a sábado. Los domingos y festivos el horario puede variar. Para cenas, consultad nuestro horario específico.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HORARIO -->
+<section class="horario" id="horario">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Horario</span>
+      <h2>Cuándo visitarnos</h2>
+      <p>Estamos abiertos para atenderte todos los días excepto los lunes</p>
+    </div>
+    <div class="horario-grid">
+      <div class="horario-card cerrado">
+        <h3>Lunes</h3>
+        <div class="horas">
+          Cerrado
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Martes</h3>
+        <div class="horas">
+          08:00 – 22:00
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Miércoles</h3>
+        <div class="horas">
+          08:00 – 22:00
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Jueves</h3>
+        <div class="horas">
+          08:00 – 22:00
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Viernes</h3>
+        <div class="horas">
+          08:00 – 23:00
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Sábado</h3>
+        <div class="horas">
+          08:00 – 23:00
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Domingo</h3>
+        <div class="horas">
+          09:00 – 16:00
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contacto" id="contacto">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Contacto</span>
+      <h2>Visítanos o reserva tu mesa</h2>
+      <p>Estamos en el corazón de Puente de Vallecas, esperando atenderte</p>
+    </div>
+    <div class="contacto-grid">
+      <div class="contacto-info">
+        <h3>Información de Contacto</h3>
+        <div class="contacto-item">
+          <div class="contacto-icon">📍</div>
+          <div>
+            <h4>Dirección</h4>
+            <p>Camino de Valderribas, 93<br>Puente de Vallecas<br>28038 Madrid</p>
+          </div>
+        </div>
+        <div class="contacto-item">
+          <div class="contacto-icon">📞</div>
+          <div>
+            <h4>Teléfono</h4>
+            <p>913 28 34 66</p>
+          </div>
+        </div>
+        <div class="contacto-item">
+          <div class="contacto-icon">✉️</div>
+          <div>
+            <h4>Email</h4>
+            <p>info@cafeteriaelpaso.es</p>
+          </div>
+        </div>
+        <div class="contacto-item">
+          <div class="contacto-icon">💬</div>
+          <div>
+            <h4>WhatsApp</h4>
+            <p>Reserva tu mesa rápidamente por WhatsApp</p>
+          </div>
+        </div>
+        <div style="margin-top: 40px;">
+          <a href="https://wa.me/34913283466?text=Hola,%20me%20gustaría%20reservar%20una%20mesa" class="btn btn-primary" target="_blank" style="margin-bottom: 15px; display: inline-flex;">
+            <span></span> Reservar por WhatsApp
+          </a>
+          <a href="tel:+34913283466" class="btn btn-secondary" style="display: inline-flex;">
+            <span>📞</span> Llamar ahora
+          </a>
+        </div>
+      </div>
+      <div class="contacto-form">
+        <h3>Envíanos un mensaje</h3>
+        <form onsubmit="event.preventDefault(); alert('¡Gracias por tu mensaje! Te contactaremos pronto.'); this.reset();">
+          <div class="form-group">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" name="nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" name="telefono" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+          </div>
+          <div class="form-group">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos qué necesitas..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-submit">Enviar mensaje</button>
+        </form>
+      </div>
+    </div>
+    <div class="mapa">
+      <iframe src="https://maps.google.com/maps?q=Camino%20de%20Valderribas%2C%2093%2C%2028038%20Madrid&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación de Cafetería El Paso en Camino de Valderribas 93, Puente de Vallecas, Madrid"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- WHATSAPP FLOTANTE -->
+<a href="https://wa.me/34913283466?text=Hola,%20me%20gustaría%20reservar%20una%20mesa" class="whatsapp-float" target="_blank" title="Reservar mesa por WhatsApp" aria-label="Contactar por WhatsApp">💬</a>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <div class="logo-text">El <span>Paso</span></div>
+          <div class="logo-sub">Cafetería</div>
+        </div>
+        <p>Tu cafetería de confianza en Puente de Vallecas. Desayunos, comidas y el mejor ambiente desde hace más de 15 años.</p>
+        <div class="footer-social">
+          <a href="#" title="Facebook" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" title="Instagram" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#nosotros">Sobre Nosotros</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#carta">Carta</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Horario</h4>
+        <ul>
+          <li>Lunes: Cerrado</li>
+          <li>Mar-Jue: 08:00-22:00</li>
+          <li>Vie-Sáb: 08:00-23:00</li>
+          <li>Domingo: 09:00-16:00</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li>📍 Camino de Valderribas, 93<br>Puente de Vallecas, 28038 Madrid</li>
+          <li>📞 913 28 34 66</li>
+          <li>✉️ info@cafeteriaelpaso.es</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Cafetería El Paso. Todos los derechos reservados.</p>
+      <div class="footer-legal">
+        <a onclick="openModal('aviso')">Aviso Legal</a>
+        <a onclick="openModal('privacidad')">Política de Privacidad</a>
+        <a onclick="openModal('cookies')">Política de Cookies</a>
+        <a onclick="openModal('datos')">Protección de Datos</a>
+        <a onclick="openModal('accesibilidad')">Accesibilidad</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODALES LEGALES -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// Header scroll effect
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
+// Mobile menu close on link click
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('active');
+  });
+});
+
+// FAQ Accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    document.querySelectorAll('.faq-item').forEach(i => {
+      if (i !== item) i.classList.remove('active');
+    });
+    item.classList.toggle('active');
+  });
+});
+
+// Lightbox
+function openLightbox(element) {
+  const img = element.querySelector('img');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  lightboxImg.src = img.src;
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Modales legales
+const modales = {
+  aviso: {
+    title: 'Aviso Legal',
+    content: `
+      <h3>1. Datos identificativos</h3>
+      <p>En cumplimiento del deber de información recogido en el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSICE), se informan los siguientes datos:</p>
+      <ul>
+        <li>Titular: Cafetería El Paso</li>
+        <li>Domicilio: Camino de Valderribas, 93, 28038 Madrid</li>
+        <li>Teléfono: 913 28 34 66</li>
+        <li>Email: info@cafeteriaelpaso.es</li>
+      </ul>
+      
+      <h3>2. Objeto</h3>
+      <p>El presente sitio web tiene por objeto proporcionar información sobre los servicios de restauración ofrecidos por Cafetería El Paso.</p>
+      
+      <h3>3. Propiedad intelectual</h3>
+      <p>Todos los contenidos del sitio web (textos, imágenes, diseños, logotipos, etc.) son propiedad de Cafetería El Paso o cuenta con la correspondiente autorización. Queda prohibida su reproducción sin autorización previa.</p>
+      
+      <h3>4. Responsabilidad</h3>
+      <p>Cafetería El Paso no se responsabiliza del uso indebido de los contenidos del sitio web. La información tiene carácter meramente informativo.</p>
+      
+      <h3>5. Legislación aplicable</h3>
+      <p>Las presentes condiciones se rigen por la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales de Madrid.</p>
+    `
+  },
+  privacidad: {
+    title: 'Política de Privacidad',
+    content: `
+      <h3>1. Responsable del tratamiento</h3>
+      <ul>
+        <li>Identidad: Cafetería El Paso</li>
+        <li>Dirección: Camino de Valderribas, 93, 28038 Madrid</li>
+        <li>Teléfono: 913 28 34 66</li>
+        <li>Email: info@cafeteriaelpaso.es</li>
+      </ul>
+      
+      <h3>2. Finalidad del tratamiento</h3>
+      <p>Los datos personales recogidos serán tratados para:</p>
+      <ul>
+        <li>Gestionar reservas de mesas</li>
+        <li>Atender consultas y solicitudes</li>
+        <li>Enviar comunicaciones comerciales (solo con consentimiento)</li>
+        <li>Cumplir obligaciones legales</li>
+      </ul>
+      
+      <h3>3. Legitimación</h3>
+      <p>La base legal es el consentimiento del interesado, la ejecución de un contrato y el cumplimiento de obligaciones legales.</p>
+      
+      <h3>4. Conservación</h3>
+      <p>Los datos se conservarán durante el tiempo necesario para cumplir con la finalidad y determinar posibles responsabilidades.</p>
+      
+      <h3>5. Destinatarios</h3>
+      <p>No se cederán datos a terceros salvo obligación legal.</p>
+      
+      <h3>6. Derechos</h3>
+      <p>Puede ejercer sus derechos de acceso, rectificación, supresión, limitación, oposición y portabilidad enviando un email a info@cafeteriaelpaso.es con copia del DNI.</p>
+      <p>Puede presentar reclamación ante la AEPD (www.aepd.es).</p>
+    `
+  },
+  cookies: {
+    title: 'Política de Cookies',
+    content: `
+      <h3>1. ¿Qué son las cookies?</h3>
+      <p>Las cookies son pequeños archivos de texto que se almacenan en su dispositivo para recoger información sobre su navegación.</p>
+      
+      <h3>2. Cookies utilizadas</h3>
+      <ul>
+        <li><strong>Cookies técnicas:</strong> necesarias para el funcionamiento del sitio</li>
+        <li><strong>Cookies analíticas:</strong> para medir y analizar la navegación</li>
+      </ul>
+      
+      <h3>3. Gestión de cookies</h3>
+      <p>Puede configurar su navegador para rechazar las cookies, aunque esto puede afectar al funcionamiento del sitio.</p>
+    `
+  },
+  datos: {
+    title: 'Política de Protección de Datos',
+    content: `
+      <h3>1. Compromiso</h3>
+      <p>Cumplimos estrictamente con el RGPD y la LOPDGDD.</p>
+      
+      <h3>2. Medidas de seguridad</h3>
+      <ul>
+        <li>Cifrado SSL/TLS</li>
+        <li>Control de accesos</li>
+        <li>Copias de seguridad</li>
+        <li>Formación del personal</li>
+      </ul>
+      
+      <h3>3. Violaciones</h3>
+      <p>En caso de violación de seguridad, notificaremos a la autoridad en 72 horas.</p>
+      
+      <h3>4. Transferencias</h3>
+      <p>No realizamos transferencias internacionales sin garantías adecuadas.</p>
+    `
+  },
+  accesibilidad: {
+    title: 'Política de Accesibilidad',
+    content: `
+      <h3>Compromiso</h3>
+      <p>Nos comprometemos a hacer nuestro sitio accesible conforme al Real Decreto 1112/2018 y WCAG 2.1 nivel AA.</p>
+      
+      <h3>Medidas</h3>
+      <ul>
+        <li>HTML semántico</li>
+        <li>Contrastes adecuados</li>
+        <li>Navegación por teclado</li>
+        <li>Textos alternativos</li>
+        <li>Diseño responsive</li>
+      </ul>
+      
+      <h3>Feedback</h3>
+      <p>Si encuentra barreras de accesibilidad, contáctenos en info@cafeteriaelpaso.es</p>
+    `
+  }
+};
+
+function openModal(key) {
+  const m = modales[key];
+  document.getElementById('modalBody').innerHTML = `<h2>${m.title}</h2>${m.content}`;
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+</script>
+
+<!-- Schema.org LocalBusiness -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "name": "Cafetería El Paso",
+  "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f1a?w=1200",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Camino de Valderribas, 93",
+    "addressLocality": "Madrid",
+    "addressRegion": "Madrid",
+    "postalCode": "28038",
+    "addressCountry": "ES"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 40.3985,
+    "longitude": -3.6485
+  },
+  "url": "https://cafeteriaelpaso.es",
+  "telephone": "+34913283466",
+  "email": "info@cafeteriaelpaso.es",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Monday",
+      "opens": "00:00",
+      "closes": "00:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Tuesday", "Wednesday", "Thursday"],
+      "opens": "08:00",
+      "closes": "22:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Friday", "Saturday"],
+      "opens": "08:00",
+      "closes": "23:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Sunday",
+      "opens": "09:00",
+      "closes": "16:00"
+    }
+  ],
+  "priceRange": "€€",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.1",
+    "reviewCount": "667"
+  },
+  "servesCuisine": ["Spanish", "Latin American", "Cafe"]
+}
+</script>
+
+</body>
+</html>
