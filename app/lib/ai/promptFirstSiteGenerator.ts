@@ -187,7 +187,7 @@ export async function rewriteFullPageFromRequest(
   prompt: string,
   lang: 'es' | 'en',
   opts?: { clientImageUrls?: string[] }
-): Promise<{ html: string | null; provider: string; falImages: number }> {
+): Promise<{ html: string | null; provider: string; falImages: number; repaired?: boolean }> {
   const pack = buildBriefImagePack(prompt + '\n' + currentHtml.slice(0, 2000), lang, opts?.clientImageUrls);
   const system =
     lang === 'es'
