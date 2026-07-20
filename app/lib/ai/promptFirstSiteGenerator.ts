@@ -261,3 +261,36 @@ CHANGE MODE: apply ONLY the client's request to the current HTML. Do not defend 
   }
   return { html: null, provider: 'rules', falImages: 0 };
 }
+
+function buildChangeRebuildPrompt(currentHtml: string, changeRequest: string, lang: 'es' | 'en'): string {
+  const titleText = currentHtml.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim() || '';
+  const h1Text =
+    currentHtml.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1]?.replace(/<[^>]+>/g, '').trim() || '';
+  const brand =
+    (titleText.split(/[|\-–]/)[0] || '').trim() ||
+    h1Text ||
+    (lang === 'es' ? 'el negocio' : 'the business');
+  if (lang === 'en') {
+    return `Rebuild the full premium website for «${brand}». Current H1: «${h1Text}».
+Apply this client change and keep the same business: ${changeRequest}
+Complete HTML document, dense, professional. No cart/Stripe unless asked.`;
+  }
+  return `Reconstruye la web premium completa de «${brand}». H1 actual: «${h1Text}».
+Aplica este cambio del cliente y mantén el mismo negocio: ${changeRequest}
+Documento HTML completo, denso, profesional. Sin carrito/Stripe salvo que lo pida.`;
+}
+
+/**
+ * Si el rewrite falla: reconstruir fullpage desde brief sintético + pedido (no cosmético).
+ */
+export async function rebuildFullPageFromChangeRequest(
+  currentHtml: string,
+  changeRequest: string,
+  lang: 'es' | 'en',
+  opts?: { clientImageUrls?: string[] }
+): Promise<PromptFirstResult> {
+  const rebuildPrompt = buildChangeRebuildPrompt(currentHtml, changeRequest, lang);
+  return generateSiteFromUserPrompt(rebuildPrompt, lang, {
+    clientImageUrls: opts?.clientImageUrls,
+  });
+}
