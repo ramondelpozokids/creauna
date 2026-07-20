@@ -148,6 +148,11 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
       scores[dim] = clamp10(scores[dim] + 0.65);
     }
   }
+  if (has(html, /data-cua-composition="v2"/)) {
+    scores.composition = clamp10(scores.composition + 0.8);
+    scores.artDirection = clamp10(scores.artDirection + 0.5);
+    scores.hierarchy = clamp10(scores.hierarchy + 0.3);
+  }
 
   // Prompt keyword presence
   if (/madrid/i.test(prompt) && /madrid/i.test(html + (brief.address || ''))) {
