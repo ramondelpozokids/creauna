@@ -56,11 +56,14 @@ export function hardenSiteImages(html: string, urls: string[]): string {
   const cursor = { n: 0 };
   let out = html;
 
-  out = out.replace(/<img\b([^>]*?)>/gi, (full, attrs: string) => {
-    let a = attrs;
+  out = out.replace(/<img\b([^>]*?)\/?\s*>/gi, (_full, attrs: string) => {
+    let a = String(attrs || '').replace(/\s*\/\s*$/, '');
     const srcMatch = a.match(/\bsrc\s*=\s*("([^"]*)"|'([^']*)')/i);
     const current = srcMatch ? srcMatch[2] ?? srcMatch[3] ?? '' : '';
-    const needsSwap = !current || isFragileUrl(current) || !isTrustedUrl(current);
+    // data: en src (fotos subidas enormes / basura) → pack http; SVG solo vía onerror
+    const isDataSrc = /^data:image\//i.test(current);
+    const needsSwap =
+      !current || isDataSrc || isFragileUrl(current) || !isTrustedUrl(current);
     const url = needsSwap ? nextUrl(pool, cursor) : current;
     if (srcMatch) {
       a = a.replace(/\bsrc\s*=\s*("([^"]*)"|'([^']*)')/i, `src="${url.replace(/"/g, '%22')}"`);
@@ -156,6 +159,148 @@ export function ensureMinimumGallery(html: string, urls: string[]): string {
 
   if (/<\/body>/i.test(html)) return html.replace(/<\/body>/i, `${block}\n</body>`);
   return html + block;
+}
+
+/**
+ * Gate duro post-build: hero + about con foto real, cero src vacíos / placeholders.
+ * Si falla, rellena desde el pack — no entrega “casi bien”.
+ */
+export function ensureHeroPhoto(html: string, heroUrl: string): string {
+  if (!html || !heroUrl) return html;
+  let out = html;
+
+  const sectionHasPhoto = (body: string) =>
+    /<img[^>]+src=["']https?:\/\//i.test(body) ||
+    /background-image\s*:\s*url\(\s*['"]?https?:\/\//i.test(body);
+
+  const injectBg = (body: string) => {
+    if (sectionHasPhoto(body)) return body;
+    const photo = `<div class="absolute inset-0 -z-10" data-cua-hero-bg style="position:absolute;inset:0;z-index:0">
+  <img src="${heroUrl.replace(/"/g, '%22')}" alt="Hero" class="w-full h-full object-cover object-center" style="width:100%;height:100%;object-fit:cover" fetchpriority="high" referrerpolicy="no-referrer" />
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.45),rgba(0,0,0,.65))"></div>
+</div>`;
+    // Asegurar position relative en la sección vía wrapper interno
+    return `${photo}${body}`;
+  };
+
+  // 1) section id hero/inicio/home o data-cua-hero
+  if (/<section[^>]*(?:id=["'](?:inicio|hero|home)["']|data-cua-hero)/i.test(out)) {
+    out = out.replace(
+      /(<section[^>]*(?:id=["'](?:inicio|hero|home)["']|data-cua-hero)[^>]*>)([\s\S]*?)(<\/section>)/i,
+      (_m, open: string, body: string, close: string) => {
+        let o = open;
+        if (!/relative/i.test(o) && /class="/i.test(o)) {
+          o = o.replace(/class="/i, 'class="relative overflow-hidden ');
+        } else if (!/relative/i.test(o)) {
+          o = o.replace(/>$/, ' class="relative overflow-hidden">');
+        }
+        return `${o}${injectBg(body)}${close}`;
+      }
+    );
+    return out;
+  }
+
+  // 2) Primera <section> que contiene el H1 principal
+  out = out.replace(
+    /(<section\b[^>]*>)([\s\S]*?<h1\b[\s\S]*?)(<\/section>)/i,
+    (_m, open: string, body: string, close: string) => {
+      if (sectionHasPhoto(open + body)) return open + body + close;
+      let o = open;
+      if (!/relative/i.test(o) && /class="/i.test(o)) {
+        o = o.replace(/class="/i, 'class="relative overflow-hidden ');
+      } else if (!/relative/i.test(o)) {
+        o = o.replace(/>$/, ' class="relative overflow-hidden">');
+      }
+      return `${o}${injectBg(body)}${close}`;
+    }
+  );
+  return out;
+}
+
+export function ensureAboutPhoto(html: string, aboutUrl: string): string {
+  if (!html || !aboutUrl) return html;
+
+  // Preferir section con id nosotros/about/quienes
+  const byId =
+    /(<section\b[^>]*(?:id=["'](?:nosotros|about|quienes-somos|quienes)["'])[^>]*>)([\s\S]*?)(<\/section>)/i;
+  const byTitle =
+    /(<section\b[^>]*>)([\s\S]*?(?:qui[eé]nes\s+somos|sobre\s+nosotros|about\s+us|nuestra\s+(?:historia|empresa)|who\s+we\s+are)[\s\S]*?)(<\/section>)/i;
+
+  const apply = (_m: string, open: string, body: string, close: string) => {
+    if (/<img[^>]+src=["']https?:\/\//i.test(body)) return open + body + close;
+    let next = body.replace(
+      /<div([^>]*style=["'][^"']*(?:gradient|background)[^"']*["'][^>]*)>\s*<\/div>/i,
+      `<div$1><img src="${aboutUrl.replace(/"/g, '%22')}" alt="Equipo" class="w-full h-full object-cover rounded-2xl" style="width:100%;height:100%;object-fit:cover;min-height:240px;border-radius:1rem" loading="lazy" referrerpolicy="no-referrer" /></div>`
+    );
+    if (next === body) {
+      next = body.replace(
+        /(<div[^>]*(?:style=["'][^"']*min-height[^"']*["']|class=["'][^"']*(?:image|photo|media|about-img)[^"']*["'])[^>]*>)(\s*)(<\/div>)/i,
+        `$1<img src="${aboutUrl.replace(/"/g, '%22')}" alt="Equipo" class="w-full h-full object-cover" style="width:100%;height:100%;object-fit:cover" loading="lazy" referrerpolicy="no-referrer" />$3`
+      );
+    }
+    if (next === body) {
+      next = `<div data-cua-about-img class="reveal"><img src="${aboutUrl.replace(/"/g, '%22')}" alt="Quiénes somos" class="rounded-2xl w-full aspect-[4/3] object-cover shadow-lg" loading="lazy" referrerpolicy="no-referrer" /></div>\n${body}`;
+    }
+    return open + next + close;
+  };
+
+  if (byId.test(html)) return html.replace(byId, apply);
+  if (byTitle.test(html)) return html.replace(byTitle, apply);
+  return html;
+}
+
+export function gateProfessionalImages(
+  html: string,
+  urls: string[]
+): { html: string; ok: boolean; issues: string[] } {
+  const issues: string[] = [];
+  let out = html || '';
+  // Solo stock http(s) — nunca data: (pesado / fuera de sector)
+  const httpsOnly = urls.filter((u) => /^https?:\/\//i.test(u) && !u.startsWith('data:'));
+  const pool = reliableImagePool(httpsOnly.length ? httpsOnly : urls.filter((u) => /^https?:\/\//i.test(u)));
+  const heroUrl = pool[0];
+  const aboutUrl = pool[Math.min(1, pool.length - 1)] || pool[0];
+
+  if (/src=["']\s*["']/i.test(out) || /src=["'][#]/i.test(out)) {
+    issues.push('img_src_vacio');
+  }
+  if (/CREAUNA|data:image\/svg\+xml.*CREAUNA/i.test(out)) {
+    issues.push('placeholder_creauna');
+  }
+
+  // Quitar data: enormes ya metidos en hero/about
+  out = out.replace(
+    /(<img[^>]+src=["'])(data:image\/[^"']+)(["'])/gi,
+    (_m, pre: string, _data: string, post: string) => `${pre}${heroUrl || ''}${post}`
+  );
+
+  out = hardenSiteImages(out, pool);
+  out = ensureMinimumGallery(out, pool);
+  if (heroUrl) out = ensureHeroPhoto(out, heroUrl);
+  if (aboutUrl) out = ensureAboutPhoto(out, aboutUrl);
+
+  const heroOk =
+    /data-cua-hero-bg[\s\S]{0,600}<img[^>]+src=["']https?:\/\//i.test(out) ||
+    /<section[^>]*>[\s\S]{0,800}<h1\b[\s\S]{0,2000}<img[^>]+src=["']https?:\/\//i.test(out) ||
+    /<section[^>]*>[\s\S]{0,400}<img[^>]+src=["']https?:\/\/[\s\S]{0,1500}<h1\b/i.test(out);
+
+  if (!heroOk) issues.push('hero_sin_foto');
+
+  const stillEmpty = /src=["']\s*["']/i.test(out);
+  const stillPlaceholder = /src=["'][^"']*CREAUNA/i.test(out);
+  // Solo el atributo src del <img> del hero — no el onerror con SVG de respaldo
+  const heroImgAttrs = out.match(/data-cua-hero-bg[\s\S]{0,1200}?<img\b([^>]*)>/i)?.[1] || '';
+  const heroSrcMatch = heroImgAttrs.match(/\bsrc\s*=\s*("([^"]*)"|'([^']*)')/i);
+  const heroSrc = heroSrcMatch ? heroSrcMatch[2] ?? heroSrcMatch[3] ?? '' : '';
+  const stillDataHero = /^data:image\//i.test(heroSrc);
+  const imgCount = (out.match(/<img\b/gi) || []).length;
+  if (stillEmpty) issues.push('src_vacio_persistente');
+  if (stillPlaceholder) issues.push('placeholder_persistente');
+  if (stillDataHero) issues.push('hero_data_url');
+  if (imgCount < 3) issues.push('pocas_imagenes');
+
+  const ok = heroOk && !stillEmpty && !stillPlaceholder && !stillDataHero && imgCount >= 3;
+  return { html: out, ok, issues: ok ? [] : [...new Set(issues)] };
 }
 
 export { LAST_RESORT_SVG };

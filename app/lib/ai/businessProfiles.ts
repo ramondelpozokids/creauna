@@ -20,18 +20,28 @@ export function isBakeryShopPrompt(prompt: string): boolean {
 /** Brief de tienda online / moda premium (evita confundir con arquitectura por «Arquitecto UX/UI»). */
 export function isFashionEcommercePrompt(prompt: string): boolean {
   if (isBikeShopPrompt(prompt)) return false;
+  // Gestoría / profesional B2B nunca es moda
+  if (/gestor[ií]a|asesor[ií]a|fiscal|contabil|despacho\s+de\s+abog/i.test(prompt)) return false;
+  // Barbería / peluquería de caballeros nunca es moda ecommerce
+  if (isBarbershopPrompt(prompt)) return false;
   const lower = prompt.toLowerCase();
-  // «sin carrito» / «no carrito» no es ecommerce
+  // Negaciones: no contar «carrito» / «tienda online» como deseo de ecommerce
   const rejectsCart =
-    /sin\s+carrito|no\s+(debe\s+existir\s+)?(?:\w+\s+){0,4}carrito|no\s+proceso\s+de\s+compra|no\s+pago\s+online|sin\s+compra\s+online|no\s+es\s+una\s+tienda\s+online/i.test(
+    /sin\s+carrito|ni\s+carrito|no\s+(?:debe\s+)?(?:existir|incluir|tener|haber)[\s\S]{0,40}carrito|no\s+proceso\s+de\s+compra|no\s+pago\s+online|sin\s+compra\s+online|no\s+es\s+una\s+tienda\s+online|no\s+debe\s+existir\s+tienda\s+online|sin\s+tienda\s+online|ni\s+pagos?\s+online/i.test(
       lower
     );
   const wantsCart =
     !rejectsCart &&
     /\bcarrito\b|checkout|pasarela\s+de\s+pago|\bstripe\b|woocommerce|shopify/i.test(lower);
+  const tiendaOnline =
+    /\btienda\s+online\b/i.test(lower) &&
+    !/no\s+(?:debe\s+)?(?:existir|incluir)[\s\S]{0,30}tienda\s+online|sin\s+tienda\s+online|ni\s+tienda\s+online/i.test(
+      lower
+    );
   return (
     wantsCart ||
-    /ecommerce|e-commerce|comercio electr[oó]nico|tienda online|tienda de (moda|ropa)|boutique de moda|lookbook|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos|nueva colecci[oó]n|explorar colecci[oó]n|productos destacados/i.test(
+    tiendaOnline ||
+    /ecommerce|e-commerce|comercio electr[oó]nico|tienda de (moda|ropa)|boutique de moda|lookbook|colecci[oó]n premium|moda premium|luxury fashion|firma internacional|vender miles de productos|nueva colecci[oó]n|explorar colecci[oó]n|productos destacados/i.test(
       lower
     ) ||
     /zara|massimo dutti|\bcos\b|mango|gymshark|balenciaga|dior|gucci|hugo boss|tommy hilfiger|calvin klein|lacoste|ralph lauren|louis vuitton|uniqlo|alo yoga|sandro|armani exchange|velora|chanel|loewe|aesop/i.test(
@@ -40,6 +50,23 @@ export function isFashionEcommercePrompt(prompt: string): boolean {
     /wig|peluca|pelucas|women'?s?\s+fashion|moda\s+femenina|fashion\s+accessor|accesorios\s+de\s+moda|ultra-?premium.*(?:wig|fashion|moda|boutique)/i.test(
       lower
     )
+  );
+}
+
+/** Barbería / peluquería masculina (NO moda, NO salón unisex genérico). */
+export function isBarbershopPrompt(prompt: string): boolean {
+  return /barber[ií]a|barbershop|\bbarber\b|afeitad|grooming\s+masculin|peluquer[ií]a\s+(?:de\s+)?caballer|peluquer[ií]a\s+masculin|caballero\s+tarik|\btarik\b|corte\s+de\s+caballero|arreglo\s+de\s+barba/i.test(
+    prompt
+  );
+}
+
+/** Detecta barbería aunque el pedido sea corto («arregla fotos») mirando también el HTML actual. */
+export function isBarbershopContext(prompt: string, html = ''): boolean {
+  if (isBarbershopPrompt(prompt)) return true;
+  const slice = (html || '').slice(0, 12000);
+  return (
+    isBarbershopPrompt(slice) ||
+    /peluquer[ií]a\s+caballero|experiencia\s+de\s+barber|caballero\s+tarik/i.test(slice)
   );
 }
 
@@ -1079,6 +1106,10 @@ export const NONPROFIT_PROFILE: BusinessProfile = {
 export function detectVariant(prompt: string): BusinessVariant {
   // Bicicletas ANTES que moda (colección/accesorios/carrito disparaban fashion)
   if (isBikeShopPrompt(prompt)) return 'bike';
+  // Gestoría / asesoría ANTES que moda («no tienda online» contiene la substring tienda online)
+  if (/gestor[ií]a|asesor[ií]a|asesor|fiscal|contab|laboral|campon|despacho/i.test(prompt)) return 'corporate';
+  // Barbería / peluquería caballeros → beauty (banco salón/barber), nunca fashion
+  if (isBarbershopPrompt(prompt)) return 'beauty';
   if (isFashionEcommercePrompt(prompt)) return 'fashion';
   if (/tatuaje|tattoo|piercing|royal bang|gemas dentales|iron.?ink|tinta/i.test(prompt)) return 'tattoo';
   if (/kebab|d[öo]ner|doner|durum|falafel/i.test(prompt)) return 'kebab';
@@ -1100,8 +1131,7 @@ export function detectVariant(prompt: string): BusinessVariant {
   if (/maison|fine dining|alta cocina|gourmet|la maison/i.test(prompt)) return 'luxury';
   if (/yamaha|motos?\s+cort|concesionario|motocicleta|motorcycle\s+dealer|taller\s+oficial/i.test(prompt)) return 'automotive';
   if (/abogad|law firm|notar[ií]a|jur[ií]dic|bufete/i.test(prompt)) return 'default';
-  if (/gestor[ií]a|asesor[ií]a|asesor|fiscal|contab|laboral|campon|despacho/i.test(prompt)) return 'corporate';
-  if (/barber[ií]a|barbershop|\bbarber\b|afeitad|grooming masculin/i.test(prompt)) return 'default';
+  if (/barber[ií]a|barbershop|\bbarber\b|afeitad|grooming masculin/i.test(prompt)) return 'beauty';
   if (/peluquer|sal[oó]n\s+de\s+belleza|elite\s+beauty|estilo\s+de\s+belleza|hair\s+salon|manicur|uñas/i.test(prompt)) return 'beauty';
   if (/recetas|blog de comida|blog gastron|food blog|comida casera|blog culin|publicaciones.*receta|stanton|libro de recetas/i.test(prompt)) return 'foodblog';
   if (/trattoria|italian[o]?|pizzer[ií]a|pizza|pasta|risotto|cocina italiana|nonna|antipast|carbonara|bolognese|tiramis/i.test(prompt)) return 'italian';

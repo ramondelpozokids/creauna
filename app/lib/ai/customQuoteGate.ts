@@ -4,7 +4,8 @@
  * Si el brief EXPLÍCITAMENTE rechaza esas cosas (NO carrito, sin Stripe…), no bloquear.
  */
 
-function explicitlyRejectsExtras(prompt: string): boolean {
+/** Brief dice explícitamente NO carrito / Stripe / checkout. */
+export function brieflyRejectsOnlineCheckout(prompt: string): boolean {
   return /(?:\bno\b|\bsin\b|without|never|nunca|prohibido|not\s+an?\s+e-?commerce|no\s+es\s+e-?commerce)[^\n.]{0,40}(?:stripe|checkout|carrito|pasarela|pago\s+online|shopping\s*cart|payment\s+gateway|woocommerce|shopify)/i.test(
     prompt
   ) || /(?:stripe|checkout|carrito|pasarela|shopping\s*cart|payment\s+gateway)[^\n.]{0,30}(?:\bno\b|prohibido|nunca|not\s+allowed)/i.test(
@@ -13,7 +14,7 @@ function explicitlyRejectsExtras(prompt: string): boolean {
 }
 
 export function isCustomQuoteRequest(prompt: string): boolean {
-  if (explicitlyRejectsExtras(prompt)) return false;
+  if (brieflyRejectsOnlineCheckout(prompt)) return false;
   return /stripe|pasarela\s+de\s+pago|pago\s+online|cobrar\s+con\s+tarjeta|carrito\s+de\s+compra|checkout\s+real|woocommerce|shopify|paypal|paddle|saas|mvp|crm|erp|panel\s+de\s+administraci[oó]n|login\s+de\s+usuarios|base\s+de\s+datos|supabase|alojamiento|hosting|dominio\s+y\s+hosting|github\s+sync|api\s+keys?|claves?\s+api|integraci[oó]n\s+con\s+api/i.test(
     prompt
   );
