@@ -15,6 +15,7 @@
     "test:kebab-local": "dotenv -e .env.local -- npx tsx scripts/local-kebab-hut-test.ts",
     "verify:engine": "npx tsx scripts/verify-engine.ts",
     "verify:starters": "npx tsx scripts/verify-premium-starters.ts",
+    "benchmark:agency-100": "npx tsx scripts/benchmark-agency-100.ts",
     "sync:ai-arsenal": "powershell -ExecutionPolicy Bypass -File scripts/sync-ai-arsenal.ps1"
   },
   "dependencies": {

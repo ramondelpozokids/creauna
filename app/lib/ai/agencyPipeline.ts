@@ -14,11 +14,13 @@ import {
 } from './promptFirstQuality';
 import { buildSiteBrief } from './siteAiEnhancer';
 import { analyzeIntent } from './intentAnalyzer';
-import { getBusinessProfile, detectVariant, isBikeShopPrompt, isFashionEcommercePrompt } from './businessProfiles';
+import { getBusinessProfile, detectVariant, isBikeShopPrompt, isFashionEcommercePrompt, isBarbershopPrompt, isBarbershopContext } from './businessProfiles';
 import type { AiSkippedReason, PipelineStage } from './engineHealth';
 import type { PreviewSection } from './studioEngine';
 import { buildDeterministicAgencyHtml } from './agencyDeterministicBuild';
 import { constructorSystemPreamble } from './creaunaConstructorManifesto';
+import { brieflyRejectsOnlineCheckout } from './customQuoteGate';
+import { withAgencyChromePrompt, promptWantsWhatsApp } from './siteChrome';
 
 function extractHtmlFromAiResponse(raw: string): string | null {
   const trimmed = raw.trim();
@@ -33,10 +35,70 @@ function extractHtmlFromAiResponse(raw: string): string | null {
   return null;
 }
 
+function extractQuotedHeroFromBrief(prompt: string): string | undefined {
+  const patterns = [
+    /llamada a la acci[oó]n[^\n]*\n+\s*["«]([^"»]{12,140})["»]/i,
+    /["«](Más que un corte[^"»]{5,100})["»]/i,
+    /(?:Hero|hero)[\s\S]{0,500}?["«]([^"»]{15,120})["»]/i,
+  ];
+  for (const re of patterns) {
+    const m = prompt.match(re);
+    if (m?.[1] && !isMetaHeroPhrase(m[1])) return m[1].trim();
+  }
+  return undefined;
+}
+
+/** Lista de servicios del brief (tras el encabezado Servicios). */
+export function detectServicesFromBrief(prompt: string): string[] {
+  const idx = prompt.search(/(?:^|\n)\s*Servicios\s*(?:\n|$)/i);
+  if (idx < 0) return [];
+  const chunk = prompt.slice(idx, idx + 1200);
+  const lines = chunk.split(/\r?\n/).slice(1);
+  const out: string[] = [];
+  for (const line of lines) {
+    const t = line.trim().replace(/^[-•*]\s*/, '');
+    if (!t) continue;
+    if (
+      /^(Cada servicio|Sobre\s+nosotros|Hero|¿Por|Por qu[eé]|Horario|Galer|Opiniones|Contacto|Footer|SEO|Objetivo|P[aá]ginas?\s+legales)/i.test(
+        t
+      )
+    ) {
+      break;
+    }
+    if (t.length >= 4 && t.length <= 70 && !/icono|descripci[oó]n|dise[nñ]o moderno/i.test(t)) {
+      out.push(t);
+    }
+  }
+  return [...new Set(out)].slice(0, 16);
+}
+
+function extractHoursBlock(prompt: string): string | undefined {
+  const idx = prompt.search(/(?:^|\n)\s*Horario\s*(?:\n|$)/i);
+  if (idx < 0) return undefined;
+  const chunk = prompt.slice(idx, idx + 900);
+  const lines = chunk.split(/\r?\n/).slice(1);
+  const days: string[] = [];
+  let cur = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t) continue;
+    if (/^(Galer|Opiniones|Contacto|Footer|SEO|Servicios|Sobre|Hero|¿Por)/i.test(t)) break;
+    if (/^(Lunes|Martes|Mi[eé]rcoles|Jueves|Viernes|S[aá]bado|Domingo)/i.test(t)) {
+      if (cur) days.push(cur);
+      cur = t;
+    } else if (/^\d{1,2}:\d{2}|Cerrado/i.test(t) && cur) {
+      cur += ` ${t.replace(/[–—]/g, '-')}`;
+    }
+  }
+  if (cur) days.push(cur);
+  return days.length ? days.join(' · ') : undefined;
+}
+
 function extractBusinessNameFromPrompt(prompt: string, lang: 'es' | 'en'): string {
   const patterns = [
     /(?:marca|negocio|tienda|llamad[oa]|named|brand)\s*[:\-]?\s*["']?([A-ZÁÉÍÓÚÑ][\wáéíóúñ\s&'-]{2,40})/i,
     /(?:se\s+llama|called)\s+["']([^"']+)["']/i,
+    /peluquer[ií]a\s+[^\n]{0,40}?llamada\s+([^\n.]{3,60})/i,
   ];
   for (const re of patterns) {
     const m = prompt.match(re);
@@ -117,6 +179,11 @@ function defaultHeroTitleBySector(prompt: string, lang: 'es' | 'en'): string {
   if (/panader[ií]a|bakery|bollería|pasteler/i.test(prompt)) {
     return lang === 'es' ? 'El sabor del pan recién horneado' : 'The taste of freshly baked bread';
   }
+  if (isBarbershopPrompt(prompt)) {
+    return lang === 'es'
+      ? 'Más que un corte de pelo, una experiencia de barbería.'
+      : 'More than a haircut — a barbershop experience.';
+  }
   const v = detectVariant(prompt);
   const map: Record<string, { es: string; en: string }> = {
     beauty: { es: 'Belleza que se nota', en: 'Beauty that shows' },
@@ -168,32 +235,102 @@ function hasPhotoHero(html: string): boolean {
   );
 }
 
+/**
+ * Arquitectura profesional como guía (no plantilla fija).
+ * Baseline + adaptación al brief / sector. plan.sections = fuente de verdad del HTML.
+ */
 function detectSections(prompt: string): string[] {
   const lower = prompt.toLowerCase();
+  /** Solo niega si el brief dice explícitamente «sin X» / «no quiero X» junto a la sección. */
+  const denied = (topic: RegExp) =>
+    new RegExp(
+      `(?:sin|without|no\\s+(?:quiero|necesito|incluy(?:o|as)?|pong(?:o|as)?))\\s+[\\wáéíóúñ\\s]{0,24}(?:${topic.source})`,
+      'i'
+    ).test(prompt);
+
+  const productLed =
+    !isBarbershopPrompt(prompt) &&
+    /producto|cat[aá]logo|tienda|panader[ií]a|boll|pasteler|boutique|moda|bicicleta|bike|peluca|wig|(?:con\s+)?precios?\s+(?:claros|desde)|€\s*\d|\d\s*€/i.test(
+      lower
+    );
+  const serviceLed =
+    /servicio|gestor[ií]a|cl[ií]nica|dental|taller\b|asesor[ií]a|consultor|abogad|gimnasio|fisioter|sal[oó]n\s+de|encarg|catering|reparaci|barber|peluquer|caballero|cita/i.test(
+      lower
+    );
+  const fashion =
+    /moda|lookbook|boutique|peluca|wig|fashion|colecci[oó]n/i.test(lower) &&
+    !/bicicleta|bike|panader/i.test(lower);
+
   const sections: string[] = ['nav', 'hero'];
-  if (/sobre\s+nosotros|about|nuestra\s+historia|experiencia/i.test(lower)) sections.push('about');
-  if (/especialidad|servicio|men[uú]|carta/i.test(lower) && !/tienda de (moda|ropa)|lookbook|colecci/i.test(lower)) {
-    sections.push('specialties');
+
+  if (!denied(/sobre\s+nosotros|about|historia/i)) {
+    sections.push('about');
   }
-  if (/nueva\s+colecci|colecci[oó]n/i.test(lower)) sections.push('collection');
+
+  // Productos y/o servicios según el negocio
+  if (productLed || fashion) {
+    if (/colecci|categor|lookbook|hombre|mujer/i.test(lower) || fashion || productLed) {
+      sections.push('collections');
+    }
+    sections.push('products');
+  }
+  if (serviceLed || /servicio|especialidad|men[uú]|carta|taller/i.test(lower)) {
+    sections.push('services');
+  }
+  if (!sections.includes('products') && !sections.includes('services')) {
+    sections.push(serviceLed ? 'services' : 'products');
+  }
+
+  if (!denied(/benefic|por\s+qu[eé]|why\s+choose/i)) {
+    sections.push('why');
+  }
+
+  // Proceso: servicios, encargos, o tiendas con flujo claro
+  if (
+    !denied(/proceso|c[oó]mo\s+trabaj/i) &&
+    (serviceLed || /proceso|c[oó]mo\s+(trabaj|funcion)|pasos|encarg/i.test(lower) || productLed)
+  ) {
+    sections.push('process');
+  }
+
+  if (!denied(/galer[ií]a|gallery|instagram/i)) {
+    sections.push('gallery');
+  }
+
+  if (!denied(/rese[nñ]a|testimon|opiniones|reviews/i)) {
+    sections.push('reviews');
+  }
+
+  if (
+    !denied(/faq|preguntas?\s+frecuentes/i) &&
+    (serviceLed || productLed || /faq|preguntas?\s+frecuentes|dudas/i.test(lower))
+  ) {
+    sections.push('faq');
+  }
+
+  // Modelos fiscales / impuestos cuando el brief lo pide (gestoría, IVA, IRPF…)
+  if (
+    !denied(/modelos?\s+fiscal/i) &&
+    /modelos?\s+fiscal|iva\b|irpf|sociedades|aut[oó]nomos.{0,40}fiscal|fiscales?\s+m[aá]s\s+habitual/i.test(
+      lower
+    )
+  ) {
+    sections.push('tax_models');
+  }
+
   if (/lookbook/i.test(lower)) sections.push('lookbook');
-  if (/categor[ií]as|hombre|mujer|accesorios|calzado/i.test(lower) && /moda|ropa|boutique|fashion|lookbook/i.test(lower)) {
-    sections.push('categories');
-  }
-  if (/productos?\s+destacados|destacados/i.test(lower)) sections.push('products');
-  if (/galer|instagram/i.test(lower)) sections.push('gallery');
-  if (/por\s+qu[eé]|why\s+(choose|us)/i.test(lower)) sections.push('why');
   if (/promoci[oó]n|banner|oto[nñ]o/i.test(lower)) sections.push('promo');
   if (/newsletter|[uú]nete/i.test(lower)) sections.push('newsletter');
-  if (/rese[nñ]a|testimon|review/i.test(lower)) sections.push('reviews');
-  if (/ubicaci|mapa|direcci[oó]n|location|contacto/i.test(lower)) sections.push('location');
-  if (/cta|preparado|ven a visit|descubrir ahora/i.test(lower)) sections.push('cta');
-  if (/carrito|checkout|comprar/i.test(lower)) sections.push('cart');
-  if (/aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap|legales/i.test(lower)) {
-    sections.push('legal', 'sitemap');
+
+  sections.push('cta', 'contact', 'footer', 'legal');
+
+  if (/carrito|checkout|stripe|comprar\s+online/i.test(lower) && !brieflyRejectsOnlineCheckout(prompt)) {
+    sections.push('cart');
   }
-  if (/whatsapp|scroll\s*up|redes\s+sociales/i.test(lower)) sections.push('widgets');
-  sections.push('footer');
+  if (promptWantsWhatsApp(prompt) || /scroll\s*up|redes\s+sociales/i.test(lower)) {
+    sections.push('widgets');
+  }
+
   return [...new Set(sections)];
 }
 
@@ -230,18 +367,36 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
   const nameField = nextLineAfter(prompt, /^nombre\b/i);
   const badge = nextLineAfter(prompt, /^badge\b/i);
   const slogan = nextLineAfter(prompt, /^eslogan\b/i);
-  const heroTitle = sanitizeHeroTitle(nextLineAfter(prompt, /^t[ií]tulo\b/i), prompt, slogan, lang);
+  const heroTitle = sanitizeHeroTitle(
+    nextLineAfter(prompt, /^t[ií]tulo\b/i) || extractQuotedHeroFromBrief(prompt),
+    prompt,
+    slogan,
+    lang
+  );
   const heroSubtitle = nextLineAfter(prompt, /^subt[ií]tulo\b/i);
+  const isBarber = isBarbershopPrompt(prompt);
   const primaryCta =
     nextLineAfter(prompt, /^bot[oó]n\s+principal\b/i) ||
-    (lang === 'es' ? 'Ver Menú' : 'View Menu');
+    (isBarber
+      ? lang === 'es'
+        ? 'Reservar cita por WhatsApp'
+        : 'Book via WhatsApp'
+      : lang === 'es'
+        ? 'Ver Menú'
+        : 'View Menu');
   const secondaryCta =
     nextLineAfter(prompt, /^bot[oó]n\s+secundario\b/i) ||
-    (lang === 'es' ? 'Cómo llegar' : 'Get directions');
+    (isBarber
+      ? lang === 'es'
+        ? 'Llamar ahora'
+        : 'Call now'
+      : lang === 'es'
+        ? 'Cómo llegar'
+        : 'Get directions');
 
   // Moda SOLO con contexto moda real — nunca bicicletas / «sin carrito» / colección genérica
   const isBike = isBikeShopPrompt(prompt);
-  const isFashion = !isBike && isFashionEcommercePrompt(prompt);
+  const isFashion = !isBike && !isBarber && isFashionEcommercePrompt(prompt);
   const fashionPrimary = isFashion
     ? nextLineAfter(prompt, /^bot[oó]n\s+principal\b/i) || (lang === 'es' ? 'Explorar colección' : 'Explore collection')
     : isBike
@@ -262,7 +417,7 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
   const accent =
     prompt.match(/#([0-9A-Fa-f]{6})/)?.[0] ||
     electricGreen ||
-    (isBike ? '#00d084' : isFashion ? '#C6A75E' : undefined);
+    (isBike ? '#00d084' : isBarber ? '#C6A75E' : isFashion ? '#C6A75E' : undefined);
   const wantsPlayfair = /playfair/i.test(prompt);
   const wantsMontserrat = /montserrat/i.test(prompt);
   const wantsInter = /inter\b/i.test(prompt);
@@ -271,10 +426,17 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
   const address =
     prompt.match(/Calle\s+[^\n]+(?:\nEsquina[^\n]+)?\n?\d{5}\s+\w+/i)?.[0]?.replace(/\n+/g, ', ') ||
     prompt.match(/Calle\s+[A-Za-zÁÉÍÓÚáéíóúñÑ][^\n,]{3,50}/)?.[0];
-  const hours = nextLineAfter(prompt, /^horario\b/i) || (/hasta\s+las\s+00:00/i.test(prompt) ? 'Todos los días hasta las 00:00' : undefined);
+  const hoursBlock = extractHoursBlock(prompt);
+  const hours =
+    hoursBlock ||
+    nextLineAfter(prompt, /^horario\b/i) ||
+    (/hasta\s+las\s+00:00/i.test(prompt) ? 'Todos los días hasta las 00:00' : undefined);
 
   let specialties = detectSpecialties(prompt);
-  if (isBike && specialties.length === 0) {
+  const briefServices = detectServicesFromBrief(prompt);
+  if (briefServices.length) {
+    specialties = briefServices;
+  } else if (isBike && specialties.length === 0) {
     specialties = ['MTB', 'Carretera', 'E-Bike', 'Urbanas', 'Infantiles', 'Accesorios'].filter((c) =>
       new RegExp(c.replace('-', '[- ]?'), 'i').test(prompt)
     );
@@ -324,6 +486,23 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
     if (wantsInter) styleNotes.push('Texto Inter');
     if (wantsPoppins) styleNotes.push('Botones Poppins');
   }
+  if (isBarber) {
+    styleNotes.push(
+      lang === 'es'
+        ? 'IDENTIDAD BARBERÍA: negro + blanco + oro. NUNCA fotos de moda femenina, retail ni niños.'
+        : 'BARBERSHOP IDENTITY: black + white + gold. NEVER fashion/women/retail/kids photos.'
+    );
+    styleNotes.push(
+      lang === 'es'
+        ? 'Hero y galería: local de barbería, cortes de caballero, barba, silla y herramientas.'
+        : 'Hero & gallery: barbershop interior, men’s cuts, beard, chair and tools.'
+    );
+    styleNotes.push(
+      lang === 'es'
+        ? 'Grids de servicios y “por qué elegirnos”: exactamente md:grid-cols-3 (2 filas de 3). Horario en grid de 3 columnas.'
+        : 'Services and why grids: md:grid-cols-3 (2×3). Hours in a 3-column grid.'
+    );
+  }
   if (/aviso\s+legal|privacidad|cookies|mapa\s+del\s+sitio|sitemap/i.test(prompt)) {
     styleNotes.push(
       lang === 'es'
@@ -331,11 +510,21 @@ export function buildAgencyPlanFromBrief(prompt: string, lang: 'es' | 'en'): Age
         : 'Legal notice, Privacy, Cookies, Sitemap + footer links'
     );
   }
-  if (/whatsapp|scroll|redes\s+sociales/i.test(prompt)) {
+  if (promptWantsWhatsApp(prompt)) {
     styleNotes.push(
       lang === 'es'
-        ? 'Botón WhatsApp flotante (verde oficial), scroll-up y redes con iconos de marca (Instagram, Facebook, TikTok, X, Pinterest, YouTube)'
-        : 'WhatsApp FAB, scroll-up, brand social icon buttons'
+        ? 'Botón WhatsApp flotante (verde oficial) — solo porque el brief lo pide'
+        : 'Floating WhatsApp button — only because the brief asks for it'
+    );
+  }
+  if (/scroll[\s_-]*up|volver\s+arriba/i.test(prompt)) {
+    styleNotes.push(lang === 'es' ? 'Botón scroll arriba' : 'Scroll-up button');
+  }
+  if (/redes\s+sociales|instagram|facebook|tiktok/i.test(prompt)) {
+    styleNotes.push(
+      lang === 'es'
+        ? 'Redes con iconos de marca según el brief'
+        : 'Brand social icons per brief'
     );
   }
 
@@ -559,6 +748,22 @@ function deliverHtml(
   };
 }
 
+function hasContactCta(html: string): boolean {
+  return /wa\.me|#contacto|WhatsApp|mailto:|tel:|Contactar|Reservar|Book\s+now/i.test(html);
+}
+
+function hasLegalChrome(html: string): boolean {
+  return /privacidad|cookies|aviso[\s-]?legal|data-cua-legal|openModal\s*\(|cua-legal-modal|pol[ií]tica\s+de\s+privacidad/i.test(
+    html
+  );
+}
+
+function hasForbiddenCartUi(html: string): boolean {
+  return /stripe\.com|add\s+to\s+cart|shopping[\s-]?cart|checkout\s+payment|pasarela\s+de\s+pago|woocommerce|shopify\s+buy/i.test(
+    html
+  );
+}
+
 function verifyDeterministic(html: string, plan: AgencySitePlan, prompt: string): string[] {
   const issues: string[] = [];
   if (isUnacceptableAgencyHtml(html, prompt)) {
@@ -584,9 +789,29 @@ function verifyDeterministic(html: string, plan: AgencySitePlan, prompt: string)
     issues.push('Pocas imágenes reales');
   }
   if (!/<h1\b/i.test(html)) issues.push('Falta H1');
+  if (!hasContactCta(html)) issues.push('Falta CTA de contacto (WhatsApp / #contacto)');
+  if (!hasPhotoHero(html)) issues.push('Hero sin foto real');
+  if (brieflyRejectsOnlineCheckout(prompt) && hasForbiddenCartUi(html)) {
+    issues.push('El brief prohíbe carrito/Stripe pero el HTML incluye checkout');
+  }
   const missing = missingBriefRequirements(html, prompt);
   for (const m of missing.slice(0, 4)) issues.push(`Falta texto del brief: «${m}»`);
   return [...new Set(issues)];
+}
+
+/** Gate final post-chrome: legales + CTA + hero + densidad + no-cart si aplica. */
+function failsAgencyDeliveryGate(html: string, prompt: string): boolean {
+  if (!html || html.length < 12000) return true;
+  if (isSkeletonLanding(html)) return true;
+  if (isMetaHeroPhrase(firstH1Text(html))) return true;
+  if (!hasPhotoHero(html)) return true;
+  if (!hasContactCta(html)) return true;
+  if (!hasLegalChrome(html)) return true;
+  if (brieflyRejectsOnlineCheckout(prompt) && hasForbiddenCartUi(html)) return true;
+  if (isUnacceptableAgencyHtml(html, prompt) && html.length < 25000) return true;
+  if (/src=["']\s*["']/i.test(html)) return true;
+  if (/<img[^>]+src=["'][^"']*CREAUNA/i.test(html)) return true;
+  return false;
 }
 
 async function applyImages(
@@ -603,6 +828,26 @@ async function applyImages(
   const visual = /fashion|beauty|jewelry|tattoo|luxury|wig|peluca|boutique|bridal|novia|bike|bicicleta|ciclismo|mtb/i.test(
     pack.variant + ' ' + prompt
   );
+  const { isBarbershopContext } = await import('./businessProfiles');
+  // Barbería: NUNCA fal/Gemini moda — solo banco barber (Desktop/barberia.html)
+  if (isBarbershopContext(prompt, html)) {
+    const { IMAGE_BANK } = await import('./imageBank');
+    const { hardenSiteImages, ensureHeroPhoto, ensureAboutPhoto, ensureMinimumGallery, reliableImagePool } =
+      await import('./hardenSiteImages');
+    const { applyBarbershopSectorImages } = await import('./polishCatalogLayout');
+    const pool = reliableImagePool([
+      IMAGE_BANK.barber.hero,
+      IMAGE_BANK.barber.about,
+      ...IMAGE_BANK.barber.gallery,
+      ...pack.urls,
+    ]);
+    let out = hardenSiteImages(html, pool);
+    out = ensureHeroPhoto(out, IMAGE_BANK.barber.hero);
+    out = ensureAboutPhoto(out, IMAGE_BANK.barber.about);
+    out = ensureMinimumGallery(out, pool);
+    out = applyBarbershopSectorImages(out);
+    return { html: out, falImages: 0 };
+  }
   // Siempre rellenar con fal/Gemini si hay claves: nunca entregar stock roto / huecos.
   const ensured = await ensureVisibleSiteImages(html, pack.urls, brief, {
     maxAiImages: visual ? 6 : 4,
@@ -735,6 +980,64 @@ export async function runAgencyPipeline(
   const plan = buildAgencyPlanFromBrief(prompt, lang);
   const pack = buildBriefImagePack(prompt, lang, opts?.clientImageUrls);
   const businessName = plan.businessName;
+
+  // === CREATIVE DIRECTOR (primary path — techo de calidad) ===
+  try {
+    const { runCreativePipeline } = await import('./creative/runCreativePipeline');
+    const creative = await runCreativePipeline(prompt, lang, {
+      clientImageUrls: opts?.clientImageUrls,
+      scoreFloor: 90,
+      maxRevisions: 3,
+    });
+    if (creative.html && creative.html.length > 8000) {
+      const mergedPlan: AgencySitePlan = {
+        ...plan,
+        businessName: creative.brief.businessName || plan.businessName,
+        heroTitle: creative.brief.heroTitle,
+        heroSubtitle: creative.brief.heroSubtitle,
+        primaryCta: creative.brief.primaryCta,
+        secondaryCta: creative.brief.secondaryCta,
+        specialties: creative.brief.services,
+        address: creative.brief.address || plan.address,
+        fonts: {
+          heading: creative.dna.typography.heading,
+          body: creative.dna.typography.body,
+          button: creative.dna.typography.button,
+        },
+        colors: {
+          accent: creative.dna.palette.accent,
+          dark: creative.dna.palette.dark,
+          light: creative.dna.palette.light,
+        },
+        styleNotes: [
+          ...plan.styleNotes,
+          creative.brief.rationale,
+          `layout:${creative.selection.layout.id}`,
+          `dna:${creative.dna.id}`,
+          `rubric:${creative.rubric.total}`,
+        ],
+        summaryEs: `${plan.summaryEs} · Director Creativo ${creative.rubric.total}/100`,
+      };
+      return {
+        ok: true,
+        previewSections: [{ id: 101, type: 'fullpage', html: creative.html }],
+        businessName: creative.brief.businessName || businessName,
+        message:
+          lang === 'es'
+            ? `He diseñado tu web como Director Creativo (${creative.rubric.total}/100). Layout «${creative.selection.layout.name}». Si quieres cambiar algo, dímelo.`
+            : `Designed as Creative Director (${creative.rubric.total}/100). Layout “${creative.selection.layout.name}”. Ask for any change.`,
+        source: 'rules',
+        motorsUsed: ['code', 'visual', 'copy', 'ux'],
+        providersUsed: ['creative_director'],
+        pipelineStage: 'agency_pipeline',
+        templateSlug: 'creative-director',
+        plan: mergedPlan,
+      };
+    }
+  } catch (err) {
+    console.warn('[agencyPipeline] creative director failed, falling back', err);
+  }
+
   const finishWithDeterministic = async (
     _reason: string,
     provider: AiProvider | 'rules' = 'rules'
@@ -742,18 +1045,7 @@ export async function runAgencyPipeline(
     let html = buildDeterministicAgencyHtml(plan, pack, prompt, lang);
     const imaged = await applyImages(html, prompt, lang, pack, opts?.clientImageUrls);
     html = polishHeroHtml(imaged.html, plan, pack, prompt, lang);
-    const { injectSiteChrome } = await import('./siteChrome');
-    html = injectSiteChrome(html, {
-      prompt: prompt + '\n WhatsApp legales redes sociales scroll up',
-      lang,
-      businessName,
-    });
-    const { polishCatalogLayout } = await import('./polishCatalogLayout');
-    html = polishCatalogLayout(html, {
-      prompt,
-      packUrls: pack.urls,
-      variant: pack.variant,
-    });
+    html = await finalizeAgencyHtml(html, prompt, lang, businessName, pack);
     return deliverHtml(
       html,
       plan,
@@ -765,6 +1057,14 @@ export async function runAgencyPipeline(
       ''
     );
   };
+
+  // Barbería legacy solo si el Director Creativo no entregó
+  if (isBarbershopPrompt(prompt)) {
+    return finishWithDeterministic(
+      lang === 'es' ? 'barbería con fotos de sector' : 'barbershop with sector photos',
+      'rules'
+    );
+  }
 
   if (!getConfiguredProviders().length) {
     // Sin IA: igual entregamos web densamente construida desde el brief
@@ -779,13 +1079,14 @@ export async function runAgencyPipeline(
 
 ENTREGA: un documento HTML completo, responsive, ultra-premium, fiel al brief.
 - Identidad visual del sector real (bicicletas ≠ moda; etc.).
-- Catálogo sin e-commerce si el brief lo dice: precios + WhatsApp / Solicitar info. NUNCA carrito/Stripe/Comprar.
+- Catálogo sin e-commerce si el brief lo dice: precios + contacto / WhatsApp solo si lo pide. NUNCA carrito/Stripe/Comprar.
 - Hero con foto real del sector, altura ~70vh (máx. 820px), título y CTAs visibles sin scroll. PROHIBIDO hero vacío o pantallazo de color.
-- HTML denso (ideal >40KB). Devuelve SOLO el HTML, sin markdown.`
+- HTML denso (ideal >40KB). Devuelve SOLO el HTML, sin markdown.
+- WhatsApp flotante SOLO si el brief lo pide explícitamente.`
       : `${constructorSystemPreamble('en')}
 
 DELIVER: one complete ultra-premium HTML document from the brief only.
-Catalogue without cart if asked. Photo hero required. Return ONLY HTML.`;
+Catalogue without cart if asked. Photo hero required. WhatsApp FAB only if asked. Return ONLY HTML.`;
 
   const assets = `\n\nAssets de imagen sugeridos (puedes usar Unsplash/Pexels; prioriza estas si encajan):\n${pack.briefBlock}`;
 
@@ -865,70 +1166,20 @@ HTML previo:\n${html.slice(0, 50000)}`
     }
   }
 
-  // Imágenes + pulido — HTML denso tipo Qwen (CSS propio >35KB): toque ligero, no machacar
+  // Imágenes + chrome forzado + gate final (mismo path denso o no)
   const denseAi =
     html.length > 35000 && /<\/html>/i.test(html) && /<h1\b/i.test(html);
 
-  if (denseAi) {
-    const imaged = await applyImages(html, prompt, lang, pack, opts?.clientImageUrls);
-    html = imaged.html;
-    const { injectSiteChrome } = await import('./siteChrome');
-    html = injectSiteChrome(html, {
-      prompt: prompt + (promptWantsChrome(prompt) ? '' : '\n legales WhatsApp'),
-      lang,
-      businessName,
-    });
-    const { polishCatalogLayout } = await import('./polishCatalogLayout');
-    html = polishCatalogLayout(html, {
-      prompt,
-      packUrls: pack.urls,
-      variant: pack.variant,
-    });
-    return deliverHtml(
-      html,
-      plan,
-      businessName,
-      lang,
-      provider,
-      imaged.falImages,
-      imaged.falImages ? 'hybrid' : 'ai',
-      ''
-    );
-  }
-
   const imaged = await applyImages(html, prompt, lang, pack, opts?.clientImageUrls);
-  html = polishHeroHtml(imaged.html, plan, pack, prompt, lang);
-  const { injectSiteChrome } = await import('./siteChrome');
-  html = injectSiteChrome(html, { prompt, lang, businessName });
-  {
-    const { polishCatalogLayout } = await import('./polishCatalogLayout');
-    html = polishCatalogLayout(html, {
-      prompt,
-      packUrls: pack.urls,
-      variant: pack.variant,
-    });
-  }
+  html = denseAi ? imaged.html : polishHeroHtml(imaged.html, plan, pack, prompt, lang);
+  html = await finalizeAgencyHtml(html, prompt, lang, businessName, pack);
 
-  const finalIssues = verifyDeterministic(html, plan, prompt);
-  const unacceptable = isUnacceptableAgencyHtml(html, prompt);
-  const metaH1 = isMetaHeroPhrase(firstH1Text(html));
-  const noPhoto = !hasPhotoHero(html);
-  const criticalFail =
-    !html ||
-    html.length < 12000 ||
-    isSkeletonLanding(html) ||
-    (unacceptable && html.length < 25000) ||
-    metaH1 ||
-    noPhoto;
-
-  if (criticalFail) {
+  if (failsAgencyDeliveryGate(html, prompt)) {
     return finishWithDeterministic(
       lang === 'es' ? 'versión premium garantizada' : 'guaranteed premium version',
       provider
     );
   }
-
-  void finalIssues;
 
   return deliverHtml(
     html,
@@ -942,8 +1193,69 @@ HTML previo:\n${html.slice(0, 50000)}`
   );
 }
 
-function promptWantsChrome(prompt: string): boolean {
-  return /whatsapp|aviso\s+legal|privacidad|cookies|redes\s+sociales|scroll|chat|blog|buscador|carrusel/i.test(
-    prompt
-  );
+/** Chrome + catálogo + gate de imágenes (legales siempre; WA solo si el brief lo pide). */
+async function finalizeAgencyHtml(
+  html: string,
+  prompt: string,
+  lang: 'es' | 'en',
+  businessName: string,
+  pack: BriefImagePack
+): Promise<string> {
+  const { injectSiteChrome } = await import('./siteChrome');
+  let out = injectSiteChrome(html, {
+    prompt: withAgencyChromePrompt(prompt),
+    lang,
+    businessName,
+  });
+  const { polishCatalogLayout } = await import('./polishCatalogLayout');
+  out = polishCatalogLayout(out, {
+    prompt,
+    packUrls: pack.urls,
+    variant: pack.variant,
+  });
+  const { gateProfessionalImages } = await import('./hardenSiteImages');
+  const { IMAGE_BANK } = await import('./imageBank');
+  const bakeryPool = [
+    IMAGE_BANK.bakery.hero,
+    ...IMAGE_BANK.bakery.bread,
+    ...IMAGE_BANK.bakery.pastry,
+    ...IMAGE_BANK.bakery.cakes,
+    ...IMAGE_BANK.bakery.gallery,
+  ];
+  const corporatePool = [
+    IMAGE_BANK.corporate.hero,
+    IMAGE_BANK.corporate.team,
+    IMAGE_BANK.corporate.madrid,
+    ...IMAGE_BANK.corporate.office,
+    ...IMAGE_BANK.corporate.gallery,
+  ];
+  const barberPool = [
+    IMAGE_BANK.barber.hero,
+    IMAGE_BANK.barber.about,
+    ...IMAGE_BANK.barber.gallery,
+  ];
+  const { isBarbershopContext } = await import('./businessProfiles');
+  const pool =
+    isBarbershopContext(prompt, out)
+      ? [...barberPool, ...pack.urls.filter((u) => /^https?:\/\//i.test(u))]
+      : pack.variant === 'corporate'
+        ? [...corporatePool, ...pack.urls.filter((u) => /^https?:\/\//i.test(u))]
+        : pack.urls.length > 0
+          ? pack.urls.filter((u) => /^https?:\/\//i.test(u))
+          : pack.variant === 'bakery'
+            ? bakeryPool
+            : [...corporatePool, ...bakeryPool];
+  let gated = gateProfessionalImages(out, pool);
+  out = gated.html;
+  // Tras gate: volver a forzar banco barber (Unsplash moda es “trusted” y harden no lo toca)
+  if (isBarbershopContext(prompt, out)) {
+    const { applyBarbershopSectorImages, fixGoogleMapsEmbeds } = await import('./polishCatalogLayout');
+    out = applyBarbershopSectorImages(out);
+    out = fixGoogleMapsEmbeds(
+      out,
+      prompt.match(/Calle\s+[^\n]+/i)?.[0] ||
+        'Calle Alto del León, 2, Puente de Vallecas, 28038 Madrid'
+    );
+  }
+  return out;
 }

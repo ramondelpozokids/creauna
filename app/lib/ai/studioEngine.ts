@@ -1,6 +1,18 @@
 import { chatCompletion, type MotorId } from './providers';
 import { generateInitialSite, generateInitialSiteFromDiscovery } from './siteGenerator';
-import { rewriteFullPageFromRequest } from './promptFirstSiteGenerator';
+import { rewriteFullPageFromRequest, rebuildFullPageFromChangeRequest } from './promptFirstSiteGenerator';
+import {
+  parseInsertSectionRequest,
+  applySurgicalSectionInsert,
+  applySurgicalDelta,
+  changeRequestMarkers,
+  htmlHasChangeMarkers,
+} from './surgicalSectionChange';
+import {
+  extractCreativeMeta,
+  preserveCreativeMeta,
+  shouldBlockFullRebuild,
+} from './creative/preserveDnaChange';
 import { isSiteBuildPrompt, isCosmeticPrompt, shouldGenerateFullSite, isExistingSiteSections } from './intentAnalyzer';
 import { applyVisualEnhancement, applyStrongVisualEnhancement, isCorporatePreviewSite, rebuildCorporatePreviewSections } from './siteSections';
 import { validateSectionHtml } from '../studio/sectionValidator';
@@ -486,25 +498,155 @@ async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerate
 
   if (isFullPagePreview(input.previewSections)) {
     const full = input.previewSections.find((s) => s.type === 'fullpage') ?? input.previewSections[0];
+    const markers = changeRequestMarkers(input.prompt);
+    const insertReq = parseInsertSectionRequest(input.prompt);
+    const creativeMeta = extractCreativeMeta(full.html);
+
+    // 1) Delta quirúrgico (insertar sección y/o parchear hero) — sin rewrite completo
+    {
+      const delta = applySurgicalDelta(full.html, input.prompt, input.lang, {
+        imageUrls: input.clientImageUrls,
+      });
+      if (delta.ok) {
+        const patchedHtml = preserveCreativeMeta(delta.html, creativeMeta);
+        const validation = validateSectionHtml(patchedHtml, full.id, full.type);
+        if (validation.ok) {
+          const partsEs: string[] = [];
+          const partsEn: string[] = [];
+          if (delta.didInsert && delta.title) {
+            const placeEs = insertReq?.beforeLabel
+              ? insertReq.afterLabel
+                ? `entre «${insertReq.afterLabel}» y «${insertReq.beforeLabel}»`
+                : `antes de «${insertReq.beforeLabel}»`
+              : insertReq?.afterLabel
+                ? `después de «${insertReq.afterLabel}»`
+                : '';
+            partsEs.push(
+              placeEs
+                ? `He añadido «${delta.title}» ${placeEs}`
+                : `He añadido «${delta.title}»`
+            );
+            partsEn.push(`Added “${delta.title}”`);
+          }
+          if (delta.didHero) {
+            partsEs.push('actualicé el hero');
+            partsEn.push('updated the hero');
+          }
+          return {
+            message:
+              input.lang === 'es'
+                ? `${partsEs.join(' y ')}, sin tocar el resto.`
+                : `${partsEn.join(' and ')}, leaving the rest intact.`,
+            previewSections: patchSection(cloneSections(input.previewSections), full.id, patchedHtml),
+            motorsUsed: ['code', 'ux'],
+            source: 'rules',
+            changedSectionIds: [full.id],
+            pipelineStage: 'rules',
+            providersUsed: ['surgical_delta'],
+          };
+        }
+      }
+    }
+
+    // 2) Rewrite IA (solo si el resultado incluye los marcadores del pedido)
     const rewritten = await rewriteFullPageFromRequest(full.html, input.prompt, input.lang, {
       clientImageUrls: input.clientImageUrls,
     });
-    if (!rewritten.html) return null;
-    const validation = validateSectionHtml(rewritten.html, full.id, full.type);
-    if (!validation.ok) return null;
-    return {
-      message:
-        input.lang === 'es'
-          ? 'Cambio aplicado sobre tu diseño, según tu pedido.'
-          : 'Change applied on your design, per your request.',
-      previewSections: patchSection(cloneSections(input.previewSections), full.id, rewritten.html),
-      motorsUsed: ['visual', 'code'],
-      source: rewritten.falImages ? 'hybrid' : 'ai',
-      changedSectionIds: [full.id],
-      pipelineStage: 'prompt_first',
-      falImages: rewritten.falImages,
-      providersUsed: [rewritten.provider],
-    };
+    if (rewritten.html) {
+      const rewrittenHtml = preserveCreativeMeta(rewritten.html, creativeMeta);
+      const markersOk = htmlHasChangeMarkers(rewrittenHtml, markers);
+      const validation = validateSectionHtml(rewrittenHtml, full.id, full.type);
+      if (validation.ok && markersOk) {
+        return {
+          message:
+            input.lang === 'es'
+              ? rewritten.repaired
+                ? 'Cambio aplicado y reparado sobre tu diseño.'
+                : 'Cambio aplicado sobre tu diseño, según tu pedido.'
+              : rewritten.repaired
+                ? 'Change applied and repaired on your design.'
+                : 'Change applied on your design, per your request.',
+          previewSections: patchSection(cloneSections(input.previewSections), full.id, rewrittenHtml),
+          motorsUsed: ['visual', 'code'],
+          source: rewritten.falImages ? 'hybrid' : 'ai',
+          changedSectionIds: [full.id],
+          pipelineStage: 'prompt_first',
+          falImages: rewritten.falImages,
+          providersUsed: [rewritten.provider],
+        };
+      }
+
+      // Rewrite devolvió HTML válido pero SIN el cambio pedido → reintentar surgical sobre original
+      if (insertReq && !markersOk) {
+        const surgicalRetry = applySurgicalSectionInsert(full.html, insertReq, input.lang, {
+          imageUrls: input.clientImageUrls,
+        });
+        if (surgicalRetry.ok) {
+          const retryHtml = preserveCreativeMeta(surgicalRetry.html, creativeMeta);
+          const validation = validateSectionHtml(retryHtml, full.id, full.type);
+          if (validation.ok) {
+            return {
+              message:
+                input.lang === 'es'
+                  ? `He insertado «${insertReq.title}» de forma precisa (el rewrite no aplicó el pedido).`
+                  : `Inserted “${insertReq.title}” precisely (rewrite missed the request).`,
+              previewSections: patchSection(
+                cloneSections(input.previewSections),
+                full.id,
+                retryHtml
+              ),
+              motorsUsed: ['code', 'ux'],
+              source: 'rules',
+              changedSectionIds: [full.id],
+              pipelineStage: 'rules',
+              providersUsed: ['surgical_insert'],
+            };
+          }
+        }
+      }
+    }
+
+    // 3) Fallback rebuild — BLOQUEADO si hay DesignDna (Fase 8) salvo rediseño total explícito
+    if (shouldBlockFullRebuild(full.html, input.prompt)) {
+      return {
+        message:
+          input.lang === 'es'
+            ? 'Tu web tiene Design DNA. Indica el cambio concreto (texto, foto, sección) y lo aplico sin destruir el diseño. Si quieres un rediseño total, dilo explícitamente.'
+            : 'Your site has Design DNA. Specify a concrete change (copy, photo, section) and I will apply it without destroying the design. Ask explicitly for a full redesign if needed.',
+        previewSections: cloneSections(input.previewSections),
+        motorsUsed: ['ux'],
+        source: 'rules',
+        changedSectionIds: [],
+        pipelineStage: 'rules',
+        providersUsed: ['preserve_dna'],
+      };
+    }
+
+    // 3b) Rebuild fullpage desde brief sintético + pedido
+    const rebuilt = await rebuildFullPageFromChangeRequest(full.html, input.prompt, input.lang, {
+      clientImageUrls: input.clientImageUrls,
+    });
+    if (rebuilt.ok && rebuilt.previewSections[0]?.html) {
+      const html = rebuilt.previewSections[0].html;
+      const validation = validateSectionHtml(html, full.id, 'fullpage');
+      const markersOk = htmlHasChangeMarkers(html, markers);
+      if (validation.ok && (markersOk || markers.length === 0)) {
+        return {
+          message:
+            input.lang === 'es'
+              ? 'He reconstruido tu web aplicando el cambio pedido.'
+              : 'Rebuilt your site applying the requested change.',
+          previewSections: patchSection(cloneSections(input.previewSections), full.id, html),
+          motorsUsed: rebuilt.motorsUsed,
+          source: rebuilt.source,
+          changedSectionIds: [full.id],
+          pipelineStage: rebuilt.pipelineStage,
+          falImages: rebuilt.falImages,
+          providersUsed: rebuilt.providersUsed,
+        };
+      }
+    }
+    return null;
   }
 
   const target = targetSection(input);
@@ -764,6 +906,23 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
 
   const aiResult = await applyAIChange(input);
   if (aiResult) return aiResult;
+
+  // Fullpage: nunca maquillaje cosmético si el rewrite/rebuild falló
+  if (isFullPagePreview(input.previewSections)) {
+    const health = getEngineHealth();
+    return {
+      message:
+        input.lang === 'es'
+          ? 'No pude aplicar ese cambio sobre tu web completa. Reformúlalo (qué sección, qué color, qué texto) y lo intento de nuevo.'
+          : 'Could not apply that change on your full site. Rephrase (which section, color, copy) and I will try again.',
+      previewSections: cloneSections(input.previewSections),
+      motorsUsed: [],
+      source: 'rules',
+      changedSectionIds: [],
+      pipelineStage: health.aiEnabled ? 'rules_fallback' : 'rules_only',
+      aiSkippedReason: health.aiEnabled ? 'ai_parse_failed' : 'no_api_keys',
+    };
+  }
 
   const health = getEngineHealth();
   const target = targetSection(input);

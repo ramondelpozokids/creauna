@@ -73,6 +73,21 @@ export const IMAGE_BANK = {
     gallery: [sq(3992858), sq(373834), sq(3993449), sq(3992219), sq(3992876), sq(3992870)],
     services: [p(3993449, 600, 400), p(373834, 600, 400), p(3992876, 600, 400), p(3992219, 600, 400)],
   },
+  /** Barbería — URLs exactas de referencia (Desktop/barberia.html). Nunca moda. */
+  barber: {
+    hero: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1920&q=80',
+    about: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&q=80',
+      'https://images.unsplash.com/photo-1503951914875-452162b7f30a?w=600&q=80',
+      'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80',
+      'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80',
+      'https://images.unsplash.com/photo-1512864084360-7c0c4d0ce038?w=600&q=80',
+      'https://images.unsplash.com/photo-1620331311520-246429473913?w=600&q=80',
+    ],
+    shop: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1200&q=80',
+    tools: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80',
+  },
   corporate: {
     hero: u('1497366216548-37526070297c', 1600, 900),
     madrid: p(3379864, 1600, 900),
@@ -247,6 +262,61 @@ export const IMAGE_BANK = {
       sq(291762, 800),
     ],
   },
+  /** Clínica dental / salud premium */
+  clinic: {
+    hero: u('1629909613654-28e377c37b09', 1600, 900),
+    about: u('1519494026892-80bbd2d6fd0d', 900, 1100),
+    gallery: [
+      u('1606811841689-23dfddce3e95', 900, 600),
+      u('1588776814546-1ffcf47267a5', 900, 600),
+      u('1629909615184-74f495363b67', 900, 600),
+      p(3779703, 900, 600),
+      p(3845625, 900, 600),
+      p(3845810, 900, 600),
+    ],
+    services: [p(3779703, 600, 400), p(3845625, 600, 400), u('1606811841689-23dfddce3e95', 600, 400)],
+  },
+  /** Abogados / legal */
+  legal: {
+    hero: u('1589829545856-d10d557cf95f', 1600, 900),
+    about: u('1450101499163-c8848c66ca85', 900, 1100),
+    gallery: [
+      u('1497366811353-68707447154d', 900, 600),
+      u('1454165804606-c3d57bc86b40', 900, 600),
+      p(5668858, 900, 600),
+      p(5668473, 900, 600),
+      p(7873557, 900, 600),
+      u('1521791136064-622dba8850ea', 900, 600),
+    ],
+  },
+  /** Hotel boutique / hospitality */
+  hotel: {
+    hero: u('1566073771259-6a8506099945', 1600, 900),
+    about: u('1611892440504-42a792e24d32', 900, 1100),
+    gallery: [
+      u('1631049307264-da0ec9d70304', 900, 600),
+      u('1590490360182-c33d57733427', 900, 600),
+      u('1582719478250-c89cae4dc85b', 900, 600),
+      p(258154, 900, 600),
+      p(271624, 900, 600),
+      p(1838550, 900, 600),
+    ],
+    rooms: [u('1631049307264-da0ec9d70304', 800, 1000), u('1611892440504-42a792e24d32', 800, 1000)],
+  },
+  /** Arquitectura / estudio */
+  architecture: {
+    hero: u('1487958449943-2429e8be8625', 1600, 900),
+    about: u('1503387762-592deb58ef4e', 900, 1100),
+    gallery: [
+      u('1511818966892-1b0f8d4c0f3d', 900, 600),
+      u('1600607687939-ce8a6c25118c', 900, 600),
+      u('1600585154340-be6161a56a0c', 900, 600),
+      p(323780, 900, 600),
+      p(1396122, 900, 600),
+      p(1571460, 900, 600),
+    ],
+    projects: [u('1487958449943-2429e8be8625', 900, 1100), u('1600607687939-ce8a6c25118c', 900, 1100)],
+  },
 } as const;
 
 export type ImageBankCategory = keyof typeof IMAGE_BANK;
@@ -254,6 +324,7 @@ export type ImageBankEntry = (typeof IMAGE_BANK)[ImageBankCategory];
 
 export function imagesForVariant(variant: string): ImageBankEntry {
   if (variant === 'bakery') return IMAGE_BANK.bakery;
+  if (variant === 'barber') return IMAGE_BANK.barber;
   if (variant in IMAGE_BANK) return IMAGE_BANK[variant as ImageBankCategory];
   return IMAGE_BANK.default;
 }
