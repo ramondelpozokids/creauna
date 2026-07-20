@@ -336,7 +336,7 @@ export async function runLlmCreativeDirector(
       brief.rationale = `${brief.rationale} · provider=${result.provider}`;
       return {
         brief,
-        provider: result.provider === 'rules' ? 'rules' : result.provider,
+        provider: result.provider,
         source: 'llm',
       };
     }
