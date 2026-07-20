@@ -66,3 +66,11 @@ Hechos del brief, `IMAGE_BANK` como pool, chrome legales/WA gate, demos como tec
 npm run benchmark:agency-100
 npx tsx scripts/verify-creative-director.ts
 ```
+
+## Siguiente (techo visual)
+
+Con gates automáticos en verde, el foco pasa a calidad percibida (no más parches de exports):
+
+1. Enriquecer variantes reales de Hero/composición (menos “Lego”, más asimetría).
+2. Calibrar juez con demos de techo (`public/demos/clientes/`) sin clonar páginas.
+3. Probar en Studio 5 briefs ciegos y revisar HTML en `tmp/benchmark/`.
