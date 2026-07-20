@@ -92,8 +92,11 @@ function visualVertical(brief: SiteBrief, packVariant?: string): boolean {
   const blob = `${brief.businessType} ${brief.userPrompt} ${packVariant || ''}`.toLowerCase();
   if (/bicicleta|ciclismo|\bmtb\b|e-?bike|bike/i.test(blob)) return true;
   if (/panader|bollería|bolleria|pasteler|bakery|masa madre|sourdough|trigo dorado/i.test(blob)) return true;
-  return /fashion|moda|beauty|jewelry|tattoo|luxury|wig|peluca|boutique|bridal|novia/i.test(blob) &&
-    !/accesorios\s+de\s+cicl|casco|mtb/i.test(blob);
+  return (
+    /fashion|moda|jewelry|tattoo|luxury|wig|peluca|boutique|bridal|novia/i.test(blob) &&
+    !/barber|caballero|peluquer[ií]a\s+de\s+caballer/i.test(blob) &&
+    !/accesorios\s+de\s+cicl|casco|mtb/i.test(blob)
+  );
 }
 
 /**
@@ -121,8 +124,51 @@ export async function ensureVisibleSiteImages(
 
   const maxAi = Math.min(Math.max(opts?.maxAiImages ?? 6, 0), 8);
   const visual = visualVertical(brief, undefined);
-  const refHero = (opts?.clientImageUrls || []).find((u) => u.startsWith('data:image'));
+  // data: solo como ref de edición en moda; gestoría/corporate usa banco de oficina
+  const isCorporateish = /corporate|gestor|asesor|fiscal|despacho|ledger/i.test(
+    `${brief.variant} ${brief.userPrompt || ''}`
+  );
+  const isBarberish =
+    /barber|peluquer|caballero|afeitad|grooming/i.test(`${brief.variant} ${brief.userPrompt || ''}`) &&
+    !/canina|dog|pet/i.test(brief.userPrompt || '');
+  const refHero = isCorporateish || isBarberish
+    ? undefined
+    : (opts?.clientImageUrls || []).find((u) => u.startsWith('data:image'));
   const canAi = isFalImagesEnabled() || isProviderConfigured('gemini');
+
+  // Gestoría / corporate: solo banco de oficina — nunca IA moda/lifestyle
+  if (isCorporateish) {
+    const { IMAGE_BANK } = await import('./imageBank');
+    const { ensureHeroPhoto, ensureAboutPhoto } = await import('./hardenSiteImages');
+    const pool = reliableImagePool([
+      ...packUrls,
+      IMAGE_BANK.corporate.hero,
+      IMAGE_BANK.corporate.team,
+      ...IMAGE_BANK.corporate.office,
+      ...IMAGE_BANK.corporate.gallery,
+    ]);
+    out = hardenSiteImages(out, pool);
+    if (pool[0]) out = ensureHeroPhoto(out, pool[0]);
+    if (pool[1] || pool[0]) out = ensureAboutPhoto(out, pool[1] || pool[0]);
+    return { html: out, aiImages: 0, source: 'bank' };
+  }
+
+  // Barbería: solo banco barber — nunca IA moda
+  if (isBarberish) {
+    const { IMAGE_BANK } = await import('./imageBank');
+    const { ensureHeroPhoto, ensureAboutPhoto, ensureMinimumGallery } = await import('./hardenSiteImages');
+    const pool = reliableImagePool([
+      ...packUrls,
+      IMAGE_BANK.barber.hero,
+      IMAGE_BANK.barber.about,
+      ...IMAGE_BANK.barber.gallery,
+    ]);
+    out = hardenSiteImages(out, pool);
+    if (pool[0]) out = ensureHeroPhoto(out, IMAGE_BANK.barber.hero);
+    out = ensureAboutPhoto(out, IMAGE_BANK.barber.about);
+    out = ensureMinimumGallery(out, pool);
+    return { html: out, aiImages: 0, source: 'bank' };
+  }
 
   const fragileCount = extractImgSrcs(out).filter(needsAiReplacement).length;
   const imgCount = (out.match(/<img\b/gi) || []).length;

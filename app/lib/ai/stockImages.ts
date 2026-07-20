@@ -27,7 +27,8 @@ export const FRAGILE_STOCK_HOST =
 
 export function isTrustedStockUrl(url: string): boolean {
   if (!url) return false;
-  if (url.startsWith('data:image/')) return true;
+  // data: no es stock usable en entrega (pesado / irrelevante); solo fallback onerror
+  if (url.startsWith('data:')) return false;
   return TRUSTED_STOCK_HOST.test(url);
 }
 

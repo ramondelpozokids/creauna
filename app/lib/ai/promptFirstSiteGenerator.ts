@@ -91,7 +91,7 @@ async function applyFalToFullPage(
 }
 
 /** Para HTML grandes: CSS :root + head + hero + pedido, no cortar a 28KB a ciegas. */
-function packHtmlForRewrite(currentHtml: string, maxChars = 70000): string {
+export function packHtmlForRewrite(currentHtml: string, maxChars = 70000): string {
   if (currentHtml.length <= maxChars) return currentHtml;
   const head = currentHtml.match(/<head[\s\S]*?<\/head>/i)?.[0] ?? currentHtml.slice(0, 8000);
   const style =

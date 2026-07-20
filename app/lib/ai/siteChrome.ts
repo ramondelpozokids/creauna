@@ -4,6 +4,12 @@
  * Datos de contacto: solo del brief / opts — nunca teléfono demo inventado.
  */
 
+import {
+  promptWantsWhatsApp,
+  withAgencyChromePrompt,
+  AGENCY_LEGAL_FORCE_SUFFIX as POLICY_LEGAL_SUFFIX,
+} from './agencyChromePolicy';
+
 export type SiteModuleId =
   | 'legal'
   | 'widgets'
@@ -46,9 +52,15 @@ const MODULE_PATTERNS: Record<SiteModuleId, RegExp> = {
 };
 
 export function detectRequestedModules(prompt: string): SiteModuleId[] {
-  return (Object.keys(MODULE_PATTERNS) as SiteModuleId[]).filter((id) =>
-    MODULE_PATTERNS[id].test(prompt)
-  );
+  return (Object.keys(MODULE_PATTERNS) as SiteModuleId[]).filter((id) => {
+    if (id === 'widgets') {
+      const wantsScroll =
+        /scroll[\s_-]*up|scoll|volver\s+arriba|bot[oó]n\s+arriba/i.test(prompt);
+      // «Sin WhatsApp» no debe activar el FAB
+      return promptWantsWhatsApp(prompt) || wantsScroll;
+    }
+    return MODULE_PATTERNS[id].test(prompt);
+  });
 }
 
 export function promptWantsSiteChrome(prompt: string): boolean {
@@ -57,6 +69,17 @@ export function promptWantsSiteChrome(prompt: string): boolean {
 
 /** @deprecated alias */
 export const promptWantsModules = promptWantsSiteChrome;
+
+/**
+ * Sufijo que fuerza solo legales de baseline profesional (RGPD).
+ * WhatsApp, redes y scroll: SOLO si el cliente los pide en el brief.
+ */
+export const AGENCY_LEGAL_FORCE_SUFFIX = POLICY_LEGAL_SUFFIX;
+
+/** @deprecated usar AGENCY_LEGAL_FORCE_SUFFIX */
+export const AGENCY_CHROME_FORCE_SUFFIX = AGENCY_LEGAL_FORCE_SUFFIX;
+
+export { promptWantsWhatsApp, withAgencyChromePrompt };
 
 function normalizePhone(raw: string): string | undefined {
   const digits = raw.replace(/\D/g, '');
@@ -199,128 +222,226 @@ function legalModals(brand: string, lang: 'es' | 'en', contact: ClientContact): 
   links: string;
   dialogsAndScript: string;
 } {
-  const titular = contact.legalName || brand;
-  const extrasEs = [
-    contact.cif ? `CIF/NIF: ${contact.cif}.` : '',
-    contact.address ? `Domicilio: ${contact.address}.` : '',
-    contact.email ? `Email: ${contact.email}.` : '',
-    contact.phone ? `Teléfono: +${contact.phone}.` : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-  const extrasEn = [
-    contact.cif ? `Tax ID: ${contact.cif}.` : '',
-    contact.address ? `Address: ${contact.address}.` : '',
-    contact.email ? `Email: ${contact.email}.` : '',
-    contact.phone ? `Phone: +${contact.phone}.` : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const titular = (contact.legalName || brand).replace(/'/g, "\\'");
+  const address = (contact.address || '').replace(/'/g, "\\'");
+  const email = (contact.email || '').replace(/'/g, "\\'");
+  const phone = contact.phone
+    ? contact.phone.startsWith('34')
+      ? contact.phone.replace(/^34/, '').replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4')
+      : contact.phone
+    : '';
+  const phoneDisp = phone || '';
+  const emailDisp = email || '';
+  const addrDisp = address || '';
 
-  const pages =
-    lang === 'es'
-      ? [
-          {
-            id: 'aviso',
-            title: 'Aviso legal',
-            body: `<p>Titular: <strong>${titular}</strong>. ${extrasEs}</p><p>Sitio informativo y de catálogo. No se realizan compras ni pagos online en esta web. Queda prohibida la reproducción sin autorización.</p>`,
-          },
-          {
-            id: 'privacidad',
-            title: 'Política de privacidad',
-            body: `<p>Tratamos datos (nombre, email, teléfono) para responder consultas y encargos conforme al RGPD/LOPDGDD.</p><p>Derechos de acceso, rectificación y supresión${contact.email ? ` vía ${contact.email}` : ' vía el email de contacto'}.</p>`,
-          },
-          {
-            id: 'cookies',
-            title: 'Política de cookies',
-            body: `<p>Cookies técnicas necesarias y, con consentimiento, analíticas. Puede configurar o rechazar cookies no esenciales en el navegador.</p>`,
-          },
-          {
-            id: 'accesibilidad',
-            title: 'Accesibilidad',
-            body: `<p>Buscamos cumplimiento WCAG 2.1 AA (contraste, navegación por teclado, textos alternativos). Si detecta barreras, contáctenos.</p>`,
-          },
-        ]
-      : [
-          {
-            id: 'aviso',
-            title: 'Legal notice',
-            body: `<p>Owner: <strong>${titular}</strong>. ${extrasEn}</p><p>Informative catalogue site. No online payments.</p>`,
-          },
-          {
-            id: 'privacidad',
-            title: 'Privacy policy',
-            body: `<p>We process contact data to answer enquiries under applicable law.${contact.email ? ` Contact: ${contact.email}.` : ''}</p>`,
-          },
-          {
-            id: 'cookies',
-            title: 'Cookie policy',
-            body: `<p>Essential technical cookies and optional analytics with consent.</p>`,
-          },
-          {
-            id: 'accesibilidad',
-            title: 'Accessibility',
-            body: `<p>We aim for WCAG 2.1 AA. Contact us if you find barriers.</p>`,
-          },
-        ];
+  const pagesEs: Record<string, { title: string; content: string }> = {
+    aviso: {
+      title: 'Aviso Legal',
+      content: `
+      <h3>1. Datos identificativos</h3>
+      <p>En cumplimiento del deber de información recogido en el artículo 10 de la Ley 34/2002 (LSSICE), se informan los siguientes datos:</p>
+      <ul>
+        <li>Titular: ${titular}</li>
+        ${addrDisp ? `<li>Domicilio: ${addrDisp}</li>` : ''}
+        ${phoneDisp ? `<li>Teléfono: ${phoneDisp}</li>` : ''}
+        ${emailDisp ? `<li>Email: ${emailDisp}</li>` : ''}
+        ${contact.cif ? `<li>CIF/NIF: ${contact.cif}</li>` : ''}
+      </ul>
+      <h3>2. Objeto</h3>
+      <p>El presente sitio web tiene por objeto proporcionar información sobre los servicios ofrecidos por ${titular}.</p>
+      <h3>3. Propiedad intelectual</h3>
+      <p>Todos los contenidos del sitio web (textos, imágenes, diseños, logotipos, etc.) son propiedad de ${titular} o cuentan con la correspondiente autorización. Queda prohibida su reproducción sin autorización previa.</p>
+      <h3>4. Responsabilidad</h3>
+      <p>${titular} no se responsabiliza del uso indebido de los contenidos del sitio web. La información tiene carácter meramente informativo. No se realizan compras ni pagos online en esta web.</p>
+      <h3>5. Legislación aplicable</h3>
+      <p>Las presentes condiciones se rigen por la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales competentes.</p>`,
+    },
+    privacidad: {
+      title: 'Política de Privacidad',
+      content: `
+      <h3>1. Responsable del tratamiento</h3>
+      <ul>
+        <li>Identidad: ${titular}</li>
+        ${addrDisp ? `<li>Dirección: ${addrDisp}</li>` : ''}
+        ${phoneDisp ? `<li>Teléfono: ${phoneDisp}</li>` : ''}
+        ${emailDisp ? `<li>Email: ${emailDisp}</li>` : ''}
+      </ul>
+      <h3>2. Finalidad del tratamiento</h3>
+      <p>Los datos personales recogidos serán tratados para:</p>
+      <ul>
+        <li>Gestionar reservas y consultas</li>
+        <li>Atender solicitudes</li>
+        <li>Enviar comunicaciones comerciales (solo con consentimiento)</li>
+        <li>Cumplir obligaciones legales</li>
+      </ul>
+      <h3>3. Legitimación</h3>
+      <p>La base legal es el consentimiento del interesado, la ejecución de un contrato y el cumplimiento de obligaciones legales.</p>
+      <h3>4. Conservación</h3>
+      <p>Los datos se conservarán durante el tiempo necesario para cumplir con la finalidad y determinar posibles responsabilidades.</p>
+      <h3>5. Destinatarios</h3>
+      <p>No se cederán datos a terceros salvo obligación legal.</p>
+      <h3>6. Derechos</h3>
+      <p>Puede ejercer sus derechos de acceso, rectificación, supresión, limitación, oposición y portabilidad${emailDisp ? ` enviando un email a ${emailDisp}` : ' a través del formulario de contacto'}.</p>
+      <p>Puede presentar reclamación ante la AEPD (www.aepd.es).</p>`,
+    },
+    cookies: {
+      title: 'Política de Cookies',
+      content: `
+      <h3>1. ¿Qué son las cookies?</h3>
+      <p>Las cookies son pequeños archivos de texto que se almacenan en su dispositivo para recoger información sobre su navegación.</p>
+      <h3>2. Cookies utilizadas</h3>
+      <ul>
+        <li><strong>Cookies técnicas:</strong> necesarias para el funcionamiento del sitio</li>
+        <li><strong>Cookies analíticas:</strong> para medir y analizar la navegación (con consentimiento)</li>
+      </ul>
+      <h3>3. Gestión de cookies</h3>
+      <p>Puede configurar su navegador para rechazar las cookies, aunque esto puede afectar al funcionamiento del sitio.</p>`,
+    },
+    datos: {
+      title: 'Política de Protección de Datos',
+      content: `
+      <h3>1. Compromiso</h3>
+      <p>Cumplimos estrictamente con el RGPD y la LOPDGDD.</p>
+      <h3>2. Medidas de seguridad</h3>
+      <ul>
+        <li>Cifrado SSL/TLS</li>
+        <li>Control de accesos</li>
+        <li>Copias de seguridad</li>
+        <li>Formación del personal</li>
+      </ul>
+      <h3>3. Violaciones</h3>
+      <p>En caso de violación de seguridad, notificaremos a la autoridad en 72 horas cuando proceda.</p>
+      <h3>4. Transferencias</h3>
+      <p>No realizamos transferencias internacionales sin garantías adecuadas.</p>`,
+    },
+    accesibilidad: {
+      title: 'Política de Accesibilidad',
+      content: `
+      <h3>Compromiso</h3>
+      <p>Nos comprometemos a hacer nuestro sitio accesible conforme al Real Decreto 1112/2018 y WCAG 2.1 nivel AA.</p>
+      <h3>Medidas</h3>
+      <ul>
+        <li>HTML semántico</li>
+        <li>Contrastes adecuados</li>
+        <li>Navegación por teclado</li>
+        <li>Textos alternativos</li>
+        <li>Diseño responsive</li>
+      </ul>
+      <h3>Feedback</h3>
+      <p>Si encuentra barreras de accesibilidad, contáctenos${emailDisp ? ` en ${emailDisp}` : ''}.</p>`,
+    },
+  };
 
-  const dialogs = pages
-    .map(
-      (p) => `<dialog id="cua-legal-${p.id}" data-cua-mod="legal" class="cua-legal-dialog" style="border:0;border-radius:1rem;padding:0;max-width:640px;width:calc(100% - 2rem);box-shadow:0 25px 50px rgba(0,0,0,.35)">
-  <div style="padding:1.5rem 1.75rem 1.25rem;max-height:min(70vh,560px);overflow:auto">
-    <div style="display:flex;justify-content:space-between;align-items:start;gap:1rem;margin-bottom:1rem">
-      <h2 style="margin:0;font-size:1.35rem;font-family:Georgia,serif">${p.title}</h2>
-      <button type="button" data-cua-legal-close style="border:0;background:transparent;font-size:1.5rem;line-height:1;cursor:pointer;opacity:.7" aria-label="Cerrar">×</button>
-    </div>
-    <div style="font-size:.9rem;line-height:1.65;opacity:.92">${p.body}</div>
-  </div>
-</dialog>`
-    )
-    .join('\n');
+  const pagesEn: Record<string, { title: string; content: string }> = {
+    aviso: {
+      title: 'Legal notice',
+      content: `<h3>1. Owner</h3><p><strong>${titular}</strong>. ${addrDisp} ${emailDisp} ${phoneDisp}</p><h3>2. Purpose</h3><p>Informative catalogue site. No online payments.</p>`,
+    },
+    privacidad: {
+      title: 'Privacy policy',
+      content: `<h3>1. Controller</h3><p>${titular}</p><h3>2. Purpose</h3><p>We process contact data to answer enquiries under applicable law.${emailDisp ? ` Contact: ${emailDisp}.` : ''}</p>`,
+    },
+    cookies: {
+      title: 'Cookie policy',
+      content: `<p>Essential technical cookies and optional analytics with consent. You may reject non-essential cookies in your browser.</p>`,
+    },
+    datos: {
+      title: 'Data protection',
+      content: `<p>We comply with applicable data protection law. Contact us to exercise your rights.${emailDisp ? ` Email: ${emailDisp}.` : ''}</p>`,
+    },
+    accesibilidad: {
+      title: 'Accessibility',
+      content: `<p>We aim for WCAG 2.1 AA. Contact us if you find barriers.</p>`,
+    },
+  };
+
+  const pages = lang === 'es' ? pagesEs : pagesEn;
+
+  // Escape for embedding in JS template literals — use JSON
+  const modalesJson = JSON.stringify(pages);
 
   const links =
     lang === 'es'
-      ? `<nav data-cua-legal-links class="flex flex-wrap gap-4 text-xs opacity-90 py-2">
-  <button type="button" data-cua-legal-open="aviso" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Aviso legal</button>
-  <button type="button" data-cua-legal-open="privacidad" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Privacidad</button>
-  <button type="button" data-cua-legal-open="cookies" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Cookies</button>
-  <button type="button" data-cua-legal-open="accesibilidad" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Accesibilidad</button>
-</nav>`
-      : `<nav data-cua-legal-links class="flex flex-wrap gap-4 text-xs opacity-90 py-2">
-  <button type="button" data-cua-legal-open="aviso" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Legal</button>
-  <button type="button" data-cua-legal-open="privacidad" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Privacy</button>
-  <button type="button" data-cua-legal-open="cookies" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Cookies</button>
-  <button type="button" data-cua-legal-open="accesibilidad" class="underline bg-transparent border-0 p-0 cursor-pointer text-inherit">Accessibility</button>
-</nav>`;
+      ? `<div class="footer-legal" data-cua-legal-links style="display:flex;flex-wrap:wrap;gap:0.75rem 1.25rem;justify-content:center;padding:0.75rem 0;font-size:0.8rem;color:inherit;opacity:0.95">
+  <a href="#" role="button" onclick="event.preventDefault();openModal('aviso')" style="cursor:pointer;color:inherit;text-decoration:none">Aviso Legal</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('privacidad')" style="cursor:pointer;color:inherit;text-decoration:none">Política de Privacidad</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('cookies')" style="cursor:pointer;color:inherit;text-decoration:none">Política de Cookies</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('datos')" style="cursor:pointer;color:inherit;text-decoration:none">Protección de Datos</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('accesibilidad')" style="cursor:pointer;color:inherit;text-decoration:none">Accesibilidad</a>
+</div>`
+      : `<div class="footer-legal" data-cua-legal-links style="display:flex;flex-wrap:wrap;gap:0.75rem 1.25rem;justify-content:center;padding:0.75rem 0;font-size:0.8rem;color:inherit;opacity:0.95">
+  <a href="#" role="button" onclick="event.preventDefault();openModal('aviso')" style="cursor:pointer;color:inherit;text-decoration:none">Legal notice</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('privacidad')" style="cursor:pointer;color:inherit;text-decoration:none">Privacy policy</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('cookies')" style="cursor:pointer;color:inherit;text-decoration:none">Cookie policy</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('datos')" style="cursor:pointer;color:inherit;text-decoration:none">Data protection</a>
+  <a href="#" role="button" onclick="event.preventDefault();openModal('accesibilidad')" style="cursor:pointer;color:inherit;text-decoration:none">Accessibility</a>
+</div>`;
 
-  const script = `<script>
+  // Patrón Desktop/index.html: overlay .modal + openModal(key) — NO <dialog>
+  const dialogsAndScript = `<style id="cua-legal-css">
+#cua-legal-modal.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:2000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
+#cua-legal-modal.modal.active{display:flex}
+#cua-legal-modal .modal-content{background:#1a1a1a;color:#eee;border-radius:5px;max-width:800px;width:100%;max-height:85vh;overflow-y:auto;padding:40px 50px;position:relative;border:1px solid rgba(198,167,94,.3)}
+#cua-legal-modal .modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;line-height:1}
+#cua-legal-modal .modal-close:hover{color:#C6A75E}
+#cua-legal-modal .modal-content h2{color:#C6A75E;margin:0 0 1.25rem;padding-bottom:1rem;border-bottom:2px solid rgba(198,167,94,.3);font-size:1.75rem}
+#cua-legal-modal .modal-content h3{color:#fff;margin:1.5rem 0 .75rem;font-size:1.15rem}
+#cua-legal-modal .modal-content p,#cua-legal-modal .modal-content li{color:#c8c8c8;margin-bottom:.75rem;line-height:1.75}
+#cua-legal-modal .modal-content ul{padding-left:1.25rem;margin:0 0 1rem}
+.footer-legal a{cursor:pointer}
+</style>
+<div class="modal" id="cua-legal-modal" data-cua-mod="legal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true">
+    <button type="button" class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+    <div id="cua-legal-modal-body"></div>
+  </div>
+</div>
+<script>
 (function(){
-  function openId(id){var d=document.getElementById('cua-legal-'+id);if(d&&d.showModal)d.showModal();else if(d)d.setAttribute('open','');}
-  function closeEl(d){if(d&&d.close)d.close();else if(d)d.removeAttribute('open');}
-  document.querySelectorAll('[data-cua-legal-open]').forEach(function(btn){
-    btn.addEventListener('click',function(e){e.preventDefault();openId(btn.getAttribute('data-cua-legal-open'));});
-  });
-  document.querySelectorAll('[data-cua-legal-close]').forEach(function(btn){
-    btn.addEventListener('click',function(){closeEl(btn.closest('dialog'));});
-  });
-  document.querySelectorAll('dialog[data-cua-mod=legal]').forEach(function(d){
-    d.addEventListener('click',function(e){if(e.target===d)closeEl(d);});
-  });
-  document.querySelectorAll('a[href="#aviso-legal"],a[href="#privacidad"],a[href="#cookies"],a[href="#accesibilidad"],a[href="#mapa-sitio"],a[href="#legal-notice"],a[href="#privacy"],a[href="#sitemap"],a[href*="aviso-legal"],a[href*="privacidad"],a[href*="cookies"],a[href*="accesibilidad"]').forEach(function(a){
-    a.addEventListener('click',function(e){
-      e.preventDefault();
-      var h=(a.getAttribute('href')||'').toLowerCase();
-      if(h.indexOf('aviso')>=0||h.indexOf('legal-notice')>=0||h.indexOf('legal')>=0&&h.indexOf('priv')<0)openId('aviso');
-      else if(h.indexOf('priv')>=0||h==='privacy')openId('privacidad');
-      else if(h.indexOf('cookie')>=0)openId('cookies');
-      else if(h.indexOf('acces')>=0)openId('accesibilidad');
-      else openId('aviso');
-    });
+  var modales = ${modalesJson};
+  function openModal(key){
+    var m = modales[key];
+    if(!m) return;
+    var body = document.getElementById('cua-legal-modal-body');
+    var box = document.getElementById('cua-legal-modal');
+    if(!body||!box) return;
+    body.innerHTML = '<h2>'+m.title+'</h2>'+m.content;
+    box.classList.add('active');
+    box.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    var box = document.getElementById('cua-legal-modal');
+    if(!box) return;
+    box.classList.remove('active');
+    box.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+  window.openModal = openModal;
+  window.closeModal = closeModal;
+  var box = document.getElementById('cua-legal-modal');
+  if(box) box.addEventListener('click', function(e){ if(e.target===box) closeModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+  function resolveLegalKey(text,href){
+    var t=((text||'')+' '+(href||'')).toLowerCase();
+    if(/protecci[oó]n\\s+de\\s+datos|data\\s+protection|#datos|lopd|rgpd/.test(t))return 'datos';
+    if(/privacidad|privacy/.test(t))return 'privacidad';
+    if(/cookies?/.test(t))return 'cookies';
+    if(/accesib/.test(t))return 'accesibilidad';
+    if(/aviso|legal\\s*notice|t[eé]rminos/.test(t))return 'aviso';
+    return null;
+  }
+  document.querySelectorAll('footer a, .footer-legal a, [data-cua-legal-links] a').forEach(function(a){
+    if(/openModal\\s*\\(/.test(a.getAttribute('onclick')||'')) return;
+    var key=resolveLegalKey(a.textContent,a.getAttribute('href'));
+    if(!key)return;
+    a.style.cursor='pointer';
+    a.addEventListener('click',function(e){e.preventDefault();openModal(key);});
   });
 })();
 </script>`;
 
-  return { links, dialogsAndScript: `${dialogs}\n${script}` };
+  return { links, dialogsAndScript };
 }
 
 /** Quita bloques legales a pantalla completa (van en modales del footer). */
@@ -349,21 +470,79 @@ function stripInlineLegalSections(html: string): string {
   return out;
 }
 
-function footerAlreadyHasLegalLinks(html: string): boolean {
-  const foot = html.match(/<footer\b[\s\S]*?<\/footer>/i)?.[0] || '';
-  return /aviso\s*legal|privacidad|cookies|accesibilidad/i.test(foot);
+/** Convierte texto/enlaces muertos del footer en onclick openModal (como Desktop/index.html). */
+function wireFooterLegalTextToOpeners(html: string): string {
+  const footM = html.match(/<footer\b[\s\S]*?<\/footer>/i);
+  if (!footM) return html;
+  let foot = footM[0];
+
+  const link = (id: string, label: string) =>
+    `<a href="#" role="button" onclick="event.preventDefault();openModal('${id}')" style="cursor:pointer;color:inherit;text-decoration:none">${label}</a>`;
+
+  foot = foot.replace(
+    /<a\b([^>]*)>([\s\S]*?)<\/a>/gi,
+    (full, _attrs: string, inner: string) => {
+      if (/openModal\s*\(/i.test(full)) return full;
+      const text = inner.replace(/<[^>]+>/g, '').trim();
+      const href = full.match(/\bhref=["']([^"']*)["']/i)?.[1] || '';
+      const blob = `${text} ${href}`.toLowerCase();
+      if (/protecci[oó]n\s+de\s+datos|data\s+protection|#datos|lopd|rgpd/.test(blob))
+        return link('datos', text || 'Protección de Datos');
+      if (/privacidad|privacy/.test(blob)) return link('privacidad', text || 'Política de Privacidad');
+      if (/cookies?/.test(blob)) return link('cookies', text || 'Política de Cookies');
+      if (/accesib/.test(blob)) return link('accesibilidad', text || 'Accesibilidad');
+      if (/aviso\s*legal|legal\s*notice|t[eé]rminos/.test(blob)) return link('aviso', text || 'Aviso Legal');
+      return full;
+    }
+  );
+
+  // Botones data-cua-legal-open antiguos → onclick openModal
+  foot = foot.replace(
+    /<button\b[^>]*data-cua-legal-open=["']([^"']+)["'][^>]*>([\s\S]*?)<\/button>/gi,
+    (_m, id: string, inner: string) => {
+      const text = inner.replace(/<[^>]+>/g, '').trim() || id;
+      return link(id, text);
+    }
+  );
+
+  if (!/openModal\s*\(/i.test(foot) && /aviso\s*legal/i.test(foot) && /privacidad/i.test(foot)) {
+    foot = foot.replace(
+      /(?:Aviso\s*Legal)\s*[|·•]\s*(?:Pol[ií]tica\s+de\s+)?Privacidad\s*[|·•]\s*(?:Pol[ií]tica\s+de\s+)?Cookies(?:\s*[|·•]\s*Protecci[oó]n\s+de\s+Datos)?(?:\s*[|·•]\s*Accesibilidad)?/gi,
+      () =>
+        [
+          link('aviso', 'Aviso Legal'),
+          ' | ',
+          link('privacidad', 'Política de Privacidad'),
+          ' | ',
+          link('cookies', 'Política de Cookies'),
+          ' | ',
+          link('datos', 'Protección de Datos'),
+          ' | ',
+          link('accesibilidad', 'Accesibilidad'),
+        ].join('')
+    );
+  }
+
+  return html.replace(footM[0], foot);
 }
 
-function widgetsHtml(phone: string | undefined, lang: 'es' | 'en'): string {
-  const wa = phone
-    ? `<a href="https://wa.me/${phone}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;width:58px;height:58px;border-radius:9999px;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.5)">
+function widgetsHtml(
+  phone: string | undefined,
+  lang: 'es' | 'en',
+  includeWhatsApp: boolean
+): string {
+  const wa = !includeWhatsApp
+    ? ''
+    : phone
+      ? `<a href="https://wa.me/${phone}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;width:58px;height:58px;border-radius:9999px;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.5)">
 <svg width="30" height="30" viewBox="0 0 24 24"><path fill="#fff" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm4.43 12.39c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.01-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.41-.54-.42h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.58.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
 </a>`
-    : `<a href="#contacto" data-cua-wa-placeholder aria-label="${lang === 'es' ? 'Añade tu WhatsApp' : 'Add your WhatsApp'}" title="${lang === 'es' ? 'Añade tu WhatsApp en el brief' : 'Add WhatsApp in your brief'}" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;width:58px;height:58px;border-radius:9999px;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.5);opacity:.85;font-size:11px;color:#fff;font-weight:700;text-align:center;padding:4px;line-height:1.1;text-decoration:none">${lang === 'es' ? 'Añade<br/>WA' : 'Add<br/>WA'}</a>`;
+      : `<a href="#contacto" data-cua-wa-placeholder aria-label="${lang === 'es' ? 'Añade tu WhatsApp' : 'Add your WhatsApp'}" title="${lang === 'es' ? 'Añade tu WhatsApp en el brief' : 'Add WhatsApp in your brief'}" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;width:58px;height:58px;border-radius:9999px;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.5);opacity:.85;font-size:11px;color:#fff;font-weight:700;text-align:center;padding:4px;line-height:1.1;text-decoration:none">${lang === 'es' ? 'Añade<br/>WA' : 'Add<br/>WA'}</a>`;
 
+  const scrollRight = includeWhatsApp ? '5.5rem' : '1.5rem';
   return `<div id="cua-site-widgets" data-cua-mod="widgets">
 ${wa}
-<button type="button" id="cua-scroll-top" aria-label="Volver arriba" style="position:fixed;bottom:1.5rem;right:5.5rem;z-index:9999;width:48px;height:48px;border-radius:9999px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.25);display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.4)">
+<button type="button" id="cua-scroll-top" aria-label="Volver arriba" style="position:fixed;bottom:1.5rem;right:${scrollRight};z-index:9999;width:48px;height:48px;border-radius:9999px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.25);display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.4)">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 </div>
@@ -483,29 +662,34 @@ export function injectSiteChrome(
 
   if (modules.includes('legal')) {
     out = stripInlineLegalSections(out);
+    out = out.replace(
+      /<(?:div|nav)[^>]*(?:footer-legal|data-cua-legal-links)[^>]*>\s*(?:\|?\s*)*<\/(?:div|nav)>/gi,
+      ''
+    );
+    // Quitar dialogs legales viejos (rompían preview / “fuera de la página”)
+    out = out.replace(/<dialog[^>]*(?:cua-legal-|data-cua-mod=["']legal["'])[^>]*>[\s\S]*?<\/dialog>/gi, '');
+    out = out.replace(/<style[^>]*id=["']cua-legal[^"']*["'][^>]*>[\s\S]*?<\/style>/gi, '');
+    out = out.replace(/<div[^>]*id=["']cua-legal-modal["'][^>]*>[\s\S]*?<\/div>\s*(?=<script|<style|<\/body>)/gi, '');
+    out = wireFooterLegalTextToOpeners(out);
     const legal = legalModals(brand, lang, contact);
-    const hasOpeners = /data-cua-legal-open=/i.test(out);
+    const hasOpeners = /openModal\s*\(\s*['"]aviso['"]/i.test(out) || /data-cua-legal-open=/i.test(out);
     if (!hasOpeners) {
-      if (footerAlreadyHasLegalLinks(out)) {
-        // Footer ya tiene columna legal: solo modales + cablear <a href="#…">
-        out = insertBeforeBodyEnd(out, legal.dialogsAndScript);
-      } else {
-        // Insertar links DENTRO del footer, antes del copyright si existe
-        if (/<\/footer>/i.test(out)) {
-          if (/©|todos los derechos|all rights reserved/i.test(out)) {
-            out = out.replace(
-              /(<p[^>]*>[^<]*(?:©|todos los derechos|all rights reserved)[^<]*<\/p>)/i,
-              `${legal.links}\n$1`
-            );
-          } else {
-            out = insertBeforeFooterEnd(out, legal.links);
-          }
+      if (/<\/footer>/i.test(out)) {
+        if (/©|todos los derechos|all rights reserved/i.test(out)) {
+          out = out.replace(
+            /(<p[^>]*>[^<]*(?:©|todos los derechos|all rights reserved)[^<]*<\/p>|(?:<div[^>]*>)\s*©[\s\S]*?<\/div>)/i,
+            `${legal.links}\n$1`
+          );
         } else {
-          out = insertBeforeBodyEnd(out, legal.links);
+          out = insertBeforeFooterEnd(out, legal.links);
         }
-        out = insertBeforeBodyEnd(out, legal.dialogsAndScript);
+      } else {
+        out = insertBeforeBodyEnd(out, legal.links);
       }
-    } else if (!/<dialog[^>]*id=["']cua-legal-/i.test(out)) {
+    }
+    if (!/id=["']cua-legal-modal["']/i.test(out) || !/function\s+openModal|window\.openModal\s*=/i.test(out)) {
+      // Evitar duplicar script si ya hay modal incompleto
+      out = out.replace(/<div[^>]*id=["']cua-legal-modal["'][\s\S]*?<\/div>/gi, '');
       out = insertBeforeBodyEnd(out, legal.dialogsAndScript);
     }
     applied.push('legal');
@@ -554,16 +738,20 @@ export function injectSiteChrome(
     applied.push('chat');
   }
 
+  const wantsWa = promptWantsWhatsApp(opts.prompt);
   if (
     modules.includes('widgets') &&
     (!/data-cua-mod=["']widgets["']|cua-scroll-top/i.test(out) ||
-      (!/wa\.me\//i.test(out) && !/data-cua-wa-placeholder/i.test(out)))
+      (wantsWa && !/wa\.me\//i.test(out) && !/data-cua-wa-placeholder/i.test(out)))
   ) {
     out = out.replace(
       /<div id="cua-site-widgets"[\s\S]*?<\/div>\s*<script>[\s\S]*?cua-scroll-top[\s\S]*?<\/script>/i,
       ''
     );
-    out = insertBeforeBodyEnd(out, widgetsHtml(contact.whatsapp || contact.phone, lang));
+    out = insertBeforeBodyEnd(
+      out,
+      widgetsHtml(contact.whatsapp || contact.phone, lang, wantsWa)
+    );
     applied.push('widgets');
   }
 

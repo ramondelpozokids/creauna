@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { premiumStarters } from '../app/data/premiumStarters';
 import { buildPremiumStarterSections } from '../app/lib/studio/loadPremiumStarter';
+import { validateFullpageHtml } from '../app/lib/studio/sectionValidator';
 
 const root = process.cwd();
 let ok = 0;
@@ -25,6 +26,13 @@ for (const starter of premiumStarters) {
   const html = fs.readFileSync(filePath, 'utf-8');
   if (html.length < 5000) {
     console.error(`FAIL  ${label}: HTML demasiado corto (${html.length} bytes)`);
+    fail++;
+    continue;
+  }
+
+  const gateErrors = validateFullpageHtml(html);
+  if (gateErrors.length) {
+    console.error(`FAIL  ${label}: gate fullpage — ${gateErrors.join('; ')}`);
     fail++;
     continue;
   }

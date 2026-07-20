@@ -4,8 +4,9 @@
  */
 
 import { analyzeIntent } from './intentAnalyzer';
-import { imageBriefForVariant, imagesForVariant } from './imageBank';
+import { imageBriefForVariant, imagesForVariant, IMAGE_BANK } from './imageBank';
 import { ensureMinimumGallery, hardenSiteImages, reliableImagePool } from './hardenSiteImages';
+import { isBarbershopContext } from './businessProfiles';
 
 export interface BriefImagePack {
   variant: string;
@@ -70,24 +71,27 @@ export function assessBriefQuality(prompt: string): BriefQualityAssessment {
   return { score, weak, reasons, hasBusinessName, hasContact, hasSections };
 }
 
-/** Empaqueta URLs reales según el sector detectado en el brief — assets, no layout. */
+/** Empaqueta URLs reales según el sector detectado en el brief — assets, no layout.
+ * Nunca prioriza data:image (subidas enormes / irrelevantes) para hero. */
 export function buildBriefImagePack(
   prompt: string,
   lang: 'es' | 'en',
   clientImageUrls?: string[]
 ): BriefImagePack {
   const intent = analyzeIntent(prompt, lang);
-  const bank = imagesForVariant(intent.variant);
+  const barber = isBarbershopContext(prompt);
+  const variantKey = barber ? 'barber' : intent.variant;
+  const bank = barber ? IMAGE_BANK.barber : imagesForVariant(intent.variant);
   const urls: string[] = [];
-  const client = (clientImageUrls || []).filter((u) => /^https?:\/\//i.test(u) || u.startsWith('data:image'));
-  urls.push(...client);
   for (const val of Object.values(bank)) {
     if (typeof val === 'string') urls.push(val);
     else if (Array.isArray(val)) urls.push(...val);
   }
+  const clientHttps = (clientImageUrls || []).filter((u) => /^https?:\/\//i.test(u));
+  urls.push(...clientHttps);
   return {
-    variant: intent.variant,
-    briefBlock: imageBriefForVariant(intent.variant),
+    variant: barber ? 'beauty' : intent.variant,
+    briefBlock: imageBriefForVariant(variantKey),
     urls: [...new Set(urls)].slice(0, 24),
   };
 }

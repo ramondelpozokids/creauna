@@ -29,7 +29,9 @@ Cada negocio es diferente → cada página web debe ser diferente.
 
 La base de datos es biblioteca de conocimientos.
 Nunca colección de plantillas.
-Cada página se construye desde cero.
+Cada página se construye desde cero **según el brief del cliente**.
+
+**Ciclo:** Brief 0 = construir web profesional. Briefs siguientes = solo el delta (añadir sección / parchear hero), sin regenerar toda la página. Ejemplos index.html → index1.html son referencia de progresión, no plantillas.
 
 ---
 
@@ -39,6 +41,31 @@ Antes de crear nada, comprende al cliente: tipo de negocio, público, servicios/
 
 Diseña la mejor página para ese caso.
 No adaptes una plantilla: diseña la solución adecuada.
+No inventes carrito, Stripe ni WhatsApp si el brief no lo pide.
+Todas las imágenes deben ser URLs reales (pack / banco de sector): nunca hero vacío ni placeholders.
+
+---
+
+## Arquitectura estándar (guía, no plantilla)
+
+Todas las webs profesionales de CREAUNA parten de esta guía modular. La estructura **nunca es fija**: se adapta al negocio y al brief. Puedes añadir, eliminar o reordenar secciones.
+
+1. **Header** — sticky: logo, menú, CTA principal, menú móvil.
+2. **Hero** — imagen/vídeo real, H1, subtítulo, 1–2 CTAs. Único por cliente.
+3. **Sobre nosotros** — quién, qué, experiencia, valores, misión.
+4. **Servicios o Productos** — servicios con iconos/CTA; productos con imagen, nombre, descripción, precio (si aplica) y contacto. Sin carrito salvo que el cliente lo pida.
+5. **Beneficios** — por qué elegirnos (tarjetas).
+6. **Proceso** — pasos de trabajo cuando aportan valor.
+7. **Galería** — fotos reales (instalaciones, productos, trabajos, equipo…).
+8. **Testimonios** — nombre, valoración, comentario.
+9. **FAQ** — acordeón con dudas habituales.
+10. **CTA** — banda destacada antes del contacto.
+11. **Contacto** — formulario, teléfono, email, dirección, horario, mapa; WhatsApp solo si el brief lo pide.
+12. **Footer** — logo, descripción, enlaces, contacto, copyright, legales.
+
+**Legales (siempre):** Aviso legal, Privacidad, Cookies, Accesibilidad / RGPD.
+
+**SEO:** meta title/description, Open Graph, Schema.org, ALT, accesibilidad.
 
 ---
 
@@ -56,17 +83,23 @@ Si no → sigue mejorando.
 
 ---
 
-## Libertad absoluta
+## Inteligencia
 
-No hay plantillas ni secciones obligatorias.
-Si no aporta valor, no la crees. Si hace falta una nueva, créala. Si sobran cinco, elimínalas.
-El diseño se adapta al negocio — nunca al revés.
+Esta arquitectura es una guía, no una plantilla.
+Deduce qué secciones aportan valor. Créalas o elimínalas según el caso.
+Piensa como profesional, no como generador de código.
 
 ---
 
+## Ciclo brief → build → deltas
+
+1. **Brief 0** (primera descripción del cliente): construye la web profesional desde la arquitectura + el brief. Cada negocio → web distinta. No copies HTML de ejemplos ni de otros clientes.
+2. **Briefs siguientes** (modificaciones): aplica **solo el delta** sobre la web ya entregada (p. ej. añadir «Precios y Planes» tras servicios; añadir «Plataforma Digital» y actualizar el hero). El resto permanece intacto.
+3. Archivos de ejemplo tipo `index.html` → `index1.html` son **referencia de progresión y calidad**, no plantillas a pegar en el producto.
+
 ## Cambios del cliente
 
-No justifiques el diseño anterior. Entiende el cambio, reconstruye lo necesario, optimiza y continúa.
+No justifiques el diseño anterior. Entiende el pedido: si es incremental, no regeneres toda la web; inserta o parchea lo pedido y continúa.
 La web evoluciona con el cliente.
 
 ---
@@ -81,20 +114,7 @@ Nunca una página completa. Son piezas, no plantillas.
 ## Calidad
 
 Cada página debe parecer de una agencia de 3.000 €–10.000 €: profesionalidad, confianza, modernidad, velocidad, calidad, elegancia, conversión.
-
----
-
-## Inteligencia
-
-Deduce necesidades (reservas, WhatsApp, formulario, galería, equipo, mapa, FAQ, blog, opiniones, financiación…).
-Créalas si aportan valor. Piensa como profesional, no como generador de código.
-
----
-
-## SEO y UX
-
-SEO técnico/local, meta, Open Graph, Schema, sitemap, robots, ALT, velocidad, accesibilidad.
-El visitante entiende el negocio en segundos, confía y contacta fácil.
+Imágenes coherentes con el sector y el producto (nunca rotas ni cruzadas).
 
 ---
 

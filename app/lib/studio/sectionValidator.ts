@@ -50,12 +50,28 @@ export interface SectionValidationResult {
   sectionType?: string;
 }
 
+/** Gate fullpage (agency + starters): densidad mínima + hero/CTA/legales. No bloquea <script> de chrome. */
+export function validateFullpageHtml(html: string): string[] {
+  const errors: string[] = [];
+  if (!html || html.length < 5000) errors.push('HTML fullpage demasiado corto');
+  if (!/<!DOCTYPE\s+html/i.test(html)) errors.push('Falta <!DOCTYPE html>');
+  if (!/<\/html>/i.test(html)) errors.push('Falta cierre </html>');
+  if (!/<h1\b/i.test(html)) errors.push('Falta H1');
+  const hasCta =
+    /wa\.me|#contacto|WhatsApp|mailto:|tel:|#reserv|pedir\.html|Contactar|Book|Reservar/i.test(html);
+  if (!hasCta) errors.push('Falta CTA de contacto');
+  const hasLegal =
+    /privacidad|cookies|aviso[\s-]?legal|data-cua-legal|pol[ií]tica\s+de\s+privacidad/i.test(html);
+  if (!hasLegal) errors.push('Faltan enlaces legales');
+  return errors;
+}
+
 export function validateSectionHtml(html: string, sectionId?: number, sectionType?: string): SectionValidationResult {
   if (sectionType === 'fullpage') {
-    const ok = (html?.length ?? 0) > 1000 && html.includes('<!DOCTYPE');
+    const errors = validateFullpageHtml(html || '');
     return {
-      ok,
-      errors: ok ? [] : ['HTML de muestra premium inválido'],
+      ok: errors.length === 0,
+      errors: errors.length ? errors : [],
       sectionId,
       sectionType,
     };
