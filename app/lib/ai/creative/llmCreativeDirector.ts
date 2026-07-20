@@ -275,26 +275,32 @@ export async function runLlmCreativeDirector(
   lang: 'es' | 'en',
   opts?: { entropy?: string; preferProvider?: AiProvider }
 ): Promise<CreativeDirectorResult | null> {
-  const configured = getConfiguredProviders().filter((p) => p !== 'manus' && p !== 'fal');
+  type ChatProvider = 'gemini' | 'claude' | 'openai' | 'qwen' | 'groq';
+  const configured = getConfiguredProviders().filter(
+    (p): p is ChatProvider => p !== 'manus' && p !== 'fal'
+  );
   if (configured.length === 0) return null;
 
-  const prefer: AiProvider | undefined =
-    opts?.preferProvider ||
-    (isProviderConfigured('gemini')
-      ? 'gemini'
-      : isProviderConfigured('openai')
-        ? 'openai'
-        : isProviderConfigured('groq')
-          ? 'groq'
-          : undefined);
+  const prefer: ChatProvider | undefined =
+    opts?.preferProvider && configured.includes(opts.preferProvider as ChatProvider)
+      ? (opts.preferProvider as ChatProvider)
+      : isProviderConfigured('gemini')
+        ? 'gemini'
+        : isProviderConfigured('openai')
+          ? 'openai'
+          : isProviderConfigured('groq')
+            ? 'groq'
+            : configured[0];
 
-  const tryOrder = [
-    ...new Set(
-      [prefer, 'gemini', 'openai', 'groq', 'qwen', 'claude'].filter(
-        (p): p is AiProvider => Boolean(p) && configured.includes(p as AiProvider)
-      )
-    ),
+  const candidates: Array<ChatProvider | undefined> = [
+    prefer,
+    'gemini',
+    'openai',
+    'groq',
+    'qwen',
+    'claude',
   ];
+  const tryOrder = [...new Set(candidates.filter((p): p is ChatProvider => Boolean(p) && configured.includes(p)))];
 
   const system = buildSystemPrompt(lang);
   const user = `BRIEF DEL CLIENTE:\n\n${prompt.slice(0, 12000)}\n\nDevuelve SOLO el JSON del CreativeBrief.`;
