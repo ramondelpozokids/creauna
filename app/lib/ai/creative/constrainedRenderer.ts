@@ -16,6 +16,54 @@ function esc(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
+/** Alturas de hero desde density del brief (contrato), no caps globales parcheados. */
+function heroScale(brief: CreativeBrief): {
+  section: string;
+  media: string;
+  typeMedia: string;
+  editorialImg: string;
+  overlap: string;
+  overlapMedia: string;
+  bleed: string;
+  bleedPad: string;
+} {
+  switch (brief.density) {
+    case 'sparse':
+      return {
+        section: 'min(68vh,620px)',
+        media: 'min(68vh,620px)',
+        typeMedia: 'min(48vh,440px)',
+        editorialImg: 'min(38vh,380px)',
+        overlap: 'min(60vh,520px)',
+        overlapMedia: 'min(44vh,400px)',
+        bleed: 'min(70vh,640px)',
+        bleedPad: '5rem 6vw 3.5rem',
+      };
+    case 'dense':
+      return {
+        section: 'min(82vh,780px)',
+        media: 'min(82vh,780px)',
+        typeMedia: 'min(58vh,540px)',
+        editorialImg: 'min(48vh,500px)',
+        overlap: 'min(74vh,680px)',
+        overlapMedia: 'min(54vh,500px)',
+        bleed: 'min(84vh,800px)',
+        bleedPad: '6rem 6vw 4.5rem',
+      };
+    default:
+      return {
+        section: 'min(76vh,700px)',
+        media: 'min(76vh,700px)',
+        typeMedia: 'min(52vh,480px)',
+        editorialImg: 'min(42vh,420px)',
+        overlap: 'min(68vh,600px)',
+        overlapMedia: 'min(48vh,440px)',
+        bleed: 'min(78vh,720px)',
+        bleedPad: '5.5rem 6vw 4rem',
+      };
+  }
+}
+
 function packUrls(key: string): { hero: string; gallery: string[]; about: string } {
   const bank =
     (IMAGE_BANK as Record<string, Record<string, unknown>>)[key] ||
@@ -84,39 +132,40 @@ function heroHtml(
   const sector = brief.sectorId;
   const bit = seedBit(brief.uniquenessSeed, 2);
   const wide = bit % 2 === 0 ? '1.15fr 0.85fr' : '0.9fr 1.1fr';
+  const hv = heroScale(brief);
 
   if (family === 'splitMediaRight' || family === 'splitMediaLeft') {
     const mediaFirst = family === 'splitMediaLeft';
     const cols = mediaFirst ? `minmax(0,1.05fr) minmax(0,0.95fr)` : wide;
-    const media = `<div class="cua-hero-media reveal" style="min-height:min(88vh,920px);background:url('${heroImg}') center/cover no-repeat;" role="img" aria-label="${name}" data-cua-hero-bg></div>`;
-    const copy = `<div class="cua-hero-copy reveal" style="padding:clamp(3.5rem,9vw,7rem) clamp(1.5rem,5vw,4.5rem);display:flex;flex-direction:column;justify-content:center;background:var(--cua-light);position:relative;">
+    const media = `<div class="cua-hero-media reveal" style="min-height:${hv.media};background:url('${heroImg}') center/cover no-repeat;" role="img" aria-label="${name}" data-cua-hero-bg></div>`;
+    const copy = `<div class="cua-hero-copy reveal" style="padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,4.5rem);display:flex;flex-direction:column;justify-content:center;background:var(--cua-light);position:relative;">
       <p class="cua-brand">${name}</p>
       <h1 style="font-family:var(--cua-font-h);font-size:${size};line-height:1.02;margin:.35rem 0 1.1rem;color:var(--cua-dark);max-width:12ch;letter-spacing:-.02em;">${title}</h1>
       <p class="cua-lede" style="max-width:34ch;">${sub}</p>
       ${ctaRow(brief, sel)}
       <span class="cua-accent-rule" aria-hidden="true"></span>
     </div>`;
-    return `<section id="inicio" class="cua-hero cua-hero-split" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="display:grid;grid-template-columns:${cols};min-height:min(88vh,920px);">
+    return `<section id="inicio" class="cua-hero cua-hero-split" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="display:grid;grid-template-columns:${cols};min-height:${hv.section};">
       ${mediaFirst ? media + copy : copy + media}
     </section>`;
   }
 
   if (family === 'minimalTypeOnly') {
-    return `<section id="inicio" class="cua-hero cua-hero-type" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:78vh;display:grid;grid-template-columns:1.2fr 0.8fr;background:var(--cua-light);position:relative;overflow:hidden;">
-      <div class="reveal" style="padding:clamp(5rem,12vw,8rem) 8vw 4rem;align-self:center;max-width:40rem;">
+    return `<section id="inicio" class="cua-hero cua-hero-type" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.section};display:grid;grid-template-columns:1.2fr 0.8fr;background:var(--cua-light);position:relative;overflow:hidden;">
+      <div class="reveal" style="padding:clamp(4rem,10vw,6.5rem) 8vw 3.5rem;align-self:center;max-width:40rem;">
         <p class="cua-brand">${name}</p>
         <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:.6rem 0 1rem;color:var(--cua-dark);max-width:15ch;letter-spacing:-.03em;">${title}</h1>
         <p class="cua-lede" style="max-width:38ch;">${sub}</p>
         ${ctaRow(brief, sel)}
       </div>
-      <div class="reveal" style="position:relative;min-height:60vh;">
+      <div class="reveal" style="position:relative;min-height:${hv.typeMedia};">
         <div style="position:absolute;inset:8% 8% 12% 0;background:url('${heroImg}') center/cover;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);" data-cua-hero-bg role="img" aria-label="${name}"></div>
       </div>
     </section>`;
   }
 
   if (family === 'editorialStack') {
-    return `<section id="inicio" class="cua-hero cua-hero-editorial" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="padding:clamp(4rem,8vw,6.5rem) 6vw 2.5rem;background:var(--cua-light);">
+    return `<section id="inicio" class="cua-hero cua-hero-editorial" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="padding:clamp(3.5rem,7vw,5.5rem) 6vw 2rem;background:var(--cua-light);">
       <div class="reveal" style="max-width:1180px;margin:0 auto;">
         <p class="cua-brand" style="margin-bottom:1.25rem;">${name}</p>
         <div style="display:grid;grid-template-columns:1.25fr 0.75fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:end;">
@@ -126,7 +175,7 @@ function heroHtml(
             ${ctaRow(brief, sel)}
           </div>
         </div>
-        <div style="margin-top:clamp(2rem,4vw,3.5rem);height:min(52vh,560px);overflow:hidden;border-radius:var(--cua-radius);">
+        <div style="margin-top:clamp(1.75rem,3.5vw,2.75rem);height:${hv.editorialImg};overflow:hidden;border-radius:var(--cua-radius);">
           <img src="${heroImg}" alt="${name}" data-cua-hero-bg class="cua-kenburns" style="width:100%;height:100%;object-fit:cover;" />
         </div>
       </div>
@@ -134,15 +183,15 @@ function heroHtml(
   }
 
   if (family === 'asymmetricOverlap') {
-    return `<section id="inicio" class="cua-hero cua-hero-overlap" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="padding:clamp(3.5rem,7vw,6rem) 6vw;background:var(--cua-surface);overflow:hidden;">
-      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;min-height:70vh;">
+    return `<section id="inicio" class="cua-hero cua-hero-overlap" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="padding:clamp(3rem,6vw,5rem) 6vw;background:var(--cua-surface);overflow:hidden;">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;min-height:${hv.overlap};">
         <div class="reveal" style="z-index:2;padding-right:8%;">
           <p class="cua-brand">${name}</p>
           <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:.5rem 0 1rem;color:var(--cua-dark);max-width:11ch;letter-spacing:-.03em;">${title}</h1>
           <p class="cua-lede" style="max-width:32ch;">${sub}</p>
           ${ctaRow(brief, sel)}
         </div>
-        <div class="reveal" style="position:relative;min-height:520px;">
+        <div class="reveal" style="position:relative;min-height:${hv.overlapMedia};">
           <img src="${heroImg}" alt="${name}" data-cua-hero-bg style="position:absolute;inset:0;width:108%;height:100%;object-fit:cover;border-radius:var(--cua-radius);transform:translateX(-6%) rotate(${bit % 2 ? -1.2 : 1.2}deg);box-shadow:0 40px 80px color-mix(in srgb,var(--cua-dark) 22%,transparent);" />
           <div aria-hidden="true" style="position:absolute;left:-12%;bottom:8%;width:42%;aspect-ratio:4/5;background:var(--cua-accent);opacity:.12;border-radius:var(--cua-radius);"></div>
         </div>
@@ -154,7 +203,7 @@ function heroHtml(
   const left = family === 'fullBleedLeft';
   const lightText = sector === 'clinic' || sector === 'legal' ? 'var(--cua-dark)' : '#fff';
   const onDark = !(sector === 'clinic' || sector === 'legal');
-  return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:92vh;display:flex;align-items:center;justify-content:${left ? 'flex-start' : 'center'};text-align:${left ? 'left' : 'center'};background:${bleedOverlay(sector)},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:7rem 6vw 5rem;position:relative;">
+  return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.bleed};display:flex;align-items:center;justify-content:${left ? 'flex-start' : 'center'};text-align:${left ? 'left' : 'center'};background:${bleedOverlay(sector)},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:${hv.bleedPad};position:relative;">
     <div class="reveal" style="max-width:${left ? '640px' : '780px'};${left ? '' : 'margin:0 auto;'}">
       <p class="cua-brand" style="color:inherit;opacity:.95;">${name}</p>
       <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:1rem 0;line-height:1.02;letter-spacing:-.02em;">${title}</h1>
@@ -260,9 +309,8 @@ function aboutHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelecti
   }"></div>`;
   const copy = `<div class="reveal" style="padding:${overlap ? '2rem 0 0' : '1rem 0'};">
     <p class="cua-kicker">${brief.lang === 'es' ? 'Nosotros' : 'About'}</p>
-    <h2 class="cua-h2" style="max-width:14ch;">${esc(brief.positioning)}</h2>
-    <p class="cua-lede" style="max-width:40ch;margin-top:1rem;">${esc(brief.audience)}</p>
-    <p style="color:var(--cua-muted);line-height:1.7;max-width:42ch;margin-top:.75rem;">${esc(brief.photoStyle)}.</p>
+    <h2 class="cua-h2" style="max-width:14ch;">${esc(brief.aboutHeadline || brief.positioning)}</h2>
+    <p class="cua-lede" style="max-width:40ch;margin-top:1rem;">${esc(brief.aboutBody || brief.positioning)}</p>
   </div>`;
   return `<section id="nosotros" class="cua-section" data-cua-comp="${sel.aboutId}" style="padding:clamp(4.5rem,9vw,8rem) 6vw;background:var(--cua-surface);">
   <div style="max-width:1120px;margin:0 auto;display:grid;grid-template-columns:${
@@ -335,17 +383,24 @@ function whyHtml(brief: CreativeBrief, sel: CompositionSelection): string {
 }
 
 function testimonialsHtml(brief: CreativeBrief, sel: CompositionSelection): string {
+  const isClinic = brief.sectorId === 'clinic';
   const quotes =
     brief.lang === 'es'
       ? [
           ['Excelente atención y resultado impecable.', 'Cliente verificado'],
           ['Se nota el criterio profesional en cada detalle.', 'Reseña Google'],
-          ['Volveremos. Ambiente y calidad de primer nivel.', 'Huésped'],
+          [
+            'Volveremos. Ambiente y calidad de primer nivel.',
+            isClinic ? 'Paciente' : 'Huésped',
+          ],
         ]
       : [
           ['Excellent care and impeccable result.', 'Verified client'],
           ['Professional judgment in every detail.', 'Google review'],
-          ['We will return. Top-tier atmosphere and quality.', 'Guest'],
+          [
+            'We will return. Top-tier atmosphere and quality.',
+            isClinic ? 'Patient' : 'Guest',
+          ],
         ];
   return `<section id="opiniones" class="cua-section" data-cua-comp="${sel.testimonialId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-surface);">
   <div style="max-width:1000px;margin:0 auto;">

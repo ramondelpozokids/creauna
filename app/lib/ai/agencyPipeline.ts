@@ -1015,20 +1015,29 @@ export async function runAgencyPipeline(
           `layout:${creative.selection.layout.id}`,
           `dna:${creative.dna.id}`,
           `rubric:${creative.rubric.total}`,
+          `director:${creative.directorSource}:${creative.directorProvider}`,
         ],
         summaryEs: `${plan.summaryEs} · Director Creativo ${creative.rubric.total}/100`,
       };
+      const providersUsed =
+        creative.directorProvider !== 'rules'
+          ? [String(creative.directorProvider), 'creative_director']
+          : ['creative_director_fallback'];
       return {
         ok: true,
         previewSections: [{ id: 101, type: 'fullpage', html: creative.html }],
         businessName: creative.brief.businessName || businessName,
         message:
-          lang === 'es'
-            ? `He diseñado tu web como Director Creativo (${creative.rubric.total}/100). Layout «${creative.selection.layout.name}». Si quieres cambiar algo, dímelo.`
-            : `Designed as Creative Director (${creative.rubric.total}/100). Layout “${creative.selection.layout.name}”. Ask for any change.`,
-        source: 'rules',
-        motorsUsed: ['code', 'visual', 'copy', 'ux'],
-        providersUsed: ['creative_director'],
+          creative.directorSource === 'llm'
+            ? lang === 'es'
+              ? `He razonado tu brief con ${creative.directorProvider} y diseñado la web como Director Creativo (${creative.rubric.total}/100). Layout «${creative.selection.layout.name}». Si quieres cambiar algo, dímelo.`
+              : `I reasoned your brief with ${creative.directorProvider} and designed the site as Creative Director (${creative.rubric.total}/100). Layout “${creative.selection.layout.name}”. Ask for any change.`
+            : lang === 'es'
+              ? `He diseñado tu web como Director Creativo (${creative.rubric.total}/100) — modo local sin motores LLM. Layout «${creative.selection.layout.name}».`
+              : `Designed as Creative Director (${creative.rubric.total}/100) — local mode without LLM motors. Layout “${creative.selection.layout.name}”.`,
+        source: creative.directorSource === 'llm' ? 'ai' : 'hybrid',
+        motorsUsed: creative.directorSource === 'llm' ? ['copy', 'creative'] : ['creative'],
+        providersUsed,
         pipelineStage: 'agency_pipeline',
         templateSlug: 'creative-director',
         plan: mergedPlan,

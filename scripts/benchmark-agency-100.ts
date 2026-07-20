@@ -13,31 +13,46 @@ import { compositionDistance, composeSelection } from '../app/lib/ai/creative/co
 import { resolveDesignDna } from '../app/lib/ai/creative/designDna';
 import { runCreativeDirector } from '../app/lib/ai/creative/creativeDirector';
 
-const BRIEFS: { id: string; prompt: string }[] = [
+const BRIEFS: { id: string; prompt: string; expectSector?: string; forbidCopy?: RegExp }[] = [
   {
     id: 'clinic-dental-madrid',
     prompt:
       'Necesito una clínica dental premium en Madrid. Se llama Clínica Dental Aura. Sin WhatsApp. Sin carrito. Quiero cita online y confianza.',
+    expectSector: 'clinic',
   },
   {
     id: 'restaurant-italiano',
     prompt:
       'Restaurante italiano Trattoria Nonna en Barcelona. Pasta fresca, pizzas al horno, reservas. Ambiente cálido y gastronómico.',
+    expectSector: 'restaurant',
   },
   {
     id: 'abogados-mercantiles',
     prompt:
       'Bufete de abogados mercantiles Despacho Meridian. Corporativo, elegante, sobrio. Consulta confidencial. Sin WhatsApp.',
+    expectSector: 'legal',
   },
   {
     id: 'hotel-boutique',
     prompt:
       'Hotel boutique Maison Lumière. Lujo experiencial, suites, spa, gastronomía. Reserva de estancia. Aspiracional.',
+    expectSector: 'hotel',
   },
   {
     id: 'arquitectura',
     prompt:
       'Agencia de arquitectura Atelier Forma. Minimalista, grandes espacios, mucho blanco. Proyectos de vivienda y comercial.',
+    expectSector: 'architecture',
+  },
+  {
+    id: 'aura-clinic-metaphor',
+    prompt: `# Brief — Clínica de Medicina Estética Premium
+**Nombre de la clínica:** Aura Clinic
+**Sector:** Medicina estética avanzada
+Ubicación: Madrid. Inspiración: clínica suiza + hotel cinco estrellas (solo mood, NO es un hotel).
+CTA: Reservar primera consulta. Servicios: Ácido hialurónico, Neuromoduladores, Skinboosters, Láser dermatológico.`,
+    expectSector: 'clinic',
+    forbidCopy: /Reservar estancia|Explorar suites|>\s*Suites\s*</i,
   },
 ];
 
@@ -64,6 +79,9 @@ async function main() {
     total: number;
     ok: boolean;
     htmlBytes: number;
+    directorSource: string;
+    directorProvider: string;
+    comprehensionOk: boolean;
   }> = [];
 
   for (const b of BRIEFS) {
@@ -74,6 +92,15 @@ async function main() {
     });
     const htmlPath = join(outDir, `${b.id}.html`);
     writeFileSync(htmlPath, result.html, 'utf8');
+    const sectorOk = !b.expectSector || result.brief.sectorId === b.expectSector;
+    const copyOk = !b.forbidCopy || !b.forbidCopy.test(result.html + result.brief.primaryCta);
+    // Comprensión Aura solo exigible si hubo LLM (fallback heurístico puede confundir metáforas)
+    const comprehensionOk =
+      b.id !== 'aura-clinic-metaphor'
+        ? sectorOk && copyOk
+        : result.directorSource === 'llm'
+          ? sectorOk && copyOk && /aura/i.test(result.brief.businessName)
+          : true;
     cards.push({
       id: b.id,
       sector: result.brief.sectorId,
@@ -82,9 +109,12 @@ async function main() {
       total: result.rubric.total,
       ok: result.ok,
       htmlBytes: result.html.length,
+      directorSource: result.directorSource,
+      directorProvider: String(result.directorProvider),
+      comprehensionOk,
     });
     console.log(
-      `${result.ok ? 'OK' : 'LOW'} ${b.id}: ${result.rubric.total}/100 · ${result.brief.sectorId} · ${result.selection.layout.id}`
+      `${result.ok ? 'OK' : 'LOW'} ${b.id}: ${result.rubric.total}/100 · ${result.brief.sectorId} · ${result.directorSource}/${result.directorProvider} · ${result.selection.layout.id}${comprehensionOk ? '' : ' · COMPREHENSION FAIL'}`
     );
   }
 
@@ -99,6 +129,7 @@ async function main() {
   const totals = cards.map((c) => c.total);
   const avg = Math.round((totals.reduce((a, b) => a + b, 0) / totals.length) * 10) / 10;
   const min = Math.min(...totals);
+  const comprehensionAll = cards.every((c) => c.comprehensionOk);
   const scorecard = {
     runId,
     rubricVersion: RUBRIC_VERSION,
@@ -107,9 +138,13 @@ async function main() {
     diversityDistance: distance,
     average: avg,
     minimum: min,
+    comprehensionAll,
     passedAvg95: avg >= PRODUCT_GATES.avgBenchmark,
     passedMin90: min >= PRODUCT_GATES.minPerGeneration,
-    featureFreezeLifted: avg >= PRODUCT_GATES.avgBenchmark && min >= PRODUCT_GATES.minPerGeneration,
+    featureFreezeLifted:
+      avg >= PRODUCT_GATES.avgBenchmark &&
+      min >= PRODUCT_GATES.minPerGeneration &&
+      comprehensionAll,
     cards,
   };
   writeFileSync(join(outDir, 'scorecard.json'), JSON.stringify(scorecard, null, 2), 'utf8');
@@ -117,14 +152,19 @@ async function main() {
   console.log(JSON.stringify(scorecard, null, 2));
   console.log(`Wrote ${outDir}`);
 
+  if (!comprehensionAll) {
+    console.error('\nComprehension gate failed (metaphor/sector mismatch with LLM).');
+    process.exitCode = 1;
+  }
+
   if (!scorecard.passedMin90 || !scorecard.passedAvg95) {
     console.error(
       `\nGates not met yet (avg ${avg}, min ${min}). Creative path active; continue tuning toward 95/90.`
     );
     // Exit 0 if all ≥90 and avg ≥90 (phase 6 intermediate); exit 1 only if min < 85
     if (min < 85) process.exit(1);
-  } else {
-    console.log('\nFEATURE FREEZE LIFTED: media ≥95 y mínimo ≥90.');
+  } else if (comprehensionAll) {
+    console.log('\nFEATURE FREEZE LIFTED: media ≥95 y mínimo ≥90 + comprensión.');
   }
 }
 

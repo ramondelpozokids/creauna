@@ -71,6 +71,9 @@ npx tsx scripts/verify-creative-director.ts
 
 Con gates automáticos en verde, el foco pasa a calidad percibida (no más parches de exports):
 
-1. Enriquecer variantes reales de Hero/composición (menos “Lego”, más asimetría).
-2. Calibrar juez con demos de techo (`public/demos/clientes/`) sin clonar páginas.
-3. Probar en Studio 5 briefs ciegos y revisar HTML en `tmp/benchmark/`.
+1. **Director Creativo LLM** (primario): razona el brief → `CreativeBrief` JSON. Heurística solo fallback sin providers.
+2. Enriquecer variantes reales de Hero/composición (menos “Lego”, más asimetría).
+3. Calibrar juez con demos de techo (`public/demos/clientes/`) sin clonar páginas.
+4. Probar en Studio briefs ciegos (incl. metáforas tipo Aura Clinic) y revisar HTML en `tmp/benchmark/`.
+
+**PROHIBIDO:** parches regex por cliente («si dice hotel pero también hialurónico…»), caps globales de hero, forzar tipografías/grids.

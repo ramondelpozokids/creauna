@@ -1,15 +1,26 @@
 /**
- * Creative Director — razona el brief (pasos 1–14) → CreativeBrief JSON.
- * Sin HTML. Heurística fuerte + LLM opcional si hay providers.
+ * Creative Director — fallback heurístico frío (sin providers / JSON inválido).
+ * El camino de producto es `runCreativeDirectorAsync` → LLM.
+ * PROHIBIDO: reglas ad-hoc por cliente o «parches» de metáforas (hotel vs clínica).
  */
 
-import type { CreativeBrief, CreativeSectorId, ArtDirection, VisualLanguage, HeroFamily } from './creativeBrief';
+import type {
+  CreativeBrief,
+  CreativeSectorId,
+  ArtDirection,
+  VisualLanguage,
+  HeroFamily,
+} from './creativeBrief';
 import { makeUniquenessSeed, pickSeeded, seededRandom } from './uniquenessSeed';
+import {
+  runLlmCreativeDirector,
+  type CreativeDirectorResult,
+} from './llmCreativeDirector';
 
 function detectSector(prompt: string): CreativeSectorId {
   const p = prompt.toLowerCase();
-  if (/cl[ií]nica\s+dental|odontolog|dentista|dental/.test(p)) return 'clinic';
-  if (/abogad|bufete|mercantil|legal\b|despacho/.test(p)) return 'legal';
+  if (/cl[ií]nica|odontolog|dentista|dental|est[eé]tica|hialur/.test(p)) return 'clinic';
+  if (/abogad|bufete|mercantil|despacho/.test(p)) return 'legal';
   if (/hotel|boutique\s+hotel|turismo\s+rural|resort/.test(p)) return 'hotel';
   if (/arquitect|estudio\s+de\s+arquitectura|blueprint/.test(p)) return 'architecture';
   if (/restaurante|trattoria|pizzer|italiano|italian/.test(p)) return 'restaurant';
@@ -31,7 +42,7 @@ function extractName(prompt: string, lang: 'es' | 'en'): string {
     if (m?.[1] && m[1].trim().length >= 3) return m[1].trim().slice(0, 48);
   }
   const defaults: Record<CreativeSectorId, { es: string; en: string }> = {
-    clinic: { es: 'Clínica Dental Aura', en: 'Aura Dental Clinic' },
+    clinic: { es: 'Clínica Premium', en: 'Premium Clinic' },
     restaurant: { es: 'Trattoria Nonna', en: 'Trattoria Nonna' },
     legal: { es: 'Despacho Meridian', en: 'Meridian Law' },
     hotel: { es: 'Maison Lumière', en: 'Maison Lumière' },
@@ -43,8 +54,7 @@ function extractName(prompt: string, lang: 'es' | 'en'): string {
     fashion: { es: 'Maison', en: 'Maison' },
     default: { es: 'Tu marca', en: 'Your brand' },
   };
-  const sector = detectSector(prompt);
-  return defaults[sector][lang];
+  return defaults[detectSector(prompt)][lang];
 }
 
 function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
@@ -58,6 +68,8 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       visualLanguage: VisualLanguage;
       heroFamilies: HeroFamily[];
       photoStyle: string;
+      aboutHeadline: string;
+      aboutBody: string;
       services: { es: string[]; en: string[] };
       hero: { es: [string, string]; en: [string, string] };
       cta: { es: [string, string]; en: [string, string] };
@@ -65,32 +77,56 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
     }
   > = {
     clinic: {
-      audience: lang === 'es' ? 'Adultos urbanos que buscan odontología premium sin ansiedad' : 'Urban adults seeking premium anxiety-free dentistry',
-      positioning: lang === 'es' ? 'Clínica dental premium: confianza, precisión, luz' : 'Premium dental: trust, precision, light',
+      audience:
+        lang === 'es'
+          ? 'Adultos urbanos que buscan cuidado médico premium'
+          : 'Urban adults seeking premium medical care',
+      positioning:
+        lang === 'es'
+          ? 'Clínica premium: confianza, precisión, luz'
+          : 'Premium clinic: trust, precision, light',
       brandTone: 'premium',
       artDirection: 'clinicalLight',
       visualLanguage: 'airAndWhite',
       heroFamilies: ['fullBleedLeft', 'splitMediaRight', 'editorialStack'],
       photoStyle: 'bright clinical interiors, calm portraits, soft daylight',
+      aboutHeadline:
+        lang === 'es'
+          ? 'Cuidado premium con calma y precisión'
+          : 'Premium care with calm and precision',
+      aboutBody:
+        lang === 'es'
+          ? 'Tecnología actual, protocolos claros y un espacio pensado para que te sientas cuidado desde el primer momento.'
+          : 'Modern technology, clear protocols, and a space designed so you feel cared for from the first visit.',
       services: {
-        es: ['Blanqueamiento', 'Implantes', 'Ortodoncia', 'Estética dental', 'Urgencias'],
-        en: ['Whitening', 'Implants', 'Orthodontics', 'Dental aesthetics', 'Emergencies'],
+        es: ['Consulta', 'Tratamientos', 'Seguimiento', 'Diagnóstico', 'Urgencias'],
+        en: ['Consult', 'Treatments', 'Follow-up', 'Diagnostics', 'Emergencies'],
       },
       hero: {
-        es: ['Sonrisas con precisión y calma', 'Odontología premium en Madrid, con tecnología y trato humano.'],
-        en: ['Precision smiles, calm care', 'Premium dentistry in Madrid with tech and human warmth.'],
+        es: ['Cuidado con precisión y calma', 'Clínica premium con tecnología y trato humano.'],
+        en: ['Care with precision and calm', 'Premium clinic with tech and human warmth.'],
       },
       cta: { es: ['Pedir cita', 'Ver tratamientos'], en: ['Book visit', 'View treatments'] },
-      arc: ['hero', 'trust', 'services', 'about', 'process', 'gallery', 'testimonials', 'faq', 'contact'],
+      arc: ['hero', 'trust', 'services', 'about', 'gallery', 'testimonials', 'faq', 'contact'],
     },
     restaurant: {
-      audience: lang === 'es' ? 'Foodies y parejas que buscan experiencia italiana auténtica' : 'Foodies seeking authentic Italian dining',
-      positioning: lang === 'es' ? 'Gastronomía emocional, fotografía dominante' : 'Emotional gastronomy, photo-led',
+      audience:
+        lang === 'es'
+          ? 'Foodies y parejas que buscan experiencia italiana auténtica'
+          : 'Foodies seeking authentic Italian dining',
+      positioning:
+        lang === 'es' ? 'Gastronomía emocional, fotografía dominante' : 'Emotional gastronomy, photo-led',
       brandTone: 'warm',
       artDirection: 'gastronomicEmotion',
       visualLanguage: 'photographyDominant',
       heroFamilies: ['fullBleedCenter', 'asymmetricOverlap', 'splitMediaLeft'],
       photoStyle: 'plated dishes, warm interiors, hands cooking, wine',
+      aboutHeadline:
+        lang === 'es' ? 'Cocina con alma y hospitalidad' : 'Cooking with soul and hospitality',
+      aboutBody:
+        lang === 'es'
+          ? 'Pasta, fuego y mesa. Una experiencia pensada para quedarse.'
+          : 'Pasta, fire and table. An experience made to linger.',
       services: {
         es: ['Pasta fresca', 'Pizzas al horno', 'Menú degustación', 'Vinos italianos', 'Reservas grupos'],
         en: ['Fresh pasta', 'Wood-fired pizza', 'Tasting menu', 'Italian wines', 'Group bookings'],
@@ -103,13 +139,23 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       arc: ['hero', 'about', 'menu', 'gallery', 'experience', 'testimonials', 'reservations', 'contact'],
     },
     legal: {
-      audience: lang === 'es' ? 'Empresas y directivos que necesitan asesoría mercantil seria' : 'Companies needing serious commercial counsel',
-      positioning: lang === 'es' ? 'Bufete elegante, sobrio, corporativo' : 'Elegant, sober corporate law',
+      audience:
+        lang === 'es'
+          ? 'Empresas y directivos que necesitan asesoría mercantil seria'
+          : 'Companies needing serious commercial counsel',
+      positioning:
+        lang === 'es' ? 'Bufete elegante, sobrio, corporativo' : 'Elegant, sober corporate law',
       brandTone: 'corporate',
       artDirection: 'soberCorporate',
       visualLanguage: 'typeLed',
       heroFamilies: ['minimalTypeOnly', 'splitMediaRight', 'editorialStack'],
       photoStyle: 'quiet offices, architecture detail, confident professionals',
+      aboutHeadline:
+        lang === 'es' ? 'Criterio jurídico con discreción' : 'Legal judgment with discretion',
+      aboutBody:
+        lang === 'es'
+          ? 'Acompañamos decisiones complejas con claridad y sobriedad.'
+          : 'We support complex decisions with clarity and sobriety.',
       services: {
         es: ['Mercantil', 'Societario', 'Contratos', 'M&A', 'Compliance'],
         en: ['Commercial', 'Corporate', 'Contracts', 'M&A', 'Compliance'],
@@ -118,17 +164,30 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
         es: ['Claridad jurídica para decidir', 'Abogados mercantiles con criterio y discreción.'],
         en: ['Legal clarity to decide', 'Commercial lawyers with judgment and discretion.'],
       },
-      cta: { es: ['Consulta confidencial', 'Áreas de práctica'], en: ['Confidential consult', 'Practice areas'] },
+      cta: {
+        es: ['Consulta confidencial', 'Áreas de práctica'],
+        en: ['Confidential consult', 'Practice areas'],
+      },
       arc: ['hero', 'positioning', 'practices', 'about', 'method', 'insights', 'testimonials', 'contact'],
     },
     hotel: {
-      audience: lang === 'es' ? 'Viajeros que buscan estancia boutique aspiracional' : 'Travelers seeking aspirational boutique stays',
-      positioning: lang === 'es' ? 'Lujo experiencial, no resort genérico' : 'Experiential luxury, not generic resort',
+      audience:
+        lang === 'es'
+          ? 'Viajeros que buscan estancia boutique aspiracional'
+          : 'Travelers seeking aspirational boutique stays',
+      positioning:
+        lang === 'es' ? 'Lujo experiencial, no resort genérico' : 'Experiential luxury, not generic resort',
       brandTone: 'luxury',
       artDirection: 'aspirationalLuxury',
       visualLanguage: 'photographyDominant',
       heroFamilies: ['fullBleedCenter', 'fullBleedLeft', 'asymmetricOverlap'],
       photoStyle: 'rooms with light, textures, spa, city views at dusk',
+      aboutHeadline:
+        lang === 'es' ? 'Lujo experiencial, no resort genérico' : 'Experiential luxury, not a generic resort',
+      aboutBody:
+        lang === 'es'
+          ? 'Suites, silencio y detalle. Una estancia diseñada para quienes valoran el criterio.'
+          : 'Suites, quiet and detail. A stay for those who value judgment.',
       services: {
         es: ['Suites', 'Spa', 'Gastronomía', 'Concierge', 'Experiencias'],
         en: ['Suites', 'Spa', 'Dining', 'Concierge', 'Experiences'],
@@ -141,13 +200,23 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       arc: ['hero', 'atmosphere', 'rooms', 'experiences', 'dining', 'gallery', 'testimonials', 'contact'],
     },
     architecture: {
-      audience: lang === 'es' ? 'Promotores y particulares que valoran espacio y luz' : 'Clients who value space and light',
-      positioning: lang === 'es' ? 'Minimalismo espacial, mucho blanco' : 'Spatial minimalism, generous white',
+      audience:
+        lang === 'es'
+          ? 'Promotores y particulares que valoran espacio y luz'
+          : 'Clients who value space and light',
+      positioning:
+        lang === 'es' ? 'Minimalismo espacial, mucho blanco' : 'Spatial minimalism, generous white',
       brandTone: 'minimal',
       artDirection: 'spatialMinimal',
       visualLanguage: 'airAndWhite',
       heroFamilies: ['editorialStack', 'splitMediaLeft', 'minimalTypeOnly'],
       photoStyle: 'architectural photography, concrete and glass, empty rooms with light',
+      aboutHeadline:
+        lang === 'es' ? 'Espacios que respiran' : 'Spaces that breathe',
+      aboutBody:
+        lang === 'es'
+          ? 'Arquitectura de luz, proporción y materia.'
+          : 'Architecture of light, proportion, material.',
       services: {
         es: ['Vivienda', 'Comercial', 'Rehabilitación', 'Interiorismo', 'Dirección de obra'],
         en: ['Residential', 'Commercial', 'Retrofit', 'Interiors', 'Site direction'],
@@ -160,13 +229,21 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       arc: ['hero', 'philosophy', 'projects', 'process', 'studio', 'gallery', 'contact'],
     },
     cafe: {
-      audience: lang === 'es' ? 'Vecinos y remotos que buscan café y ambiente' : 'Locals seeking coffee and atmosphere',
+      audience:
+        lang === 'es'
+          ? 'Vecinos y remotos que buscan café y ambiente'
+          : 'Locals seeking coffee and atmosphere',
       positioning: 'Warm neighborhood hospitality',
       brandTone: 'warm',
       artDirection: 'warmNeighborhood',
       visualLanguage: 'photographyDominant',
       heroFamilies: ['fullBleedCenter', 'splitMediaRight'],
       photoStyle: 'coffee, terrace, pastries, community',
+      aboutHeadline: lang === 'es' ? 'Café y barrio' : 'Coffee and neighborhood',
+      aboutBody:
+        lang === 'es'
+          ? 'Un lugar para quedarse: café de especialidad y mesa cálida.'
+          : 'A place to stay: specialty coffee and a warm table.',
       services: {
         es: ['Desayunos', 'Café de especialidad', 'Menú del día', 'Terraza'],
         en: ['Breakfast', 'Specialty coffee', 'Daily menu', 'Terrace'],
@@ -179,13 +256,21 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       arc: ['hero', 'about', 'services', 'gallery', 'why', 'contact'],
     },
     barber: {
-      audience: lang === 'es' ? 'Hombres que buscan corte y ritual de barbería' : 'Men seeking cut and barbershop ritual',
+      audience:
+        lang === 'es'
+          ? 'Hombres que buscan corte y ritual de barbería'
+          : 'Men seeking cut and barbershop ritual',
       positioning: 'Craft, contrast, gold accents',
       brandTone: 'editorial',
       artDirection: 'darkCraft',
       visualLanguage: 'darkMoody',
       heroFamilies: ['fullBleedCenter', 'splitMediaLeft'],
       photoStyle: 'barber tools, fades, shop atmosphere — never fashion runway',
+      aboutHeadline: lang === 'es' ? 'Más que un corte' : 'More than a cut',
+      aboutBody:
+        lang === 'es'
+          ? 'Oficio, detalle y un ritual de barbería con carácter.'
+          : 'Craft, detail and a barbershop ritual with character.',
       services: {
         es: ['Corte', 'Barba', 'Afeitado clásico', 'Pack completo'],
         en: ['Cut', 'Beard', 'Classic shave', 'Full pack'],
@@ -205,6 +290,11 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       visualLanguage: 'photographyDominant',
       heroFamilies: ['fullBleedLeft', 'asymmetricOverlap'],
       photoStyle: 'bread, flour, pastry, oven — never boats/cocktails',
+      aboutHeadline: lang === 'es' ? 'Pan de oficio' : 'Bread of craft',
+      aboutBody:
+        lang === 'es'
+          ? 'Masa madre y horno diario. Sabor real, sin atajos.'
+          : 'Sourdough and daily oven. Real flavor, no shortcuts.',
       services: {
         es: ['Pan de masa madre', 'Bollería', 'Encargos', 'Tartas'],
         en: ['Sourdough', 'Pastries', 'Orders', 'Cakes'],
@@ -224,6 +314,11 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       visualLanguage: 'typeLed',
       heroFamilies: ['splitMediaRight', 'editorialStack'],
       photoStyle: 'offices, handshake, Madrid skyline, documents calm',
+      aboutHeadline: lang === 'es' ? 'Asesoría con criterio' : 'Advisory with judgment',
+      aboutBody:
+        lang === 'es'
+          ? 'Fiscal, contable y laboral con claridad y cercanía.'
+          : 'Tax, accounting and labor with clarity and proximity.',
       services: {
         es: ['Fiscal', 'Contable', 'Laboral', 'Mercantil'],
         en: ['Tax', 'Accounting', 'Labor', 'Commercial'],
@@ -243,6 +338,11 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       visualLanguage: 'photographyDominant',
       heroFamilies: ['fullBleedCenter', 'asymmetricOverlap'],
       photoStyle: 'editorial fashion, lookbook, texture',
+      aboutHeadline: lang === 'es' ? 'Elegancia con carácter' : 'Elegance with character',
+      aboutBody:
+        lang === 'es'
+          ? 'Colecciones pensadas para quien valora el detalle.'
+          : 'Collections for those who value detail.',
       services: {
         es: ['Novedades', 'Lookbook', 'Colección'],
         en: ['New in', 'Lookbook', 'Collection'],
@@ -261,7 +361,13 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
       artDirection: 'warmNeighborhood',
       visualLanguage: 'splitEditorial',
       heroFamilies: ['splitMediaRight', 'fullBleedLeft', 'editorialStack'],
-      photoStyle: ' authentic business photography',
+      photoStyle: 'authentic business photography',
+      aboutHeadline:
+        lang === 'es' ? 'Presencia clara y memorable' : 'Clear, memorable presence',
+      aboutBody:
+        lang === 'es'
+          ? 'Diseñamos cada detalle para que tu marca se sienta alineada con lo que prometes.'
+          : 'Every detail is designed so your brand feels aligned with what you promise.',
       services: {
         es: ['Servicio principal', 'Consulta', 'Atención'],
         en: ['Core service', 'Consult', 'Support'],
@@ -283,13 +389,15 @@ function wantsWa(prompt: string): boolean {
 }
 
 function forbidCart(prompt: string): boolean {
-  return /sin\s+(carrito|ecommerce|e-commerce|tienda\s+online)|without\s+(cart|checkout)/i.test(prompt) ||
-    !/carrito|stripe|comprar\s+online|checkout/i.test(prompt);
+  return (
+    /sin\s+(carrito|ecommerce|e-commerce|tienda\s+online)|without\s+(cart|checkout)/i.test(prompt) ||
+    !/carrito|stripe|comprar\s+online|checkout/i.test(prompt)
+  );
 }
 
 /**
- * Director Creativo determinista (siempre disponible).
- * Opcionalmente se puede enriquecer con LLM en el futuro sin cambiar el contrato.
+ * Fallback síncrono — solo cuando no hay LLM.
+ * No intenta «adivinar» metáforas de brief; el LLM es el responsable.
  */
 export function runCreativeDirector(
   prompt: string,
@@ -306,14 +414,14 @@ export function runCreativeDirector(
   const rhythm = pickSeeded(rng, ['alternatingBands', 'editorialBreaks', 'continuous'] as const);
   const typeScale = pickSeeded(rng, ['editorial', 'billboard', 'intimate'] as const);
   const iconStyle = pickSeeded(rng, [
-    sectorId === 'legal' || sectorId === 'architecture' ? 'line' : 'line',
+    'line',
     'duotone',
     sectorId === 'restaurant' || sectorId === 'cafe' ? 'emoji' : 'line',
   ] as const);
 
   const addr =
-    prompt.match(/(?:direcci[oó]n|address)\s*[:\-]?\s*([^\n]{8,80})/i)?.[1]?.trim() ||
-    (sectorId === 'clinic' && /madrid/i.test(prompt) ? 'Madrid, España' : undefined);
+    prompt.match(/(?:direcci[oó]n|address|ubicaci[oó]n)\s*[:\-]?\s*([^\n]{4,80})/i)?.[1]?.trim() ||
+    undefined;
 
   return {
     version: '1.0',
@@ -336,21 +444,32 @@ export function runCreativeDirector(
     primaryCta: d.cta[lang][0],
     secondaryCta: d.cta[lang][1],
     services: d.services[lang],
+    aboutHeadline: d.aboutHeadline,
+    aboutBody: d.aboutBody,
     address: addr,
     hours: prompt.match(/(?:horario|hours)\s*[:\-]?\s*([^\n]{5,60})/i)?.[1]?.trim(),
     wantsWhatsApp: wantsWa(prompt),
     forbidCart: forbidCart(prompt),
     lang,
     uniquenessSeed: seed,
-    rationale: `Director: sector=${sectorId}, art=${d.artDirection}, hero=${heroFamily}, seed=${seed}`,
+    rationale: `Fallback heuristic: sector=${sectorId}, art=${d.artDirection}, hero=${heroFamily}, seed=${seed}`,
   };
 }
 
+/** API de producto: LLM primero; heurística solo si no hay providers o JSON inválido. */
 export async function runCreativeDirectorAsync(
   prompt: string,
   lang: 'es' | 'en',
-  opts?: { entropy?: string }
-): Promise<CreativeBrief> {
-  // Contrato estable: heurística CD primero. LLM enrichment can wrap later.
-  return runCreativeDirector(prompt, lang, opts);
+  opts?: { entropy?: string; preferProvider?: import('../providers').AiProvider }
+): Promise<CreativeDirectorResult> {
+  const llm = await runLlmCreativeDirector(prompt, lang, {
+    entropy: opts?.entropy,
+    preferProvider: opts?.preferProvider,
+  });
+  if (llm) return llm;
+  return {
+    brief: runCreativeDirector(prompt, lang, { entropy: opts?.entropy }),
+    provider: 'rules',
+    source: 'heuristic_fallback',
+  };
 }

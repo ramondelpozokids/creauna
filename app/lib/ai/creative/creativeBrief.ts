@@ -85,6 +85,9 @@ export interface CreativeBrief {
   primaryCta: string;
   secondaryCta: string;
   services: string[];
+  /** Copy de sección nosotros (nunca photoStyle / audience crudos) */
+  aboutHeadline: string;
+  aboutBody: string;
   address?: string;
   hours?: string;
   wantsWhatsApp: boolean;

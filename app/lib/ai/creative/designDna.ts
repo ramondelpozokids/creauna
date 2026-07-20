@@ -394,9 +394,36 @@ const DNA_BY_SECTOR: Record<CreativeSectorId, DnaBase> = {
 
 export function resolveDesignDna(brief: CreativeBrief): DesignDna {
   const base = DNA_BY_SECTOR[brief.sectorId] || DNA_BY_SECTOR.default;
+  // Medicina estética premium: marfil / dorado sutil / salvia — no teal dental
+  const luxuryAesthetic =
+    brief.sectorId === 'clinic' &&
+    (brief.artDirection === 'aspirationalLuxury' || brief.brandTone === 'luxury');
+  const palette = luxuryAesthetic
+    ? {
+        accent: '#B8A078',
+        dark: '#1C1A17',
+        light: '#FAF8F4',
+        surface: '#FFFFFF',
+        muted: '#6B6560',
+        cssVars: {
+          '--cua-accent': '#B8A078',
+          '--cua-dark': '#1C1A17',
+          '--cua-light': '#FAF8F4',
+          '--cua-surface': '#FFFFFF',
+          '--cua-muted': '#6B6560',
+          '--cua-sage': '#A8B5A0',
+        },
+      }
+    : base.palette;
+  const designStyle = luxuryAesthetic
+    ? 'Luxury aesthetic medicine: ivory air, subtle gold, soft sage, editorial serif, never hotel suites.'
+    : base.designStyle;
   return {
     ...base,
     id: `dna-${brief.sectorId}-${brief.uniquenessSeed.slice(0, 8)}`,
+    palette,
+    designStyle,
+    mood: luxuryAesthetic ? 'aspirationalLuxury' : base.mood,
     heroFamily: brief.heroFamily,
     density: brief.density,
     rhythm: brief.rhythm,
