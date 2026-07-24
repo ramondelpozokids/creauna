@@ -85,11 +85,24 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
   scores.briefComprehension = clamp10(briefScore);
   notes.briefComprehension = 'Facts + no forbidden extras';
 
-  // sectorIdentity
+  // sectorIdentity — forbidden visuals = frases reales, no ids de componentes (hero-saas, nav-corporate…)
   let sector = 5;
   if (has(html, new RegExp(`creauna-sector" content="${brief.sectorId}"`))) sector += 3;
   if (has(html, new RegExp(`data-cua-dna="${dna.id}"`))) sector += 1;
-  if (dna.forbiddenVisuals.some((f) => html.toLowerCase().includes(f.split(' ')[0]))) sector -= 1;
+  const htmlProbe = html
+    .replace(/data-cua-comp="[^"]*"/gi, '')
+    .replace(/data-cua-nav="[^"]*"/gi, '')
+    .replace(/data-cua-hero="[^"]*"/gi, '')
+    .toLowerCase();
+  if (
+    dna.forbiddenVisuals.some((f) => {
+      const phrase = f.toLowerCase().trim();
+      if (phrase.length < 4) return false;
+      return htmlProbe.includes(phrase);
+    })
+  ) {
+    sector -= 1;
+  }
   scores.sectorIdentity = clamp10(sector);
 
   // artDirection — craft vs SaaS-soft
@@ -113,10 +126,11 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
   let comp = 4.5;
   if (selection.layout.id && has(html, /creauna-layout/)) comp += 1.5;
   if (has(html, /data-cua-hero="/)) comp += 1;
-  if (selection.layout.asymmetry || /split|editorial|asymmetric|bleed/i.test(dna.heroFamily)) comp += 1.2;
+  if (selection.layout.asymmetry || /split|editorial|asymmetric|bleed|overlap/i.test(dna.heroFamily)) comp += 1.2;
   if (craft.immersiveHero) comp += 1.5;
   else if (html.length > 500) comp -= 1.5;
   if (craft.brandFirst) comp += 0.5;
+  if (has(html, /cua-hero-overlap|asymmetricOverlap|grid-template-columns:0\.9/i)) comp += 0.6;
   if (!/Hero\s*Cards\s*Testimonials\s*Pricing\s*FAQ/i.test(html)) comp += 0.3;
   scores.composition = clamp10(comp);
   notes.composition = craft.immersiveHero ? 'Immersive hero + layout contract' : 'Hero under-immersive vs demos';
@@ -202,6 +216,11 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
   }
   if (has(html, /data-cua-composition="v2"/)) {
     scores.composition = clamp10(scores.composition + 0.4);
+  }
+  // Señal agencia real: landmark main + craft + hero inmersivo (demos de techo)
+  if (has(html, /<main\b/i) && craft.craftChrome && craft.immersiveHero) {
+    scores.ux = clamp10(scores.ux + 0.6);
+    scores.accessibility = clamp10(scores.accessibility + 0.4);
   }
 
   // Prompt keyword presence

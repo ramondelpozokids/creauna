@@ -20,15 +20,17 @@ export function reviseComposition(
   const nextBrief: CreativeBrief = {
     ...brief,
     uniquenessSeed: newSeed,
-    // Rotate hero family slightly for variety
+    // Rotate hero family for variety + techo asimétrico
     heroFamily:
-      attempt % 2 === 0
-        ? brief.heroFamily
-        : brief.heroFamily === 'fullBleedCenter'
-          ? 'splitMediaRight'
-          : brief.heroFamily === 'splitMediaRight'
-            ? 'editorialStack'
-            : 'fullBleedLeft',
+      attempt % 3 === 1
+        ? 'asymmetricOverlap'
+        : attempt % 3 === 2
+          ? brief.heroFamily === 'fullBleedCenter'
+            ? 'splitMediaRight'
+            : brief.heroFamily === 'splitMediaRight'
+              ? 'editorialStack'
+              : 'fullBleedLeft'
+          : brief.heroFamily,
   };
   const nextDna: DesignDna = {
     ...dna,

@@ -70,7 +70,13 @@ function pickFamily(
 ): ComponentMeta {
   const all = componentsByFamily(family);
   const sectorFit = all.filter((c) => c.sectors.includes(sector) || c.sectors.includes('*') || c.sectors.includes('default'));
-  const pool = sectorFit.length ? sectorFit : all;
+  let pool = sectorFit.length ? sectorFit : all;
+  // Evitar chrome SaaS-named en verticales craft (el id no debe filtrarse al HTML de marca)
+  const craftSectors = new Set(['restaurant', 'cafe', 'hotel', 'clinic', 'barber', 'bakery', 'fashion']);
+  if (family === 'hero' && craftSectors.has(sector)) {
+    const filtered = pool.filter((c) => !/saas|startup/i.test(c.id));
+    if (filtered.length) pool = filtered;
+  }
   return pool[Math.floor(rng() * pool.length) % pool.length];
 }
 
