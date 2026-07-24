@@ -34,7 +34,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'pricing',
     keywords: ['precio', 'precios', 'plan', 'planes', 'cuanto cuesta', 'cuánto cuesta', 'tarifa', 'coste', 'costo', 'gratis', 'pago', 'suscripción', 'mensual', 'anual'],
-    answer: 'Dos caminos en /precios:\n\n**Opción 1 — Studio (tú la haces):**\n• Gratis — 0€, probar sin tarjeta (15 cambios/mes, sin exportación completa)\n• Pro — desde 15€/mes (anual) o 19€/mes, exportas archivos y publicas tú\n• Business — desde 39€/mes, equipos y agencias\n\n**Opción 2 — Te la hacemos (pago único):**\n• Web nueva particular — desde 690€\n• Autónomo — 890€ · PYME — 1.290€\n• Web a Medida — 1.790€ + IVA\n\nDominio y hosting no incluidos (presupuesto aparte si lo pides).',
+    answer: 'Dos caminos en /precios:\n\n**Opción 1 — Studio (tú la haces):**\n• Gratis — 0€, probar sin tarjeta (15 cambios/mes, sin exportación completa)\n• Pro — desde 15€/mes (anual) o 19€/mes, exportas archivos y publicas tú\n• Business — desde 39€/mes, equipos y agencias\n\n**Opción 2 — Te la hacemos (pago único):**\n• Web nueva particular — desde 690€\n• Autónomo — 890€ · PYME — 1.290€\n• Web a Medida — 1.790€ + IVA\n• Premium Experiencia (webs con 3D y mucho impacto, tipo Velocity X, AEON, PHANTOM) — desde 4.900€ + IVA\n\nDominio y hosting no incluidos (presupuesto aparte si lo pides).',
   },
   {
     id: 'credits',
@@ -54,7 +54,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'templates',
     keywords: ['plantilla', 'plantillas', 'template', 'templates', 'catálogo', 'catalogo', 'diseños', 'modelos'],
-    answer: '15 ejemplos demo en /templates (9 plantillas + 6 proyectos reales, sin duplicados). Solo vitrina — para ver calidad CREAUNA. Para crear la tuya: describe tu idea con prompts en /studio o pide presupuesto en /contacto',
+    answer: 'Ejemplos demo en /templates: plantillas, proyectos y el filtro Premium (Velocity X, AEON NEXUS, PHANTOM — desde 4.900€). Solo vitrina. Para crear la tuya: /studio o presupuesto en /contacto',
   },
   {
     id: 'ai-tech',
@@ -74,7 +74,7 @@ export const knowledgeBase: KnowledgeEntry[] = [
   {
     id: 'custom-web',
     keywords: ['medida', 'personalizada', 'personalizado', 'exclusivo', 'agencia', 'proyecto especial'],
-    answer: 'Web a Medida: precio cerrado 1.790€ + IVA (máximo web premium). Incluye diseño exclusivo, copywriting, desarrollo, SEO, publicación y 3 meses de soporte. Proceso completo en /web-a-medida. Ramón del Pozo Rott supervisa cada proyecto. Contacto en /contacto',
+    answer: 'Web a Medida: 1.790€ + IVA — web de negocio o marca hecha a medida (sin las demos Premium con 3D).\n\nPremium Experiencia: desde 4.900€ + IVA — webs con animaciones, 3D e interacción (tipo Velocity X, AEON o PHANTOM). Demos en /templates?cat=premium.\n\nDetalle en /precios y /web-a-medida. Contacto: /contacto',
   },
   {
     id: 'export',

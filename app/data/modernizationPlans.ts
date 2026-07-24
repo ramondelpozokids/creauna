@@ -1,6 +1,6 @@
 import { User, Briefcase, Building2, RefreshCw, type LucideIcon } from 'lucide-react';
 
-/** Precio máximo web premium / web a medida (pago único). */
+/** Precio máximo web a medida clásica (pago único). No incluye Premium Experiencia WebGL. */
 export const PREMIUM_WEB_PRICE_ES = '1.790€';
 export const PREMIUM_WEB_PRICE_EN = '€1,790';
 

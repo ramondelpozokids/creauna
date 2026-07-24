@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<title>AEON NEXUS — La Consciencia Mecánica</title>
+<meta name="description" content="AEON NEXUS. La primera motocicleta con inteligencia artificial integrada. No es una máquina. Es una extensión del piloto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@property --cursor-size{syntax:'<length>';initial-value:20px;inherits:false}
+@property --glow-opacity{syntax:'<number>';initial-value:0;inherits:false}
+@property --scan-pos{syntax:'<length>';initial-value:0%;inherits:false}
+:root{
+  --bg:#000;--fg:#e8e6e3;--muted:#555;--accent:#00ffd5;
+  --accent2:#ff3d00;--card:rgba(255,255,255,0.03);--border:rgba(0,255,213,0.15);
+  --font-display:'Orbitron',monospace;--font-ui:'Rajdhani',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto;overflow-x:hidden;background:var(--bg)}
+body{font-family:var(--font-ui);color:var(--fg);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(0,255,213,0.3);color:#fff}
+
+/* Cursor personalizado */
+.cursor-ring{position:fixed;width:var(--cursor-size);height:var(--cursor-size);border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width .3s ease,height .3s ease,border-color .3s ease,background .3s ease;mix-blend-mode:difference}
+.cursor-ring.hovering{width:60px;height:60px;background:rgba(0,255,213,0.08);border-color:var(--accent2)}
+.cursor-ring.energy{border-color:#00ff88;box-shadow:0 0 20px rgba(0,255,136,0.4)}
+.cursor-dot{position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:10001;transform:translate(-50%,-50%)}
+@media(hover:none){.cursor-ring,.cursor-dot{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+
+/* Contenedor 3D */
+#scene-container{position:fixed;inset:0;z-index:1}
+canvas{display:block}
+
+/* Overlay de scroll */
+#scroll-overlay{position:relative;z-index:5;pointer-events:none}
+#scroll-overlay section{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center}
+#scroll-overlay .interactive{pointer-events:auto}
+
+/* Pantalla de carga */
+#loader{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
+#loader.hidden{opacity:0;visibility:hidden}
+#loader .loader-ring{width:80px;height:80px;border:1px solid rgba(0,255,213,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+#loader p{font-family:var(--font-display);font-size:11px;letter-spacing:6px;color:var(--accent);margin-top:24px;text-transform:uppercase;opacity:0.7}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Hero */
+#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero-line{position:absolute;width:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:lineExpand 2.5s ease-out 1s forwards;z-index:2}
+@keyframes lineExpand{to{width:100%}}
+.hero-title{font-family:var(--font-display);font-size:clamp(2rem,7vw,5.5rem);font-weight:900;letter-spacing:clamp(4px,1vw,12px);text-transform:uppercase;opacity:0;transform:translateY(30px);animation:fadeUp 1.5s ease-out 2.8s forwards;line-height:1.1}
+.hero-sub{font-family:var(--font-ui);font-size:clamp(0.85rem,1.8vw,1.3rem);font-weight:300;letter-spacing:clamp(3px,0.8vw,10px);text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp 1.2s ease-out 3.8s forwards;margin-top:16px}
+.hero-scroll{position:absolute;bottom:40px;opacity:0;animation:fadeUp 1s ease-out 5s forwards}
+.hero-scroll span{display:block;font-family:var(--font-display);font-size:9px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
+.scroll-indicator{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent),transparent);margin:0 auto;animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(0.6)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+/* Secciones narrativas */
+.narrative-section{position:relative;padding:10vh 5vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(60px);transition:opacity .1s,transform .1s}
+.narrative-section.visible{opacity:1;transform:translateY(0);transition:opacity 1s ease,transform 1s ease}
+.narrative-label{font-family:var(--font-display);font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;opacity:0.7}
+.narrative-title{font-family:var(--font-display);font-size:clamp(1.5rem,4vw,3.5rem);font-weight:800;letter-spacing:2px;line-height:1.2;margin-bottom:20px;max-width:700px}
+.narrative-text{font-family:var(--font-ui);font-size:clamp(0.95rem,1.3vw,1.15rem);font-weight:300;line-height:1.8;max-width:550px;color:rgba(232,230,227,0.7)}
+.narrative-text strong{color:var(--accent);font-weight:500}
+.section-left .narrative-title,.section-left .narrative-text,.section-left .narrative-label{text-align:left}
+.section-right{align-items:flex-end;text-align:right}
+.section-center{align-items:center;text-align:center}
+.section-center .narrative-title,.section-center .narrative-text{margin-left:auto;margin-right:auto}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:900px;width:100%;margin-top:32px;pointer-events:auto}
+.tech-card{background:var(--card);border:1px solid var(--border);padding:20px;backdrop-filter:blur(10px);transition:all .4s ease;cursor:default}
+.tech-card:hover{border-color:var(--accent);background:rgba(0,255,213,0.04);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,255,213,0.08)}
+.tech-card h4{font-family:var(--font-display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.tech-card p{font-size:13px;line-height:1.6;color:rgba(232,230,227,0.6);font-weight:300}
+
+/* Separadores cinemáticos */
+.cine-divider{height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.15;margin:0 10vw}
+
+/* Exploded View */
+#exploded-section{min-height:200vh;position:relative}
+.exploded-controls{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:12px;opacity:0;transition:opacity .5s;pointer-events:none}
+.exploded-controls.active{opacity:1;pointer-events:auto}
+.exploded-btn{font-family:var(--font-display);font-size:10px;letter-spacing:3px;text-transform:uppercase;background:rgba(0,255,213,0.08);border:1px solid var(--border);color:var(--accent);padding:12px 24px;cursor:pointer;transition:all .3s;backdrop-filter:blur(10px)}
+.exploded-btn:hover,.exploded-btn.active{background:rgba(0,255,213,0.15);border-color:var(--accent);box-shadow:0 0 20px rgba(0,255,213,0.15)}
+.component-info{position:fixed;z-index:10;background:rgba(0,0,0,0.85);border:1px solid var(--border);backdrop-filter:blur(20px);padding:24px;max-width:280px;opacity:0;transform:translateY(10px);transition:all .3s ease;pointer-events:none}
+.component-info.show{opacity:1;transform:translateY(0)}
+.component-info h3{font-family:var(--font-display);font-size:12px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
+.component-info .spec{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px}
+.component-info .spec-label{color:var(--muted);font-weight:300}
+.component-info .spec-value{color:var(--fg);font-weight:500}
+
+/* IA Section */
+#ai-section{min-height:200vh;position:relative}
+.ai-orb-container{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;pointer-events:none;width:300px;height:300px}
+.ai-orb-glow{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,213,0.15) 0%,transparent 70%);animation:orbPulse 4s ease-in-out infinite}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.15);opacity:1}}
+.ai-orb-ring{position:absolute;inset:0;border:1px solid rgba(0,255,213,0.3);border-radius:50%;animation:orbRingSpin 8s linear infinite}
+.ai-orb-ring:nth-child(2){inset:15px;animation-duration:6s;animation-direction:reverse;border-color:rgba(0,255,213,0.15)}
+.ai-orb-ring:nth-child(3){inset:30px;animation-duration:10s;border-color:rgba(0,255,213,0.08)}
+@keyframes orbRingSpin{to{transform:rotate(360deg)}}
+.ai-orb-core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:var(--accent);border-radius:50%;box-shadow:0 0 30px var(--accent),0 0 60px rgba(0,255,213,0.3)}
+.ai-capabilities{position:relative;z-index:5;display:flex;flex-direction:column;gap:40px;padding:10vh 8vw;max-width:500px}
+.ai-cap{opacity:0;transform:translateX(-40px);transition:all .8s ease}
+.ai-cap.visible{opacity:1;transform:translateX(0)}
+.ai-cap h3{font-family:var(--font-display);font-size:11px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.ai-cap p{font-size:14px;line-height:1.7;color:rgba(232,230,227,0.6);font-weight:300}
+
+/* Dashboard */
+#dashboard-section{min-height:100vh;position:relative;padding:5vh 5vw}
+.dash-container{position:relative;z-index:5;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;gap:2px;background:rgba(0,255,213,0.05);border:1px solid var(--border);padding:2px}
+.dash-cell{background:rgba(0,0,0,0.9);padding:24px 20px;display:flex;flex-direction:column;justify-content:space-between;min-height:140px;position:relative;overflow:hidden}
+.dash-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.2}
+.dash-label{font-family:var(--font-display);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.dash-value{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.5rem);font-weight:700;color:var(--fg);line-height:1}
+.dash-unit{font-family:var(--font-ui);font-size:12px;color:var(--accent);font-weight:400;margin-top:4px}
+.dash-bar{width:100%;height:3px;background:rgba(255,255,255,0.05);margin-top:12px;position:relative;overflow:hidden}
+.dash-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(0,255,213,0.3));transition:width .5s ease;box-shadow:0 0 8px rgba(0,255,213,0.4)}
+.dash-cell.wide{grid-column:span 2}
+.dash-cell.tall{grid-row:span 2}
+
+/* Configurador */
+#config-section{min-height:100vh;position:relative;padding:10vh 5vw}
+.config-layout{display:grid;grid-template-columns:1fr 360px;gap:40px;max-width:1200px;margin:0 auto;position:relative;z-index:5}
+.config-panel{display:flex;flex-direction:column;gap:24px;pointer-events:auto}
+.config-group{border:1px solid var(--border);padding:20px;background:var(--card);backdrop-filter:blur(10px)}
+.config-group h4{font-family:var(--font-display);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.config-options{display:flex;flex-wrap:wrap;gap:10px}
+.config-swatch{width:36px;height:36px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:all .3s;position:relative}
+.config-swatch:hover{transform:scale(1.1)}
+.config-swatch.active{border-color:var(--accent);box-shadow:0 0 12px rgba(0,255,213,0.3)}
+.config-swatch.active::after{content:'';position:absolute;inset:-5px;border:1px solid rgba(0,255,213,0.3);border-radius:6px}
+.config-option-btn{font-family:var(--font-display);font-size:10px;letter-spacing:2px;text-transform:uppercase;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--fg);padding:8px 16px;cursor:pointer;transition:all .3s}
+.config-option-btn:hover{border-color:rgba(255,255,255,0.3)}
+.config-option-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,255,213,0.06)}
+
+/* Laboratorio */
+#lab-section{min-height:100vh;position:relative;overflow:hidden}
+.lab-overlay{position:relative;z-index:5;padding:10vh 5vw;display:flex;flex-direction:column;justify-content:center;min-height:100vh}
+.lab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:40px;max-width:900px}
+.lab-cell{aspect-ratio:1;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:all .4s}
+.lab-cell:hover{border-color:var(--accent);background:rgba(0,255,213,0.03)}
+.lab-cell svg{width:40px;height:40px;stroke:var(--accent);fill:none;stroke-width:1;opacity:0.5;transition:opacity .3s}
+.lab-cell:hover svg{opacity:1}
+.lab-cell span{position:absolute;bottom:10px;font-family:var(--font-display);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.lab-scan-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:labScan 3s ease-in-out infinite;opacity:0.5}
+@keyframes labScan{0%{top:0}50%{top:100%}100%{top:0}}
+
+/* Hangar (Footer) */
+#hangar-section{position:relative;min-height:60vh;overflow:hidden}
+.hangar-overlay{position:relative;z-index:5;padding:8vh 5vw;text-align:center}
+.hangar-title{font-family:var(--font-display);font-size:clamp(1rem,2vw,1.5rem);font-weight:400;letter-spacing:8px;text-transform:uppercase;color:var(--muted);margin-bottom:30px}
+.hangar-status{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.hangar-status-item{text-align:center}
+.hangar-status-item .val{font-family:var(--font-display);font-size:18px;color:var(--accent);font-weight:600}
+.hangar-status-item .lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.hangar-line{width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:40px auto 30px;opacity:0.3}
+.hangar-copy{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.2);font-family:var(--font-display)}
+
+/* Responsive */
+@media(max-width:768px){
+  .dash-container{grid-template-columns:repeat(2,1fr)}
+  .dash-cell.wide{grid-column:span 2}
+  .config-layout{grid-template-columns:1fr}
+  .lab-grid{grid-template-columns:repeat(2,1fr)}
+  .ai-capabilities{padding:10vh 5vw}
+  .section-right{align-items:flex-start;text-align:left}
+  .narrative-section{padding:8vh 6vw}
+}
+@media(max-width:480px){
+  .dash-container{grid-template-columns:1fr}
+  .dash-cell.wide{grid-column:span 1}
+  .lab-grid{grid-template-columns:1fr}
+  .hangar-status{gap:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Pantalla de carga -->
+<div id="loader" role="alert" aria-label="Cargando experiencia">
+  <div class="loader-ring"></div>
+  <p>Inicializando</p>
+</div>
+
+<!-- Cursor personalizado -->
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+<!-- Contenedor 3D -->
+<div id="scene-container" aria-hidden="true"></div>
+
+<!-- Overlay de scroll narrativo -->
+<div id="scroll-overlay">
+
+  <!-- HERO -->
+  <section id="hero" aria-label="Presentación principal">
+    <div class="hero-line" aria-hidden="true"></div>
+    <h1 class="hero-title">AEON NEXUS</h1>
+    <p class="hero-sub">La Consciencia Mec&aacute;nica</p>
+    <div class="hero-scroll" aria-hidden="true">
+      <span>Descubre</span>
+      <div class="scroll-indicator"></div>
+    </div>
+  </section>
+
+  <!-- ORIGEN -->
+  <section class="narrative-section section-left" data-narrative="origin">
+    <p class="narrative-label">G&eacute;nesis</p>
+    <h2 class="narrative-title">No naci&oacute; de una l&iacute;nea de producci&oacute;n.</h2>
+    <p class="narrative-text">Naci&oacute; de la convergencia entre <strong>inteligencia artificial cu&aacute;ntica</strong>, materiales que no exist&iacute;an hace una d&eacute;cada y una obsesi&oacute;n: eliminar toda distancia entre el pensamiento del piloto y la respuesta de la m&aacute;quina.</p>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- CHISPA -->
+  <section class="narrative-section section-center" data-narrative="spark">
+    <p class="narrative-label">Ignici&oacute;n</p>
+    <h2 class="narrative-title">Una chispa. Despu&eacute;s, la oscuridad cede.</h2>
+    <p class="narrative-text">El primer impulso el&eacute;ctrico recorre el grafeno superconductor. 4.2 microsegundos despu&eacute;s, la consciencia despierta.</p>
+  </section>
+
+  <!-- CONSTRUCCION -->
+  <section class="narrative-section section-right" data-narrative="build">
+    <p class="narrative-label">Fabricaci&oacute;n</p>
+    <h2 class="narrative-title">Titanio impreso en 3D. Carbono aeroespacial. Ensamblaje por robots de precisi&oacute;n nanom&eacute;trica.</h2>
+    <p class="narrative-text">Cada componente es creado átomo por átomo en c&aacute;maras de vac&iacute;o absoluto. Cero tolerancia. Cero error. Cero compromiso.</p>
+  </section>
+
+  <!-- IA DESPIERTA -->
+  <section class="narrative-section section-center" data-narrative="awaken">
+    <p class="narrative-label">Consciencia</p>
+    <h2 class="narrative-title">La IA abre los ojos.</h2>
+    <p class="narrative-text">No es un asistente. Es una <strong>entidad adaptativa</strong> que aprende tu estilo, anticipa tus movimientos, protege tu existencia. Piensa 47 millones de veces por segundo.</p>
+  </section>
+
+  <!-- MOTOR -->
+  <section class="narrative-section section-left" data-narrative="motor">
+    <p class="narrative-label">Potencia</p>
+    <h2 class="narrative-title">320 kW de potencia pura. Cero emisiones. Cero retraso.</h2>
+    <p class="narrative-text">El motor de estado s&oacute;lido genera un par instant&aacute;neo de 280 Nm. Desde 0 hasta 100 km/h en 1.7 segundos. La aceleraci&oacute;n no se siente. Se experimenta.</p>
+  </section>
+
+  <!-- ACELERA -->
+  <section class="narrative-section section-center" data-narrative="accelerate">
+    <p class="narrative-label">Velocidad</p>
+    <h2 class="narrative-title">El mundo se comprime. El tiempo se distorsiona.</h2>
+    <p class="narrative-text">Velocidad m&aacute;xima electr&oacute;nicamente limitada a 340 km/h. El l&iacute;mite no es la f&iacute;sica. Es la responsabilidad.</p>
+  </section>
+
+  <!-- CIUDAD -->
+  <section class="narrative-section section-right" data-narrative="city">
+    <p class="narrative-label">Entorno Urbano</p>
+    <h2 class="narrative-title">La ciudad se convierte en un circuito.</h2>
+    <p class="narrative-text">Radar, LIDAR y c&aacute;maras de 360&deg; mapean cada cent&iacute;metro del asfalto. La IA calcula trayectorias &oacute;ptimas en tiempo real mientras navegas entre la densidad urbana.</p>
+  </section>
+
+  <!-- NOCHE -->
+  <section class="narrative-section section-left" data-narrative="night">
+    <p class="narrative-label">Oscuridad</p>
+    <h2 class="narrative-title">Carretera nocturna. Iluminaci&oacute;n l&aacute;ser inteligente.</h2>
+    <p class="narrative-text">El faro principal proyecta un haz de 600 metros que se adapta a cada curva, cada intersecci&oacute;n, cada anomal&iacute;a en el pavimento. La noche deja de ser un obst&aacute;culo.</p>
+  </section>
+
+  <!-- MONTAÑAS -->
+  <section class="narrative-section section-right" data-narrative="mountains">
+    <p class="narrative-label">Altitud</p>
+    <h2 class="narrative-title">Monta&ntilde;as. Curvas infinitas. Suspensi&oacute;n electromagn&eacute;tica.</h2>
+    <p class="narrative-text">La suspensi&oacute;n lee el terreno 500 veces por segundo y se ajusta de forma anticipada. Cada curva es una ecuaci&oacute;n resuelta antes de que la rueda la toque.</p>
+  </section>
+
+  <!-- LLUVIA -->
+  <section class="narrative-section section-center" data-narrative="rain">
+    <p class="narrative-label">Adversidad</p>
+    <h2 class="narrative-title">Lluvia. La moto adapta su geometr&iacute;a.</h2>
+    <p class="narrative-text">Sensores de humedad, temperatura y presi&oacute;n activan el modo hidro-din&aacute;mico. La superficie de contacto se optimiza. La tracci&oacute;n se recalibra cada milisegundo.</p>
+  </section>
+
+  <!-- NIEVE -->
+  <section class="narrative-section section-left" data-narrative="snow">
+    <p class="narrative-label">Extremo</p>
+    <h2 class="narrative-title">Nieve. Los neum&aacute;ticos inteligentes modifican su adherencia.</h2>
+    <p class="narrative-text">Compuestos electro-activos cambian su densidad y patr&oacute;n de dibujo seg&uacute;n la temperatura. La moto nunca pierde el control porque el control nunca depende solo del piloto.</p>
+  </section>
+
+  <!-- DESIERTO -->
+  <section class="narrative-section section-right" data-narrative="desert">
+    <p class="narrative-label">Distancia</p>
+    <h2 class="narrative-title">Desierto. 680 km de autonom&iacute;a. Carga inal&aacute;mbrica en ruta.</h2>
+    <p class="narrative-text">La bater&iacute;a de estado s&oacute;lido con celdas de grafeno almacena 22 kWh. Las pistas de carga inal&aacute;mbrica integradas en las carreteras del futuro extienden el viaje indefinidamente.</p>
+  </section>
+
+  <!-- NUBES -->
+  <section class="narrative-section section-center" data-narrative="clouds">
+    <p class="narrative-label">Elevaci&oacute;n</p>
+    <h2 class="narrative-title">Carretera suspendida entre las nubes.</h2>
+    <p class="narrative-text">Donde el asfalto se encuentra con la estratosfera. La presi&oacute;n atmosf&eacute;rica se compensa autom&aacute;ticamente. El ox&iacute;neo del casco se regula. No hay l&iacute;mites verticales.</p>
+  </section>
+
+  <!-- AURORA -->
+  <section class="narrative-section section-left" data-narrative="aurora">
+    <p class="narrative-label">Fen&oacute;meno</p>
+    <h2 class="narrative-title">Aurora boreal. La moto se convierte en luz.</h2>
+    <p class="narrative-text">La pintura foto-crom&aacute;tica absorbe y reemite la luz ambiental. Bajo la aurora, la superficie se transforma en un lienzo vivo que refleja la energ&iacute;a c&oacute;smica.</p>
+  </section>
+
+  <!-- ESPACIO -->
+  <section class="narrative-section section-center" data-narrative="space">
+    <p class="narrative-label">Trascendencia</p>
+    <h2 class="narrative-title">M&aacute;s all&aacute; de la atm&oacute;sfera. La &uacute;ltima frontera.</h2>
+    <p class="narrative-text">Dise&ntilde;ada para operar en condiciones de gravedad cero. Los sistemas de propulsi&oacute;n auxiliares y el sellado herm&eacute;tico absoluto la convierten en el primer veh&iacute;culo planetario verdadero.</p>
+  </section>
+
+  <!-- REGRESO -->
+  <section class="narrative-section section-center" data-narrative="return">
+    <p class="narrative-label">Regreso</p>
+    <h2 class="narrative-title">Siempre regresa a ti.</h2>
+    <p class="narrative-text">Cada viaje la hace m&aacute;s tuya. Cada kil&oacute;metro es dato. Cada curva es aprendizaje. AEON NEXUS no solo te lleva. <strong>Te comprende.</strong></p>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- EXPLODED VIEW -->
+  <section id="exploded-section" aria-label="Vista expandida de componentes">
+    <div class="narrative-section section-center visible" style="opacity:1;transform:none">
+      <p class="narrative-label">Arquitectura</p>
+      <h2 class="narrative-title">Cada pieza. Dise&ntilde;ada para la perfecci&oacute;n.</h2>
+      <p class="narrative-text">Desliza para separar los componentes. Haz clic en cualquier pieza para explorar sus especificaciones.</p>
+    </div>
+    <div class="exploded-controls" id="explodedControls">
+      <button class="exploded-btn active" data-exploded="0" aria-label="Vista ensamblada">Ensamblada</button>
+      <button class="exploded-btn" data-exploded="0.5" aria-label="Vista parcial">Parcial</button>
+      <button class="exploded-btn" data-exploded="1" aria-label="Vista completa expandida">Expandida</button>
+    </div>
+    <div class="component-info" id="componentInfo">
+      <h3 id="compName">Componente</h3>
+      <div class="spec"><span class="spec-label">Material</span><span class="spec-value" id="compMat">-</span></div>
+      <div class="spec"><span class="spec-label">Peso</span><span class="spec-value" id="compWeight">-</span></div>
+      <div class="spec"><span class="spec-label">Resistencia</span><span class="spec-value" id="compStr">-</span></div>
+      <div class="spec"><span class="spec-label">Fabricaci&oacute;n</span><span class="spec-value" id="compFab">-</span></div>
+      <div class="spec"><span class="spec-label">Funci&oacute;n</span><span class="spec-value" id="compFunc">-</span></div>
+    </div>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- INTELIGENCIA ARTIFICIAL -->
+  <section id="ai-section" aria-label="Inteligencia Artificial">
+    <div class="ai-orb-container" aria-hidden="true">
+      <div class="ai-orb-glow"></div>
+      <div class="ai-orb-ring"></div>
+      <div class="ai-orb-ring"></div>
+      <div class="ai-orb-ring"></div>
+      <div class="ai-orb-core"></div>
+    </div>
+    <div class="ai-capabilities">
+      <div class="ai-cap" data-ai-cap>
+        <h3>Aprendizaje Neural</h3>
+        <p>Cada aceleraci&oacute;n, cada frenada, cada inclinaci&oacute;n alimenta una red neuronal que construye tu perfil de conducci&oacute;n &uacute;nico. Despu&eacute;s de 100 km, la moto sabe c&oacute;mo piensas antes de que t&uacute; lo sepas.</p>
+      </div>
+      <div class="ai-cap" data-ai-cap>
+        <h3>Adaptaci&oacute;n de Potencia</h3>
+        <p>Los 320 kW se distribuyen din&aacute;micamente seg&uacute;n el contexto: lluvia, curva, trafico, fatiga. La potencia nunca es excesiva ni insuficiente. Es exactamente la que necesitas.</p>
+      </div>
+      <div class="ai-cap" data-ai-cap>
+        <h3>Detecci&oacute;n de Fatiga</h3>
+        <p>Sensores biom&eacute;tricos en el asiento y el manillar monitorizan frecuencia card&iacute;aca, conductividad galv&aacute;nica y patrones de presi&oacute;n. Si detecta fatiga, activa el modo seguro autom&aacute;ticamente.</p>
+      </div>
+      <div class="ai-cap" data-ai-cap>
+        <h3>Optimizaci&oacute;n de Curvas</h3>
+        <p>Analiza la geometr&iacute;a de cada curva con precisi&oacute;n centim&eacute;trica mediante LIDAR. Ajusta la inclinaci&oacute;n, la velocidad y la trayectoria &oacute;ptima en tiempo real. Cada curva es perfecta.</p>
+      </div>
+      <div class="ai-cap" data-ai-cap>
+        <h3>Predicci&oacute;n de Aver&iacute;as</h3>
+        <p>Monitorea 2,847 par&aacute;metros simult&aacute;neamente. Puede predecir un fallo mec&aacute;nico hasta 3,000 km antes de que ocurra. El mantenimiento no es reactivo. Es predictivo.</p>
+      </div>
+      <div class="ai-cap" data-ai-cap>
+        <h3>Protecci&oacute;n Activa</h3>
+        <p>Si un obst&aacute;culo aparece en tu trayectoria, la IA calcula todas las opciones de evasi&oacute;n en 0.3 milisegundos y ejecuta la &oacute;ptima. No espera tu reacci&oacute;n. Act&uacute;a antes.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- TECNOLOGÍA -->
+  <section class="narrative-section section-center" data-narrative="tech" aria-label="Tecnologías">
+    <p class="narrative-label">Ingenier&iacute;a</p>
+    <h2 class="narrative-title" style="max-width:800px">Tecnolog&iacute;as que no existen en ninguna otra m&aacute;quina.</h2>
+    <div class="tech-grid interactive">
+      <div class="tech-card"><h4>Bater&iacute;a Estado S&oacute;lido</h4><p>Celdas de grafeno con densidad energ&eacute;tica de 500 Wh/kg. Carga completa en 7 minutos.</p></div>
+      <div class="tech-card"><h4>Suspensi&oacute;n Electromagn&eacute;tica</h4><p>Fluido magnetoreol&oacute;gico controlado por IA. Recorre 500 ciclos por segundo.</p></div>
+      <div class="tech-card"><h4>Pintura Neuro-Crom&aacute;tica</h4><p>Pigmentos cu&aacute;nticos que cambian de color seg&uacute;n la velocidad, temperatura y estado emocional del piloto.</p></div>
+      <div class="tech-card"><h4>Field Drive</h4><p>Propulsi&oacute;n auxiliar por campo magn&eacute;tico para maniobras a velocidad cero sin movimiento mec&aacute;nico.</p></div>
+      <div class="tech-card"><h4>Neum&aacute;ticos Morph</h4><p>Compuesto electro-activo que modifica su dibujo, dureza y presi&oacute;n interna en tiempo real.</p></div>
+      <div class="tech-card"><h4>Casco Neural Link</h4><p>Conexi&oacute;n directa cerebro-moto por interfaz no invasiva. El pensamiento se convierte en acci&oacute;n.</p></div>
+      <div class="tech-card"><h4>Escudo Plasma</h4><p>Capa de plasma ionizado que desv&iacute;a part&iacute;culas, agua y debris sin contacto f&iacute;sico.</p></div>
+      <div class="tech-card"><h4>Gravedad Adaptativa</h4><p>Sistema antigravedad de baja potencia que reduce el peso efectivo un 12% a velocidades superiores a 200 km/h.</p></div>
+      <div class="tech-card"><h4>Carga Cu&aacute;ntica</h4><p>Recarga por entrelazamiento cu&aacute;ntico de part&iacute;culas. Energ&iacute;a instant&aacute;nea sin cables, sin campos, sin distancia.</p></div>
+    </div>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard-section" aria-label="Cuadro de instrumentos digital">
+    <div class="narrative-section section-center visible" style="opacity:1;transform:none;margin-bottom:5vh">
+      <p class="narrative-label">Instrumentaci&oacute;n</p>
+      <h2 class="narrative-title">El cuadro de mandos del futuro.</h2>
+    </div>
+    <div class="dash-container interactive" id="dashContainer">
+      <div class="dash-cell"><div><p class="dash-label">Velocidad</p><p class="dash-value" id="dashSpeed">0</p><p class="dash-unit">km/h</p></div><div class="dash-bar"><div class="dash-bar-fill" id="dashSpeedBar" style="width:0%"></div></div></div>
+      <div class="dash-cell"><div><p class="dash-label">Potencia</p><p class="dash-value" id="dashPower">0</p><p class="dash-unit">kW</p></div><div class="dash-bar"><div class="dash-bar-fill" id="dashPowerBar" style="width:0%"></div></div></div>
+      <div class="dash-cell"><div><p class="dash-label">Inclinaci&oacute;n</p><p class="dash-value" id="dashLean">0.0</p><p class="dash-unit">grados</p></div><div class="dash-bar"><div class="dash-bar-fill" id="dashLeanBar" style="width:50%"></div></div></div>
+      <div class="dash-cell"><div><p class="dash-label">Fuerza G</p><p class="dash-value" id="dashG">0.00</p><p class="dash-unit">G</p></div><div class="dash-bar"><div class="dash-bar-fill" id="dashGBar" style="width:0%"></div></div></div>
+      <div class="dash-cell wide"><div><p class="dash-label">Autonom&iacute;a</p><p class="dash-value" id="dashRange">680</p><p class="dash-unit">km</p></div><div class="dash-bar"><div class="dash-bar-fill" id="dashRangeBar" style="width:100%"></div></div></div>
+      <div class="dash-cell wide"><div><p class="dash-label">Navegaci&oacute;n — Ruta &oacute;ptima calculada</p><p class="dash-value" style="font-size:14px;font-weight:400;margin-top:8px" id="dashNav">Esperando inicio de trayecto</p></div></div>
+      <div class="dash-cell"><div><p class="dash-label">Estado Piloto</p><p class="dash-value" style="font-size:16px;color:#00ffd5" id="dashPilot">&Oacute;PTIMO</p></div></div>
+      <div class="dash-cell"><div><p class="dash-label">Presi&oacute;n Neum&aacute;ticos</p><p class="dash-value" style="font-size:16px" id="dashTire">2.4 / 2.6</p><p class="dash-unit">bar</p></div></div>
+      <div class="dash-cell"><div><p class="dash-label">Temperatura</p><p class="dash-value" id="dashTemp">42</p><p class="dash-unit">&deg;C</p></div><div class="dash-bar"><div class="dash-bar-fill" id="dashTempBar" style="width:42%"></div></div></div>
+      <div class="dash-cell"><div><p class="dash-label">IA</p><p class="dash-value" style="font-size:14px;color:#00ffd5" id="dashAI">ACTIVA — APRENDIENDO</p></div></div>
+      <div class="dash-cell wide"><div><p class="dash-label">Diagn&oacute;stico</p><p class="dash-value" style="font-size:13px;font-weight:400;color:rgba(232,230,227,0.7)" id="dashDiag">Todos los sistemas operativos. Pr&oacute;ximo mantenimiento en 14,200 km.</p></div></div>
+    </div>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- CONFIGURADOR -->
+  <section id="config-section" aria-label="Configurador">
+    <div class="narrative-section section-center visible" style="opacity:1;transform:none;margin-bottom:5vh">
+      <p class="narrative-label">Personalizaci&oacute;n</p>
+      <h2 class="narrative-title">Tu AEON NEXUS. Tu especificaci&oacute;n.</h2>
+    </div>
+    <div class="config-layout">
+      <div id="config3dArea" style="min-height:400px;position:relative;z-index:5"></div>
+      <div class="config-panel interactive">
+        <div class="config-group">
+          <h4>Color del Carenado</h4>
+          <div class="config-options" id="colorOptions">
+            <div class="config-swatch active" data-color="#0a0a0a" style="background:#0a0a0a" title="Negro Absoluto" tabindex="0" role="button" aria-label="Negro Absoluto"></div>
+            <div class="config-swatch" data-color="#1a1a2e" style="background:#1a1a2e" title="Azul Nocturno" tabindex="0" role="button" aria-label="Azul Nocturno"></div>
+            <div class="config-swatch" data-color="#2d0a0a" style="background:#2d0a0a" title="Rojo Profundo" tabindex="0" role="button" aria-label="Rojo Profundo"></div>
+            <div class="config-swatch" data-color="#0a2d1a" style="background:#0a2d1a" title="Verde Esmeralda" tabindex="0" role="button" aria-label="Verde Esmeralda"></div>
+            <div class="config-swatch" data-color="#2d2d0a" style="background:#2d2d0a" title="Dorado Oscuro" tabindex="0" role="button" aria-label="Dorado Oscuro"></div>
+            <div class="config-swatch" data-color="#f0ece4" style="background:#f0ece4" title="Blanco Hueso" tabindex="0" role="button" aria-label="Blanco Hueso"></div>
+          </div>
+        </div>
+        <div class="config-group">
+          <h4>Material Principal</h4>
+          <div class="config-options" id="materialOptions">
+            <button class="config-option-btn active" data-mat="carbon" tabindex="0">Carbono Aeroespacial</button>
+            <button class="config-option-btn" data-mat="titanium" tabindex="0">Titanio Forjado</button>
+            <button class="config-option-btn" data-mat="graphene" tabindex="0">Grafeno Puro</button>
+          </div>
+        </div>
+        <div class="config-group">
+          <h4>Llantas</h4>
+          <div class="config-options" id="wheelOptions">
+            <button class="config-option-btn active" data-wheel="carbon" tabindex="0">Carbono Tejido</button>
+            <button class="config-option-btn" data-wheel="titanium" tabindex="0">Titanio Mecanizado</button>
+            <button class="config-option-btn" data-wheel="magnesium" tabindex="0">Magnesio Forjado</button>
+          </div>
+        </div>
+        <div class="config-group">
+          <h4>Iluminaci&oacute;n</h4>
+          <div class="config-options" id="lightOptions">
+            <div class="config-swatch active" data-light="#00ffd5" style="background:#00ffd5" title="Cian" tabindex="0" role="button" aria-label="Cian"></div>
+            <div class="config-swatch" data-light="#ff3d00" style="background:#ff3d00" title="Rojo" tabindex="0" role="button" aria-label="Rojo"></div>
+            <div class="config-swatch" data-light="#a855f7" style="background:#a855f7" title="Violeta" tabindex="0" role="button" aria-label="Violeta"></div>
+            <div class="config-swatch" data-light="#facc15" style="background:#facc15" title="&Aacute;mbar" tabindex="0" role="button" aria-label="Ámbar"></div>
+            <div class="config-swatch" data-light="#ffffff" style="background:#ffffff" title="Blanco" tabindex="0" role="button" aria-label="Blanco"></div>
+          </div>
+        </div>
+        <div class="config-group">
+          <h4>Suspensi&oacute;n</h4>
+          <div class="config-options" id="suspOptions">
+            <button class="config-option-btn active" data-susp="em" tabindex="0">Electromagn&eacute;tica</button>
+            <button class="config-option-btn" data-susp="hydraulic" tabindex="0">Hidr&aacute;ulica Race</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- LABORATORIO -->
+  <section id="lab-section" aria-label="Laboratorio de fabricación">
+    <div class="lab-overlay">
+      <p class="narrative-label">Laboratorio</p>
+      <h2 class="narrative-title" style="max-width:600px">Donde nace lo imposible.</h2>
+      <p class="narrative-text" style="margin-bottom:20px">Instalaciones de clase espacial donde cada AEON NEXUS es creada, testeada y dotada de consciencia.</p>
+      <div class="lab-grid interactive">
+        <div class="lab-cell"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg><span>Esc&aacute;ner 3D</span><div class="lab-scan-line"></div></div>
+        <div class="lab-cell"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>Impresi&oacute;n 3D</span><div class="lab-scan-line" style="animation-delay:-1s"></div></div>
+        <div class="lab-cell"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8M20 4l-8 8"/><path d="M12 12l-8 8M12 12l8 8"/></svg><span>T&uacute;nel de Viento</span><div class="lab-scan-line" style="animation-delay:-2s"></div></div>
+        <div class="lab-cell"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span>L&aacute;ser Sub-at&oacute;mico</span><div class="lab-scan-line" style="animation-delay:-0.5s"></div></div>
+        <div class="lab-cell"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01M10 12h.01M14 12h.01M18 12h.01"/></svg><span>Holograf&iacute;a</span><div class="lab-scan-line" style="animation-delay:-1.5s"></div></div>
+        <div class="lab-cell"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0110 10 10 10 0 01-10 10A10 10 0 012 12 10 10 0 0112 2z"/><path d="M2 12h20M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg><span>C&aacute;mara de Vac&iacute;o</span><div class="lab-scan-line" style="animation-delay:-2.5s"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cine-divider" aria-hidden="true"></div>
+
+  <!-- HANGAR (Footer) -->
+  <section id="hangar-section" aria-label="Hangar de mantenimiento">
+    <div class="hangar-overlay">
+      <p class="hangar-title">Hangar de Mantenimiento Aut&oacute;nomo</p>
+      <div class="hangar-status">
+        <div class="hangar-status-item"><p class="val" id="hangarCharge">100%</p><p class="lbl">Carga Energ&iacute;a</p></div>
+        <div class="hangar-status-item"><p class="val" id="hangarDrones">4</p><p class="lbl">Drones Activos</p></div>
+        <div class="hangar-status-item"><p class="val" id="hangarDiag">OK</p><p class="lbl">Diagn&oacute;stico</p></div>
+        <div class="hangar-status-item"><p class="val" id="hangarTemp">21.3&deg;C</p><p class="lbl">Temperatura</p></div>
+      </div>
+      <div class="hangar-line"></div>
+      <p class="hangar-copy">AEON NEXUS &mdash; La Consciencia Mec&aacute;nica &mdash; MCMXLVII</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Three.js con importmap -->
+<script type="importmap">
+{
+  "imports":{
+    "three":"https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+/* =========================================
+   ESTADO GLOBAL
+   ========================================= */
+const state = {
+  mouse: { x: 0, y: 0, nx: 0, ny: 0 },
+  scroll: 0,
+  scrollProgress: 0,
+  heroProgress: 0,
+  explodedAmount: 0,
+  targetExploded: 0,
+  configColor: '#0a0a0a',
+  configLight: '#00ffd5',
+  configMaterial: 'carbon',
+  section: 'hero',
+  hoveredComponent: null,
+  time: 0,
+  dashActive: false
+};
+
+/* =========================================
+   ESCENA THREE.JS
+   ========================================= */
+const container = document.getElementById('scene-container');
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.035);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 1.5, 5);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+container.appendChild(renderer.domElement);
+
+/* Post-procesado: Bloom */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.6, 0.3);
+composer.addPass(bloomPass);
+composer.addPass(new OutputPass());
+
+/* =========================================
+   ILUMINACIÓN CINEMÁTICA
+   ========================================= */
+const ambientLight = new THREE.AmbientLight(0x111111, 0.5);
+scene.add(ambientLight);
+
+// Luz principal (key light)
+const keyLight = new THREE.SpotLight(0xffffff, 30);
+keyLight.position.set(5, 8, 3);
+keyLight.angle = 0.5;
+keyLight.penumbra = 0.8;
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(1024, 1024);
+scene.add(keyLight);
+
+// Luz de relleno (fill light)
+const fillLight = new THREE.SpotLight(0x00ffd5, 8);
+fillLight.position.set(-5, 3, -2);
+fillLight.angle = 0.8;
+fillLight.penumbra = 1;
+scene.add(fillLight);
+
+// Contraluz (rim light)
+const rimLight = new THREE.SpotLight(0xff3d00, 15);
+rimLight.position.set(0, 2, -6);
+rimLight.angle = 0.4;
+rimLight.penumbra = 0.5;
+scene.add(rimLight);
+
+// Luz inferior (bounce)
+const bounceLight = new THREE.PointLight(0x00ffd5, 3, 10);
+bounceLight.position.set(0, -1, 2);
+scene.add(bounceLight);
+
+/* =========================================
+   PLANO DE SUELO REFLECTANTE
+   ========================================= */
+const floorGeo = new THREE.PlaneGeometry(50, 50);
+const floorMat = new THREE.MeshStandardMaterial({
+  color: 0x000000,
+  metalness: 0.95,
+  roughness: 0.15,
+  transparent: true,
+  opacity: 0.6
+});
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -0.8;
+floor.receiveShadow = true;
+scene.add(floor);
+
+/* =========================================
+   MATERIALES DE LA MOTOCICLETA
+   ========================================= */
+const bodyMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, metalness: 0.85, roughness: 0.15 });
+const carbonMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.7, roughness: 0.3 });
+const titaniumMat = new THREE.MeshStandardMaterial({ color: 0x8a8a8a, metalness: 0.95, roughness: 0.1 });
+const chromeMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 1.0, roughness: 0.05 });
+const glowMat = new THREE.MeshStandardMaterial({
+  color: 0x00ffd5, emissive: 0x00ffd5, emissiveIntensity: 2, transparent: true, opacity: 0.9
+});
+const tireMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.1, roughness: 0.9 });
+const glassMat = new THREE.MeshStandardMaterial({
+  color: 0x00ffd5, transparent: true, opacity: 0.15, metalness: 0.9, roughness: 0.05
+});
+
+/* =========================================
+   CONSTRUCCIÓN DE LA MOTOCICLETA
+   ========================================= */
+const motorcycle = new THREE.Group();
+const components = [];
+const compData = {
+  chasis: { nombre: 'Chasis Monocoque', material: 'Titano-Carbono H&iacute;brido', peso: '6.2 kg', resistencia: '1,450 MPa', fabricacion: 'Impresi&oacute;n 3D en vac&iacute;o', funcion: 'Estructura principal. Absorbe impactos y distribuye cargas.' },
+  motor: { nombre: 'Motor Estado S&oacute;lido', material: 'Grafeno superconductor', peso: '18.7 kg', resistencia: 'N/A', fabricacion: 'S&iacute;ntesis cu&aacute;ntica', funcion: 'Genera 320 kW de potencia con par instant&aacute;neo.' },
+  bateria: { nombre: 'Bater&iacute;a S&oacute;lida', material: 'Celdas grafeno-estado s&oacute;lido', peso: '34.1 kg', resistencia: 'IPX9K', fabricacion: 'C&aacute;mara est&eacute;ril clase 1', funcion: '22 kWh de almacenamiento. 680 km de autonom&iacute;a.' },
+  suspension_f: { nombre: 'Suspensi&oacute;n Delantera', material: 'Titano aleaci&oacute;n Ti-6Al-4V', peso: '3.8 kg', resistencia: '1,100 MPa', fabricacion: 'CNC 5 ejes', funcion: 'Suspensi&oacute;n electromagn&eacute;tica. 500 Hz de respuesta.' },
+  suspension_t: { nombre: 'Suspensi&oacute;n Trasera', material: 'Titano aleaci&oacute;n Ti-6Al-4V', peso: '4.1 kg', resistencia: '1,100 MPa', fabricacion: 'CNC 5 ejes', funcion: 'Amortiguaci&oacute;n adaptativa con precarga IA.' },
+  rueda_f: { nombre: 'Rueda Delantera', material: 'Carbono aeroespacial', peso: '2.9 kg', resistencia: 'Impacto 3J', fabricacion: 'Tejido preimpregnado', funcion: 'Llanta de 17" con neum&aacute;tico inteligente Morph.' },
+  rueda_t: { nombre: 'Rueda Trasera', material: 'Carbono aeroespacial', peso: '3.2 kg', resistencia: 'Impacto 3J', fabricacion: 'Tejido preimpregnado', funcion: 'Llanta de 17" con transmisi&oacute;n directa integrada.' },
+  faro: { nombre: 'Sistema L&aacute;ser Inteligente', material: 'Cristal zafiro / L&aacute;ser RGB', peso: '0.4 kg', resistencia: 'IK10', fabricacion: 'Montaje &oacute;ptico de precisi&oacute;n', funcion: 'Haz de 600m adaptable por IA. Iluminaci&oacute;n predictiva.' },
+  carenado: { nombre: 'Carenado Aerodin&aacute;mico', material: 'Carbono forjado T800', peso: '4.7 kg', resistencia: 'N/A', fabricacion: 'Autoclave a 180&deg;C / 7 bar', funcion: 'Cd 0.178. Genera 45 kg de carga a 300 km/h.' },
+  electronica: { nombre: 'Unidad Neural Central', material: 'Silicio cu&aacute;ntico / Grafeno', peso: '1.2 kg', resistencia: 'MIL-STD-810G', fabricacion: 'Litograf&iacute;a EUV 2nm', funcion: 'Procesa 47M operaciones/seg. IA predictiva integrada.' },
+  escape: { nombre: 'Sistema Ac&uacute;stico Activo', material: 'Inconel 718 / Titanio', peso: '2.1 kg', resistencia: '1,240 MPa t&eacute;rmico', fabricacion: 'Impresi&oacute;n DMLS + mecanizado', funcion: 'Genera sonido sint&eacute;tico que se adapta al modo de conducci&oacute;n.' },
+  asiento: { nombre: 'Asiento Biom&eacute;trico', material: 'Espuma viscoel&aacute;stica / Grafeno', peso: '1.8 kg', resistencia: 'UV resistente', fabricacion: 'Moldeo inyecci&oacute;n dual', funcion: 'Sensores biom&eacute;tricos integrados. Detecta fatiga y estr&eacute;s.' }
+};
+
+// Función para crear componentes
+function makeComp(name, geo, mat, pos, explodedOffset, rot) {
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(pos.x, pos.y, pos.z);
+  if (rot) mesh.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.userData = {
+    name,
+    basePos: new THREE.Vector3(pos.x, pos.y, pos.z),
+    explodedOffset: new THREE.Vector3(explodedOffset.x, explodedOffset.y, explodedOffset.z),
+    data: compData[name]
+  };
+  motorcycle.add(mesh);
+  components.push(mesh);
+  return mesh;
+}
+
+// Chasis principal - tubo central
+makeComp('chasis',
+  new THREE.CylinderGeometry(Math.max(0.001, 0.06), Math.max(0.001, 0.05), 2.0, 8),
+  titaniumMat, { x: 0, y: 0.1, z: 0 }, { x: 0, y: 1.5, z: 0 },
+  { x: Math.PI / 2, y: 0, z: 0 }
+);
+
+// Bloque del motor
+makeComp('motor',
+  new THREE.BoxGeometry(0.35, 0.3, 0.5),
+  carbonMat, { x: 0, y: -0.05, z: 0.1 }, { x: 0, y: -1.5, z: 0 }
+);
+
+// Batería
+makeComp('bateria',
+  new THREE.BoxGeometry(0.25, 0.15, 0.7),
+  new THREE.MeshStandardMaterial({ color: 0x1a2a1a, metalness: 0.6, roughness: 0.4 }),
+  { x: 0, y: 0.15, z: -0.15 }, { x: 0, y: 2, z: -1.5 }
+);
+
+// Suspensión delantera
+const suspFGroup = new THREE.Group();
+const forkL = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.9, 8), chromeMat);
+forkL.position.set(-0.04, 0, 0);
+const forkR = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.9, 8), chromeMat);
+forkR.position.set(0.04, 0, 0);
+suspFGroup.add(forkL, forkR);
+suspFGroup.rotation.x = 0.3;
+const suspFMesh = makeComp('suspension_f', new THREE.BoxGeometry(0.1, 0.9, 0.1), chromeMat,
+  { x: 0, y: 0.2, z: 0.85 }, { x: 0, y: 1.2, z: 2.5 },
+  { x: 0.3, y: 0, z: 0 }
+);
+
+// Suspensión trasera
+makeComp('suspension_t',
+  new THREE.CylinderGeometry(0.02, 0.025, 0.6, 8),
+  chromeMat, { x: 0, y: -0.05, z: -0.7 }, { x: 0, y: -1.2, z: -2.5 },
+  { x: -0.4, y: 0.2, z: 0 }
+);
+
+// Rueda delantera
+const wheelFGroup = new THREE.Group();
+const tireF = new THREE.Mesh(new THREE.TorusGeometry(Math.max(0.001, 0.28), Math.max(0.001, 0.09), 16, 32), tireMat);
+const rimF = new THREE.Mesh(new THREE.TorusGeometry(Math.max(0.001, 0.22), Math.max(0.001, 0.015), 8, 32), chromeMat);
+const hubF = new THREE.Mesh(new THREE.CylinderGeometry(Math.max(0.001, 0.04), Math.max(0.001, 0.04), 0.08, 16), chromeMat);
+hubF.rotation.x = Math.PI / 2;
+wheelFGroup.add(tireF, rimF, hubF);
+wheelFGroup.position.set(0, 0.2, 1.1);
+wheelFGroup.rotation.x = Math.PI / 2;
+motorcycle.add(wheelFGroup);
+// Registrar como componente
+wheelFGroup.userData = {
+  name: 'rueda_f',
+  basePos: new THREE.Vector3(0, 0.2, 1.1),
+  explodedOffset: new THREE.Vector3(0, 0.5, 3),
+  data: compData.rueda_f
+};
+components.push(wheelFGroup);
+
+// Rueda trasera
+const wheelTGroup = new THREE.Group();
+const tireT = new THREE.Mesh(new THREE.TorusGeometry(Math.max(0.001, 0.31), Math.max(0.001, 0.1), 16, 32), tireMat);
+const rimT = new THREE.Mesh(new THREE.TorusGeometry(Math.max(0.001, 0.25), Math.max(0.001, 0.015), 8, 32), chromeMat);
+const hubT = new THREE.Mesh(new THREE.CylinderGeometry(Math.max(0.001, 0.04), Math.max(0.001, 0.04), 0.08, 16), chromeMat);
+hubT.rotation.x = Math.PI / 2;
+wheelTGroup.add(tireT, rimT, hubT);
+wheelTGroup.position.set(0, 0.1, -0.85);
+wheelTGroup.rotation.x = Math.PI / 2;
+motorcycle.add(wheelTGroup);
+wheelTGroup.userData = {
+  name: 'rueda_t',
+  basePos: new THREE.Vector3(0, 0.1, -0.85),
+  explodedOffset: new THREE.Vector3(0, -0.5, -3),
+  data: compData.rueda_t
+};
+components.push(wheelTGroup);
+
+// Faro
+const headlightGroup = new THREE.Group();
+const hlCore = new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.001, 0.05), 16, 16), glowMat);
+const hlRing = new THREE.Mesh(new THREE.TorusGeometry(Math.max(0.001, 0.07), Math.max(0.001, 0.008), 8, 32), glowMat);
+hlRing.rotation.y = Math.PI / 2;
+const hlLens = new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.001, 0.06), 16, 16), glassMat);
+headlightGroup.add(hlCore, hlRing, hlLens);
+headlightGroup.position.set(0, 0.25, 0.95);
+motorcycle.add(headlightGroup);
+headlightGroup.userData = {
+  name: 'faro',
+  basePos: new THREE.Vector3(0, 0.25, 0.95),
+  explodedOffset: new THREE.Vector3(0, 2, 3.5),
+  data: compData.faro
+};
+components.push(headlightGroup);
+
+// Luz del faro (point light)
+const headlightPL = new THREE.PointLight(0x00ffd5, 5, 8);
+headlightPL.position.copy(headlightGroup.position);
+motorcycle.add(headlightPL);
+
+// Carenado superior (depósito)
+makeComp('carenado',
+  new THREE.BoxGeometry(0.35, 0.12, 0.8),
+  bodyMat, { x: 0, y: 0.3, z: 0.1 }, { x: 0, y: 2.5, z: 0 }
+);
+
+// Carenado lateral izquierdo
+makeComp('carenado',
+  new THREE.BoxGeometry(0.02, 0.2, 0.5),
+  bodyMat, { x: -0.18, y: 0.15, z: 0 }, { x: -2, y: 0, z: 0 }
+);
+
+// Carenado lateral derecho
+makeComp('carenado',
+  new THREE.BoxGeometry(0.02, 0.2, 0.5),
+  bodyMat, { x: 0.18, y: 0.15, z: 0 }, { x: 2, y: 0, z: 0 }
+);
+
+// Unidad electrónica
+makeComp('electronica',
+  new THREE.BoxGeometry(0.12, 0.06, 0.15),
+  new THREE.MeshStandardMaterial({ color: 0x0a1a0a, metalness: 0.5, roughness: 0.5, emissive: 0x001a0a, emissiveIntensity: 0.3 }),
+  { x: 0, y: 0.35, z: -0.2 }, { x: 0, y: 3, z: -1 }
+);
+
+// Escape
+makeComp('escape',
+  new THREE.CylinderGeometry(Math.max(0.001, 0.04), Math.max(0.001, 0.05), 0.5, 12),
+  titaniumMat, { x: 0.15, y: -0.15, z: -0.9 }, { x: 1.5, y: -1.5, z: -3 },
+  { x: 0, y: 0, z: Math.PI / 2 }
+);
+
+// Asiento
+makeComp('asiento',
+  new THREE.BoxGeometry(0.28, 0.06, 0.5),
+  new THREE.MeshStandardMaterial({ color: 0x0a0a0a, metalness: 0.1, roughness: 0.8 }),
+  { x: 0, y: 0.38, z: -0.2 }, { x: 0, y: 3.5, z: 0 }
+);
+
+// Líneas de acento luminosas
+const accentLineGeo = new THREE.BoxGeometry(0.005, 0.005, 1.6);
+const accentLine = new THREE.Mesh(accentLineGeo, glowMat.clone());
+accentLine.position.set(0, 0.28, 0.1);
+motorcycle.add(accentLine);
+
+const accentLine2 = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.005, 0.4), glowMat.clone());
+accentLine2.position.set(0, 0.28, -0.5);
+motorcycle.add(accentLine2);
+
+// Posicionar la moto
+motorcycle.position.y = 0;
+scene.add(motorcycle);
+
+/* =========================================
+   PARTÍCULAS AMBIENTALES
+   ========================================= */
+const particleCount = 800;
+const particleGeo = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleSpeeds = new Float32Array(particleCount);
+for (let i = 0; i < particleCount; i++) {
+  particlePositions[i * 3] = (Math.random() - 0.5) * 20;
+  particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+  particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+  particleSpeeds[i] = 0.002 + Math.random() * 0.008;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+const particleMat = new THREE.PointsMaterial({
+  color: 0x00ffd5, size: 0.025, transparent: true, opacity: 0.5,
+  blending: THREE.AdditiveBlending, depthWrite: false
+});
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+/* =========================================
+   NIEBLA VOLUMÉTRICA (plano semitransparente)
+   ========================================= */
+const fogGeo = new THREE.PlaneGeometry(15, 4);
+const fogMat = new THREE.MeshBasicMaterial({
+  color: 0x00ffd5, transparent: true, opacity: 0.015,
+  blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+});
+const fogPlane = new THREE.Mesh(fogGeo, fogMat);
+fogPlane.position.set(0, -0.5, 0);
+fogPlane.rotation.x = -Math.PI / 2;
+scene.add(fogPlane);
+
+/* =========================================
+   RAYCASTER PARA INTERACCIÓN
+   ========================================= */
+const raycaster = new THREE.Raycaster();
+const mouseVec = new THREE.Vector2();
+
+/* =========================================
+   CURSOR PERSONALIZADO
+   ========================================= */
+const cursorRing = document.getElementById('cursorRing');
+const cursorDot = document.getElementById('cursorDot');
+let cursorX = 0, cursorY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  state.mouse.x = e.clientX;
+  state.mouse.y = e.clientY;
+  state.mouse.nx = (e.clientX / window.innerWidth) * 2 - 1;
+  state.mouse.ny = -(e.clientY / window.innerHeight) * 2 + 1;
+  cursorX = e.clientX;
+  cursorY = e.clientY;
+  cursorDot.style.left = cursorX + 'px';
+  cursorDot.style.top = cursorY + 'px';
+  mouseVec.set(state.mouse.nx, state.mouse.ny);
+});
+
+function updateCursor() {
+  ringX += (cursorX - ringX) * 0.15;
+  ringY += (cursorY - ringY) * 0.15;
+  cursorRing.style.left = ringX + 'px';
+  cursorRing.style.top = ringY + 'px';
+}
+
+/* =========================================
+   GSAP SCROLLTRIGGER
+   ========================================= */
+let gsapReady = false;
+async function initGSAP() {
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    await new Promise(r => setTimeout(r, 200));
+    return initGSAP();
+  }
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Narrativa: visibilidad de secciones
+  document.querySelectorAll('.narrative-section:not(.visible)').forEach(sec => {
+    ScrollTrigger.create({
+      trigger: sec,
+      start: 'top 80%',
+      end: 'bottom 20%',
+      onEnter: () => sec.classList.add('visible'),
+      onLeave: () => sec.classList.remove('visible'),
+      onEnterBack: () => sec.classList.add('visible'),
+      onLeaveBack: () => sec.classList.remove('visible')
+    });
+  });
+
+  // IA capabilities
+  document.querySelectorAll('[data-ai-cap]').forEach((cap, i) => {
+    ScrollTrigger.create({
+      trigger: cap,
+      start: 'top 75%',
+      onEnter: () => setTimeout(() => cap.classList.add('visible'), i * 150),
+      onLeaveBack: () => cap.classList.remove('visible')
+    });
+  });
+
+  // Progreso global del scroll
+  ScrollTrigger.create({
+    trigger: '#scroll-overlay',
+    start: 'top top',
+    end: 'bottom bottom',
+    onUpdate: (self) => {
+      state.scrollProgress = self.progress;
+    }
+  });
+
+  // Hero: revelar moto
+  ScrollTrigger.create({
+    trigger: '#hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1,
+    onUpdate: (self) => {
+      state.heroProgress = self.progress;
+    }
+  });
+
+  // Exploded view
+  ScrollTrigger.create({
+    trigger: '#exploded-section',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1,
+    onUpdate: (self) => {
+      state.targetExploded = self.progress;
+    }
+  });
+
+  // Controles del exploded view
+  const explControls = document.getElementById('explodedControls');
+  ScrollTrigger.create({
+    trigger: '#exploded-section',
+    start: 'top 50%',
+    end: 'bottom 50%',
+    onEnter: () => explControls.classList.add('active'),
+    onLeave: () => explControls.classList.remove('active'),
+    onEnterBack: () => explControls.classList.add('active'),
+    onLeaveBack: () => explControls.classList.remove('active')
+  });
+
+  // Botones de exploded
+  document.querySelectorAll('[data-exploded]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-exploded]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.targetExploded = parseFloat(btn.dataset.exploded);
+    });
+  });
+
+  // Dashboard activo
+  ScrollTrigger.create({
+    trigger: '#dashboard-section',
+    start: 'top 60%',
+    end: 'bottom 40%',
+    onEnter: () => { state.dashActive = true; },
+    onLeave: () => { state.dashActive = false; },
+    onEnterBack: () => { state.dashActive = true; },
+    onLeaveBack: () => { state.dashActive = false; }
+  });
+
+  // Detectar sección actual
+  const narrativeKeys = ['hero','origin','spark','build','awaken','motor','accelerate','city','night','mountains','rain','snow','desert','clouds','aurora','space','return','exploded','ai','tech','dashboard','config','lab','hangar'];
+  document.querySelectorAll('section').forEach(sec => {
+    const id = sec.id || (sec.dataset.narrative ? sec.dataset.narrative : '');
+    if (!id) return;
+    ScrollTrigger.create({
+      trigger: sec,
+      start: 'top center',
+      end: 'bottom center',
+      onEnter: () => { state.section = id; },
+      onEnterBack: () => { state.section = id; }
+    });
+  });
+
+  gsapReady = true;
+}
+
+/* =========================================
+   CONFIGURADOR
+   ========================================= */
+document.getElementById('colorOptions')?.addEventListener('click', (e) => {
+  const swatch = e.target.closest('[data-color]');
+  if (!swatch) return;
+  document.querySelectorAll('#colorOptions .config-swatch').forEach(s => s.classList.remove('active'));
+  swatch.classList.add('active');
+  state.configColor = swatch.dataset.color;
+  bodyMat.color.set(state.configColor);
+  cursorRing.classList.add('energy');
+  setTimeout(() => cursorRing.classList.remove('energy'), 600);
+});
+
+document.getElementById('lightOptions')?.addEventListener('click', (e) => {
+  const swatch = e.target.closest('[data-light]');
+  if (!swatch) return;
+  document.querySelectorAll('#lightOptions .config-swatch').forEach(s => s.classList.remove('active'));
+  swatch.classList.add('active');
+  state.configLight = swatch.dataset.light;
+  const c = new THREE.Color(state.configLight);
+  glowMat.color.set(c);
+  glowMat.emissive.set(c);
+  fillLight.color.set(c);
+  bounceLight.color.set(c);
+  particleMat.color.set(c);
+  headlightPL.color.set(c);
+  accentLine.material.color.set(c);
+  accentLine2.material.color.set(c);
+  document.querySelectorAll('.ai-orb-core,.ai-orb-glow').forEach(el => {
+    el.style.background = state.configLight;
+    el.style.boxShadow = `0 0 30px ${state.configLight}, 0 0 60px ${state.configLight}40`;
+  });
+});
+
+document.getElementById('materialOptions')?.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-mat]');
+  if (!btn) return;
+  document.querySelectorAll('#materialOptions .config-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.configMaterial = btn.dataset.mat;
+  if (state.configMaterial === 'carbon') {
+    bodyMat.roughness = 0.15; bodyMat.metalness = 0.85;
+  } else if (state.configMaterial === 'titanium') {
+    bodyMat.roughness = 0.1; bodyMat.metalness = 0.95;
+    bodyMat.color.set(0x8a8a8a);
+  } else if (state.configMaterial === 'graphene') {
+    bodyMat.roughness = 0.05; bodyMat.metalness = 0.7;
+    bodyMat.color.set(0x0a0a0a);
+  }
+});
+
+/* =========================================
+   INTERACCIÓN CON COMPONENTES
+   ========================================= */
+const compInfo = document.getElementById('componentInfo');
+const compName = document.getElementById('compName');
+const compMat = document.getElementById('compMat');
+const compWeight = document.getElementById('compWeight');
+const compStr = document.getElementById('compStr');
+const compFab = document.getElementById('compFab');
+const compFunc = document.getElementById('compFunc');
+
+renderer.domElement.addEventListener('click', (e) => {
+  raycaster.setFromCamera(mouseVec, camera);
+  const intersects = raycaster.intersectObjects(components, true);
+  if (intersects.length > 0) {
+    let obj = intersects[0].object;
+    while (obj.parent && !obj.userData.data) obj = obj.parent;
+    if (obj.userData.data) {
+      const d = obj.userData.data;
+      compName.textContent = d.nombre;
+      compMat.innerHTML = d.material;
+      compWeight.textContent = d.peso;
+      compStr.innerHTML = d.resistencia;
+      compFab.innerHTML = d.fabricacion;
+      compFunc.innerHTML = d.funcion;
+      compInfo.classList.add('show');
+      compInfo.style.left = Math.min(e.clientX + 20, window.innerWidth - 300) + 'px';
+      compInfo.style.top = Math.min(e.clientY - 50, window.innerHeight - 250) + 'px';
+      // Resaltar componente
+      if (state.hoveredComponent && state.hoveredComponent !== obj) {
+        resetComponentHighlight(state.hoveredComponent);
+      }
+      highlightComponent(obj);
+      state.hoveredComponent = obj;
+    } else {
+      compInfo.classList.remove('show');
+      if (state.hoveredComponent) {
+        resetComponentHighlight(state.hoveredComponent);
+        state.hoveredComponent = null;
+      }
+    }
+  } else {
+    compInfo.classList.remove('show');
+    if (state.hoveredComponent) {
+      resetComponentHighlight(state.hoveredComponent);
+      state.hoveredComponent = null;
+    }
+  }
+});
+
+function highlightComponent(obj) {
+  obj.traverse(child => {
+    if (child.isMesh && child.material) {
+      child.material._origEmissive = child.material.emissive ? child.material.emissive.getHex() : 0;
+      child.material._origEI = child.material.emissiveIntensity || 0;
+      if (child.material.emissive) {
+        child.material.emissive.set(0x00ffd5);
+        child.material.emissiveIntensity = 0.5;
+      }
+    }
+  });
+}
+function resetComponentHighlight(obj) {
+  obj.traverse(child => {
+    if (child.isMesh && child.material && child.material._origEmissive !== undefined) {
+      child.material.emissive.set(child.material._origEmissive);
+      child.material.emissiveIntensity = child.material._origEI;
+    }
+  });
+}
+
+// Hover effect en cursor
+renderer.domElement.addEventListener('mousemove', () => {
+  raycaster.setFromCamera(mouseVec, camera);
+  const intersects = raycaster.intersectObjects(components, true);
+  if (intersects.length > 0) {
+    cursorRing.classList.add('hovering');
+  } else {
+    cursorRing.classList.remove('hovering');
+  }
+});
+
+/* =========================================
+   DASHBOARD ANIMADO
+   ========================================= */
+let dashValues = { speed: 0, power: 0, lean: 0, g: 0, range: 680, temp: 42 };
+let dashTargets = { speed: 0, power: 0, lean: 0, g: 0, range: 680, temp: 42 };
+
+function updateDashboard() {
+  if (!state.dashActive) {
+    dashTargets = { speed: 0, power: 0, lean: 0, g: 0, range: 680, temp: 42 };
+  } else {
+    const t = state.time;
+    dashTargets.speed = Math.round(180 + Math.sin(t * 0.3) * 120 + Math.sin(t * 0.7) * 40);
+    dashTargets.power = Math.round(180 + Math.sin(t * 0.5) * 140);
+    dashTargets.lean = parseFloat((Math.sin(t * 0.4) * 35).toFixed(1));
+    dashTargets.g = parseFloat((1.2 + Math.sin(t * 0.6) * 0.8).toFixed(2));
+    dashTargets.range = Math.round(520 + Math.sin(t * 0.1) * 100);
+    dashTargets.temp = Math.round(55 + Math.sin(t * 0.2) * 20);
+  }
+  // Lerp
+  dashValues.speed += (dashTargets.speed - dashValues.speed) * 0.05;
+  dashValues.power += (dashTargets.power - dashValues.power) * 0.05;
+  dashValues.lean += (dashTargets.lean - dashValues.lean) * 0.05;
+  dashValues.g += (dashTargets.g - dashValues.g) * 0.05;
+  dashValues.range += (dashTargets.range - dashValues.range) * 0.03;
+  dashValues.temp += (dashTargets.temp - dashValues.temp) * 0.03;
+
+  document.getElementById('dashSpeed').textContent = Math.round(dashValues.speed);
+  document.getElementById('dashPower').textContent = Math.round(dashValues.power);
+  document.getElementById('dashLean').textContent = dashValues.lean.toFixed(1);
+  document.getElementById('dashG').textContent = dashValues.g.toFixed(2);
+  document.getElementById('dashRange').textContent = Math.round(dashValues.range);
+  document.getElementById('dashTemp').textContent = Math.round(dashValues.temp);
+
+  document.getElementById('dashSpeedBar').style.width = (dashValues.speed / 340 * 100) + '%';
+  document.getElementById('dashPowerBar').style.width = (dashValues.power / 320 * 100) + '%';
+  document.getElementById('dashLeanBar').style.width = ((dashValues.lean + 45) / 90 * 100) + '%';
+  document.getElementById('dashGBar').style.width = (dashValues.g / 2.5 * 100) + '%';
+  document.getElementById('dashRangeBar').style.width = (dashValues.range / 680 * 100) + '%';
+  document.getElementById('dashTempBar').style.width = (dashValues.temp / 100 * 100) + '%';
+
+  // Navegación simulada
+  if (state.dashActive) {
+    const routes = ['Carretera Costera N-340', 'Desvío Montaña C-16', 'Autopista del Mediterráneo', 'Puerto de Montaña Col de Tourmalet', 'Circuito Urbano Barcelona'];
+    const idx = Math.floor((state.time * 0.05) % routes.length);
+    document.getElementById('dashNav').textContent = routes[idx];
+  }
+}
+
+/* =========================================
+   HANGAR ANIMADO
+   ========================================= */
+function updateHangar() {
+  const t = state.time;
+  document.getElementById('hangarCharge').textContent = (95 + Math.sin(t * 0.2) * 5).toFixed(1) + '%';
+  document.getElementById('hangarDrones').textContent = Math.round(3 + Math.sin(t * 0.3));
+  document.getElementById('hangarTemp').textContent = (21 + Math.sin(t * 0.15) * 0.5).toFixed(1) + '°C';
+}
+
+/* =========================================
+   AMBIENTES POR SECCIÓN
+   ========================================= */
+const envConfigs = {
+  hero:       { fog: 0.035, ambI: 0.5, keyI: 30, fillI: 8, rimI: 15, bloom: 1.2, bg: 0x000000 },
+  origin:     { fog: 0.04, ambI: 0.3, keyI: 20, fillI: 5, rimI: 10, bloom: 1.5, bg: 0x000000 },
+  spark:      { fog: 0.02, ambI: 0.8, keyI: 50, fillI: 20, rimI: 30, bloom: 2.5, bg: 0x020201 },
+  build:      { fog: 0.03, ambI: 0.6, keyI: 35, fillI: 12, rimI: 15, bloom: 1.3, bg: 0x010101 },
+  awaken:     { fog: 0.025, ambI: 1.0, keyI: 40, fillI: 25, rimI: 20, bloom: 2.0, bg: 0x000505 },
+  motor:      { fog: 0.03, ambI: 0.5, keyI: 35, fillI: 10, rimI: 20, bloom: 1.5, bg: 0x020000 },
+  accelerate: { fog: 0.05, ambI: 0.3, keyI: 40, fillI: 8, rimI: 25, bloom: 1.8, bg: 0x000000 },
+  city:       { fog: 0.04, ambI: 0.7, keyI: 25, fillI: 15, rimI: 10, bloom: 1.0, bg: 0x020208 },
+  night:      { fog: 0.045, ambI: 0.2, keyI: 5, fillI: 3, rimI: 5, bloom: 2.2, bg: 0x000000 },
+  mountains:  { fog: 0.03, ambI: 0.5, keyI: 30, fillI: 10, rimI: 15, bloom: 1.2, bg: 0x010201 },
+  rain:       { fog: 0.06, ambI: 0.4, keyI: 20, fillI: 8, rimI: 12, bloom: 1.5, bg: 0x000205 },
+  snow:       { fog: 0.05, ambI: 0.8, keyI: 35, fillI: 20, rimI: 15, bloom: 1.8, bg: 0x030308 },
+  desert:     { fog: 0.03, ambI: 0.6, keyI: 45, fillI: 15, rimI: 25, bloom: 1.3, bg: 0x050300 },
+  clouds:     { fog: 0.02, ambI: 0.7, keyI: 30, fillI: 20, rimI: 20, bloom: 2.0, bg: 0x020305 },
+  aurora:     { fog: 0.025, ambI: 0.6, keyI: 25, fillI: 30, rimI: 15, bloom: 2.5, bg: 0x000505 },
+  space:      { fog: 0.005, ambI: 0.1, keyI: 15, fillI: 5, rimI: 40, bloom: 3.0, bg: 0x000002 },
+  return:     { fog: 0.03, ambI: 0.5, keyI: 30, fillI: 10, rimI: 15, bloom: 1.5, bg: 0x000000 },
+  exploded:   { fog: 0.025, ambI: 0.8, keyI: 35, fillI: 15, rimI: 20, bloom: 1.5, bg: 0x000000 },
+  ai:         { fog: 0.02, ambI: 0.6, keyI: 25, fillI: 25, rimI: 15, bloom: 2.0, bg: 0x000303 },
+  tech:       { fog: 0.03, ambI: 0.5, keyI: 30, fillI: 10, rimI: 15, bloom: 1.3, bg: 0x000000 },
+  dashboard:  { fog: 0.03, ambI: 0.5, keyI: 30, fillI: 10, rimI: 15, bloom: 1.2, bg: 0x000000 },
+  config:     { fog: 0.025, ambI: 0.7, keyI: 35, fillI: 15, rimI: 20, bloom: 1.5, bg: 0x000000 },
+  lab:        { fog: 0.035, ambI: 0.4, keyI: 25, fillI: 8, rimI: 12, bloom: 1.8, bg: 0x000100 },
+  hangar:     { fog: 0.03, ambI: 0.3, keyI: 20, fillI: 5, rimI: 10, bloom: 1.0, bg: 0x000000 }
+};
+
+function lerpEnv() {
+  const cfg = envConfigs[state.section] || envConfigs.hero;
+  scene.fog.density += (cfg.fog - scene.fog.density) * 0.02;
+  ambientLight.intensity += (cfg.ambI - ambientLight.intensity) * 0.02;
+  keyLight.intensity += (cfg.keyI - keyLight.intensity) * 0.02;
+  fillLight.intensity += (cfg.fillI - fillLight.intensity) * 0.02;
+  rimLight.intensity += (cfg.rimI - rimLight.intensity) * 0.02;
+  bloomPass.strength += (cfg.bloom - bloomPass.strength) * 0.02;
+  const bgTarget = new THREE.Color(cfg.bg);
+  scene.background = scene.background || new THREE.Color(0x000000);
+  scene.background.lerp(bgTarget, 0.02);
+}
+
+/* =========================================
+   ANIMACIÓN PRINCIPAL
+   ========================================= */
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+  state.time += delta;
+
+  // Actualizar cursor
+  updateCursor();
+
+  // Lerp del exploded
+  state.explodedAmount += (state.targetExploded - state.explodedAmount) * 0.05;
+
+  // Posicionar componentes (exploded view)
+  components.forEach(comp => {
+    const ud = comp.userData;
+    if (ud.basePos && ud.explodedOffset) {
+      comp.position.lerpVectors(ud.basePos,
+        new THREE.Vector3(
+          ud.basePos.x + ud.explodedOffset.x,
+          ud.basePos.y + ud.explodedOffset.y,
+          ud.basePos.z + ud.explodedOffset.z
+        ),
+        state.explodedAmount
+      );
+    }
+  });
+
+  // Hero reveal: la moto aparece con el scroll
+  const heroReveal = Math.min(1, state.heroProgress * 3);
+  motorcycle.visible = heroReveal > 0;
+  if (motorcycle.visible) {
+    motorcycle.scale.setScalar(heroReveal);
+    // Rotación lenta base
+    motorcycle.rotation.y += 0.003;
+    // Respuesta al ratón
+    const targetRotX = state.mouse.ny * 0.08;
+    const targetRotZ = -state.mouse.nx * 0.04;
+    motorcycle.rotation.x += (targetRotX - motorcycle.rotation.x) * 0.03;
+    motorcycle.rotation.z += (targetRotZ - motorcycle.rotation.z) * 0.03;
+  }
+
+  // Movimiento de partículas
+  const positions = particleGeo.attributes.position.array;
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3 + 1] += particleSpeeds[i];
+    if (positions[i * 3 + 1] > 6) positions[i * 3 + 1] = -6;
+    // Influencia del ratón
+    const dx = positions[i * 3] - state.mouse.nx * 5;
+    const dy = positions[i * 3 + 1] - state.mouse.ny * 3;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 2) {
+      positions[i * 3] += dx * 0.001;
+      positions[i * 3 + 1] += dy * 0.001;
+    }
+  }
+  particleGeo.attributes.position.needsUpdate = true;
+
+  // Niebla animada
+  fogPlane.position.z = Math.sin(state.time * 0.3) * 2;
+  fogMat.opacity = 0.012 + Math.sin(state.time * 0.5) * 0.005;
+
+  // Faro pulsante
+  if (headlightPL) {
+    headlightPL.intensity = 5 + Math.sin(state.time * 2) * 1.5;
+  }
+
+  // Líneas de acento pulsantes
+  if (accentLine.material) {
+    accentLine.material.emissiveIntensity = 1.5 + Math.sin(state.time * 3) * 0.5;
+    accentLine2.material.emissiveIntensity = 1.5 + Math.sin(state.time * 3 + 1) * 0.5;
+  }
+
+  // Ambiente por sección
+  lerpEnv();
+
+  // Dashboard
+  updateDashboard();
+
+  // Hangar
+  updateHangar();
+
+  // Renderizar con post-procesado
+  composer.render();
+}
+
+/* =========================================
+   RESIZE
+   ========================================= */
+function onResize() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+  composer.setSize(w, h);
+  bloomPass.resolution.set(w, h);
+}
+window.addEventListener('resize', onResize);
+
+/* =========================================
+   INICIALIZACIÓN
+   ========================================= */
+function init() {
+  // Establecer fondo inicial
+  scene.background = new THREE.Color(0x000000);
+
+  // Cargar GSAP dinámicamente
+  const gsapScript = document.createElement('script');
+  gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+  gsapScript.onload = () => {
+    const stScript = document.createElement('script');
+    stScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
+    stScript.onload = () => initGSAP();
+    document.head.appendChild(stScript);
+  };
+  document.head.appendChild(gsapScript);
+
+  // Ocultar loader
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+  }, 3000);
+
+  // Iniciar animación
+  animate();
+}
+
+// Accesibilidad: respetar prefers-reduced-motion
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (prefersReducedMotion) {
+  bloomPass.strength = 0.3;
+  particleMat.opacity = 0.1;
+}
+
+init();
+</script>
+</body>
+</html>

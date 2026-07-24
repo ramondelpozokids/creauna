@@ -47,7 +47,13 @@ export default function TemplateDemoPreviewFrame({
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-bold text-xl md:text-2xl tracking-tight text-slate-950 truncate">{name}</span>
-            <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-full shrink-0">
+            <span
+              className={`text-xs font-semibold px-3 py-1 rounded-full shrink-0 ${
+                item.kind === 'premium'
+                  ? 'bg-amber-100 text-amber-900'
+                  : 'bg-slate-100 text-slate-700'
+              }`}
+            >
               {category}
             </span>
           </div>

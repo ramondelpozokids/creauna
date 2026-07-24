@@ -48,7 +48,7 @@ const t = {
     priceLabel: 'PRECIO CERRADO',
     price: '1.790€',
     priceNote: '+ IVA · Pago único · Precio máximo web premium · Sin cuotas ocultas',
-    priceBreakdown: 'Mismo techo que nuestro Rescate Premium en modernización: calidad de firma internacional a precio cerrado.',
+    priceBreakdown: 'Mismo precio tope que nuestro Rescate Premium en modernización: calidad de firma internacional a precio cerrado.',
     paymentTitle: 'Forma de pago',
     payment: '50% al confirmar el proyecto · 50% en la entrega final. Transferencia o tarjeta. Factura con IVA desglosado.',
     timeline: 'Plazo estimado: 4–6 semanas desde el briefing.',

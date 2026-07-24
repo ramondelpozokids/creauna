@@ -10,9 +10,10 @@ export type TemplateShowcaseCategory =
   | 'luxury'
   | 'architecture'
   | 'services'
-  | 'creative';
+  | 'creative'
+  | 'premium';
 
-export type TemplateShowcaseKind = 'template' | 'project';
+export type TemplateShowcaseKind = 'template' | 'project' | 'premium';
 
 export interface TemplateShowcaseItem {
   slug: string;
@@ -25,7 +26,7 @@ export interface TemplateShowcaseItem {
   categoryKey: TemplateShowcaseCategory;
   categoryLabelEs: string;
   categoryLabelEn: string;
-  /** Plantilla de referencia CREAUNA vs proyecto real entregado. */
+  /** Plantilla / proyecto real / Premium Experiencia. */
   kind: TemplateShowcaseKind;
 }
 
@@ -44,6 +45,7 @@ export const templateShowcaseCategories: {
   { key: 'luxury', labelEs: 'Lujo', labelEn: 'Luxury' },
   { key: 'architecture', labelEs: 'Arquitectura', labelEn: 'Architecture' },
   { key: 'creative', labelEs: 'Creativos', labelEn: 'Creative' },
+  { key: 'premium', labelEs: 'Premium', labelEn: 'Premium' },
 ];
 
 /** 9 plantillas de referencia CREAUNA (muestras premium). */
@@ -73,8 +75,9 @@ function mapPremiumCategory(
   return 'gastronomy';
 }
 
-/** Proyectos reales — sin duplicados ni subpáginas sueltas. */
+/** Proyectos reales — comida primero por tipo de servicio, luego el resto. */
 const portfolioProjects: TemplateShowcaseItem[] = [
+  // —— Gastronomía (por servicio) ——
   {
     slug: 'rest-art-cafe',
     nameEs: 'Rest Art Café',
@@ -121,6 +124,53 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryKey: 'gastronomy',
     categoryLabelEs: 'Kebab & fast casual',
     categoryLabelEn: 'Kebab & fast casual',
+    kind: 'project',
+  },
+  {
+    slug: 'cafeteria-el-paso',
+    nameEs: 'Cafetería El Paso',
+    nameEn: 'Cafetería El Paso',
+    descEs:
+      'Cafetería en Puente de Vallecas: desayunos, comidas caseras, menú del día y galería de platos reales.',
+    descEn:
+      'Café in Puente de Vallecas: breakfasts, homemade meals, daily menu and a real dish gallery.',
+    demoPath: '/demos/clientes/cafeteria-el-paso/index.html',
+    previewImage: '/demos/clientes/cafeteria-el-paso/images/1.png',
+    categoryKey: 'gastronomy',
+    categoryLabelEs: 'Cafetería',
+    categoryLabelEn: 'Café',
+    kind: 'project',
+  },
+  {
+    slug: 'chiringuito-los-leones',
+    nameEs: 'Chiringuito Los Leones',
+    nameEn: 'Chiringuito Los Leones',
+    descEs:
+      'Chiringuito en Torremolinos desde 1962: espetos, marisco, paellas y ambiente de Costa del Sol.',
+    descEn:
+      'Beach bar in Torremolinos since 1962: sardine skewers, seafood, paellas and Costa del Sol vibe.',
+    demoPath: '/demos/clientes/chiringuito-los-leones/index.html',
+    previewImage: '/demos/clientes/chiringuito-los-leones/images/1.png',
+    categoryKey: 'gastronomy',
+    categoryLabelEs: 'Chiringuito',
+    categoryLabelEn: 'Beach bar',
+    kind: 'project',
+  },
+  // —— Otros servicios ——
+  {
+    slug: 'peluqueria-caballero-tarik',
+    nameEs: 'Barbería Caballero Tarik',
+    nameEn: 'Tarik Barbershop',
+    descEs:
+      'Barbería en Puente de Vallecas: cortes, barba, galería, WhatsApp, horario y mapa. Estética black & gold premium.',
+    descEn:
+      'Barbershop in Puente de Vallecas: cuts, beard, gallery, WhatsApp, hours and map. Premium black & gold look.',
+    demoPath: '/demos/clientes/peluqueria-caballero-tarik/index.html',
+    previewImage:
+      'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&h=600&fit=crop&q=80',
+    categoryKey: 'services',
+    categoryLabelEs: 'Barbería',
+    categoryLabelEn: 'Barbershop',
     kind: 'project',
   },
   {
@@ -171,71 +221,110 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryLabelEn: 'Contemporary art',
     kind: 'project',
   },
-  {
-    slug: 'peluqueria-caballero-tarik',
-    nameEs: 'Barbería Caballero Tarik',
-    nameEn: 'Tarik Barbershop',
-    descEs:
-      'Barbería en Puente de Vallecas: cortes, barba, galería, WhatsApp, horario y mapa. Estética black & gold premium.',
-    descEn:
-      'Barbershop in Puente de Vallecas: cuts, beard, gallery, WhatsApp, hours and map. Premium black & gold look.',
-    demoPath: '/demos/clientes/peluqueria-caballero-tarik/index.html',
-    previewImage:
-      'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&h=600&fit=crop&q=80',
-    categoryKey: 'services',
-    categoryLabelEs: 'Barbería',
-    categoryLabelEn: 'Barbershop',
-    kind: 'project',
-  },
-  {
-    slug: 'cafeteria-el-paso',
-    nameEs: 'Cafetería El Paso',
-    nameEn: 'Cafetería El Paso',
-    descEs:
-      'Cafetería en Puente de Vallecas: desayunos, comidas caseras, menú del día y galería de platos reales.',
-    descEn:
-      'Café in Puente de Vallecas: breakfasts, homemade meals, daily menu and a real dish gallery.',
-    demoPath: '/demos/clientes/cafeteria-el-paso/index.html',
-    previewImage: '/demos/clientes/cafeteria-el-paso/images/1.png',
-    categoryKey: 'gastronomy',
-    categoryLabelEs: 'Cafetería',
-    categoryLabelEn: 'Café',
-    kind: 'project',
-  },
-  {
-    slug: 'chiringuito-los-leones',
-    nameEs: 'Chiringuito Los Leones',
-    nameEn: 'Chiringuito Los Leones',
-    descEs:
-      'Chiringuito en Torremolinos desde 1962: espetos, marisco, paellas y ambiente de Costa del Sol.',
-    descEn:
-      'Beach bar in Torremolinos since 1962: sardine skewers, seafood, paellas and Costa del Sol vibe.',
-    demoPath: '/demos/clientes/chiringuito-los-leones/index.html',
-    previewImage: '/demos/clientes/chiringuito-los-leones/images/1.png',
-    categoryKey: 'gastronomy',
-    categoryLabelEs: 'Chiringuito',
-    categoryLabelEn: 'Beach bar',
-    kind: 'project',
-  },
+];
+
+/**
+ * Premium Experiencia — demos de alto impacto (3D / interacción).
+ * Precio orientativo: desde 4.900€ (ver premiumExperience.ts).
+ */
+const premiumExperiences: TemplateShowcaseItem[] = [
   {
     slug: 'velocity-x',
     nameEs: 'VELOCITY X',
     nameEn: 'VELOCITY X',
     descEs:
-      'Demo futurista de movilidad e-bike: experiencia 3D, configurador, modelos y laboratorio. Sitio multipágina de alto impacto.',
+      'Premium · movilidad e-bike: 3D, configurador, modelos y laboratorio. Sitio multipágina de alto impacto.',
     descEn:
-      'Futuristic e-bike mobility demo: 3D experience, configurator, models and lab. High-impact multi-page site.',
+      'Premium · e-bike mobility: 3D, configurator, models and lab. High-impact multi-page site.',
     demoPath: '/demos/experiencias/velocity-x/index.html',
     previewImage:
       'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=900&h=600&fit=crop&q=80',
-    categoryKey: 'creative',
-    categoryLabelEs: 'Futurista',
-    categoryLabelEn: 'Futuristic',
-    kind: 'template',
+    categoryKey: 'premium',
+    categoryLabelEs: 'Premium Experiencia',
+    categoryLabelEn: 'Premium Experience',
+    kind: 'premium',
+  },
+  {
+    slug: 'aeon-nexus',
+    nameEs: 'AEON NEXUS',
+    nameEn: 'AEON NEXUS',
+    descEs:
+      'Premium · moto con IA: recorrido visual, vista de piezas, panel de datos y configurador 3D.',
+    descEn:
+      'Premium · AI motorcycle: visual journey, exploded view, data panel and 3D configurator.',
+    demoPath: '/demos/experiencias/aeon-nexus/index.html',
+    previewImage:
+      'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=900&h=600&fit=crop&q=80',
+    categoryKey: 'premium',
+    categoryLabelEs: 'Premium Experiencia',
+    categoryLabelEn: 'Premium Experience',
+    kind: 'premium',
+  },
+  {
+    slug: 'phantom-motorworks',
+    nameEs: 'PHANTOM MOTORWORKS',
+    nameEn: 'PHANTOM MOTORWORKS',
+    descEs:
+      'Premium · marca de motos: gama, galería 3D, casco inteligente, laboratorio y hangar.',
+    descEn:
+      'Premium · motorcycle brand: range, 3D gallery, smart helmet, lab and hangar.',
+    demoPath: '/demos/experiencias/phantom-motorworks/index.html',
+    previewImage:
+      'https://images.unsplash.com/photo-1558981852-426c6c22a060?w=900&h=600&fit=crop&q=80',
+    categoryKey: 'premium',
+    categoryLabelEs: 'Premium Experiencia',
+    categoryLabelEn: 'Premium Experience',
+    kind: 'premium',
   },
 ];
 
-export const templateShowcase: TemplateShowcaseItem[] = [...referenceTemplates, ...portfolioProjects];
+export const templateShowcase: TemplateShowcaseItem[] = [
+  ...referenceTemplates,
+  ...portfolioProjects,
+  ...premiumExperiences,
+];
+
+/** Las 6 de comida, ordenadas por tipo de servicio (bloque cerrado). */
+export const gastronomyShowcase: TemplateShowcaseItem[] = [
+  ...referenceTemplates.filter((i) => i.categoryKey === 'gastronomy'),
+  ...portfolioProjects.filter((i) => i.categoryKey === 'gastronomy'),
+];
+
+/** Salud: Lumina, Vitalis, Armonía — fila cerrada bajo comida. */
+export const healthShowcase: TemplateShowcaseItem[] = referenceTemplates.filter(
+  (i) => i.categoryKey === 'health'
+);
+
+/** Aura: Estates, Sanctuary, Architects — fila cerrada bajo salud. */
+const AURA_SLUGS = new Set(['aura-estates', 'aura-sanctuary', 'aura-architects']);
+export const auraShowcase: TemplateShowcaseItem[] = [
+  'aura-estates',
+  'aura-sanctuary',
+  'aura-architects',
+]
+  .map((slug) => referenceTemplates.find((i) => i.slug === slug))
+  .filter((i): i is TemplateShowcaseItem => Boolean(i));
+
+/** Resto (sin comida, salud, Aura ni Premium) — bloque cerrado. */
+export const otherShowcase: TemplateShowcaseItem[] = [
+  ...referenceTemplates.filter(
+    (i) =>
+      i.categoryKey !== 'gastronomy' &&
+      i.categoryKey !== 'health' &&
+      !AURA_SLUGS.has(i.slug)
+  ),
+  ...portfolioProjects.filter((i) => i.categoryKey !== 'gastronomy'),
+];
+
+export const templateShowcaseByKind = {
+  gastronomy: gastronomyShowcase,
+  health: healthShowcase,
+  aura: auraShowcase,
+  other: otherShowcase,
+  template: referenceTemplates,
+  project: portfolioProjects,
+  premium: premiumExperiences,
+} as const;
 
 export function getTemplateShowcaseBySlug(slug: string): TemplateShowcaseItem | undefined {
   return templateShowcase.find((item) => item.slug === slug);

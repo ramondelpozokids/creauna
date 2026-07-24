@@ -29,7 +29,6 @@ export default function BeforeAfterDemo() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-px bg-slate-200">
-        {/* Antes */}
         <div className="bg-white p-4 sm:p-5">
           <div className="mb-3">
             <span className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">
@@ -63,7 +62,6 @@ export default function BeforeAfterDemo() {
           </a>
         </div>
 
-        {/* Después */}
         <div className="bg-white p-4 sm:p-5">
           <div className="mb-3">
             <span className="bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">

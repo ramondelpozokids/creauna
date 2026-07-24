@@ -21,6 +21,7 @@ export const contactoI18n = {
     types: {
       'web-a-medida': 'Web a Medida (diseño exclusivo)',
       modernizacion: 'Modernización de web antigua',
+      'experiencia-premium': 'Premium Experiencia (web con 3D / alto impacto)',
       'proyecto-especial': 'Proyecto especial / Agencia',
       otro: 'Otro',
     },
@@ -50,6 +51,7 @@ export const contactoI18n = {
     types: {
       'web-a-medida': 'Custom Web (exclusive design)',
       modernizacion: 'Old website modernization',
+      'experiencia-premium': 'Premium Experience (3D / high-impact site)',
       'proyecto-especial': 'Special project / Agency',
       otro: 'Other',
     },

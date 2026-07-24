@@ -96,12 +96,21 @@ const translations = {
     ],
     customWebTitle: 'Web a Medida — 1.790€',
     customWebSubtitle:
-      'Proyecto exclusivo sin plantilla: briefing, 2 propuestas, desarrollo premium y 3 meses de soporte. Precio cerrado, pago único.',
+      'Proyecto exclusivo sin plantilla: 2 propuestas de diseño, desarrollo premium y 3 meses de soporte. Precio cerrado, pago único. (Web de negocio o marca — no incluye las demos Premium con 3D.)',
     customWebPrice: '1.790€',
     customWebPriceNote: 'Pago único · IVA no incluido · Dominio y hosting aparte',
     customWebIncludes:
       'Supervisado por Ramón del Pozo Rott. Te entregamos archivos listos; publicación en tu dominio o gestionada por nosotros bajo presupuesto adicional.',
     customWebLink: 'Ver proceso completo',
+    experienceTitle: 'Premium Experiencia — desde 4.900€',
+    experienceSubtitle:
+      'Webs con mucho impacto visual: Velocity X, AEON NEXUS, PHANTOM. Animaciones, 3D e interacción avanzada. Es otro tipo de proyecto, no la web a medida habitual.',
+    experiencePrice: 'desde 4.900€',
+    experiencePriceNote: 'Pago único · IVA no incluido · Precio cerrado según lo que pidas',
+    experienceIncludes:
+      'Míralas en /templates → filtro Premium. Te explicamos qué incluye y te damos precio cerrado. Ideal para marcas de producto o proyectos con mucha presencia visual.',
+    experienceDemos: 'Ver demos Premium',
+    experienceContact: 'Pedir presupuesto Premium',
     helpTitle: '¿Sigues con dudas?',
     helpSubtitle: 'FAQ completa o contacto directo — respondemos en menos de 24h.',
     helpFaq: 'Ver preguntas frecuentes',
@@ -192,12 +201,21 @@ const translations = {
     ],
     customWebTitle: 'Custom Web — €1,790',
     customWebSubtitle:
-      'Exclusive non-template project: briefing, 2 proposals, premium development and 3 months support. Fixed one-time price.',
+      'Exclusive project without a template: 2 design proposals, premium build and 3 months support. Fixed one-time price. (Business or brand site — does not include Premium 3D demos.)',
     customWebPrice: '€1,790',
     customWebPriceNote: 'One-time · VAT not included · Domain and hosting separate',
     customWebIncludes:
       'Supervised by Ramón del Pozo Rott. We deliver ready files; publishing on your domain or managed by us is an additional quote.',
     customWebLink: 'See full process',
+    experienceTitle: 'Premium Experience — from €4,900',
+    experienceSubtitle:
+      'High-impact sites: Velocity X, AEON NEXUS, PHANTOM. Animation, 3D and advanced interaction. A different kind of project from a standard custom website.',
+    experiencePrice: 'from €4,900',
+    experiencePriceNote: 'One-time · VAT not included · Fixed price based on what you need',
+    experienceIncludes:
+      'See them at /templates → Premium filter. We explain what’s included and give you a fixed quote. Ideal for product brands or visually bold projects.',
+    experienceDemos: 'View Premium demos',
+    experienceContact: 'Request Premium quote',
     helpTitle: 'Still unsure?',
     helpSubtitle: 'Full FAQ or direct contact — we reply within 24 hours.',
     helpFaq: 'View FAQ',
@@ -568,6 +586,34 @@ export default function Precios() {
           <Link href="/web-a-medida" className="inline-block mt-6 px-8 py-3.5 bg-white text-slate-900 rounded-2xl font-semibold text-sm hover:bg-slate-100 transition">
             {t.customWebLink}
           </Link>
+        </div>
+      </div>
+
+      {/* Premium Experiencia */}
+      <div className="bg-gradient-to-br from-amber-950 via-slate-950 to-black text-white py-14 border-t border-amber-500/20">
+        <div className="container max-w-3xl text-center">
+          <div className="inline-block px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-200 text-[10px] font-bold tracking-widest uppercase mb-4">
+            Premium
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{t.experienceTitle}</h2>
+          <p className="mt-3 text-slate-300 text-sm max-w-xl mx-auto">{t.experienceSubtitle}</p>
+          <div className="mt-6 text-4xl font-bold text-amber-300">{t.experiencePrice}</div>
+          <p className="text-xs text-slate-400 mt-1">{t.experiencePriceNote}</p>
+          <p className="text-sm text-amber-100/80 mt-3 max-w-lg mx-auto">{t.experienceIncludes}</p>
+          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <Link
+              href="/templates?cat=premium"
+              className="inline-block px-8 py-3.5 bg-amber-500 text-slate-950 rounded-2xl font-semibold text-sm hover:bg-amber-400 transition"
+            >
+              {t.experienceDemos}
+            </Link>
+            <Link
+              href="/contacto?tipo=experiencia-premium"
+              className="inline-block px-8 py-3.5 border border-amber-400/40 text-amber-100 rounded-2xl font-semibold text-sm hover:bg-white/5 transition"
+            >
+              {t.experienceContact}
+            </Link>
+          </div>
         </div>
       </div>
 

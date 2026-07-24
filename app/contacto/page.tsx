@@ -8,7 +8,13 @@ import { contactoI18n } from '../data/i18n/marketing';
 import { toast } from 'sonner';
 import { ShieldCheck, Mail, MessageSquare, ArrowRight } from 'lucide-react';
 
-const VALID_TYPES = new Set(['web-a-medida', 'modernizacion', 'proyecto-especial', 'otro']);
+const VALID_TYPES = new Set([
+  'web-a-medida',
+  'modernizacion',
+  'experiencia-premium',
+  'proyecto-especial',
+  'otro',
+]);
 
 function ContactForm() {
   const { lang } = useLanguage();
@@ -25,7 +31,10 @@ function ContactForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const tipo = searchParams.get('tipo') || searchParams.get('type');
+    const tipo =
+      searchParams.get('tipo') ||
+      searchParams.get('type') ||
+      searchParams.get('plan');
     const mensaje = searchParams.get('mensaje') || searchParams.get('message');
     const tema = searchParams.get('tema');
     if (!tipo && !mensaje && !tema) return;
