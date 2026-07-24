@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Manifiesto</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg-0:#030304;--platinum:#e4e7ec;--electric:#4ea8ff;--electric-2:#7dd3ff;--text:#e8ebf0;--text-dim:#8a90a0;--text-faint:#50566a;--glass-border:rgba(255,255,255,0.08);--font-display:'Space Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{background:var(--bg-0);color:var(--text);overflow-x:hidden}body{font-family:var(--font-display);font-weight:300;cursor:none;-webkit-font-smoothing:antialiased;line-height:1.5}@media(max-width:900px){body{cursor:auto}}
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%}.cursor-ring{width:38px;height:38px;border:1px solid rgba(255,255,255,0.5);border-radius:50%;transition:width .3s,height .3s}.cursor-ring.hover{width:70px;height:70px;border-color:var(--electric)}@media(max-width:900px){.cursor-dot,.cursor-ring{display:none}}
+nav.top{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}.logo{font-size:1.1rem;font-weight:500;letter-spacing:.35em;color:var(--platinum)}.logo span{color:var(--electric);font-weight:600}.nav-links{display:flex;gap:2.5rem;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase}.nav-links a{color:var(--text-dim);transition:color .3s}.nav-links a:hover{color:var(--electric-2)}@media(max-width:900px){nav.top{padding:1rem 1.5rem}.nav-links{display:none}}
+.manifesto-hero{height:60vh;min-height:400px;display:flex;align-items:center;justify-content:center;text-align:center}.hero-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.5em;color:var(--electric);text-transform:uppercase;margin-bottom:2rem}.hero-title{font-size:clamp(3rem,8vw,7rem);font-weight:200;color:var(--platinum);line-height:.95}
+.manifesto-body{max-width:800px;margin:0 auto;padding:5rem 3rem 10rem}.manifesto-body p{font-size:clamp(1.1rem,1.5vw,1.4rem);color:var(--text-dim);line-height:2;margin-bottom:3rem;font-weight:300}.manifesto-body p strong{color:var(--platinum);font-weight:400}.manifesto-body p em{color:var(--electric-2);font-style:italic}
+.manifesto-body .divider{width:60px;height:1px;background:var(--electric);margin:4rem auto;opacity:.5}
+.manifesto-quote{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:200;color:var(--platinum);text-align:center;line-height:1.4;margin:5rem 0;font-style:italic}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s}.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="cursor-ring" id="cursor-ring"></div><div class="cursor-dot" id="cursor-dot"></div>
+<nav class="top"><div class="logo">VELOCITY<span>·</span>X</div><div class="nav-links"><a href="index.html">Inicio</a><a href="models.html">Modelos</a><a href="technology.html">Tecnología</a><a href="configurator.html">Configurador</a></div></nav>
+<section class="manifesto-hero"><div><div class="hero-label">Nuestra razón de existir</div><h1 class="hero-title">Manifiesto</h1></div></section>
+<section class="manifesto-body">
+<p class="reveal"><strong>No fabricamos bicicletas.</strong> Fabricamos la prueba de que el futuro ya existe. Cada VELOCITY X es un argumento contra la mediocridad, un manifiesto rodante de lo que la humanidad puede lograr cuando se niega a aceptar lo suficiente.</p>
+<div class="divider reveal"></div>
+<p class="reveal">Vivimos en una era de <em>compromiso</em>. Productos diseñados para durar lo justo. Tecnología que envejece antes de madurar. Diseño que imita en lugar de inventar. <strong>Nosotros elegimos el camino difícil.</strong></p>
+<p class="reveal">Cada cuadro tarda <em>180 horas</em> en curarse. Cada componente pasa por 314 sensores. Cada bicicleta recorre 5000 kilómetros en un banco de pruebas antes de que un humano la toque. No es perfeccionismo. Es respeto por quien la va a montar.</p>
+<div class="divider reveal"></div>
+<p class="reveal">Creemos que la <strong>velocidad es una forma de libertad</strong>. Que la ingeniería es poesía aplicada. Que el carbono líquido, el grafeno y el titanio impreso en 3D no son materiales: son <em>palabras de un nuevo lenguaje</em>.</p>
+<p class="reveal">No vendemos especificaciones. Vendemos la sensación de que el mundo se mueve a tu alrededor mientras tú permaneces inmóvil en el centro de todo. <strong>La sensación de viajar al futuro</strong> sin despegar los pies de los pedales.</p>
+<div class="divider reveal"></div>
+<p class="manifesto-quote reveal">"El futuro no pertenece a quienes lo esperan. Pertenece a quienes lo pedalean."</p>
+<p class="reveal" style="text-align:center;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.4em;color:var(--text-faint)">— VELOCITY X, Zurich, 2040</p>
+</section>
+<script>
+const dot=document.getElementById('cursor-dot'),ring=document.getElementById('cursor-ring');let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});(function l(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(l)})();document.querySelectorAll('a').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script></body></html>

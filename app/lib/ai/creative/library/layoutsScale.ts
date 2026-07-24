@@ -25,6 +25,7 @@ const SECTORS = [
   'barber',
   'bakery',
   'corporate',
+  'bike',
   'fashion',
   'default',
 ] as const;

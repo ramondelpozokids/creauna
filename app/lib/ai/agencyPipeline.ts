@@ -981,6 +981,111 @@ export async function runAgencyPipeline(
   const pack = buildBriefImagePack(prompt, lang, opts?.clientImageUrls);
   const businessName = plan.businessName;
 
+  // === QWEN HARD BUILD (briefs experiencia / producto duro) — entrega a la primera ===
+  try {
+    const { wantsQwenHardBuild, runQwenHardBuild } = await import('./creative/qwenHardBuild');
+    if (wantsQwenHardBuild(prompt)) {
+      const { runCreativeDirectorAsync } = await import('./creative/creativeDirector');
+      const cd = await runCreativeDirectorAsync(prompt, lang, {
+        entropy: `qwen-hard-${Date.now().toString(36)}`,
+      });
+      const built = await runQwenHardBuild(prompt, lang, cd.brief);
+      if (built.ok && built.html.length > 18000) {
+        const { messageIndexPreview } = await import('./creaunaBuildPhases');
+        return {
+          ok: true,
+          previewSections: [{ id: 101, type: 'fullpage', html: built.html }],
+          businessName: cd.brief.businessName || businessName,
+          message: messageIndexPreview(lang, cd.brief.businessName || businessName),
+          source: 'ai',
+          motorsUsed: ['code', 'creative'],
+          providersUsed: [String(built.provider), 'qwen_hard_build'],
+          pipelineStage: 'agency_pipeline',
+          templateSlug: 'qwen-hard-build',
+          plan: {
+            ...plan,
+            businessName: cd.brief.businessName || plan.businessName,
+            heroTitle: cd.brief.heroTitle,
+            heroSubtitle: cd.brief.heroSubtitle,
+            primaryCta: cd.brief.primaryCta,
+            secondaryCta: cd.brief.secondaryCta,
+            specialties: cd.brief.services,
+            styleNotes: [
+              ...plan.styleNotes,
+              'mode:qwen_hard_build',
+              'phase:index_preview',
+              `gate:${built.gate.issues.join('|') || 'ok'}`,
+              `attempts:${built.attempts}`,
+              cd.brief.rationale,
+            ],
+            summaryEs: `${plan.summaryEs} · Preview index (Qwen)`,
+          },
+        };
+      }
+      console.warn(
+        '[agencyPipeline] qwen hard build gated/failed',
+        built.gate.issues,
+        'len',
+        built.html.length
+      );
+    }
+  } catch (err) {
+    console.warn('[agencyPipeline] qwen hard build failed, continuing', err);
+  }
+
+  // === ESPECTÁCULO craft — solo si NO es brief duro (evitar iframe vacío como “éxito”) ===
+  try {
+    const { isSpectaclePrompt, buildSpectacleExperienceHtml } = await import(
+      './creative/spectacleExperience'
+    );
+    const { wantsQwenHardBuild } = await import('./creative/qwenHardBuild');
+    // Briefs duros deben salir por Qwen/CD, no por shell iframe de 3KB
+    if (isSpectaclePrompt(prompt) && !wantsQwenHardBuild(prompt)) {
+      const { runCreativeDirectorAsync } = await import('./creative/creativeDirector');
+      const cd = await runCreativeDirectorAsync(prompt, lang, {
+        entropy: `spectacle-${Date.now().toString(36)}`,
+      });
+      const spectacle = buildSpectacleExperienceHtml(cd.brief, prompt);
+      if (spectacle.html.length > 2000) {
+        return {
+          ok: true,
+          previewSections: [{ id: 101, type: 'fullpage', html: spectacle.html }],
+          businessName: cd.brief.businessName || businessName,
+          message:
+            lang === 'es'
+              ? `He creado una experiencia interactiva (modo espectáculo · motor ${spectacle.engine}). Lista para explorar.`
+              : `Created an interactive experience (spectacle mode · ${spectacle.engine}). Ready to explore.`,
+          source: cd.source === 'llm' ? 'ai' : 'hybrid',
+          motorsUsed: ['creative', 'spectacle'],
+          providersUsed:
+            cd.provider !== 'rules'
+              ? [String(cd.provider), 'spectacle_experience']
+              : ['spectacle_experience'],
+          pipelineStage: 'agency_pipeline',
+          templateSlug: 'spectacle-experience',
+          plan: {
+            ...plan,
+            businessName: cd.brief.businessName || plan.businessName,
+            heroTitle: cd.brief.heroTitle,
+            heroSubtitle: cd.brief.heroSubtitle,
+            primaryCta: cd.brief.primaryCta,
+            secondaryCta: cd.brief.secondaryCta,
+            specialties: cd.brief.services,
+            styleNotes: [
+              ...plan.styleNotes,
+              'mode:spectacle',
+              `engine:${spectacle.engine}`,
+              cd.brief.rationale,
+            ],
+            summaryEs: `${plan.summaryEs} · Experiencia espectáculo`,
+          },
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('[agencyPipeline] spectacle path failed, continuing', err);
+  }
+
   // === CREATIVE DIRECTOR (primary path — techo de calidad) ===
   try {
     const { runCreativePipeline } = await import('./creative/runCreativePipeline');
@@ -1023,24 +1128,23 @@ export async function runAgencyPipeline(
         creative.directorProvider !== 'rules'
           ? [String(creative.directorProvider), 'creative_director']
           : ['creative_director_fallback'];
+      const { messageIndexPreview, stampBuildPhase } = await import('./creaunaBuildPhases');
+      const indexHtml = stampBuildPhase(creative.html, 'index_preview');
       return {
         ok: true,
-        previewSections: [{ id: 101, type: 'fullpage', html: creative.html }],
+        previewSections: [{ id: 101, type: 'fullpage', html: indexHtml }],
         businessName: creative.brief.businessName || businessName,
-        message:
-          creative.directorSource === 'llm'
-            ? lang === 'es'
-              ? `He razonado tu brief con ${creative.directorProvider} y diseñado la web como Director Creativo (${creative.rubric.total}/100). Layout «${creative.selection.layout.name}». Si quieres cambiar algo, dímelo.`
-              : `I reasoned your brief with ${creative.directorProvider} and designed the site as Creative Director (${creative.rubric.total}/100). Layout “${creative.selection.layout.name}”. Ask for any change.`
-            : lang === 'es'
-              ? `He diseñado tu web como Director Creativo (${creative.rubric.total}/100) — modo local sin motores LLM. Layout «${creative.selection.layout.name}».`
-              : `Designed as Creative Director (${creative.rubric.total}/100) — local mode without LLM motors. Layout “${creative.selection.layout.name}”.`,
+        message: messageIndexPreview(lang, creative.brief.businessName || businessName),
         source: creative.directorSource === 'llm' ? 'ai' : 'hybrid',
         motorsUsed: creative.directorSource === 'llm' ? ['copy', 'creative'] : ['creative'],
         providersUsed,
         pipelineStage: 'agency_pipeline',
         templateSlug: 'creative-director',
-        plan: mergedPlan,
+        plan: {
+          ...mergedPlan,
+          styleNotes: [...mergedPlan.styleNotes, 'phase:index_preview'],
+          summaryEs: `${plan.summaryEs} · Preview index · Director Creativo ${creative.rubric.total}/100`,
+        },
       };
     }
   } catch (err) {

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Hyper Carbon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-0: #030304;
+--bg-1: #08080b;
+--bg-2: #0d0d12;
+--platinum: #e4e7ec;
+--electric: #4ea8ff;
+--electric-2: #7dd3ff;
+--text: #e8ebf0;
+--text-dim: #8a90a0;
+--text-faint: #50566a;
+--glass: rgba(255,255,255,0.03);
+--glass-border: rgba(255,255,255,0.08);
+--font-display: 'Space Grotesk', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+}
+
+{ box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-0); color: var(--text); overflow-x: hidden; }
+body {
+font-family: var(--font-display);
+font-weight: 300;
+cursor: none;
+-webkit-font-smoothing: antialiased;
+line-height: 1.5;
+}
+@media (max-width: 900px) { body { cursor: auto; } }
+::selection { background: var(--electric); color: #000; }
+.cursor-dot, .cursor-ring {
+position: fixed; top: 0; left: 0;
+pointer-events: none; z-index: 9999;
+transform: translate(-50%, -50%);
+mix-blend-mode: difference;
+}
+.cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+.cursor-ring {
+width: 38px; height: 38px;
+border: 1px solid rgba(255,255,255,0.5);
+border-radius: 50%;
+transition: transform .15s ease-out, width .3s, height .3s;
+}
+.cursor-ring.hover { width: 70px; height: 70px; border-color: var(--electric); }
+@media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } }
+nav.top {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+padding: 1.5rem 3rem;
+display: flex; justify-content: space-between; align-items: center;
+background: rgba(5,5,8,0.8);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--glass-border);
+}
+.logo { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.35em; color: var(--platinum); }
+.logo span { color: var(--electric); font-weight: 600; }
+.nav-links { display: flex; gap: 2.5rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+.nav-links a { color: var(--text-dim); transition: color .3s; }
+.nav-links a:hover { color: var(--electric-2); }
+@media (max-width: 900px) { nav.top { padding: 1rem 1.5rem; } .nav-links { display: none; } }
+.hero {
+height: 100vh;
+min-height: 700px;
+display: flex; align-items: center; justify-content: center;
+position: relative;
+overflow: hidden;
+}
+#hero-canvas { position: absolute; inset: 0; }
+.hero-content {
+position: relative; z-index: 2;
+text-align: center;
+}
+.hero-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.5em;
+color: var(--electric);
+text-transform: uppercase;
+margin-bottom: 2rem;
+}
+.hero-title {
+font-size: clamp(4rem, 10vw, 9rem);
+font-weight: 300;
+letter-spacing: -0.02em;
+color: var(--platinum);
+line-height: 0.95;
+margin-bottom: 2rem;
+}
+.hero-sub {
+font-size: 1.2rem;
+color: var(--text-dim);
+max-width: 600px;
+margin: 0 auto 3rem;
+line-height: 1.8;
+}
+.hero-stats {
+display: flex; gap: 4rem; justify-content: center;
+margin-top: 3rem;
+}
+.hero-stat { text-align: center; }
+.hero-stat .val {
+font-size: 3rem;
+font-weight: 300;
+color: var(--electric-2);
+margin-bottom: 0.5rem;
+}
+.hero-stat .lbl {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.3em;
+color: var(--text-faint);
+text-transform: uppercase;
+}
+.section {
+padding: 8rem 3rem;
+max-width: 1600px;
+margin: 0 auto;
+}
+@media (max-width: 900px) { .section { padding: 4rem 1.5rem; } }
+.section-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.5em;
+color: var(--electric);
+text-transform: uppercase;
+margin-bottom: 2rem;
+display: flex; align-items: center; gap: 1rem;
+}
+.section-label::before {
+content: ''; width: 40px; height: 1px; background: var(--electric);
+}
+.section-title {
+font-size: clamp(2.5rem, 6vw, 5rem);
+font-weight: 300;
+letter-spacing: -0.02em;
+color: var(--platinum);
+line-height: 0.95;
+margin-bottom: 3rem;
+}
+.section-title em { color: var(--electric-2); font-style: italic; }
+.features-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 2rem;
+margin-top: 4rem;
+}
+.feature-card {
+padding: 3rem;
+border: 1px solid var(--glass-border);
+background: var(--glass);
+transition: all .5s;
+position: relative;
+overflow: hidden;
+}
+.feature-card:hover {
+border-color: rgba(78,168,255,0.3);
+transform: translateY(-10px);
+background: var(--bg-2);
+}
+.feature-num {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+color: var(--text-faint);
+letter-spacing: 0.3em;
+margin-bottom: 1rem;
+}
+.feature-card h3 {
+font-size: 1.5rem;
+font-weight: 400;
+color: var(--platinum);
+margin-bottom: 1rem;
+}
+.feature-card p {
+font-size: 0.9rem;
+color: var(--text-dim);
+line-height: 1.7;
+}
+.specs-section {
+background: var(--bg-1);
+padding: 8rem 3rem;
+}
+.specs-grid {
+max-width: 1600px;
+margin: 4rem auto 0;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 3rem;
+}
+.spec-item { text-align: center; }
+.spec-val {
+font-size: 3rem;
+font-weight: 300;
+color: var(--electric-2);
+margin-bottom: 0.5rem;
+}
+.spec-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.3em;
+color: var(--text-faint);
+text-transform: uppercase;
+}
+.cta-section {
+padding: 8rem 3rem;
+text-align: center;
+background: radial-gradient(ellipse at center, rgba(78,168,255,0.05), transparent 70%);
+}
+.cta-title {
+font-size: clamp(2.5rem, 6vw, 5rem);
+font-weight: 300;
+color: var(--platinum);
+margin-bottom: 2rem;
+}
+.cta-title em { color: var(--electric-2); font-style: italic; }
+.btn {
+padding: 1.2rem 3rem;
+font-size: 0.8rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+border: 1px solid var(--glass-border);
+background: transparent;
+color: var(--platinum);
+transition: all .4s;
+cursor: none;
+}
+@media (max-width: 900px) { .btn { cursor: pointer; } }
+.btn-primary {
+background: linear-gradient(135deg, rgba(78,168,255,0.15), rgba(78,168,255,0.05));
+border-color: rgba(78,168,255,0.3);
+}
+.btn:hover {
+border-color: var(--electric);
+box-shadow: 0 0 40px rgba(78,168,255,0.3);
+transform: translateY(-2px);
+}
+.reveal {
+opacity: 0;
+transform: translateY(40px);
+transition: opacity 1s, transform 1s;
+}
+.reveal.visible {
+opacity: 1;
+transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav class="top">
+<div class="logo">VELOCITY<span>·</span>X</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="models.html">Modelos</a>
+<a href="technology.html">Tecnología</a>
+<a href="configurator.html">Configurador</a>
+</div>
+</nav>
+
+<section class="hero">
+<canvas id="hero-canvas"></canvas>
+<div class="hero-content">
+<div class="hero-label">VX-01 · Velocidad pura</div>
+<h1 class="hero-title">Hyper Carbon</h1>
+<p class="hero-sub">La expresión máxima de velocidad pura. Cuadro monocasco de carbono líquido moldeado en una sola pieza. Cada gramo, cada curva, optimizada para la perfección aerodinámica.</p>
+<div class="hero-stats">
+<div class="hero-stat">
+<div class="val">6.2kg</div>
+<div class="lbl">Peso</div>
+</div>
+<div class="hero-stat">
+<div class="val">480km</div>
+<div class="lbl">Autonomía</div>
+</div>
+<div class="hero-stat">
+<div class="val">2.1s</div>
+<div class="lbl">0-60 km/h</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="reveal">
+<div class="section-label">Ingeniería</div>
+<h2 class="section-title">Diseñada para <em>romper límites</em>.</h2>
+</div>
+<div class="features-grid reveal">
+<div class="feature-card">
+<div class="feature-num">01</div>
+<h3>Carbono líquido T2000</h3>
+<p>Fibra de alto módulo en estado fluido. Autorreparable ante microgrietas. 40% más ligera que el T1000 tradicional. Moldeada en una sola pieza sin uniones.</p>
+</div>
+<div class="feature-card">
+<div class="feature-num">02</div>
+<h3>Motor VX-1200 Hyper</h3>
+<p>1200W de potencia pico. Campo magnético variable. Silencio absoluto. Eficiencia del 98%. Aceleración brutal desde cero.</p>
+</div>
+<div class="feature-card">
+<div class="feature-num">03</div>
+<h3>Aerodinámica activa</h3>
+<p>Superficies adaptativas que reducen el drag un 40% a alta velocidad. Perfiles que cambian según la velocidad y posición del rider.</p>
+</div>
+<div class="feature-card">
+<div class="feature-num">04</div>
+<h3>Batería de grafeno 900Wh</h3>
+<p>Densidad energética 5× superior al litio. Carga completa en 12 minutos. Vida útil de 20 años. Invisible bajo el cuadro.</p>
+</div>
+<div class="feature-card">
+<div class="feature-num">05</div>
+<h3>Ruedas de carbono profundo</h3>
+<p>Perfiles de 80mm. Rodamientos de cerámica de zirconio. Fricción cercana a cero. 100.000 km sin mantenimiento.</p>
+</div>
+<div class="feature-card">
+<div class="feature-num">06</div>
+<h3>Posición agresiva</h3>
+<p>Geometría de competición. Manillar integrado. Tija de sillín aero. Cada detalle orientado a la velocidad máxima.</p>
+</div>
+</div>
+</section>
+
+<section class="specs-section">
+<div style="max-width:1600px;margin:0 auto;">
+<div class="reveal">
+<div class="section-label">Especificaciones</div>
+<h2 class="section-title">Cada número, <em>una declaración</em>.</h2>
+</div>
+<div class="specs-grid reveal">
+<div class="spec-item">
+<div class="spec-val">6.2kg</div>
+<div class="spec-label">Peso total</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">480km</div>
+<div class="spec-label">Autonomía</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">1200W</div>
+<div class="spec-label">Potencia pico</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">2.1s</div>
+<div class="spec-label">0-60 km/h</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">0.21</div>
+<div class="spec-label">CdA</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">900Wh</div>
+<div class="spec-label">Batería</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">12min</div>
+<div class="spec-label">Carga completa</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">T2000</div>
+<div class="spec-label">Carbono</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="cta-section">
+<div class="reveal">
+<h2 class="cta-title">¿Listo para <em>el futuro</em>?</h2>
+<p style="color:var(--text-dim);max-width:500px;margin:0 auto 3rem;font-size:1.1rem;">Producción limitada a 50 unidades anuales. Entrega personal por ingeniero certificado.</p>
+<button class="btn btn-primary">Reservar Hyper Carbon</button>
+</div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = window.innerWidth/2, my = window.innerHeight/2;
+let rx = mx, ry = my;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function cursorLoop(){
+rx += (mx - rx) * 0.18;
+ry += (my - ry) * 0.18;
+dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+document.querySelectorAll('a, button, .feature-card').forEach(el=>{
+el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+});
+
+const io = new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting) e.target.classList.add('visible');
+});
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Hero 3D
+const canvas = document.getElementById('hero-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0.5, 6);
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const amb = new THREE.AmbientLight(0x404060, 0.6);
+scene.add(amb);
+const key = new THREE.DirectionalLight(0x7dd3ff, 1.2);
+key.position.set(5, 5, 5);
+scene.add(key);
+const rim = new THREE.PointLight(0x4ea8ff, 1.5, 10);
+rim.position.set(-3, 1, 2);
+scene.add(rim);
+
+const bike = new THREE.Group();
+const matFrame = new THREE.MeshPhongMaterial({color:0x0a0a0d, specular:0x4ea8ff, shininess:150});
+const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x2a5a8f, shininess:150});
+
+function makeWheel(r){
+const g = new THREE.Group();
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.08, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.05, 0.02, 8, 60), matAccent));
+for(let i=0;i<16;i++){
+const s = new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,r*2-0.1,4), matFrame);
+s.rotation.z = (i/16)*Math.PI;
+g.add(s);
+}
+return g;
+}
+const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); bike.add(wR);
+const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); bike.add(wF);
+
+function tube(a,b,r=0.04){
+const d = new THREE.Vector3().subVectors(b,a);
+const l = d.length();
+const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matFrame);
+m.position.copy(a).add(b).multiplyScalar(0.5);
+m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+return m;
+}
+const bb = new THREE.Vector3(0,-0.5,0);
+const seat = new THREE.Vector3(-0.3,0.4,0);
+const head = new THREE.Vector3(0.8,0.4,0);
+bike.add(tube(bb,seat,0.05));
+bike.add(tube(bb,head,0.05));
+bike.add(tube(seat,head,0.04));
+bike.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+bike.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+
+const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.7,12), matFrame);
+hbar.rotation.z = Math.PI/2;
+hbar.position.set(0.95,0.55,0);
+bike.add(hbar);
+
+scene.add(bike);
+
+let t=0;
+function animate(){
+t += 0.005;
+bike.rotation.y = t;
+bike.position.y = Math.sin(t*2)*0.05;
+wR.rotation.z = t*3;
+wF.rotation.z = t*3;
+renderer.render(scene, camera);
+requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener('resize', ()=>{
+camera.aspect = window.innerWidth/window.innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>

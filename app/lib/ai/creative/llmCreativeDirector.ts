@@ -25,6 +25,12 @@ import type {
 import { makeUniquenessSeed } from './uniquenessSeed';
 import { isAestheticMedicinePrompt } from './designDna';
 
+function isBikePrompt(text: string): boolean {
+  return /bicicleta|e-?bike|ebike|ciclism|bike\b|movilidad\s+(eléct|electr|urbana)|bicis\b|alta\s+gama.*bici|bici.*alta\s+gama/i.test(
+    text
+  );
+}
+
 export type CreativeDirectorSource = 'llm' | 'heuristic_fallback';
 
 export interface CreativeDirectorResult {
@@ -44,6 +50,7 @@ const SECTORS: CreativeSectorId[] = [
   'bakery',
   'corporate',
   'fashion',
+  'bike',
   'default',
 ];
 const BRAND_TONES: BrandTone[] = [
@@ -145,7 +152,11 @@ export function parseCreativeBriefJson(
   if (!data || typeof data !== 'object') return null;
   const o = data as Record<string, unknown>;
 
-  const sectorId = oneOf(o.sectorId, SECTORS, 'default');
+  let sectorId = oneOf(o.sectorId, SECTORS, 'default');
+  // Producto real primero: bicis / e-bike nunca caen en default/corporate
+  if (isBikePrompt(prompt) || isBikePrompt(str(o.businessName, '', 80) + ' ' + str(o.positioning, '', 160))) {
+    sectorId = 'bike';
+  }
   const businessName = str(o.businessName, lang === 'es' ? 'Tu marca' : 'Your brand', 48);
   if (businessName.length < 2) return null;
 
@@ -167,10 +178,8 @@ export function parseCreativeBriefJson(
     320
   );
 
-  // photoStyle is internal — never used as visible copy; still store for DNA/image guidance
-  const photoStyle = str(o.photoStyle, 'authentic professional photography for the real business', 160);
-
-  const storytellingArc = strArr(
+  // photoStyle is internal — never used as visible copy
+  let storytellingArc = strArr(
     o.storytellingArc,
     ['hero', 'about', 'services', 'gallery', 'testimonials', 'contact'],
     14
@@ -180,6 +189,12 @@ export function parseCreativeBriefJson(
 
   let brandTone = oneOf(o.brandTone, BRAND_TONES, 'premium');
   let artDirection = oneOf(o.artDirection, ART_DIRS, 'clinicalLight');
+  let photoStyle = str(o.photoStyle, 'authentic professional photography for the real business', 160);
+  let visualLanguage = oneOf(o.visualLanguage, VIS_LANGS, 'airAndWhite');
+  let density = oneOf(o.density, DENSITIES, 'balanced');
+  let typeScale = oneOf(o.typeScale, TYPE_SCALES, 'editorial');
+  let iconStyle = oneOf(o.iconStyle, ICON_STYLES, 'line');
+
   const aestheticSignal =
     sectorId === 'clinic' &&
     (isAestheticMedicinePrompt(prompt) ||
@@ -187,6 +202,25 @@ export function parseCreativeBriefJson(
   if (aestheticSignal) {
     brandTone = 'luxury';
     artDirection = 'aspirationalLuxury';
+    density = oneOf(o.density, DENSITIES, 'sparse');
+    typeScale = oneOf(o.typeScale, TYPE_SCALES, 'billboard');
+    photoStyle =
+      'soft facial treatments, skincare texture, calm clinical beauty — never dental chairs or hotel suites';
+  }
+  if (sectorId === 'bike') {
+    brandTone = 'minimal';
+    artDirection = 'spatialMinimal';
+    visualLanguage = 'photographyDominant';
+    density = oneOf(o.density, DENSITIES, 'sparse');
+    typeScale = oneOf(o.typeScale, TYPE_SCALES, 'billboard');
+    iconStyle = 'line';
+    photoStyle =
+      'high-end bicycles and e-bikes as the hero subject — product, motion, craft. Never offices, code screens, or corporate stock';
+    storytellingArc = strArr(
+      o.storytellingArc,
+      ['hero', 'about', 'services', 'gallery', 'testimonials', 'faq', 'contact'],
+      14
+    );
   }
 
   return {
@@ -196,15 +230,17 @@ export function parseCreativeBriefJson(
     positioning: str(o.positioning, aboutHeadline, 160),
     brandTone,
     artDirection,
-    visualLanguage: oneOf(o.visualLanguage, VIS_LANGS, 'airAndWhite'),
-    heroFamily: oneOf(o.heroFamily, HERO_FAMS, 'editorialStack'),
-    density: oneOf(o.density, DENSITIES, aestheticSignal ? 'sparse' : 'balanced'),
+    visualLanguage,
+    heroFamily: oneOf(
+      o.heroFamily,
+      HERO_FAMS,
+      sectorId === 'bike' ? 'fullBleedCenter' : 'editorialStack'
+    ),
+    density,
     rhythm: oneOf(o.rhythm, RHYTHMS, 'editorialBreaks'),
-    typeScale: oneOf(o.typeScale, TYPE_SCALES, aestheticSignal ? 'billboard' : 'editorial'),
-    photoStyle: aestheticSignal
-      ? 'soft facial treatments, skincare texture, calm clinical beauty — never dental chairs or hotel suites'
-      : photoStyle,
-    iconStyle: oneOf(o.iconStyle, ICON_STYLES, 'line'),
+    typeScale,
+    photoStyle,
+    iconStyle,
     storytellingArc,
     businessName,
     heroTitle,
@@ -228,7 +264,7 @@ export function parseCreativeBriefJson(
     uniquenessSeed: seed,
     rationale: str(
       o.rationale,
-      `LLM Creative Director: sector=${sectorId}, name=${businessName}${aestheticSignal ? ', aesthetic luxury' : ''}`,
+      `LLM Creative Director: sector=${sectorId}, name=${businessName}${aestheticSignal ? ', aesthetic luxury' : ''}${sectorId === 'bike' ? ', product bike' : ''}`,
       280
     ),
   };
@@ -245,6 +281,7 @@ REGLA CRÍTICA — NEGOCIO vs INSPIRACIÓN:
 - Si el brief dice clínica / medicina estética / dental y menciona «como un hotel» o «inspiración hotel 5★», el sector es clinic, NUNCA hotel.
 - Si el negocio es medicina estética / med-spa / tratamientos faciales (hialurónico, neuromoduladores, etc.): sectorId=clinic, brandTone=luxury, artDirection=aspirationalLuxury. NUNCA copies de hotel ni CTAs de estancia.
 - Si el negocio es clínica dental / salud general sin estética: brandTone=premium, artDirection=clinicalLight.
+- Si el brief es bicicletas / e-bike / movilidad ciclista / bike brand: sectorId=bike. Fotos y copy de BICICLETAS, nunca oficinas, código ni stock corporativo.
 - Si el negocio es hotel boutique, sectorId = hotel.
 - Extrae el nombre EXACTO del negocio (p.ej. «Aura Clinic»), no el título del documento ni el sector genérico.
 

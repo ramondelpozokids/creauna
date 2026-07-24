@@ -14,6 +14,7 @@ export type CreativeSectorId =
   | 'bakery'
   | 'corporate'
   | 'fashion'
+  | 'bike'
   | 'default';
 
 export type BrandTone =

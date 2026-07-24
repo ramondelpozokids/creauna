@@ -353,7 +353,8 @@ function servicesHtml(
   brief: CreativeBrief,
   dna: DesignDna,
   sel: CompositionSelection,
-  band = 'var(--cua-surface)'
+  band = 'var(--cua-surface)',
+  productImgs: string[] = []
 ): string {
   const editorial =
     /legal|architecture|clinic|corporate/.test(brief.sectorId) ||
@@ -366,15 +367,56 @@ function servicesHtml(
     brief.sectorId === 'restaurant' ||
     brief.sectorId === 'cafe' ||
     brief.sectorId === 'bakery';
-  const label = brief.lang === 'es' ? (menuLed ? 'Carta' : 'Servicios') : menuLed ? 'Menu' : 'Services';
+  const productLed = brief.sectorId === 'bike' || brief.sectorId === 'fashion';
+  const label =
+    brief.lang === 'es'
+      ? menuLed
+        ? 'Carta'
+        : productLed
+          ? 'Productos'
+          : 'Servicios'
+      : menuLed
+        ? 'Menu'
+        : productLed
+          ? 'Products'
+          : 'Services';
   const heading =
     brief.lang === 'es'
       ? menuLed
         ? 'Sabores y momentos'
-        : 'Lo que hacemos con criterio'
+        : productLed
+          ? brief.sectorId === 'bike'
+            ? 'Ingeniería sobre dos ruedas'
+            : 'Colección y piezas'
+          : 'Lo que hacemos con criterio'
       : menuLed
         ? 'Flavors and moments'
-        : 'What we do with judgment';
+        : productLed
+          ? brief.sectorId === 'bike'
+            ? 'Engineering on two wheels'
+            : 'Collection and pieces'
+          : 'What we do with judgment';
+
+  if (productLed && productImgs && productImgs.length > 0) {
+    const cards = brief.services
+      .map((s, i) => {
+        const img = productImgs[i % productImgs.length];
+        return `<a href="#contacto" class="cua-product reveal" data-cua-comp="${sel.cardId}" style="animation-delay:${i * 50}ms;display:block;text-decoration:none;color:inherit;">
+        <div style="aspect-ratio:4/3;overflow:hidden;border-radius:var(--cua-radius);background:url('${img}') center/cover;margin-bottom:1rem;" role="img" aria-label="${esc(s)}"></div>
+        <h3 style="font-family:var(--cua-font-h);margin:0 0 .4rem;color:var(--cua-dark);font-size:1.15rem;">${esc(s)}</h3>
+        <p style="margin:0;color:var(--cua-muted);font-size:.92rem;line-height:1.5;">${
+          brief.lang === 'es' ? 'Diseño, material y rendimiento en un solo gesto.' : 'Design, material and performance in one gesture.'
+        }</p>
+      </a>`;
+      })
+      .join('\n');
+    return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:${band};">
+  <div style="max-width:1120px;margin:0 auto;">
+    ${sectionHead(label, heading)}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2.5rem;">${cards}</div>
+  </div>
+</section>`;
+  }
 
   if (menuLed && !editorial) {
     const rows = brief.services
@@ -487,9 +529,13 @@ function aboutHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelecti
 function galleryHtml(brief: CreativeBrief, sel: CompositionSelection, gallery: string[], band = 'var(--cua-light)'): string {
   const imgs = gallery.slice(0, 6);
   const captions =
-    brief.lang === 'es'
-      ? ['Ambiente', 'Detalle', 'Proceso', 'Espacio', 'Cuidado', 'Presencia']
-      : ['Atmosphere', 'Detail', 'Process', 'Space', 'Care', 'Presence'];
+    brief.sectorId === 'bike'
+      ? brief.lang === 'es'
+        ? ['Modelo', 'Detalle', 'Ruta', 'Taller', 'Geometría', 'Movimiento']
+        : ['Model', 'Detail', 'Ride', 'Workshop', 'Geometry', 'Motion']
+      : brief.lang === 'es'
+        ? ['Ambiente', 'Detalle', 'Proceso', 'Espacio', 'Cuidado', 'Presencia']
+        : ['Atmosphere', 'Detail', 'Process', 'Space', 'Care', 'Presence'];
   const cells = imgs
     .map((src, i) => {
       const span =
@@ -574,6 +620,17 @@ function whyHtml(brief: CreativeBrief, sel: CompositionSelection): string {
           ['Material', 'Light, proportion and touch as language.'],
           ['Process', 'Ongoing dialogue from brief to build.'],
         ],
+    bike: es
+      ? [
+          ['Producto', 'La bicicleta es el mensaje: forma, peso, respuesta.'],
+          ['Ingeniería', 'Asistencia, materiales y geometría sin concesiones.'],
+          ['Experiencia', 'Configura, prueba y rueda — no solo mires un catálogo.'],
+        ]
+      : [
+          ['Product', 'The bike is the message: form, weight, response.'],
+          ['Engineering', 'Assist, materials and geometry without compromise.'],
+          ['Experience', 'Configure, try and ride — not just browse a catalog.'],
+        ],
   };
   const items =
     bySector[brief.sectorId] ||
@@ -656,6 +713,17 @@ function testimonialsHtml(brief: CreativeBrief, sel: CompositionSelection): stri
           ['Solid judgment, no theatre.', 'Founder'],
           ['Serious response when it mattered most.', 'Client'],
         ],
+    bike: es
+      ? [
+          ['La asistencia se siente natural. La bici, de otro planeta.', 'Rider'],
+          ['Diseño limpio y respuesta inmediata en ciudad.', 'Reseña'],
+          ['Configuré la mía y no quiero otra.', 'Cliente'],
+        ]
+      : [
+          ['The assist feels natural. The bike feels next-gen.', 'Rider'],
+          ['Clean design and instant response in the city.', 'Review'],
+          ['I configured mine and I do not want another.', 'Customer'],
+        ],
   };
   const quotes =
     quotesBy[brief.sectorId] ||
@@ -736,6 +804,17 @@ function faqHtml(brief: CreativeBrief, sel: CompositionSelection): string {
           ['Where are you?', where],
           ['First consult?', 'We hear the matter and propose scope and next steps.'],
         ],
+    bike: es
+      ? [
+          ['¿Cómo configuro mi bici?', 'Usa el CTA de configuración o el formulario: modelo, talla y extras.'],
+          ['¿Dónde estáis?', where],
+          ['¿Puedo probarla?', 'Sí — pide una experiencia o cita de prueba desde contacto.'],
+        ]
+      : [
+          ['How do I configure my bike?', 'Use the configure CTA or the form: model, size and extras.'],
+          ['Where are you?', where],
+          ['Can I try it?', 'Yes — request a ride experience from contact.'],
+        ],
   };
   const faqs =
     bySector[brief.sectorId] ||
@@ -774,6 +853,7 @@ function contactHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelec
     restaurant: es ? 'Reserva tu mesa' : 'Reserve your table',
     hotel: es ? 'Reserva tu estancia' : 'Book your stay',
     legal: es ? 'Consulta confidencial' : 'Confidential consult',
+    bike: es ? 'Configura tu experiencia' : 'Configure your experience',
   };
   const title = titles[brief.sectorId] || (es ? 'Hablemos' : 'Let’s talk');
   const wa =
@@ -851,7 +931,7 @@ function sectionFor(
     k.includes('room') ||
     k.includes('treatment')
   )
-    return servicesHtml(brief, dna, sel, band);
+    return servicesHtml(brief, dna, sel, band, imgs.gallery);
   if (
     k.includes('about') ||
     k.includes('nosotros') ||
@@ -911,7 +991,7 @@ export function renderConstrainedHtml(input: RenderInput): string {
   }
   // Narrativa de confianza: servicios → nosotros → galería → (resto) → contacto al final
   if (!seen.has('servicios')) {
-    bodySections.unshift(servicesHtml(brief, dna, sel, bandFor(0)));
+    bodySections.unshift(servicesHtml(brief, dna, sel, bandFor(0), imgs.gallery));
     seen.add('servicios');
   }
   if (!seen.has('nosotros')) {

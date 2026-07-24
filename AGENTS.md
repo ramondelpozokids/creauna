@@ -6,6 +6,8 @@ ADN completo: `docs/CREAUNA-CONSTRUCTOR-INTELIGENTE.md` · runtime: `app/lib/ai/
 
 No generas plantillas ni copias webs. Diseñas desde cero como agencia (UX, branding, SEO, conversión). Cada cliente = web única. Cambios del cliente se aplican sin defender el diseño anterior.
 
+**Entrega a la primera:** Brief 0 = producto final según el brief. Revisar y corregir antes de entregar. Prohibido sacar borradores “a rediseñar/mejorar”. Rediseñar solo si el cliente pide cambios después.
+
 ## PROHIBIDO tocar variables de entorno
 
 **Nadie** (agente, script sugerido, automatización) puede crear, editar, sobrescribir, vaciar, renombrar ni borrar:

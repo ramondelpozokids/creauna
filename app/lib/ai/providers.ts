@@ -199,40 +199,82 @@ async function callGroq(messages: AiMessage[], maxTokens: number, temperature = 
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
+/** Modelos Qwen/DashScope a probar si el preferido no está habilitado en la cuenta. */
+const QWEN_MODEL_FALLBACKS = [
+  'qwen-plus',
+  'qwen-turbo',
+  'qwen-max',
+  'qwen2.5-coder-32b-instruct',
+  'qwen3-coder-plus',
+  'qwen3.7-plus',
+] as const;
+
 /** Qwen vía DashScope (compatible OpenAI). Ideal para HTML largo de calidad. */
 async function callQwen(messages: AiMessage[], maxTokens: number, temperature = 0.6): Promise<string | null> {
   const apiKey = (process.env.QWEN_API_KEY || process.env.DASHSCOPE_API_KEY)?.trim();
   if (!apiKey) return null;
 
-  const base =
+  const base = (
     process.env.QWEN_BASE_URL?.trim() ||
     process.env.DASHSCOPE_BASE_URL?.trim() ||
-    'https://dashscope-intl.aliyuncs.com/compatible-mode/v1';
-  const model =
-    process.env.QWEN_MODEL?.trim() ||
-    (maxTokens >= 8000 ? 'qwen3.7-plus' : 'qwen-plus');
+    'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'
+  ).replace(/\/$/, '');
 
-  const res = await fetch(`${base.replace(/\/$/, '')}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-    }),
-  });
+  const preferred = process.env.QWEN_MODEL?.trim();
+  // Preferir qwen-plus (suele estar en cuota gratuita) antes que 3.7-plus (a menudo Unpurchased)
+  const ordered = [
+    ...(preferred ? [preferred] : []),
+    ...(maxTokens >= 8000
+      ? (['qwen-plus', 'qwen-max', 'qwen3.7-plus', 'qwen3-coder-plus', 'qwen-turbo'] as string[])
+      : (['qwen-plus', 'qwen-turbo', 'qwen-max'] as string[])),
+    ...QWEN_MODEL_FALLBACKS,
+  ];
+  const models = [...new Set(ordered.filter(Boolean))];
 
-  if (!res.ok) {
-    console.error('qwen error:', res.status, await res.text());
-    return null;
+  let lastErr = '';
+  for (const model of models) {
+    const res = await fetch(`${base}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature,
+        max_tokens: maxTokens,
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      lastErr = `${model} ${res.status} ${body.slice(0, 180)}`;
+      // Modelo no contratado / región → probar el siguiente
+      if (
+        res.status === 403 ||
+        res.status === 404 ||
+        /AccessDenied|Unpurchased|does not exist|invalid_model|Model not exist/i.test(body)
+      ) {
+        console.warn('qwen model skip:', lastErr.replace(/\s+/g, ' '));
+        continue;
+      }
+      console.error('qwen error:', lastErr.replace(/\s+/g, ' '));
+      return null;
+    }
+
+    const data = await res.json();
+    const content = data?.choices?.[0]?.message?.content?.trim() || null;
+    if (content) {
+      if (model !== preferred && preferred) {
+        console.info(`qwen: using fallback model «${model}» (preferred «${preferred}» unavailable)`);
+      }
+      return content;
+    }
   }
 
-  const data = await res.json();
-  return data?.choices?.[0]?.message?.content?.trim() || null;
+  if (lastErr) console.error('qwen: all models failed. last:', lastErr.replace(/\s+/g, ' '));
+  return null;
 }
 
 async function callProvider(

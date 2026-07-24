@@ -1,0 +1,2735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="VELOCITY X — No vendemos bicicletas. Vendemos la sensación de viajar al futuro." />
+<meta name="theme-color" content="#050507" />
+<title>VELOCITY X — Beyond Motion</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-0: #030304;
+    --bg-1: #08080b;
+    --bg-2: #0d0d12;
+    --graphite: #1a1a1f;
+    --titanium: #2a2a32;
+    --silver: #b8bcc4;
+    --platinum: #e4e7ec;
+    --electric: #4ea8ff;
+    --electric-2: #7dd3ff;
+    --electric-glow: #4ea8ff66;
+    --accent: #c8d0dc;
+    --text: #e8ebf0;
+    --text-dim: #8a90a0;
+    --text-faint: #50566a;
+    --glass: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.08);
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  @property --glow {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg-0); color: var(--text); overflow-x: hidden; }
+  html { scroll-behavior: auto; }
+  body {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    cursor: none;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  @media (max-width: 900px) { body { cursor: auto; } }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: none; }
+  @media (max-width: 900px) { button { cursor: pointer; } }
+
+  ::selection { background: var(--electric); color: #000; }
+
+  /* ============ CURSOR ============ */
+  .cursor-dot, .cursor-ring {
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    transition: width .3s cubic-bezier(.2,.8,.2,1), height .3s cubic-bezier(.2,.8,.2,1), background .3s;
+  }
+  .cursor-dot {
+    width: 6px; height: 6px; background: #fff; border-radius: 50%;
+  }
+  .cursor-ring {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    transition: transform .15s ease-out, width .3s, height .3s, border-color .3s;
+  }
+  .cursor-ring.hover { width: 70px; height: 70px; border-color: var(--electric); }
+  .cursor-ring.laser { width: 2px; height: 2px; background: var(--electric); border: none; border-radius: 50%; box-shadow: 0 0 20px var(--electric); }
+  .cursor-ring.radar { width: 80px; height: 80px; border: 1px solid var(--electric); animation: radarPulse 1.6s infinite; }
+  @keyframes radarPulse {
+    0% { transform: translate(-50%,-50%) scale(.6); opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(1.4); opacity: 0; }
+  }
+  @media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } }
+
+  /* ============ LOADER ============ */
+  #loader {
+    position: fixed; inset: 0; z-index: 10000;
+    background: var(--bg-0);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-logo {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    color: var(--platinum);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeIn 1s 0.2s forwards;
+  }
+  .loader-logo span { color: var(--electric); }
+  .loader-bar {
+    width: min(400px, 60vw); height: 1px;
+    background: rgba(255,255,255,0.1);
+    position: relative; overflow: hidden;
+  }
+  .loader-bar::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, var(--electric), transparent);
+    animation: loaderSweep 1.8s infinite;
+  }
+  .loader-pct {
+    margin-top: 1.5rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-dim);
+  }
+  @keyframes loaderSweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ============ NAV ============ */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background .4s, backdrop-filter .4s, padding .4s;
+  }
+  nav.top.scrolled {
+    background: rgba(5,5,8,0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 1rem 3rem;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .logo {
+    font-size: 1.1rem; font-weight: 500; letter-spacing: 0.35em;
+    color: var(--platinum);
+  }
+  .logo span { color: var(--electric); font-weight: 600; }
+  .nav-links { display: flex; gap: 2.5rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+  .nav-links a { color: var(--text-dim); transition: color .3s; position: relative; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -6px; left: 0; width: 0; height: 1px;
+    background: var(--electric); transition: width .4s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    padding: 0.7rem 1.5rem;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--platinum);
+    transition: all .4s;
+    position: relative; overflow: hidden;
+  }
+  .nav-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, var(--electric-glow), transparent);
+    transform: translateX(-100%); transition: transform .6s;
+  }
+  .nav-cta:hover::before { transform: translateX(100%); }
+  .nav-cta:hover { border-color: var(--electric); color: var(--electric-2); }
+  @media (max-width: 900px) {
+    nav.top { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+  }
+
+  /* ============ CANVAS BG ============ */
+  #bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+  #hero-canvas {
+    position: absolute; inset: 0; z-index: 1;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-fog {
+    position: absolute; inset: 0; z-index: 2;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(78,168,255,0.08), transparent 60%),
+      radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.03), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-vignette {
+    position: absolute; inset: 0; z-index: 3;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative; z-index: 5;
+    text-align: center;
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--electric);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1.2s 2s forwards;
+  }
+  .hero-title {
+    font-size: clamp(4rem, 14vw, 14rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    color: var(--platinum);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title .word {
+    display: inline-block;
+    overflow: hidden;
+  }
+  .hero-title .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(100%);
+    animation: charReveal 1s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes charReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-sub {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    color: var(--text-dim);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 1.2s 2.5s forwards;
+  }
+  .hero-cta {
+    display: inline-flex; gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 1.2s 2.8s forwards;
+    pointer-events: auto;
+  }
+  .btn-primary, .btn-ghost {
+    padding: 1rem 2rem;
+    font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--platinum);
+    transition: all .4s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, rgba(78,168,255,0.15), rgba(78,168,255,0.05));
+    border-color: rgba(78,168,255,0.3);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, rgba(78,168,255,0.3), rgba(78,168,255,0.1));
+    box-shadow: 0 0 40px rgba(78,168,255,0.3);
+    transform: translateY(-2px);
+  }
+  .btn-ghost:hover { border-color: var(--electric); color: var(--electric-2); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-scroll {
+    position: absolute; bottom: 3rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    opacity: 0;
+    animation: fadeIn 1s 3.5s forwards;
+  }
+  .hero-scroll::after {
+    content: ''; width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--electric), transparent);
+    animation: scrollLine 2s infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  .hero-stats {
+    position: absolute; bottom: 3rem; right: 3rem;
+    z-index: 5;
+    display: flex; flex-direction: column; gap: 1.5rem;
+    font-family: var(--font-mono);
+    text-align: right;
+  }
+  .hero-stat .val {
+    font-size: 1.5rem; color: var(--platinum); font-weight: 300;
+  }
+  .hero-stat .lbl {
+    font-size: 0.6rem; letter-spacing: 0.3em; color: var(--text-faint);
+    text-transform: uppercase;
+  }
+  @media (max-width: 900px) {
+    .hero-stats { display: none; }
+  }
+
+  /* ============ SECTIONS ============ */
+  section { position: relative; z-index: 2; }
+  .section-pad { padding: 10rem 3rem; }
+  @media (max-width: 900px) { .section-pad { padding: 5rem 1.5rem; } }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--electric);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::before {
+    content: ''; width: 40px; height: 1px; background: var(--electric);
+  }
+  .section-title {
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--platinum);
+    margin-bottom: 2rem;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--electric-2);
+    font-weight: 300;
+  }
+
+  /* ============ CINEMATIC SCROLL ============ */
+  .cinematic {
+    position: relative;
+    height: 800vh;
+  }
+  .cinematic-sticky {
+    position: sticky; top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #cinematic-canvas {
+    position: absolute; inset: 0;
+  }
+  .cinematic-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .cinematic-text {
+    font-size: clamp(2rem, 6vw, 5rem);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--platinum);
+    text-align: center;
+    opacity: 0;
+    text-shadow: 0 0 40px rgba(78,168,255,0.3);
+  }
+  .cinematic-sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--electric);
+    text-transform: uppercase;
+    margin-top: 1rem;
+    opacity: 0;
+  }
+
+  /* ============ MODELS ============ */
+  .models {
+    background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
+  }
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--glass-border);
+    margin-top: 5rem;
+    border: 1px solid var(--glass-border);
+  }
+  .model-card {
+    background: var(--bg-1);
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background .6s;
+    min-height: 400px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .model-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(78,168,255,0.1), transparent 40%);
+    opacity: 0; transition: opacity .6s;
+    pointer-events: none;
+  }
+  .model-card:hover::before { opacity: 1; }
+  .model-card:hover { background: var(--bg-2); }
+  .model-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    letter-spacing: 0.3em;
+  }
+  .model-name {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--platinum);
+    margin: 1rem 0;
+  }
+  .model-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .model-specs {
+    display: flex; gap: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--glass-border);
+    padding-top: 1.5rem;
+  }
+  .model-specs span strong {
+    display: block; color: var(--electric-2); font-size: 1rem; font-weight: 400; margin-bottom: 0.2rem;
+  }
+  .model-visual {
+    height: 160px;
+    margin: 1rem 0;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .model-visual svg { width: 100%; height: 100%; }
+
+  /* ============ CONFIGURATOR ============ */
+  .configurator {
+    background: var(--bg-0);
+    position: relative;
+    overflow: hidden;
+  }
+  .config-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 5rem;
+  }
+  @media (max-width: 1100px) { .config-layout { grid-template-columns: 1fr; } }
+  .config-visual {
+    aspect-ratio: 1;
+    position: relative;
+    border: 1px solid var(--glass-border);
+    background: radial-gradient(circle at center, rgba(78,168,255,0.05), transparent 70%);
+    overflow: hidden;
+  }
+  #config-canvas { position: absolute; inset: 0; }
+  .config-controls { display: flex; flex-direction: column; gap: 2rem; }
+  .config-group {
+    border-top: 1px solid var(--glass-border);
+    padding-top: 1.5rem;
+  }
+  .config-group-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .config-options {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .config-opt {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    transition: all .3s;
+  }
+  .config-opt:hover { border-color: var(--electric); color: var(--platinum); }
+  .config-opt.active {
+    border-color: var(--electric);
+    background: rgba(78,168,255,0.1);
+    color: var(--electric-2);
+  }
+  .config-colors {
+    display: flex; gap: 0.8rem;
+  }
+  .config-color {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    cursor: none;
+    transition: transform .3s, border-color .3s;
+    position: relative;
+  }
+  @media (max-width: 900px) { .config-color { cursor: pointer; } }
+  .config-color:hover { transform: scale(1.1); }
+  .config-color.active { border-color: var(--electric); box-shadow: 0 0 20px var(--electric-glow); }
+  .config-color.active::after {
+    content: ''; position: absolute; inset: -6px;
+    border: 1px solid var(--electric); border-radius: 50%;
+  }
+
+  /* ============ AI SPHERE ============ */
+  .ai-section {
+    background: var(--bg-0);
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center;
+  }
+  .ai-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    width: 100%;
+  }
+  @media (max-width: 1100px) { .ai-layout { grid-template-columns: 1fr; } }
+  .ai-sphere-wrap {
+    aspect-ratio: 1;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #ai-canvas { position: absolute; inset: 0; }
+  .ai-features {
+    display: flex; flex-direction: column; gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .ai-feature {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    transition: all .4s;
+  }
+  .ai-feature:hover {
+    border-color: rgba(78,168,255,0.3);
+    background: rgba(78,168,255,0.03);
+    transform: translateX(10px);
+  }
+  .ai-feature-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border: 1px solid var(--electric);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--electric);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  .ai-feature h4 {
+    font-size: 1rem; font-weight: 400;
+    color: var(--platinum);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+  .ai-feature p {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ============ COMPARATOR ============ */
+  .comparator {
+    background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
+    overflow: hidden;
+  }
+  .comp-stage {
+    margin-top: 5rem;
+    height: 70vh;
+    min-height: 500px;
+    position: relative;
+    border: 1px solid var(--glass-border);
+    background: radial-gradient(ellipse at center, rgba(78,168,255,0.05), transparent 60%);
+    overflow: hidden;
+  }
+  #comp-canvas { position: absolute; inset: 0; }
+  .comp-labels {
+    position: absolute; top: 2rem; left: 0; right: 0;
+    display: flex; justify-content: space-between;
+    padding: 0 3rem;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .comp-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .comp-label .name { display: block; font-size: 1.2rem; color: var(--platinum); letter-spacing: 0.1em; margin-top: 0.3rem; font-family: var(--font-display); }
+  .comp-metrics {
+    position: absolute; bottom: 2rem; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 4rem;
+    padding: 0 2rem;
+    z-index: 5;
+    flex-wrap: wrap;
+  }
+  .comp-metric {
+    text-align: center;
+    font-family: var(--font-mono);
+  }
+  .comp-metric .val { font-size: 1.5rem; color: var(--electric-2); font-weight: 400; }
+  .comp-metric .lbl { font-size: 0.65rem; letter-spacing: 0.3em; color: var(--text-faint); text-transform: uppercase; margin-top: 0.3rem; }
+
+  /* ============ TECHNOLOGY ============ */
+  .tech {
+    background: var(--bg-0);
+  }
+  .tech-grid {
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background: var(--glass-border);
+    border: 1px solid var(--glass-border);
+  }
+  .tech-item {
+    background: var(--bg-1);
+    padding: 3rem;
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+    transition: background .5s;
+  }
+  .tech-item:hover { background: var(--bg-2); }
+  .tech-item.large { grid-column: span 8; min-height: 500px; }
+  .tech-item.medium { grid-column: span 4; }
+  .tech-item.third { grid-column: span 4; }
+  .tech-item.half { grid-column: span 6; }
+  @media (max-width: 900px) {
+    .tech-item, .tech-item.large, .tech-item.medium, .tech-item.third, .tech-item.half { grid-column: span 12; }
+  }
+  .tech-item-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    letter-spacing: 0.3em;
+  }
+  .tech-item h3 {
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    color: var(--platinum);
+    margin: 1rem 0;
+  }
+  .tech-item p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 500px;
+  }
+  .tech-visual {
+    position: absolute;
+    right: -5%; top: 50%;
+    transform: translateY(-50%);
+    width: 60%; height: 80%;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .tech-item.large .tech-visual { width: 50%; opacity: 0.7; }
+  .tech-visual svg { width: 100%; height: 100%; }
+
+  /* ============ LAB ============ */
+  .lab {
+    background: linear-gradient(180deg, var(--bg-0), #020203);
+    position: relative;
+    overflow: hidden;
+  }
+  .lab-grid {
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  @media (max-width: 900px) { .lab-grid { grid-template-columns: 1fr; } }
+  .lab-card {
+    aspect-ratio: 4/5;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: all .5s;
+  }
+  .lab-card:hover {
+    border-color: rgba(78,168,255,0.3);
+    transform: translateY(-10px);
+  }
+  .lab-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(78,168,255,0.05));
+    opacity: 0; transition: opacity .5s;
+  }
+  .lab-card:hover::before { opacity: 1; }
+  .lab-visual {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    margin: 2rem 0;
+    position: relative;
+  }
+  .lab-visual svg { width: 80%; height: 80%; }
+  .lab-card h4 {
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--platinum);
+    letter-spacing: 0.05em;
+  }
+  .lab-card p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  /* ============ PRODUCTION ============ */
+  .production {
+    background: var(--bg-0);
+  }
+  .prod-timeline {
+    margin-top: 5rem;
+    position: relative;
+    padding-left: 3rem;
+  }
+  .prod-timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--electric), transparent);
+  }
+  .prod-step {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 3rem;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--glass-border);
+    position: relative;
+  }
+  .prod-step::before {
+    content: ''; position: absolute;
+    left: -3rem; top: 3.5rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--bg-0);
+    border: 1px solid var(--electric);
+    box-shadow: 0 0 20px var(--electric-glow);
+  }
+  .prod-step-num {
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    color: var(--electric);
+    font-weight: 300;
+    line-height: 1;
+  }
+  .prod-step h4 {
+    font-size: 1.5rem; font-weight: 300;
+    color: var(--platinum);
+    margin-bottom: 0.5rem;
+  }
+  .prod-step p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+  @media (max-width: 700px) {
+    .prod-step { grid-template-columns: 1fr; gap: 1rem; }
+  }
+
+  /* ============ MATERIALS ============ */
+  .materials {
+    background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
+  }
+  .mat-carousel {
+    margin-top: 5rem;
+    display: flex;
+    gap: 1px;
+    background: var(--glass-border);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .mat-carousel::-webkit-scrollbar { display: none; }
+  .mat-card {
+    flex: 0 0 60vw;
+    min-width: 320px;
+    aspect-ratio: 16/10;
+    background: var(--bg-1);
+    padding: 3rem;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: background .5s;
+  }
+  .mat-card:hover { background: var(--bg-2); }
+  .mat-card h3 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--platinum);
+    letter-spacing: 0.02em;
+  }
+  .mat-card p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    max-width: 400px;
+    line-height: 1.7;
+  }
+  .mat-visual {
+    position: absolute;
+    right: 0; top: 0;
+    width: 50%; height: 100%;
+    pointer-events: none;
+  }
+  .mat-visual svg { width: 100%; height: 100%; }
+
+  /* ============ SAFETY ============ */
+  .safety {
+    background: var(--bg-0);
+  }
+  .safety-grid {
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1px;
+    background: var(--glass-border);
+    border: 1px solid var(--glass-border);
+  }
+  .safety-item {
+    background: var(--bg-1);
+    padding: 2.5rem;
+    min-height: 250px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: background .5s;
+    position: relative;
+  }
+  .safety-item:hover { background: var(--bg-2); }
+  .safety-icon {
+    width: 50px; height: 50px;
+    border: 1px solid var(--electric);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--electric);
+    margin-bottom: 1.5rem;
+  }
+  .safety-item h4 {
+    font-size: 1.1rem; font-weight: 400;
+    color: var(--platinum);
+    margin-bottom: 0.5rem;
+  }
+  .safety-item p {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ============ DASHBOARD ============ */
+  .dashboard {
+    background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
+  }
+  .dash-wrap {
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 1100px) { .dash-wrap { grid-template-columns: 1fr; } }
+  .dash-phone {
+    aspect-ratio: 9/19;
+    max-width: 380px;
+    margin: 0 auto;
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    background: #000;
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.5), 0 0 80px rgba(78,168,255,0.1);
+  }
+  .dash-screen {
+    width: 100%; height: 100%;
+    border-radius: 30px;
+    background: linear-gradient(180deg, #0a0a0f, #050508);
+    overflow: hidden;
+    position: relative;
+    padding: 2rem 1.5rem;
+  }
+  .dash-notch {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 24px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 10;
+  }
+  .dash-header {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-top: 1.5rem;
+    letter-spacing: 0.1em;
+  }
+  .dash-speed {
+    text-align: center;
+    margin: 2rem 0 1rem;
+  }
+  .dash-speed .num {
+    font-size: 5rem;
+    font-weight: 200;
+    color: var(--platinum);
+    line-height: 1;
+    font-family: var(--font-display);
+  }
+  .dash-speed .unit {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    letter-spacing: 0.3em;
+    margin-top: 0.5rem;
+  }
+  .dash-ring {
+    width: 220px; height: 220px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .dash-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .dash-ring circle {
+    fill: none;
+    stroke-width: 2;
+  }
+  .dash-ring .bg { stroke: rgba(255,255,255,0.05); }
+  .dash-ring .fg {
+    stroke: url(#dashGrad);
+    stroke-linecap: round;
+    stroke-dasharray: 628;
+    stroke-dashoffset: 180;
+    filter: drop-shadow(0 0 10px var(--electric));
+    animation: dashPulse 3s infinite;
+  }
+  @keyframes dashPulse {
+    0%, 100% { stroke-dashoffset: 180; }
+    50% { stroke-dashoffset: 150; }
+  }
+  .dash-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .dash-metric {
+    text-align: center;
+    padding: 0.8rem 0.5rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+  }
+  .dash-metric .v {
+    font-size: 1.1rem; color: var(--platinum); font-weight: 400;
+  }
+  .dash-metric .l {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--text-faint);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+  .dash-map {
+    margin-top: 1rem;
+    height: 120px;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    background:
+      linear-gradient(rgba(78,168,255,0.05), rgba(78,168,255,0.05)),
+      repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,0.02) 15px, rgba(255,255,255,0.02) 16px),
+      repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(255,255,255,0.02) 15px, rgba(255,255,255,0.02) 16px);
+    position: relative;
+    overflow: hidden;
+  }
+  .dash-map::before {
+    content: ''; position: absolute;
+    top: 50%; left: 10%; right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--electric), var(--electric-2), transparent);
+    filter: drop-shadow(0 0 8px var(--electric));
+    animation: mapRoute 4s infinite;
+  }
+  @keyframes mapRoute {
+    0% { transform: translateX(-20%); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(20%); opacity: 0; }
+  }
+  .dash-map::after {
+    content: ''; position: absolute;
+    top: 50%; right: 20%;
+    width: 8px; height: 8px;
+    background: var(--electric);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+    box-shadow: 0 0 15px var(--electric);
+    animation: mapDot 4s infinite;
+  }
+  @keyframes mapDot {
+    0% { right: 80%; }
+    100% { right: 20%; }
+  }
+
+  .dash-features {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .dash-feature {
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    display: flex; gap: 1.5rem; align-items: center;
+    transition: all .4s;
+  }
+  .dash-feature:hover {
+    border-color: rgba(78,168,255,0.3);
+    transform: translateX(10px);
+  }
+  .dash-feature-num {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    color: var(--electric);
+    font-weight: 300;
+    min-width: 50px;
+  }
+  .dash-feature h5 {
+    font-size: 1rem; font-weight: 400;
+    color: var(--platinum);
+    margin-bottom: 0.3rem;
+  }
+  .dash-feature p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* ============ GALLERY ============ */
+  .gallery {
+    background: var(--bg-0);
+  }
+  .gal-stage {
+    margin-top: 5rem;
+    height: 80vh;
+    min-height: 500px;
+    position: relative;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+  }
+  #gal-canvas { position: absolute; inset: 0; }
+  .gal-controls {
+    position: absolute; bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 1rem;
+    z-index: 5;
+  }
+  .gal-btn {
+    padding: 0.7rem 1.5rem;
+    border: 1px solid var(--glass-border);
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: all .3s;
+  }
+  .gal-btn:hover { border-color: var(--electric); color: var(--platinum); }
+  .gal-btn.active { border-color: var(--electric); color: var(--electric-2); background: rgba(78,168,255,0.1); }
+
+  /* ============ FOOTER / SPACE STATION ============ */
+  .footer {
+    background: #000;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 3rem 3rem;
+  }
+  #footer-canvas {
+    position: absolute; inset: 0;
+    z-index: 1;
+  }
+  .footer-content {
+    position: relative; z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer-cta {
+    text-align: center;
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .footer-cta h2 {
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--platinum);
+    margin-bottom: 2rem;
+  }
+  .footer-cta h2 em { color: var(--electric-2); font-style: italic; }
+  .footer-cta p {
+    color: var(--text-dim);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  .footer-brand .logo { font-size: 1.3rem; margin-bottom: 1.5rem; }
+  .footer-brand p {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    max-width: 350px;
+  }
+  .footer-col h5 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+  .footer-col a {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    transition: color .3s;
+  }
+  .footer-col a:hover { color: var(--electric-2); }
+  .footer-bottom {
+    padding: 2rem 0 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    letter-spacing: 0.2em;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  /* ============ REVEAL ANIMATIONS ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ MARQUEE ============ */
+  .marquee {
+    overflow: hidden;
+    padding: 3rem 0;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    background: var(--bg-1);
+    position: relative;
+    z-index: 2;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 5rem;
+    white-space: nowrap;
+    animation: marquee 40s linear infinite;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 300;
+    color: var(--platinum);
+    letter-spacing: 0.05em;
+  }
+  .marquee-track span:nth-child(even) {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--electric);
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* ============ UTIL ============ */
+  .container { max-width: 1600px; margin: 0 auto; }
+  .text-dim { color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">VELOCITY<span>·</span>X</div>
+  <div class="loader-bar"></div>
+  <div class="loader-pct" id="loader-pct">INITIALIZING SYSTEM · 00%</div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- BACKGROUND CANVAS -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav class="top" id="nav">
+  <div class="logo">VELOCITY<span>·</span>X</div>
+  <div class="nav-links">
+    <a href="#models">Modelos</a>
+    <a href="#technology">Tecnología</a>
+    <a href="#ai">IA</a>
+    <a href="#lab">Laboratorio</a>
+    <a href="#configurator">Configurador</a>
+  </div>
+  <button class="nav-cta">Reservar</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-fog"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">MODEL · 2040 · CONCEPT</div>
+    <h1 class="hero-title" id="hero-title">BEYOND MOTION</h1>
+    <p class="hero-sub">No vendemos bicicletas. Vendemos la sensación de viajar al futuro. Ingeniería aeroespacial. IA predictiva. Materiales del mañana.</p>
+    <div class="hero-cta">
+      <button class="btn-primary">Explorar modelos</button>
+      <button class="btn-ghost">Ver manifiesto</button>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll para viajar</div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">2.1s</div><div class="lbl">0-60 km/h</div></div>
+    <div class="hero-stat"><div class="val">480km</div><div class="lbl">Autonomía</div></div>
+    <div class="hero-stat"><div class="val">6.8kg</div><div class="lbl">Peso total</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>HYPER CARBON</span><span>·</span>
+    <span>URBAN AI</span><span>·</span>
+    <span>MOUNTAIN BEAST</span><span>·</span>
+    <span>NEO GRAVEL</span><span>·</span>
+    <span>ROAD INFINITY</span><span>·</span>
+    <span>CYBER TRAIL</span><span>·</span>
+    <span>PHOTON</span><span>·</span>
+    <span>APEX</span><span>·</span>
+    <span>GHOST</span><span>·</span>
+    <span>ZERO GRAVITY</span><span>·</span>
+    <span>HYPER CARBON</span><span>·</span>
+    <span>URBAN AI</span><span>·</span>
+    <span>MOUNTAIN BEAST</span><span>·</span>
+    <span>NEO GRAVEL</span><span>·</span>
+    <span>ROAD INFINITY</span><span>·</span>
+    <span>CYBER TRAIL</span><span>·</span>
+    <span>PHOTON</span><span>·</span>
+    <span>APEX</span><span>·</span>
+    <span>GHOST</span><span>·</span>
+    <span>ZERO GRAVITY</span><span>·</span>
+  </div>
+</div>
+
+<!-- CINEMATIC SCROLL -->
+<section class="cinematic" id="cinematic">
+  <div class="cinematic-sticky">
+    <canvas id="cinematic-canvas"></canvas>
+    <div class="cinematic-overlay">
+      <div>
+        <div class="cinematic-text" id="cin-text">From silence</div>
+        <div class="cinematic-sub" id="cin-sub">Chapter 01 · Origin</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section class="models section-pad" id="models">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">02 · Colección</div>
+      <h2 class="section-title">Diez máquinas.<br><em>Diez universos.</em></h2>
+    </div>
+    <div class="models-grid reveal">
+      <!-- Model cards generated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- CONFIGURATOR -->
+<section class="configurator section-pad" id="configurator">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">03 · Atelier</div>
+      <h2 class="section-title">Construye tu <em>obsesión</em>.</h2>
+    </div>
+    <div class="config-layout reveal">
+      <div class="config-visual">
+        <canvas id="config-canvas"></canvas>
+      </div>
+      <div class="config-controls">
+        <div class="config-group">
+          <div class="config-group-label">Color · Chassis</div>
+          <div class="config-colors" id="config-colors">
+            <div class="config-color active" style="background:#0a0a0d" data-color="#0a0a0d"></div>
+            <div class="config-color" style="background:#c0c4cc" data-color="#c0c4cc"></div>
+            <div class="config-color" style="background:#4ea8ff" data-color="#4ea8ff"></div>
+            <div class="config-color" style="background:#8b6f47" data-color="#8b6f47"></div>
+            <div class="config-color" style="background:#2a3a2a" data-color="#2a3a2a"></div>
+            <div class="config-color" style="background:#5a1a2a" data-color="#5a1a2a"></div>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="config-group-label">Motor</div>
+          <div class="config-options">
+            <button class="config-opt active">VX-750 Standard</button>
+            <button class="config-opt">VX-900 Sport</button>
+            <button class="config-opt">VX-1200 Hyper</button>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="config-group-label">Batería · Grafeno</div>
+          <div class="config-options">
+            <button class="config-opt">400 Wh · 180 km</button>
+            <button class="config-opt active">600 Wh · 320 km</button>
+            <button class="config-opt">900 Wh · 480 km</button>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="config-group-label">Suspensión</div>
+          <div class="config-options">
+            <button class="config-opt">Rígida carbono</button>
+            <button class="config-opt active">IA Adaptativa 120mm</button>
+            <button class="config-opt">IA Adaptativa 160mm</button>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="config-group-label">Neumáticos</div>
+          <div class="config-options">
+            <button class="config-opt">Slick 25mm</button>
+            <button class="config-opt active">All-road 38mm</button>
+            <button class="config-opt">MTB 2.4"</button>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="config-group-label">Iluminación</div>
+          <div class="config-options">
+            <button class="config-opt">LED integrado</button>
+            <button class="config-opt active">Láser adaptativo</button>
+            <button class="config-opt">Matrix holográfico</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="ai-section section-pad" id="ai">
+  <div class="container">
+    <div class="ai-layout">
+      <div class="reveal">
+        <div class="section-label">04 · Inteligencia</div>
+        <h2 class="section-title">Una mente que <em>pedalea contigo</em>.</h2>
+        <p class="text-dim" style="max-width:500px; margin-bottom:2rem;">VX-CORE aprende tu ritmo, anticipa el terreno y reescribe las leyes de la asistencia eléctrica. Cada kilómetro te hace más rápido. Cada subida, más fácil.</p>
+        <div class="ai-features">
+          <div class="ai-feature">
+            <div class="ai-feature-icon">01</div>
+            <div>
+              <h4>Aprendizaje biométrico</h4>
+              <p>Sensores de cadencia, frecuencia cardíaca y potencia ajustan la asistencia en milisegundos.</p>
+            </div>
+          </div>
+          <div class="ai-feature">
+            <div class="ai-feature-icon">02</div>
+            <div>
+              <h4>Predicción de terreno</h4>
+              <p>LIDAR frontal + mapa 3D del entorno. La bici sabe lo que viene antes que tú.</p>
+            </div>
+          </div>
+          <div class="ai-feature">
+            <div class="ai-feature-icon">03</div>
+            <div>
+              <h4>Diagnóstico autónomo</h4>
+              <p>Detecta desgaste de componentes y agenda mantenimiento antes de que falle algo.</p>
+            </div>
+          </div>
+          <div class="ai-feature">
+            <div class="ai-feature-icon">04</div>
+            <div>
+              <h4>HUD proyectado</h4>
+              <p>Gafas AR con velocidad, navegación, potencia y biometría en tiempo real.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ai-sphere-wrap reveal">
+        <canvas id="ai-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARATOR -->
+<section class="comparator section-pad" id="comparator">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">05 · Duelo</div>
+      <h2 class="section-title">Frente a frente.<br><em>Pieza por pieza.</em></h2>
+    </div>
+    <div class="comp-stage reveal">
+      <canvas id="comp-canvas"></canvas>
+      <div class="comp-labels">
+        <div class="comp-label">Model A<span class="name">Hyper Carbon</span></div>
+        <div class="comp-label" style="text-align:right;">Model B<span class="name">Urban AI</span></div>
+      </div>
+      <div class="comp-metrics">
+        <div class="comp-metric"><div class="val">6.8 kg</div><div class="lbl">Peso</div></div>
+        <div class="comp-metric"><div class="val">480 km</div><div class="lbl">Autonomía</div></div>
+        <div class="comp-metric"><div class="val">1200 W</div><div class="lbl">Potencia pico</div></div>
+        <div class="comp-metric"><div class="val">2.1 s</div><div class="lbl">0-60</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section class="tech section-pad" id="technology">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">06 · Ingeniería</div>
+      <h2 class="section-title">Tecnología que <em>no debería existir</em>.</h2>
+    </div>
+    <div class="tech-grid reveal">
+      <div class="tech-item large">
+        <div class="tech-item-num">T-01</div>
+        <h3>Batería de grafeno</h3>
+        <p>Densidad energética 5× superior al litio tradicional. Carga completa en 12 minutos. Vida útil: 20 años. Invisible bajo el cuadro, refrigerada por flujo de aire activo.</p>
+        <div class="tech-visual"><svg viewBox="0 0 200 200"><defs><linearGradient id="bat" x1="0" x2="1"><stop offset="0" stop-color="#4ea8ff"/><stop offset="1" stop-color="#7dd3ff"/></linearGradient></defs><rect x="40" y="70" width="120" height="60" rx="8" fill="none" stroke="url(#bat)" stroke-width="1.5"/><rect x="45" y="75" width="110" height="50" rx="4" fill="url(#bat)" opacity="0.15"/><line x1="60" y1="85" x2="60" y2="115" stroke="#4ea8ff" stroke-width="0.5"/><line x1="80" y1="85" x2="80" y2="115" stroke="#4ea8ff" stroke-width="0.5"/><line x1="100" y1="85" x2="100" y2="115" stroke="#4ea8ff" stroke-width="0.5"/><line x1="120" y1="85" x2="120" y2="115" stroke="#4ea8ff" stroke-width="0.5"/><line x1="140" y1="85" x2="140" y2="115" stroke="#4ea8ff" stroke-width="0.5"/></svg></div>
+      </div>
+      <div class="tech-item medium">
+        <div class="tech-item-num">T-02</div>
+        <h3>Motor VX-1200</h3>
+        <p>Campo magnético variable. 1200W pico. Silencio absoluto.</p>
+      </div>
+      <div class="tech-item third">
+        <div class="tech-item-num">T-03</div>
+        <h3>Carbono líquido</h3>
+        <p>Fibra moldeada en estado fluido. 40% más ligera. Autorreparable.</p>
+      </div>
+      <div class="tech-item third">
+        <div class="tech-item-num">T-04</div>
+        <h3>Suspensión IA</h3>
+        <p>Escanea el terreno 2000 veces por segundo. Ajuste milimétrico.</p>
+      </div>
+      <div class="tech-item third">
+        <div class="tech-item-num">T-05</div>
+        <h3>Sensores biométricos</h3>
+        <p>Manillar que lee pulso, hidratación y fatiga muscular.</p>
+      </div>
+      <div class="tech-item half">
+        <div class="tech-item-num">T-06</div>
+        <h3>Autonomía infinita</h3>
+        <p>Carga solar invisible integrada en la pintura. Frenada regenerativa de sexta generación. Cada descenso recarga. Cada frenada, también.</p>
+      </div>
+      <div class="tech-item half">
+        <div class="tech-item-num">T-07</div>
+        <h3>Conectividad satélite</h3>
+        <p>Comunicación bici-bici en enjambre. Detección de accidentes con llamada automática. GPS submétrico. Siempre online, incluso sin cobertura.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LAB -->
+<section class="lab section-pad" id="lab">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">07 · Laboratorio</div>
+      <h2 class="section-title">Donde nace <em>el futuro</em>.</h2>
+    </div>
+    <div class="lab-grid reveal">
+      <div class="lab-card">
+        <div>
+          <div class="tech-item-num">LAB-01</div>
+          <h4 style="margin-top:1rem;">Túnel de viento</h4>
+          <p>Simulaciones CFD a 120 km/h. Cada gramo de resistencia, eliminado.</p>
+        </div>
+        <div class="lab-visual"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="60" fill="none" stroke="#4ea8ff" stroke-width="0.5" opacity="0.5"/><circle cx="100" cy="100" r="45" fill="none" stroke="#4ea8ff" stroke-width="0.5" opacity="0.7"/><circle cx="100" cy="100" r="30" fill="none" stroke="#4ea8ff" stroke-width="0.5"/><path d="M40,100 Q100,60 160,100 Q100,140 40,100" fill="none" stroke="#7dd3ff" stroke-width="1"/></svg></div>
+      </div>
+      <div class="lab-card">
+        <div>
+          <div class="tech-item-num">LAB-02</div>
+          <h4 style="margin-top:1rem;">Impresión 3D titanio</h4>
+          <p>Piezas únicas en titanio Ti-6Al-4V. Tolerancia de 0.01mm.</p>
+        </div>
+        <div class="lab-visual"><svg viewBox="0 0 200 200"><g stroke="#4ea8ff" stroke-width="0.5" fill="none"><path d="M60,140 L100,60 L140,140 Z"/><path d="M70,130 L100,75 L130,130 Z"/><path d="M80,120 L100,90 L120,120 Z"/><line x1="100" y1="60" x2="100" y2="160" stroke-dasharray="2,2"/></g></svg></div>
+      </div>
+      <div class="lab-card">
+        <div>
+          <div class="tech-item-num">LAB-03</div>
+          <h4 style="margin-top:1rem;">Escáner molecular</h4>
+          <p>Cada cuadro es inspeccionado átomo por átomo. Cero defectos.</p>
+        </div>
+        <div class="lab-visual"><svg viewBox="0 0 200 200"><g stroke="#4ea8ff" stroke-width="0.5" fill="none"><rect x="50" y="50" width="100" height="100"/><rect x="60" y="60" width="80" height="80"/><rect x="70" y="70" width="60" height="60"/><rect x="80" y="80" width="40" height="40"/><circle cx="100" cy="100" r="5" fill="#7dd3ff"/></g></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTION -->
+<section class="production section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">08 · Producción</div>
+      <h2 class="section-title">De la idea <em>al objeto</em>.</h2>
+    </div>
+    <div class="prod-timeline reveal">
+      <div class="prod-step">
+        <div class="prod-step-num">01</div>
+        <div>
+          <h4>Diseño generativo</h4>
+          <p>IA explora 10 millones de geometrías. Selecciona la óptima para cada rider. Cada cuadro es una escultura matemática.</p>
+        </div>
+      </div>
+      <div class="prod-step">
+        <div class="prod-step-num">02</div>
+        <div>
+          <h4>Molde de carbono líquido</h4>
+          <p>La fibra se inyecta en estado fluido en moldes de una sola pieza. Sin uniones. Sin puntos débiles. 180 horas de curado controlado.</p>
+        </div>
+      </div>
+      <div class="prod-step">
+        <div class="prod-step-num">03</div>
+        <div>
+          <h4>Ensamblaje robótico</h4>
+          <p>Brazos KUKA con precisión de 0.005mm. 314 sensores verifican cada tornillo. Cada bici lleva su firma digital grabada en láser.</p>
+        </div>
+      </div>
+      <div class="prod-step">
+        <div class="prod-step-num">04</div>
+        <div>
+          <h4>Prueba de 5000 km</h4>
+          <p>Cada unidad recorre 5000 km en bancos de prueba antes de salir. Simulamos 10 años de uso en 72 horas.</p>
+        </div>
+      </div>
+      <div class="prod-step">
+        <div class="prod-step-num">05</div>
+        <div>
+          <h4>Entrega con guantes blancos</h4>
+          <p>Un ingeniero VX la entrega en persona. Ajuste biométrico incluido. Configuración de IA personalizada. Bienvenido al futuro.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section class="materials section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">09 · Materiales</div>
+      <h2 class="section-title">Elementos <em>del mañana</em>.</h2>
+    </div>
+  </div>
+  <div class="mat-carousel reveal">
+    <div class="mat-card">
+      <div>
+        <div class="tech-item-num">M-01</div>
+        <h3 style="margin-top:1rem;">Carbono líquido</h3>
+        <p>Fibra de alto módulo en estado fluido. Se autorrepara ante microgrietas. 40% más ligero que el T1000 tradicional.</p>
+      </div>
+      <div class="mat-visual"><svg viewBox="0 0 200 200"><defs><pattern id="carbon" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0,5 L10,5 M5,0 L5,10" stroke="#4ea8ff" stroke-width="0.3"/></pattern></defs><rect width="200" height="200" fill="url(#carbon)" opacity="0.3"/></svg></div>
+    </div>
+    <div class="mat-card">
+      <div>
+        <div class="tech-item-num">M-02</div>
+        <h3 style="margin-top:1rem;">Grafeno</h3>
+        <p>Una capa atómica de carbono puro. Conductividad térmica y eléctrica sin rival. El corazón de nuestras baterías.</p>
+      </div>
+      <div class="mat-visual"><svg viewBox="0 0 200 200"><g stroke="#7dd3ff" stroke-width="0.5" fill="none"><polygon points="100,40 140,65 140,115 100,140 60,115 60,65"/><polygon points="100,60 125,75 125,105 100,120 75,105 75,75"/><polygon points="100,80 110,87 110,103 100,110 90,103 90,87"/></g></svg></div>
+    </div>
+    <div class="mat-card">
+      <div>
+        <div class="tech-item-num">M-03</div>
+        <h3 style="margin-top:1rem;">Titanio impreso</h3>
+        <p>Ti-6Al-4V depositado capa a capa. Piezas imposibles de mecanizar. Relación peso/resistencia de la industria aeroespacial.</p>
+      </div>
+      <div class="mat-visual"><svg viewBox="0 0 200 200"><g stroke="#4ea8ff" stroke-width="0.5" fill="none"><path d="M50,150 L100,50 L150,150"/><path d="M60,140 L100,65 L140,140"/><path d="M70,130 L100,80 L130,130"/><path d="M80,120 L100,95 L120,120"/></g></svg></div>
+    </div>
+    <div class="mat-card">
+      <div>
+        <div class="tech-item-num">M-04</div>
+        <h3 style="margin-top:1rem;">Magnesio-litio</h3>
+        <p>La aleación más ligera del mundo. Usada en satélites. Ahora en tu manillar.</p>
+      </div>
+      <div class="mat-visual"><svg viewBox="0 0 200 200"><g stroke="#7dd3ff" stroke-width="0.5" fill="none"><circle cx="100" cy="100" r="50"/><circle cx="100" cy="100" r="35"/><circle cx="100" cy="100" r="20"/><circle cx="100" cy="100" r="5" fill="#7dd3ff"/></g></svg></div>
+    </div>
+    <div class="mat-card">
+      <div>
+        <div class="tech-item-num">M-05</div>
+        <h3 style="margin-top:1rem;">Cerámica técnica</h3>
+        <p>Rodamientos de zirconio. Durabilidad 10× superior. Fricción cercana a cero. 100.000 km sin mantenimiento.</p>
+      </div>
+      <div class="mat-visual"><svg viewBox="0 0 200 200"><g stroke="#4ea8ff" stroke-width="0.5" fill="none"><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="100" r="20"/><line x1="40" y1="100" x2="160" y2="100"/><line x1="100" y1="40" x2="100" y2="160"/></g></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section class="safety section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">10 · Seguridad</div>
+      <h2 class="section-title">Protegida como <em>un satélite</em>.</h2>
+    </div>
+    <div class="safety-grid reveal">
+      <div class="safety-item">
+        <div class="safety-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/></svg>
+        </div>
+        <div>
+          <h4>Detección de caídas</h4>
+          <p>Acelerómetros + giroscopios detectan impactos en 8ms. Llamada automática a emergencias con coordenadas GPS.</p>
+        </div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 00-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 00-8-8z"/></svg>
+        </div>
+        <div>
+          <h4>GPS submétrico</h4>
+          <p>Localización precisa al centímetro. Seguimiento en tiempo real desde la app. Historial de rutas cifrado.</p>
+        </div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div>
+          <h4>Bloqueo facial</h4>
+          <p>Reconocimiento facial 3D. Solo tú puedes desbloquearla. Inmovilizador remoto desde la app.</p>
+        </div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div>
+          <h4>Alarma inteligente</h4>
+          <p>Detecta movimiento no autorizado. Alerta al propietario. Disuasión acústica de 110dB.</p>
+        </div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <h4>Recuperación asistida</h4>
+          <p>Si es robada, la IA la guía hacia estaciones seguras. Colaboración con autoridades en tiempo real.</p>
+        </div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div>
+          <h4>Comunicación V2V</h4>
+          <p>Tu bici habla con otras VX del entorno. Alerta de frenadas, obstáculos y condiciones del terreno.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="dashboard section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">11 · Aplicación</div>
+      <h2 class="section-title">Tu bici, en <em>tu muñeca</em>.</h2>
+    </div>
+    <div class="dash-wrap reveal">
+      <div class="dash-phone">
+        <div class="dash-screen">
+          <div class="dash-notch"></div>
+          <div class="dash-header">
+            <span>VX · OS 12</span>
+            <span>14:32</span>
+          </div>
+          <div class="dash-speed">
+            <div class="dash-ring">
+              <svg viewBox="0 0 220 220">
+                <defs>
+                  <linearGradient id="dashGrad" x1="0" x2="1">
+                    <stop offset="0" stop-color="#4ea8ff"/>
+                    <stop offset="1" stop-color="#7dd3ff"/>
+                  </linearGradient>
+                </defs>
+                <circle class="bg" cx="110" cy="110" r="100"/>
+                <circle class="fg" cx="110" cy="110" r="100"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div class="num" style="font-size:3rem;">42</div>
+                <div class="unit">KM / H</div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-metrics">
+            <div class="dash-metric"><div class="v">87%</div><div class="l">Batería</div></div>
+            <div class="dash-metric"><div class="v">248W</div><div class="l">Potencia</div></div>
+            <div class="dash-metric"><div class="v">142</div><div class="l">BPM</div></div>
+          </div>
+          <div class="dash-map"></div>
+        </div>
+      </div>
+      <div class="dash-features">
+        <div class="dash-feature">
+          <div class="dash-feature-num">01</div>
+          <div>
+            <h5>Telemetría en vivo</h5>
+            <p>Cada variable, cada segundo. Velocidad, potencia, cadencia, elevación, temperatura del motor.</p>
+          </div>
+        </div>
+        <div class="dash-feature">
+          <div class="dash-feature-num">02</div>
+          <div>
+            <h5>Navegación AR</h5>
+            <p>Indicaciones superpuestas en tus gafas o en la pantalla. Sin distracciones. Sin perder el rumbo.</p>
+          </div>
+        </div>
+        <div class="dash-feature">
+          <div class="dash-feature-num">03</div>
+          <div>
+            <h5>Entrenamiento IA</h5>
+            <p>Planes adaptativos que evolucionan contigo. La IA analiza tu progreso y ajusta objetivos.</p>
+          </div>
+        </div>
+        <div class="dash-feature">
+          <div class="dash-feature-num">04</div>
+          <div>
+            <h5>Comunidad VX</h5>
+            <p>Comparte rutas. Compite con riders de tu nivel. Descubre caminos que nadie ha recorrido.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">12 · Museo</div>
+      <h2 class="section-title">Obsérvala <em>desde todos los ángulos</em>.</h2>
+    </div>
+    <div class="gal-stage reveal">
+      <canvas id="gal-canvas"></canvas>
+      <div class="gal-controls">
+        <button class="gal-btn active" data-mode="rotate">Rotar</button>
+        <button class="gal-btn" data-mode="explode">Explotar</button>
+        <button class="gal-btn" data-mode="wire">Wireframe</button>
+        <button class="gal-btn" data-mode="xray">Rayos X</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER / SPACE STATION -->
+<footer class="footer">
+  <canvas id="footer-canvas"></canvas>
+  <div class="footer-content">
+    <div class="footer-cta">
+      <h2>El futuro no se espera.<br><em>Se pedalea.</em></h2>
+      <p>Reserva tu VELOCITY X. Producción limitada a 500 unidades anuales. Entrega personal por ingeniero certificado.</p>
+      <button class="btn-primary">Solicitar acceso</button>
+    </div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">VELOCITY<span>·</span>X</div>
+        <p>Diseñado en Zurich. Ingeniado en Tokio. Fabricado en un lugar que no existe en los mapas. Cada bicicleta es una declaración. Cada viaje, un manifiesto.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Modelos</h5>
+        <ul>
+          <li><a href="#">Hyper Carbon</a></li>
+          <li><a href="#">Urban AI</a></li>
+          <li><a href="#">Mountain Beast</a></li>
+          <li><a href="#">Photon</a></li>
+          <li><a href="#">Zero Gravity</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Compañía</h5>
+        <ul>
+          <li><a href="#">Manifiesto</a></li>
+          <li><a href="#">Laboratorio</a></li>
+          <li><a href="#">Prensa</a></li>
+          <li><a href="#">Carreras</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Soporte</h5>
+        <ul>
+          <li><a href="#">Atelier</a></li>
+          <li><a href="#">Garantía</a></li>
+          <li><a href="#">App VX</a></li>
+          <li><a href="#">Comunidad</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2040 VELOCITY X · ALL RIGHTS RESERVED</div>
+      <div>ZURICH · TOKYO · ORBIT-1</div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+/* ============ LOADER ============ */
+(function(){
+  let p = 0;
+  const pct = document.getElementById('loader-pct');
+  const loader = document.getElementById('loader');
+  const t = setInterval(()=>{
+    p += Math.random()*8 + 2;
+    if(p >= 100){ p = 100; clearInterval(t); setTimeout(()=>loader.classList.add('hidden'), 400); }
+    pct.textContent = `INITIALIZING SYSTEM · ${String(Math.floor(p)).padStart(2,'0')}%`;
+  }, 80);
+})();
+
+/* ============ CURSOR ============ */
+(function(){
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx = window.innerWidth/2, my = window.innerHeight/2;
+  let rx = mx, ry = my;
+  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function loop(){
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+    ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a, button, .config-color, .config-opt, .gal-btn, .model-card, .tech-item, .lab-card, .safety-item, .ai-feature, .dash-feature, .prod-step, .mat-card').forEach(el=>{
+    el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+    el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+  });
+})();
+
+/* ============ BACKGROUND PARTICLES ============ */
+(function(){
+  const c = document.getElementById('bg-canvas');
+  const ctx = c.getContext('2d');
+  let w, h, particles = [];
+  function resize(){
+    w = c.width = window.innerWidth;
+    h = c.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  for(let i=0;i<80;i++){
+    particles.push({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.2, vy: (Math.random()-0.5)*0.2,
+      r: Math.random()*1.5 + 0.3,
+      a: Math.random()*0.4 + 0.1
+    });
+  }
+  let mouseX = w/2, mouseY = h/2;
+  window.addEventListener('mousemove', e=>{ mouseX = e.clientX; mouseY = e.clientY; });
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>w) p.vx*=-1;
+      if(p.y<0||p.y>h) p.vy*=-1;
+      const dx = mouseX - p.x, dy = mouseY - p.y;
+      const d = Math.sqrt(dx*dx+dy*dy);
+      const glow = d < 200 ? (1 - d/200) * 0.5 : 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(125, 211, 255, ${p.a + glow})`;
+      ctx.fill();
+      if(glow > 0.1){
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r*3, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(78, 168, 255, ${glow*0.2})`;
+        ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============ HERO BIKE 3D ============ */
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 0.5, 6);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Lights
+  const amb = new THREE.AmbientLight(0x404060, 0.6);
+  scene.add(amb);
+  const key = new THREE.DirectionalLight(0x7dd3ff, 1.2);
+  key.position.set(5, 5, 5);
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0x4ea8ff, 0.8);
+  rim.position.set(-5, 2, -3);
+  scene.add(rim);
+  const spot = new THREE.PointLight(0x4ea8ff, 1.5, 10);
+  spot.position.set(0, -2, 2);
+  scene.add(spot);
+
+  // Build procedural bike
+  const bike = new THREE.Group();
+  const matFrame = new THREE.MeshPhongMaterial({color:0x1a1a1f, specular:0x4ea8ff, shininess:100, emissive:0x0a0a15});
+  const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x2a5a8f, shininess:150});
+  const matWheel = new THREE.MeshPhongMaterial({color:0x0a0a0d, specular:0x7dd3ff, shininess:80});
+  const matGlow = new THREE.MeshBasicMaterial({color:0x4ea8ff, transparent:true, opacity:0.9});
+
+  function makeWheel(radius){
+    const g = new THREE.Group();
+    const tire = new THREE.Mesh(new THREE.TorusGeometry(radius, 0.08, 16, 60), matWheel);
+    g.add(tire);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(radius-0.05, 0.02, 8, 60), matAccent);
+    g.add(rim);
+    // spokes
+    for(let i=0;i<16;i++){
+      const s = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, radius*2-0.1, 4), matFrame);
+      s.rotation.z = (i/16)*Math.PI;
+      g.add(s);
+    }
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.15, 16), matAccent);
+    hub.rotation.x = Math.PI/2;
+    g.add(hub);
+    return g;
+  }
+  const wheelR = makeWheel(0.7);
+  wheelR.position.set(-1.1, -0.7, 0);
+  bike.add(wheelR);
+  const wheelF = makeWheel(0.7);
+  wheelF.position.set(1.1, -0.7, 0);
+  bike.add(wheelF);
+
+  // Frame tubes
+  function tube(a, b, r=0.04){
+    const d = new THREE.Vector3().subVectors(b, a);
+    const len = d.length();
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 12), matFrame);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+    return m;
+  }
+  const bb = new THREE.Vector3(0, -0.5, 0); // bottom bracket
+  const seat = new THREE.Vector3(-0.3, 0.4, 0);
+  const head = new THREE.Vector3(0.8, 0.4, 0);
+  const rearAxle = new THREE.Vector3(-1.1, -0.7, 0);
+  const frontAxle = new THREE.Vector3(1.1, -0.7, 0);
+  bike.add(tube(bb, seat, 0.05));
+  bike.add(tube(bb, head, 0.05));
+  bike.add(tube(seat, head, 0.04));
+  bike.add(tube(bb, rearAxle, 0.04));
+  bike.add(tube(seat, rearAxle, 0.035));
+  bike.add(tube(head, frontAxle, 0.04));
+  // fork
+  const forkTop = new THREE.Vector3(0.9, 0.2, 0);
+  bike.add(tube(forkTop, frontAxle, 0.03));
+  // handlebar
+  const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.7, 12), matFrame);
+  hbar.rotation.z = Math.PI/2;
+  hbar.position.set(0.95, 0.55, 0);
+  bike.add(hbar);
+  // seat
+  const seatMesh = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.06, 0.18), matFrame);
+  seatMesh.position.set(-0.3, 0.5, 0);
+  bike.add(seatMesh);
+  // motor glow
+  const motor = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), matGlow);
+  motor.position.copy(bb);
+  bike.add(motor);
+  // battery
+  const batt = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 0.12), matAccent);
+  batt.position.set(0.2, 0, 0);
+  bike.add(batt);
+
+  scene.add(bike);
+
+  // Particles around bike
+  const pGeo = new THREE.BufferGeometry();
+  const pCount = 400;
+  const pPos = new Float32Array(pCount*3);
+  for(let i=0;i<pCount;i++){
+    pPos[i*3] = (Math.random()-0.5)*8;
+    pPos[i*3+1] = (Math.random()-0.5)*5;
+    pPos[i*3+2] = (Math.random()-0.5)*4;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({color:0x7dd3ff, size:0.02, transparent:true, opacity:0.6, blending:THREE.AdditiveBlending});
+  const pts = new THREE.Points(pGeo, pMat);
+  scene.add(pts);
+
+  // Mouse parallax
+  let mx=0, my=0;
+  window.addEventListener('mousemove', e=>{
+    mx = (e.clientX/window.innerWidth - 0.5)*2;
+    my = (e.clientY/window.innerHeight - 0.5)*2;
+  });
+
+  // Scroll disassembly
+  let scrollProg = 0;
+  const origPositions = bike.children.map(c => c.position.clone());
+  const explodeDirs = bike.children.map(() => new THREE.Vector3((Math.random()-0.5)*3, (Math.random()-0.5)*2, (Math.random()-0.5)*2));
+
+  window.addEventListener('scroll', ()=>{
+    const hero = document.getElementById('hero');
+    const rect = hero.getBoundingClientRect();
+    const prog = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.8)));
+    scrollProg = prog;
+  });
+
+  let t = 0;
+  function animate(){
+    t += 0.005;
+    bike.rotation.y = t + mx*0.3;
+    bike.rotation.x = my*0.15 + Math.sin(t*0.5)*0.05;
+    bike.position.y = Math.sin(t*2)*0.05;
+
+    // Disassembly
+    bike.children.forEach((c, i)=>{
+      if(origPositions[i]){
+        c.position.x = origPositions[i].x + explodeDirs[i].x * scrollProg * 2;
+        c.position.y = origPositions[i].y + explodeDirs[i].y * scrollProg * 2;
+        c.position.z = origPositions[i].z + explodeDirs[i].z * scrollProg * 2;
+      }
+    });
+
+    pts.rotation.y = t*0.2;
+    pts.rotation.x = t*0.1;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ============ HERO TITLE CHAR ANIMATION ============ */
+(function(){
+  const title = document.getElementById('hero-title');
+  const text = title.textContent;
+  title.innerHTML = '';
+  text.split(' ').forEach((word, wi)=>{
+    const w = document.createElement('span');
+    w.className = 'word';
+    word.split('').forEach((ch, ci)=>{
+      const s = document.createElement('span');
+      s.className = 'char';
+      s.textContent = ch;
+      s.style.animationDelay = `${2 + (wi*word.length + ci)*0.05}s`;
+      w.appendChild(s);
+    });
+    title.appendChild(w);
+    if(wi < text.split(' ').length - 1){
+      const space = document.createTextNode(' ');
+      title.appendChild(space);
+    }
+  });
+})();
+
+/* ============ NAV SCROLL ============ */
+window.addEventListener('scroll', ()=>{
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ============ REVEAL ============ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ============ MODELS GRID ============ */
+(function(){
+  const models = [
+    {n:'Hyper Carbon', d:'La expresión máxima de velocidad pura. Cuadro monocasco de carbono líquido.', s:[['6.2kg','Peso'],['480km','Autonomía'],['2.1s','0-60']]},
+    {n:'Urban AI', d:'Inteligencia urbana. Navegación AR, bloqueo facial, conducción adaptativa.', s:[['7.1kg','Peso'],['320km','Autonomía'],['IA','Conducción']]},
+    {n:'Mountain Beast', d:'Domina cualquier sendero. Suspensión IA de 160mm, chasis de titanio impreso.', s:[['11.4kg','Peso'],['280km','Autonomía'],['160mm','Suspensión']]},
+    {n:'Neo Gravel', d:'Del asfalto al infinito. Versatilidad absoluta en un diseño minimalista.', s:[['8.8kg','Peso'],['380km','Autonomía'],['All','Terreno']]},
+    {n:'Road Infinity', d:'Diseñada para devorar kilómetros. Aerodinámica activa, posición agresiva.', s:[['7.4kg','Peso'],['420km','Autonomía'],['0.21','CdA']]},
+    {n:'Cyber Trail', d:'Estética brutalista. Función absoluta. Para quienes rompen moldes.', s:[['9.2kg','Peso'],['340km','Autonomía'],['LED','Matrix']]},
+    {n:'Photon', d:'Ligera como un fotón. 5.8kg de pura obsesión ingenieril.', s:[['5.8kg','Peso'],['260km','Autonomía'],['Pro','Circuito']]},
+    {n:'Apex', d:'El vértice del rendimiento. Cada gramo, justificado.', s:[['6.5kg','Peso'],['400km','Autonomía'],['UCI','Homologada']]},
+    {n:'Ghost', d:'Invisible al viento. Silenciosa como un espectro. Letal en velocidad.', s:[['6.9kg','Peso'],['440km','Autonomía'],['-40%','Drag']]},
+    {n:'Zero Gravity', d:'Concepto 2040. Levitación magnética auxiliar. El futuro, hoy.', s:[['4.2kg','Peso'],['∞','Concept'],['2040','Model']]},
+  ];
+  const grid = document.querySelector('.models-grid');
+  models.forEach((m, i)=>{
+    const card = document.createElement('div');
+    card.className = 'model-card';
+    card.innerHTML = `
+      <div>
+        <div class="model-num">VX-${String(i+1).padStart(2,'0')}</div>
+        <div class="model-visual">
+          <svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="mg${i}" x1="0" x2="1">
+                <stop offset="0" stop-color="#4ea8ff" stop-opacity="0.8"/>
+                <stop offset="1" stop-color="#7dd3ff" stop-opacity="0.3"/>
+              </linearGradient>
+            </defs>
+            <circle cx="70" cy="110" r="35" fill="none" stroke="url(#mg${i})" stroke-width="1"/>
+            <circle cx="230" cy="110" r="35" fill="none" stroke="url(#mg${i})" stroke-width="1"/>
+            <path d="M70,110 L140,60 L210,60 L230,110 M140,60 L150,110 M70,110 L150,110 M210,60 L150,110" fill="none" stroke="#b8bcc4" stroke-width="1.2"/>
+            <circle cx="150" cy="110" r="6" fill="#4ea8ff" opacity="0.6"/>
+          </svg>
+        </div>
+        <h3 class="model-name">${m.n}</h3>
+        <p class="model-desc">${m.d}</p>
+      </div>
+      <div class="model-specs">
+        ${m.s.map(s=>`<span><strong>${s[0]}</strong>${s[1]}</span>`).join('')}
+      </div>
+    `;
+    card.addEventListener('mousemove', e=>{
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+    });
+    grid.appendChild(card);
+  });
+})();
+
+/* ============ CONFIGURATOR 3D ============ */
+(function(){
+  const canvas = document.getElementById('config-canvas');
+  if(!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(0, 0.5, 5);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  function resize(){
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height);
+    camera.aspect = r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const amb = new THREE.AmbientLight(0x606080, 0.5);
+  scene.add(amb);
+  const key = new THREE.DirectionalLight(0xffffff, 1);
+  key.position.set(3, 4, 5);
+  scene.add(key);
+  const rim = new THREE.PointLight(0x4ea8ff, 1, 10);
+  rim.position.set(-3, 1, 2);
+  scene.add(rim);
+
+  const matFrame = new THREE.MeshPhongMaterial({color:0x0a0a0d, specular:0x4ea8ff, shininess:100});
+  const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x1a3a5f, shininess:150});
+
+  const bike = new THREE.Group();
+  function makeWheel(r){
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.07, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.04, 0.015, 8, 60), matAccent));
+    for(let i=0;i<12;i++){
+      const s = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, r*2-0.1, 4), matFrame);
+      s.rotation.z = (i/12)*Math.PI;
+      g.add(s);
+    }
+    return g;
+  }
+  const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); bike.add(wR);
+  const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); bike.add(wF);
+  function tube(a,b,r=0.04){
+    const d = new THREE.Vector3().subVectors(b,a);
+    const l = d.length();
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matFrame);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+    return m;
+  }
+  const bb = new THREE.Vector3(0,-0.5,0);
+  const seat = new THREE.Vector3(-0.3,0.4,0);
+  const head = new THREE.Vector3(0.8,0.4,0);
+  bike.add(tube(bb,seat,0.05));
+  bike.add(tube(bb,head,0.05));
+  bike.add(tube(seat,head,0.04));
+  bike.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+  bike.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+  const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.6,12), matFrame);
+  hbar.rotation.z = Math.PI/2;
+  hbar.position.set(0.9,0.55,0);
+  bike.add(hbar);
+  scene.add(bike);
+
+  document.querySelectorAll('.config-color').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      document.querySelectorAll('.config-color').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      const col = c.dataset.color;
+      matFrame.color.set(col);
+    });
+  });
+  document.querySelectorAll('.config-opt').forEach(o=>{
+    o.addEventListener('click', ()=>{
+      const siblings = o.parentElement.querySelectorAll('.config-opt');
+      siblings.forEach(s=>s.classList.remove('active'));
+      o.classList.add('active');
+    });
+  });
+
+  let t=0;
+  function animate(){
+    t += 0.005;
+    bike.rotation.y = t;
+    wR.rotation.z = t*3;
+    wF.rotation.z = t*3;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ============ AI SPHERE ============ */
+(function(){
+  const canvas = document.getElementById('ai-canvas');
+  if(!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0,0,4);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  function resize(){
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height);
+    camera.aspect = r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Sphere with custom shader
+  const geo = new THREE.IcosahedronGeometry(1.2, 4);
+  const mat = new THREE.ShaderMaterial({
+    uniforms: {
+      time: {value:0},
+      color1: {value: new THREE.Color(0x4ea8ff)},
+      color2: {value: new THREE.Color(0x7dd3ff)}
+    },
+    vertexShader: `
+      uniform float time;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      void main(){
+        vNormal = normalize(normalMatrix * normal);
+        vec3 p = position;
+        p += normal * 0.08 * sin(position.x*4.0 + time*2.0) * sin(position.y*4.0 + time*1.5);
+        vPos = p;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float time;
+      uniform vec3 color1;
+      uniform vec3 color2;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      void main(){
+        float f = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
+        vec3 col = mix(color1, color2, f);
+        float pulse = 0.5 + 0.5*sin(time*2.0 + vPos.y*3.0);
+        gl_FragColor = vec4(col * (0.5 + pulse*0.5), 0.9);
+      }
+    `,
+    transparent: true,
+    wireframe: false
+  });
+  const sphere = new THREE.Mesh(geo, mat);
+  scene.add(sphere);
+
+  // Orbiting rings
+  for(let i=0;i<3;i++){
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(1.5 + i*0.2, 0.005, 8, 100),
+      new THREE.MeshBasicMaterial({color:0x4ea8ff, transparent:true, opacity:0.4 - i*0.1})
+    );
+    ring.rotation.x = Math.random()*Math.PI;
+    ring.rotation.y = Math.random()*Math.PI;
+    ring.userData = {speed: 0.003 + i*0.002, axis: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize()};
+    scene.add(ring);
+  }
+
+  // Particles
+  const pGeo = new THREE.BufferGeometry();
+  const pCount = 300;
+  const pPos = new Float32Array(pCount*3);
+  for(let i=0;i<pCount;i++){
+    const r = 1.5 + Math.random()*1.5;
+    const theta = Math.random()*Math.PI*2;
+    const phi = Math.random()*Math.PI;
+    pPos[i*3] = r*Math.sin(phi)*Math.cos(theta);
+    pPos[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
+    pPos[i*3+2] = r*Math.cos(phi);
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({color:0x7dd3ff, size:0.02, transparent:true, opacity:0.7, blending:THREE.AdditiveBlending}));
+  scene.add(pts);
+
+  let t=0;
+  function animate(){
+    t += 0.01;
+    mat.uniforms.time.value = t;
+    sphere.rotation.y = t*0.3;
+    sphere.rotation.x = t*0.2;
+    scene.children.forEach(c=>{
+      if(c.userData && c.userData.speed){
+        c.rotateOnAxis(c.userData.axis, c.userData.speed);
+      }
+    });
+    pts.rotation.y = t*0.1;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ============ COMPARATOR 3D ============ */
+(function(){
+  const canvas = document.getElementById('comp-canvas');
+  if(!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+  camera.position.set(0, 0.5, 8);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  function resize(){
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height);
+    camera.aspect = r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const amb = new THREE.AmbientLight(0x606080, 0.5);
+  scene.add(amb);
+  const key = new THREE.DirectionalLight(0xffffff, 1);
+  key.position.set(3,4,5);
+  scene.add(key);
+  const rim = new THREE.PointLight(0x4ea8ff, 1, 15);
+  rim.position.set(0, 2, 3);
+  scene.add(rim);
+
+  function buildBike(color){
+    const g = new THREE.Group();
+    const matF = new THREE.MeshPhongMaterial({color, specular:0x4ea8ff, shininess:100});
+    const matA = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x1a3a5f, shininess:150});
+    function makeWheel(r){
+      const w = new THREE.Group();
+      w.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.07, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+      w.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.04, 0.015, 8, 60), matA));
+      for(let i=0;i<12;i++){
+        const s = new THREE.Mesh(new THREE.CylinderGeometry(0.006,0.006,r*2-0.1,4), matF);
+        s.rotation.z = (i/12)*Math.PI;
+        w.add(s);
+      }
+      return w;
+    }
+    const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); g.add(wR);
+    const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); g.add(wF);
+    function tube(a,b,r=0.04){
+      const d = new THREE.Vector3().subVectors(b,a);
+      const l = d.length();
+      const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matF);
+      m.position.copy(a).add(b).multiplyScalar(0.5);
+      m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+      return m;
+    }
+    const bb = new THREE.Vector3(0,-0.5,0);
+    const seat = new THREE.Vector3(-0.3,0.4,0);
+    const head = new THREE.Vector3(0.8,0.4,0);
+    g.add(tube(bb,seat,0.05));
+    g.add(tube(bb,head,0.05));
+    g.add(tube(seat,head,0.04));
+    g.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+    g.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+    return g;
+  }
+
+  const bikeA = buildBike(0x0a0a0d);
+  bikeA.position.x = -2;
+  scene.add(bikeA);
+  const bikeB = buildBike(0x2a2a32);
+  bikeB.position.x = 2;
+  scene.add(bikeB);
+
+  let t=0;
+  function animate(){
+    t += 0.005;
+    bikeA.rotation.y = t;
+    bikeB.rotation.y = -t;
+    bikeA.position.y = Math.sin(t*2)*0.05;
+    bikeB.position.y = Math.sin(t*2 + Math.PI)*0.05;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ============ GALLERY 3D ============ */
+(function(){
+  const canvas = document.getElementById('gal-canvas');
+  if(!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+  camera.position.set(0, 0.5, 5);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  function resize(){
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height);
+    camera.aspect = r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const amb = new THREE.AmbientLight(0x606080, 0.6);
+  scene.add(amb);
+  const key = new THREE.DirectionalLight(0xffffff, 1.2);
+  key.position.set(5,5,5);
+  scene.add(key);
+  const rim = new THREE.PointLight(0x4ea8ff, 1.5, 10);
+  rim.position.set(-3,1,2);
+  scene.add(rim);
+
+  const bike = new THREE.Group();
+  const matFrame = new THREE.MeshPhongMaterial({color:0x1a1a1f, specular:0x4ea8ff, shininess:120, wireframe:false});
+  const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x2a5a8f, shininess:150});
+  function makeWheel(r){
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.08, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.05, 0.02, 8, 60), matAccent));
+    for(let i=0;i<16;i++){
+      const s = new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,r*2-0.1,4), matFrame);
+      s.rotation.z = (i/16)*Math.PI;
+      g.add(s);
+    }
+    return g;
+  }
+  const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); bike.add(wR);
+  const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); bike.add(wF);
+  function tube(a,b,r=0.04){
+    const d = new THREE.Vector3().subVectors(b,a);
+    const l = d.length();
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matFrame);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+    return m;
+  }
+  const bb = new THREE.Vector3(0,-0.5,0);
+  const seat = new THREE.Vector3(-0.3,0.4,0);
+  const head = new THREE.Vector3(0.8,0.4,0);
+  bike.add(tube(bb,seat,0.05));
+  bike.add(tube(bb,head,0.05));
+  bike.add(tube(seat,head,0.04));
+  bike.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+  bike.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+  const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.7,12), matFrame);
+  hbar.rotation.z = Math.PI/2;
+  hbar.position.set(0.95,0.55,0);
+  bike.add(hbar);
+  const seatM = new THREE.Mesh(new THREE.BoxGeometry(0.35,0.06,0.18), matFrame);
+  seatM.position.set(-0.3,0.5,0);
+  bike.add(seatM);
+  scene.add(bike);
+
+  const origPos = bike.children.map(c=>c.position.clone());
+  const explDir = bike.children.map(()=>new THREE.Vector3((Math.random()-0.5)*2,(Math.random()-0.5)*1.5,(Math.random()-0.5)*1.5));
+
+  let mode = 'rotate';
+  document.querySelectorAll('.gal-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelectorAll('.gal-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      mode = b.dataset.mode;
+      if(mode !== 'explode'){
+        bike.children.forEach((c,i)=>{
+          gsap.to(c.position, {x:origPos[i].x, y:origPos[i].y, z:origPos[i].z, duration:1, ease:'power3.out'});
+        });
+      }
+      matFrame.wireframe = (mode === 'wire' || mode === 'xray');
+      if(mode === 'xray'){
+        matFrame.transparent = true;
+        matFrame.opacity = 0.3;
+      } else {
+        matFrame.transparent = false;
+        matFrame.opacity = 1;
+      }
+    });
+  });
+
+  let t=0;
+  function animate(){
+    t += 0.005;
+    if(mode === 'rotate' || mode === 'wire' || mode === 'xray'){
+      bike.rotation.y = t;
+    }
+    if(mode === 'explode'){
+      bike.children.forEach((c,i)=>{
+        c.position.x = origPos[i].x + explDir[i].x * (0.5 + 0.5*Math.sin(t*2));
+        c.position.y = origPos[i].y + explDir[i].y * (0.5 + 0.5*Math.sin(t*2));
+        c.position.z = origPos[i].z + explDir[i].z * (0.5 + 0.5*Math.sin(t*2));
+      });
+      bike.rotation.y = t*0.3;
+    }
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ============ FOOTER STARS ============ */
+(function(){
+  const canvas = document.getElementById('footer-canvas');
+  if(!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 2, 0.1, 1000);
+  camera.position.set(0,0,5);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  function resize(){
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height);
+    camera.aspect = r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Stars
+  const sGeo = new THREE.BufferGeometry();
+  const sCount = 1500;
+  const sPos = new Float32Array(sCount*3);
+  for(let i=0;i<sCount;i++){
+    sPos[i*3] = (Math.random()-0.5)*50;
+    sPos[i*3+1] = (Math.random()-0.5)*30;
+    sPos[i*3+2] = -Math.random()*30 - 5;
+  }
+  sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+  const stars = new THREE.Points(sGeo, new THREE.PointsMaterial({color:0xffffff, size:0.05, transparent:true, opacity:0.8}));
+  scene.add(stars);
+
+  // Floating bike silhouette
+  const bike = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({color:0x4ea8ff, wireframe:true, transparent:true, opacity:0.3});
+  function makeWheel(r){
+    return new THREE.Mesh(new THREE.TorusGeometry(r, 0.05, 8, 40), mat);
+  }
+  const wR = makeWheel(0.6); wR.position.set(-1,-0.6,0); bike.add(wR);
+  const wF = makeWheel(0.6); wF.position.set(1,-0.6,0); bike.add(wF);
+  scene.add(bike);
+
+  let t=0;
+  function animate(){
+    t += 0.003;
+    stars.rotation.y = t*0.1;
+    bike.rotation.y = t*0.5;
+    bike.rotation.x = Math.sin(t)*0.2;
+    bike.position.y = Math.sin(t*2)*0.1;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ============ CINEMATIC SCROLL (GSAP) ============ */
+(function(){
+  if(!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const scenes = [
+    {t:'From silence', s:'Chapter 01 · Origin', bg:'#030304'},
+    {t:'A wheel emerges', s:'Chapter 02 · Matter', bg:'#050508'},
+    {t:'Frame by frame', s:'Chapter 03 · Assembly', bg:'#08080d'},
+    {t:'It breathes', s:'Chapter 04 · Life', bg:'#0a0a12'},
+    {t:'It moves', s:'Chapter 05 · Motion', bg:'#0d0d15'},
+    {t:'Through the city', s:'Chapter 06 · Urban', bg:'#10101a'},
+    {t:'Up the mountain', s:'Chapter 07 · Altitude', bg:'#0a0f15'},
+    {t:'Into the forest', s:'Chapter 08 · Wild', bg:'#0a120a'},
+    {t:'Under the rain', s:'Chapter 09 · Elements', bg:'#0a0a15'},
+    {t:'Through the snow', s:'Chapter 10 · Silence', bg:'#151520'},
+    {t:'Across the desert', s:'Chapter 11 · Endurance', bg:'#15100a'},
+    {t:'Into the night', s:'Chapter 12 · Neon', bg:'#0a0510'},
+    {t:'Infinite roads', s:'Chapter 13 · Horizon', bg:'#050510'},
+    {t:'Beyond the stars', s:'Chapter 14 · Cosmos', bg:'#020208'},
+    {t:'It returns', s:'Chapter 15 · Home', bg:'#030304'},
+  ];
+
+  const cinText = document.getElementById('cin-text');
+  const cinSub = document.getElementById('cin-sub');
+  const cinCanvas = document.getElementById('cinematic-canvas');
+
+  // Simple canvas background for cinematic
+  const ctx = cinCanvas.getContext('2d');
+  let cw, ch;
+  function resizeCin(){
+    const r = cinCanvas.parentElement.getBoundingClientRect();
+    cw = cinCanvas.width = r.width;
+    ch = cinCanvas.height = r.height;
+  }
+  resizeCin();
+  window.addEventListener('resize', resizeCin);
+
+  let currentBg = '#030304';
+  let particles = [];
+  for(let i=0;i<100;i++){
+    particles.push({
+      x: Math.random()*2000, y: Math.random()*1200,
+      vx: (Math.random()-0.5)*0.5, vy: Math.random()*0.3 + 0.1,
+      r: Math.random()*2 + 0.5, a: Math.random()*0.5 + 0.2
+    });
+  }
+
+  function drawCinematic(){
+    ctx.fillStyle = currentBg;
+    ctx.fillRect(0,0,cw,ch);
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy;
+      if(p.y > ch) p.y = 0;
+      if(p.x < 0) p.x = cw;
+      if(p.x > cw) p.x = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(125, 211, 255, ${p.a})`;
+      ctx.fill();
+    });
+    // Horizon line
+    ctx.strokeStyle = 'rgba(78, 168, 255, 0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, ch*0.6);
+    ctx.lineTo(cw, ch*0.6);
+    ctx.stroke();
+    requestAnimationFrame(drawCinematic);
+  }
+  drawCinematic();
+
+  scenes.forEach((sc, i)=>{
+    ScrollTrigger.create({
+      trigger: '.cinematic',
+      start: `top+=${i * (800/scenes.length)}vh top`,
+      end: `top+=${(i+1) * (800/scenes.length)}vh top`,
+      onEnter: ()=>{
+        gsap.to(cinText, {opacity:0, y:-30, duration:0.4});
+        gsap.to(cinSub, {opacity:0, duration:0.3});
+        setTimeout(()=>{
+          cinText.textContent = sc.t;
+          cinSub.textContent = sc.s;
+          currentBg = sc.bg;
+          gsap.fromTo(cinText, {opacity:0, y:30}, {opacity:1, y:0, duration:0.8, ease:'power3.out'});
+          gsap.fromTo(cinSub, {opacity:0}, {opacity:1, duration:0.8, delay:0.2});
+        }, 400);
+      },
+      onEnterBack: ()=>{
+        gsap.to(cinText, {opacity:0, y:-30, duration:0.4});
+        gsap.to(cinSub, {opacity:0, duration:0.3});
+        setTimeout(()=>{
+          cinText.textContent = sc.t;
+          cinSub.textContent = sc.s;
+          currentBg = sc.bg;
+          gsap.fromTo(cinText, {opacity:0, y:30}, {opacity:1, y:0, duration:0.8, ease:'power3.out'});
+          gsap.fromTo(cinSub, {opacity:0}, {opacity:1, duration:0.8, delay:0.2});
+        }, 400);
+      }
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

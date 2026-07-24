@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Inteligencia Artificial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-0: #030304;
+--bg-1: #08080b;
+--bg-2: #0d0d12;
+--platinum: #e4e7ec;
+--electric: #4ea8ff;
+--electric-2: #7dd3ff;
+--text: #e8ebf0;
+--text-dim: #8a90a0;
+--text-faint: #50566a;
+--glass: rgba(255,255,255,0.03);
+--glass-border: rgba(255,255,255,0.08);
+--font-display: 'Space Grotesk', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-0); color: var(--text); overflow-x: hidden; }
+body { font-family: var(--font-display); font-weight: 300; cursor: none; -webkit-font-smoothing: antialiased; line-height: 1.5; }
+@media (max-width: 900px) { body { cursor: auto; } }
+::selection { background: var(--electric); color: #000; }
+.cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); mix-blend-mode: difference; }
+.cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+.cursor-ring { width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; transition: transform .15s ease-out, width .3s, height .3s; }
+.cursor-ring.hover { width: 70px; height: 70px; border-color: var(--electric); }
+@media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } }
+nav.top { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; background: rgba(5,5,8,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); }
+.logo { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.35em; color: var(--platinum); }
+.logo span { color: var(--electric); font-weight: 600; }
+.nav-links { display: flex; gap: 2.5rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+.nav-links a { color: var(--text-dim); transition: color .3s; }
+.nav-links a:hover { color: var(--electric-2); }
+@media (max-width: 900px) { nav.top { padding: 1rem 1.5rem; } .nav-links { display: none; } }
+.hero { height: 70vh; min-height: 500px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(78,168,255,0.05), transparent 70%); }
+.hero-content { position: relative; z-index: 2; text-align: center; }
+.hero-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.5em; color: var(--electric); text-transform: uppercase; margin-bottom: 2rem; }
+.hero-title { font-size: clamp(3rem, 8vw, 7rem); font-weight: 300; letter-spacing: -0.02em; color: var(--platinum); line-height: 0.95; }
+.hero-title em { color: var(--electric-2); font-style: italic; }
+.ai-section { padding: 5rem 3rem; max-width: 1600px; margin: 0 auto; }
+@media (max-width: 900px) { .ai-section { padding: 3rem 1.5rem; } }
+.ai-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 5rem; }
+@media (max-width: 1100px) { .ai-layout { grid-template-columns: 1fr; } }
+.ai-sphere-wrap { aspect-ratio: 1; position: relative; border: 1px solid var(--glass-border); background: radial-gradient(circle at center, rgba(78,168,255,0.05), transparent 70%); overflow: hidden; }
+#ai-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ai-intro { display: flex; flex-direction: column; gap: 2rem; }
+.ai-intro p { font-size: 1.1rem; color: var(--text-dim); line-height: 1.8; max-width: 500px; }
+.ai-features { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+.ai-feature { display: flex; gap: 1.5rem; align-items: flex-start; padding: 1.5rem; border: 1px solid var(--glass-border); background: var(--glass); transition: all .4s; }
+.ai-feature:hover { border-color: rgba(78,168,255,0.3); background: rgba(78,168,255,0.03); transform: translateX(10px); }
+.ai-feature-icon { width: 40px; height: 40px; flex-shrink: 0; border: 1px solid var(--electric); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--electric); font-family: var(--font-mono); font-size: 0.8rem; }
+.ai-feature h4 { font-size: 1rem; font-weight: 400; color: var(--platinum); margin-bottom: 0.3rem; letter-spacing: 0.05em; }
+.ai-feature p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+.ai-stats { margin-top: 5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding: 3rem; border: 1px solid var(--glass-border); background: var(--glass); }
+.ai-stat { text-align: center; }
+.ai-stat-val { font-size: 3rem; font-weight: 300; color: var(--electric-2); margin-bottom: 0.5rem; }
+.ai-stat-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.3em; color: var(--text-faint); text-transform: uppercase; }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s, transform 1s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+<nav class="top">
+<div class="logo">VELOCITY<span>·</span>X</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="models.html">Modelos</a>
+<a href="technology.html">Tecnología</a>
+<a href="configurator.html">Configurador</a>
+<a href="lab.html">Laboratorio</a>
+</div>
+</nav>
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="hero-content">
+<div class="hero-label">VX-CORE Neural Engine</div>
+<h1 class="hero-title">Una mente que<br><em>pedalea contigo</em>.</h1>
+</div>
+</section>
+<section class="ai-section">
+<div class="ai-layout">
+<div class="ai-intro reveal">
+<p>VX-CORE aprende tu ritmo, anticipa el terreno y reescribe las leyes de la asistencia eléctrica. Cada kilómetro te hace más rápido. Cada subida, más fácil.</p>
+<p>La inteligencia artificial no es un añadido. Es el corazón de tu VELOCITY X.</p>
+<div class="ai-features">
+<div class="ai-feature">
+<div class="ai-feature-icon">01</div>
+<div>
+<h4>Aprendizaje biométrico</h4>
+<p>Sensores de cadencia, frecuencia cardíaca y potencia ajustan la asistencia en milisegundos. Tu bici conoce tu cuerpo mejor que tú.</p>
+</div>
+</div>
+<div class="ai-feature">
+<div class="ai-feature-icon">02</div>
+<div>
+<h4>Predicción de terreno</h4>
+<p>LIDAR frontal + mapa 3D del entorno. La bici sabe lo que viene antes que tú. Ajusta suspensión y potencia automáticamente.</p>
+</div>
+</div>
+<div class="ai-feature">
+<div class="ai-feature-icon">03</div>
+<div>
+<h4>Diagnóstico autónomo</h4>
+<p>Detecta desgaste de componentes y agenda mantenimiento antes de que falle algo. 314 sensores monitorizan cada pieza.</p>
+</div>
+</div>
+<div class="ai-feature">
+<div class="ai-feature-icon">04</div>
+<div>
+<h4>HUD proyectado</h4>
+<p>Gafas AR con velocidad, navegación, potencia y biometría en tiempo real. Información contextual, nunca distracciones.</p>
+</div>
+</div>
+<div class="ai-feature">
+<div class="ai-feature-icon">05</div>
+<div>
+<h4>Comunicación V2V</h4>
+<p>Tu bici habla con otras VX del entorno. Alerta de frenadas, obstáculos y condiciones del terreno en enjambre.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="ai-sphere-wrap reveal">
+<canvas id="ai-canvas"></canvas>
+</div>
+</div>
+<div class="ai-stats reveal">
+<div class="ai-stat">
+<div class="ai-stat-val">2000</div>
+<div class="ai-stat-label">Escaneos/segundo</div>
+</div>
+<div class="ai-stat">
+<div class="ai-stat-val">8ms</div>
+<div class="ai-stat-label">Tiempo respuesta</div>
+</div>
+<div class="ai-stat">
+<div class="ai-stat-val">314</div>
+<div class="ai-stat-label">Sensores activos</div>
+</div>
+<div class="ai-stat">
+<div class="ai-stat-val"></div>
+<div class="ai-stat-label">Aprendizaje continuo</div>
+</div>
+</div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = window.innerWidth/2, my = window.innerHeight/2;
+let rx = mx, ry = my;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function cursorLoop(){
+rx += (mx - rx) * 0.18;
+ry += (my - ry) * 0.18;
+dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+document.querySelectorAll('a, button, .ai-feature').forEach(el=>{
+el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+});
+const io = new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting) e.target.classList.add('visible');
+});
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const canvas = document.getElementById('ai-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+camera.position.set(0,0,4);
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+function resize(){
+const r = canvas.parentElement.getBoundingClientRect();
+renderer.setSize(r.width, r.height);
+camera.aspect = r.width/r.height;
+camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+const geo = new THREE.IcosahedronGeometry(1.2, 4);
+const mat = new THREE.ShaderMaterial({
+uniforms: {
+time: {value:0},
+color1: {value: new THREE.Color(0x4ea8ff)},
+color2: {value: new THREE.Color(0x7dd3ff)}
+},
+vertexShader: `
+uniform float time;
+varying vec3 vNormal;
+varying vec3 vPos;
+void main(){
+vNormal = normalize(normalMatrix * normal);
+vec3 p = position;
+p += normal * 0.08 * sin(position.x*4.0 + time*2.0) * sin(position.y*4.0 + time*1.5);
+vPos = p;
+gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+}
+`,
+fragmentShader: `
+uniform float time;
+uniform vec3 color1;
+uniform vec3 color2;
+varying vec3 vNormal;
+varying vec3 vPos;
+void main(){
+float f = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
+vec3 col = mix(color1, color2, f);
+float pulse = 0.5 + 0.5*sin(time*2.0 + vPos.y*3.0);
+gl_FragColor = vec4(col * (0.5 + pulse*0.5), 0.9);
+}
+`,
+transparent: true,
+wireframe: false
+});
+const sphere = new THREE.Mesh(geo, mat);
+scene.add(sphere);
+for(let i=0;i<3;i++){
+const ringMesh = new THREE.Mesh(
+new THREE.TorusGeometry(1.5 + i*0.2, 0.005, 8, 100),
+new THREE.MeshBasicMaterial({color:0x4ea8ff, transparent:true, opacity:0.4 - i*0.1})
+);
+ringMesh.rotation.x = Math.random()*Math.PI;
+ringMesh.rotation.y = Math.random()*Math.PI;
+ringMesh.userData = {speed: 0.003 + i*0.002, axis: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize()};
+scene.add(ringMesh);
+}
+const pGeo = new THREE.BufferGeometry();
+const pCount = 300;
+const pPos = new Float32Array(pCount*3);
+for(let i=0;i<pCount;i++){
+const r = 1.5 + Math.random()*1.5;
+const theta = Math.random()*Math.PI*2;
+const phi = Math.random()*Math.PI;
+pPos[i*3] = r*Math.sin(phi)*Math.cos(theta);
+pPos[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
+pPos[i*3+2] = r*Math.cos(phi);
+}
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({color:0x7dd3ff, size:0.02, transparent:true, opacity:0.7, blending:THREE.AdditiveBlending}));
+scene.add(pts);
+let t=0;
+function animate(){
+t += 0.01;
+mat.uniforms.time.value = t;
+sphere.rotation.y = t*0.3;
+sphere.rotation.x = t*0.2;
+scene.children.forEach(c=>{
+if(c.userData && c.userData.speed){
+c.rotateOnAxis(c.userData.axis, c.userData.speed);
+}
+});
+pts.rotation.y = t*0.1;
+renderer.render(scene, camera);
+requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Prensa</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg-0:#030304;--bg-1:#08080b;--platinum:#e4e7ec;--electric:#4ea8ff;--electric-2:#7dd3ff;--text:#e8ebf0;--text-dim:#8a90a0;--text-faint:#50566a;--glass:rgba(255,255,255,0.03);--glass-border:rgba(255,255,255,0.08);--font-display:'Space Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{background:var(--bg-0);color:var(--text);overflow-x:hidden}body{font-family:var(--font-display);font-weight:300;cursor:none;-webkit-font-smoothing:antialiased;line-height:1.5}@media(max-width:900px){body{cursor:auto}}
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%}.cursor-ring{width:38px;height:38px;border:1px solid rgba(255,255,255,0.5);border-radius:50%;transition:width .3s,height .3s}.cursor-ring.hover{width:70px;height:70px;border-color:var(--electric)}@media(max-width:900px){.cursor-dot,.cursor-ring{display:none}}
+nav.top{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}.logo{font-size:1.1rem;font-weight:500;letter-spacing:.35em;color:var(--platinum)}.logo span{color:var(--electric);font-weight:600}.nav-links{display:flex;gap:2.5rem;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase}.nav-links a{color:var(--text-dim);transition:color .3s}.nav-links a:hover{color:var(--electric-2)}@media(max-width:900px){nav.top{padding:1rem 1.5rem}.nav-links{display:none}}
+.hero{height:50vh;min-height:350px;display:flex;align-items:center;justify-content:center;text-align:center}.hero-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.5em;color:var(--electric);text-transform:uppercase;margin-bottom:2rem}.hero-title{font-size:clamp(3rem,8vw,7rem);font-weight:200;color:var(--platinum);line-height:.95}
+.press-section{padding:5rem 3rem;max-width:1200px;margin:0 auto}
+.press-item{display:grid;grid-template-columns:200px 1fr;gap:3rem;padding:3rem 0;border-bottom:1px solid var(--glass-border);transition:all .4s}.press-item:hover{padding-left:1rem}@media(max-width:700px){.press-item{grid-template-columns:1fr;gap:1rem}}
+.press-date{font-family:var(--font-mono);font-size:.75rem;color:var(--text-faint);letter-spacing:.2em;padding-top:.3rem}
+.press-content h3{font-size:1.3rem;font-weight:400;color:var(--platinum);margin-bottom:.8rem;letter-spacing:.02em}.press-content p{font-size:.9rem;color:var(--text-dim);line-height:1.7}.press-source{font-family:var(--font-mono);font-size:.7rem;color:var(--electric);letter-spacing:.2em;margin-top:.8rem;text-transform:uppercase}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 1s,transform 1s}.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="cursor-ring" id="cursor-ring"></div><div class="cursor-dot" id="cursor-dot"></div>
+<nav class="top"><div class="logo">VELOCITY<span>·</span>X</div><div class="nav-links"><a href="index.html">Inicio</a><a href="models.html">Modelos</a><a href="technology.html">Tecnología</a></div></nav>
+<section class="hero"><div><div class="hero-label">Sala de prensa</div><h1 class="hero-title">Prensa</h1></div></section>
+<section class="press-section">
+<div class="press-item reveal"><div class="press-date">2040.03.15</div><div class="press-content"><h3>VELOCITY X presenta Zero Gravity: la bicicleta que desafía la gravedad</h3><p>La compañía suiza revela su concepto más ambicioso hasta la fecha, incorporando levitación magnética auxiliar y propulsión de plasma frío en un diseño que redefine los límites de la movilidad personal.</p><div class="press-source">Wired Global</div></div></div>
+<div class="press-item reveal"><div class="press-date">2040.02.28</div><div class="press-content"><h3>Hyper Carbon bate el récord mundial de eficiencia energética en bicicletas eléctricas</h3><p>Con 480 km de autonomía en una sola carga, la Hyper Carbon establece un nuevo estándar que los analistas califican de "un salto cuántico en almacenamiento energético sobre dos ruedas".</p><div class="press-source">Financial Times</div></div></div>
+<div class="press-item reveal"><div class="press-date">2040.01.10</div><div class="press-content"><h3>El laboratorio secreto de VELOCITY X abre sus puertas por primera vez</h3><p>Ubicado en una ubicación no revelada de los Alpes suizos, el centro de I+D de VELOCITY X emplea a 340 ingenieros, 12 robots KUKA y el túnel de viento más avanzado de la industria ciclista.</p><div class="press-source">Dezeen</div></div></div>
+<div class="press-item reveal"><div class="press-date">2039.11.22</div><div class="press-content"><h3>VX-CORE: la IA que aprende a pedalear contigo</h3><p>El sistema de inteligencia artificial de VELOCITY X procesa 2000 lecturas de terreno por segundo y ajusta la asistencia en 8 milisegundos. Los probadores reportan una mejora del 34% en eficiencia tras solo una semana de uso.</p><div class="press-source">MIT Technology Review</div></div></div>
+<div class="press-item reveal"><div class="press-date">2039.09.05</div><div class="press-content"><h3>VELOCITY X recibe el premio Red Dot: Best of the Best 2039</h3><p>La Mountain Beast ha sido reconocida como el mejor diseño de producto del año, destacando su chasis de titanio impreso en 3D y su integración de sensores biométricos.</p><div class="press-source">Red Dot</div></div></div>
+</section>
+<script>
+const dot=document.getElementById('cursor-dot'),ring=document.getElementById('cursor-ring');let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});(function l(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(l)})();document.querySelectorAll('a,.press-item').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script></body></html>

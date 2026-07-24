@@ -76,10 +76,26 @@ Nunca dos páginas iguales.
 
 ---
 
+## Entrega a la primera
+
+La versión que sale de CREAUNA **es** el producto final según el brief del cliente: lo más profesional que sepamos.
+
+1. Leer el brief.
+2. Crear y construir.
+3. Revisar el resultado (¿se entiende el producto? ¿hero/luz/sector/imágenes/copy cumplen el brief?).
+4. Si algo falla, corregirlo **antes** de entregar.
+5. Solo entonces entregar.
+
+**Rediseñar** = solo cuando el cliente pide un cambio **después** de una entrega correcta.
+Prohibido entregar borradores “a mejorar” o responder un fallo de calidad con “lo voy a rediseñar”.
+Las pruebas existen para que salga perfecta a la primera — no webs “como las demás”.
+
+---
+
 ## Piensa como una agencia
 
 ¿Ayuda al negocio? ¿Genera confianza? ¿Se ve profesional? ¿El cliente estaría orgulloso? ¿Supera a la competencia?
-Si no → sigue mejorando.
+Si no → corrige **antes** de entregar.
 
 ---
 

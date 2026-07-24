@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Modelos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-0: #030304;
+--bg-1: #08080b;
+--bg-2: #0d0d12;
+--platinum: #e4e7ec;
+--electric: #4ea8ff;
+--electric-2: #7dd3ff;
+--text: #e8ebf0;
+--text-dim: #8a90a0;
+--text-faint: #50566a;
+--glass: rgba(255,255,255,0.03);
+--glass-border: rgba(255,255,255,0.08);
+--font-display: 'Space Grotesk', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+}
+
+{ box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-0); color: var(--text); overflow-x: hidden; }
+body {
+font-family: var(--font-display);
+font-weight: 300;
+cursor: none;
+-webkit-font-smoothing: antialiased;
+line-height: 1.5;
+}
+@media (max-width: 900px) { body { cursor: auto; } }
+::selection { background: var(--electric); color: #000; }
+.cursor-dot, .cursor-ring {
+position: fixed; top: 0; left: 0;
+pointer-events: none; z-index: 9999;
+transform: translate(-50%, -50%);
+mix-blend-mode: difference;
+}
+.cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+.cursor-ring {
+width: 38px; height: 38px;
+border: 1px solid rgba(255,255,255,0.5);
+border-radius: 50%;
+transition: transform .15s ease-out, width .3s, height .3s;
+}
+.cursor-ring.hover { width: 70px; height: 70px; border-color: var(--electric); }
+@media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } }
+nav.top {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+padding: 1.5rem 3rem;
+display: flex; justify-content: space-between; align-items: center;
+background: rgba(5,5,8,0.8);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--glass-border);
+}
+.logo { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.35em; color: var(--platinum); }
+.logo span { color: var(--electric); font-weight: 600; }
+.nav-links { display: flex; gap: 2.5rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+.nav-links a { color: var(--text-dim); transition: color .3s; }
+.nav-links a:hover { color: var(--electric-2); }
+@media (max-width: 900px) { nav.top { padding: 1rem 1.5rem; } .nav-links { display: none; } }
+.hero {
+height: 70vh;
+min-height: 500px;
+display: flex; align-items: center; justify-content: center;
+position: relative;
+overflow: hidden;
+}
+.hero-bg {
+position: absolute; inset: 0;
+background: radial-gradient(ellipse at center, rgba(78,168,255,0.05), transparent 70%);
+}
+.hero-content {
+position: relative; z-index: 2;
+text-align: center;
+}
+.hero-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.5em;
+color: var(--electric);
+text-transform: uppercase;
+margin-bottom: 2rem;
+}
+.hero-title {
+font-size: clamp(3rem, 8vw, 7rem);
+font-weight: 300;
+letter-spacing: -0.02em;
+color: var(--platinum);
+line-height: 0.95;
+}
+.hero-title em { color: var(--electric-2); font-style: italic; }
+.models-section {
+padding: 5rem 3rem;
+max-width: 1600px;
+margin: 0 auto;
+}
+@media (max-width: 900px) { .models-section { padding: 3rem 1.5rem; } }
+.model-showcase {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 5rem;
+align-items: center;
+margin-bottom: 10rem;
+padding: 5rem 0;
+border-top: 1px solid var(--glass-border);
+}
+@media (max-width: 1100px) { .model-showcase { grid-template-columns: 1fr; gap: 3rem; } }
+.model-visual {
+aspect-ratio: 1;
+position: relative;
+border: 1px solid var(--glass-border);
+background: radial-gradient(circle at center, rgba(78,168,255,0.03), transparent 70%);
+overflow: hidden;
+}
+.model-visual canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.model-info { display: flex; flex-direction: column; gap: 2rem; }
+.model-num {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.4em;
+color: var(--text-faint);
+}
+.model-name {
+font-size: clamp(2.5rem, 5vw, 4rem);
+font-weight: 300;
+color: var(--platinum);
+letter-spacing: 0.02em;
+}
+.model-desc {
+font-size: 1rem;
+color: var(--text-dim);
+line-height: 1.8;
+max-width: 500px;
+}
+.model-specs {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 2rem;
+padding: 2rem 0;
+border-top: 1px solid var(--glass-border);
+border-bottom: 1px solid var(--glass-border);
+}
+.spec-item { text-align: center; }
+.spec-val {
+font-size: 2rem;
+font-weight: 300;
+color: var(--electric-2);
+margin-bottom: 0.5rem;
+}
+.spec-label {
+font-family: var(--font-mono);
+font-size: 0.65rem;
+letter-spacing: 0.3em;
+color: var(--text-faint);
+text-transform: uppercase;
+}
+.model-features {
+display: flex; flex-direction: column; gap: 1rem;
+}
+.feature {
+display: flex; gap: 1rem; align-items: flex-start;
+padding: 1rem;
+border: 1px solid var(--glass-border);
+background: var(--glass);
+transition: all .4s;
+}
+.feature:hover {
+border-color: rgba(78,168,255,0.3);
+transform: translateX(10px);
+}
+.feature-icon {
+width: 32px; height: 32px; flex-shrink: 0;
+border: 1px solid var(--electric);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+color: var(--electric);
+font-family: var(--font-mono);
+font-size: 0.7rem;
+}
+.feature h4 {
+font-size: 0.95rem; font-weight: 400;
+color: var(--platinum);
+margin-bottom: 0.3rem;
+}
+.feature p {
+font-size: 0.8rem;
+color: var(--text-dim);
+line-height: 1.6;
+}
+.model-cta {
+display: flex; gap: 1rem;
+}
+.btn {
+padding: 1rem 2rem;
+font-size: 0.75rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+border: 1px solid var(--glass-border);
+background: transparent;
+color: var(--platinum);
+transition: all .4s;
+cursor: none;
+}
+@media (max-width: 900px) { .btn { cursor: pointer; } }
+.btn-primary {
+background: linear-gradient(135deg, rgba(78,168,255,0.15), rgba(78,168,255,0.05));
+border-color: rgba(78,168,255,0.3);
+}
+.btn:hover {
+border-color: var(--electric);
+box-shadow: 0 0 30px rgba(78,168,255,0.2);
+}
+.reveal {
+opacity: 0;
+transform: translateY(40px);
+transition: opacity 1s, transform 1s;
+}
+.reveal.visible {
+opacity: 1;
+transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav class="top">
+<div class="logo">VELOCITY<span>·</span>X</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="technology.html">Tecnología</a>
+<a href="configurator.html">Configurador</a>
+<a href="ai.html">IA</a>
+<a href="lab.html">Laboratorio</a>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="hero-content">
+<div class="hero-label">Colección 2040</div>
+<h1 class="hero-title">Diez máquinas.<br><em>Diez universos.</em></h1>
+</div>
+</section>
+
+<section class="models-section">
+<div class="model-showcase reveal">
+<div class="model-visual">
+<canvas id="canvas-hyper"></canvas>
+</div>
+<div class="model-info">
+<div>
+<div class="model-num">VX-01</div>
+<h2 class="model-name">Hyper Carbon</h2>
+<p class="model-desc">La expresión máxima de velocidad pura. Cuadro monocasco de carbono líquido moldeado en una sola pieza. Cada gramo, cada curva, optimizada para la perfección aerodinámica.</p>
+</div>
+<div class="model-specs">
+<div class="spec-item">
+<div class="spec-val">6.2kg</div>
+<div class="spec-label">Peso</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">480km</div>
+<div class="spec-label">Autonomía</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">2.1s</div>
+<div class="spec-label">0-60 km/h</div>
+</div>
+</div>
+<div class="model-features">
+<div class="feature">
+<div class="feature-icon">01</div>
+<div>
+<h4>Carbono líquido T2000</h4>
+<p>Fibra de alto módulo en estado fluido. Autorreparable. 40% más ligera que el T1000.</p>
+</div>
+</div>
+<div class="feature">
+<div class="feature-icon">02</div>
+<div>
+<h4>Motor VX-1200 Hyper</h4>
+<p>1200W pico. Campo magnético variable. Silencio absoluto.</p>
+</div>
+</div>
+<div class="feature">
+<div class="feature-icon">03</div>
+<div>
+<h4>Aerodinámica activa</h4>
+<p>Superficies adaptativas que reducen el drag un 40% a alta velocidad.</p>
+</div>
+</div>
+</div>
+<div class="model-cta">
+<button class="btn btn-primary">Configurar</button>
+<button class="btn">Ver detalles</button>
+</div>
+</div>
+</div>
+
+<div class="model-showcase reveal">
+<div class="model-info">
+<div>
+<div class="model-num">VX-02</div>
+<h2 class="model-name">Urban AI</h2>
+<p class="model-desc">Inteligencia urbana integrada. Navegación AR, bloqueo facial, conducción adaptativa. Diseñada para la ciudad del futuro, disponible hoy.</p>
+</div>
+<div class="model-specs">
+<div class="spec-item">
+<div class="spec-val">7.1kg</div>
+<div class="spec-label">Peso</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">320km</div>
+<div class="spec-label">Autonomía</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">IA</div>
+<div class="spec-label">Conducción</div>
+</div>
+</div>
+<div class="model-features">
+<div class="feature">
+<div class="feature-icon">01</div>
+<div>
+<h4>Navegación AR</h4>
+<p>Indicaciones superpuestas en gafas o pantalla. Sin distracciones.</p>
+</div>
+</div>
+<div class="feature">
+<div class="feature-icon">02</div>
+<div>
+<h4>Bloqueo facial 3D</h4>
+<p>Reconocimiento biométrico. Solo tú puedes desbloquearla.</p>
+</div>
+</div>
+<div class="feature">
+<div class="feature-icon">03</div>
+<div>
+<h4>Conducción adaptativa</h4>
+<p>La IA ajusta potencia y asistencia según tráfico y terreno.</p>
+</div>
+</div>
+</div>
+<div class="model-cta">
+<button class="btn btn-primary">Configurar</button>
+<button class="btn">Ver detalles</button>
+</div>
+</div>
+<div class="model-visual">
+<canvas id="canvas-urban"></canvas>
+</div>
+</div>
+
+<div class="model-showcase reveal">
+<div class="model-visual">
+<canvas id="canvas-mountain"></canvas>
+</div>
+<div class="model-info">
+<div>
+<div class="model-num">VX-03</div>
+<h2 class="model-name">Mountain Beast</h2>
+<p class="model-desc">Domina cualquier sendero. Suspensión IA de 160mm, chasis de titanio impreso en 3D. Construida para lo imposible.</p>
+</div>
+<div class="model-specs">
+<div class="spec-item">
+<div class="spec-val">11.4kg</div>
+<div class="spec-label">Peso</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">280km</div>
+<div class="spec-label">Autonomía</div>
+</div>
+<div class="spec-item">
+<div class="spec-val">160mm</div>
+<div class="spec-label">Suspensión</div>
+</div>
+</div>
+<div class="model-features">
+<div class="feature">
+<div class="feature-icon">01</div>
+<div>
+<h4>Suspensión IA 160mm</h4>
+<p>Escanea el terreno 2000 veces por segundo. Ajuste milimétrico.</p>
+</div>
+</div>
+<div class="feature">
+<div class="feature-icon">02</div>
+<div>
+<h4>Titanio Ti-6Al-4V</h4>
+<p>Impreso en 3D. Piezas imposibles de mecanizar. Relación peso/resistencia aeroespacial.</p>
+</div>
+</div>
+<div class="feature">
+<div class="feature-icon">03</div>
+<div>
+<h4>Protección integral</h4>
+<p>Carenados de cerámica técnica. 100.000 km sin mantenimiento.</p>
+</div>
+</div>
+</div>
+<div class="model-cta">
+<button class="btn btn-primary">Configurar</button>
+<button class="btn">Ver detalles</button>
+</div>
+</div>
+</div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// Cursor
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = window.innerWidth/2, my = window.innerHeight/2;
+let rx = mx, ry = my;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function cursorLoop(){
+rx += (mx - rx) * 0.18;
+ry += (my - ry) * 0.18;
+dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+document.querySelectorAll('a, button, .feature').forEach(el=>{
+el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+});
+
+// Reveal
+const io = new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting) e.target.classList.add('visible');
+});
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// 3D Bike function
+function createBike(canvasId, frameColor = 0x1a1a1f) {
+const canvas = document.getElementById(canvasId);
+if(!canvas) return;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+camera.position.set(0, 0.5, 5);
+
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+function resize(){
+const r = canvas.parentElement.getBoundingClientRect();
+renderer.setSize(r.width, r.height);
+camera.aspect = r.width/r.height;
+camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+
+const amb = new THREE.AmbientLight(0x606080, 0.6);
+scene.add(amb);
+const key = new THREE.DirectionalLight(0xffffff, 1.2);
+key.position.set(5, 5, 5);
+scene.add(key);
+const rim = new THREE.PointLight(0x4ea8ff, 1.5, 10);
+rim.position.set(-3, 1, 2);
+scene.add(rim);
+
+const bike = new THREE.Group();
+const matFrame = new THREE.MeshPhongMaterial({color: frameColor, specular:0x4ea8ff, shininess:120});
+const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x2a5a8f, shininess:150});
+
+function makeWheel(r){
+const g = new THREE.Group();
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.08, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.05, 0.02, 8, 60), matAccent));
+for(let i=0;i<16;i++){
+const s = new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,r*2-0.1,4), matFrame);
+s.rotation.z = (i/16)*Math.PI;
+g.add(s);
+}
+return g;
+}
+
+const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); bike.add(wR);
+const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); bike.add(wF);
+
+function tube(a,b,r=0.04){
+const d = new THREE.Vector3().subVectors(b,a);
+const l = d.length();
+const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matFrame);
+m.position.copy(a).add(b).multiplyScalar(0.5);
+m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+return m;
+}
+
+const bb = new THREE.Vector3(0,-0.5,0);
+const seat = new THREE.Vector3(-0.3,0.4,0);
+const head = new THREE.Vector3(0.8,0.4,0);
+bike.add(tube(bb,seat,0.05));
+bike.add(tube(bb,head,0.05));
+bike.add(tube(seat,head,0.04));
+bike.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+bike.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+
+const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.7,12), matFrame);
+hbar.rotation.z = Math.PI/2;
+hbar.position.set(0.95,0.55,0);
+bike.add(hbar);
+
+const seatM = new THREE.Mesh(new THREE.BoxGeometry(0.35,0.06,0.18), matFrame);
+seatM.position.set(-0.3,0.5,0);
+bike.add(seatM);
+
+scene.add(bike);
+
+let t=0;
+function animate(){
+t += 0.005;
+bike.rotation.y = t;
+wR.rotation.z = t*3;
+wF.rotation.z = t*3;
+renderer.render(scene, camera);
+requestAnimationFrame(animate);
+}
+animate();
+}
+
+createBike('canvas-hyper', 0x0a0a0d);
+createBike('canvas-urban', 0x2a2a32);
+createBike('canvas-mountain', 0x1a1a1f);
+</script>
+
+</body>
+</html>

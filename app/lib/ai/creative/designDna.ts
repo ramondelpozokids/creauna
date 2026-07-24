@@ -328,6 +328,37 @@ const DNA_BY_SECTOR: Record<CreativeSectorId, DnaBase> = {
     forbiddenVisuals: ['neon', 'meme emoji'],
     designStyle: 'Corporate advisory: calm blues, clarity, trust.',
   },
+  bike: {
+    sectorId: 'bike',
+    mood: 'spatialMinimal',
+    palette: {
+      accent: '#0D9488',
+      dark: '#0F172A',
+      light: '#F8FAFC',
+      surface: '#FFFFFF',
+      muted: '#64748B',
+      cssVars: {
+        '--cua-accent': '#0D9488',
+        '--cua-dark': '#0F172A',
+        '--cua-light': '#F8FAFC',
+        '--cua-surface': '#FFFFFF',
+        '--cua-muted': '#64748B',
+      },
+    },
+    typography: {
+      heading: 'Space Grotesk',
+      body: 'DM Sans',
+      button: 'DM Sans',
+      googleFontsUrl:
+        'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap',
+    },
+    imagePackKey: 'bike',
+    iconStyle: 'line',
+    radius: 'craft',
+    motionLevel: 'present',
+    forbiddenVisuals: ['office stock', 'coding screens', 'handshake', 'hotel lobby', 'dental chair'],
+    designStyle: 'E-bike / mobility brand: product photography of bicycles first, urban motion, never corporate office stock.',
+  },
   fashion: {
     sectorId: 'fashion',
     mood: 'aspirationalLuxury',
@@ -479,6 +510,13 @@ export function isAestheticMedicineBrief(
 
 export function isAestheticMedicinePrompt(prompt: string): boolean {
   return /est[eé]tic|aesthetic|med[\s-]?spa|hialuron|neuromod|skinbooster|botox|peeling|l[aá]ser\s+dermat|bioestimul|rejuvenec|medicina\s+est/i.test(
+    prompt
+  );
+}
+
+/** Bicicletas / e-bike / marca de movilidad ciclista. */
+export function isBikePrompt(prompt: string): boolean {
+  return /bicicleta|e-?bike|ebike|ciclism|bike\b|movilidad\s+(eléct|electr|urbana)|bicis\b|alta\s+gama.*bici|bici.*alta\s+gama|velocity/i.test(
     prompt
   );
 }

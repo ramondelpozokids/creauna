@@ -20,6 +20,8 @@ import { isAestheticMedicinePrompt } from './designDna';
 
 function detectSector(prompt: string): CreativeSectorId {
   const p = prompt.toLowerCase();
+  if (/bicicleta|e-?bike|ebike|ciclism|bike\s*shop|movilidad\s+(eléct|electr|urbana)|bicis\b/.test(p))
+    return 'bike';
   if (/cl[ií]nica|odontolog|dentista|dental|est[eé]tica|hialur/.test(p)) return 'clinic';
   if (/abogad|bufete|mercantil|despacho/.test(p)) return 'legal';
   if (/hotel|boutique\s+hotel|turismo\s+rural|resort/.test(p)) return 'hotel';
@@ -52,6 +54,7 @@ function extractName(prompt: string, lang: 'es' | 'en'): string {
     barber: { es: 'Barbería Tarik', en: 'Tarik Barbershop' },
     bakery: { es: 'Horno de María', en: "Maria's Bakery" },
     corporate: { es: 'Gestoría Integral', en: 'Integral Advisory' },
+    bike: { es: 'Velocity', en: 'Velocity' },
     fashion: { es: 'Maison', en: 'Maison' },
     default: { es: 'Tu marca', en: 'Your brand' },
   };
@@ -330,6 +333,52 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en', aestheticCl
       },
       cta: { es: ['Solicitar propuesta', 'Servicios'], en: ['Request proposal', 'Services'] },
       arc: ['hero', 'about', 'services', 'why', 'process', 'contact'],
+    },
+    bike: {
+      audience:
+        lang === 'es'
+          ? 'Ciclistas urbanos y entusiastas de e-bike de alta gama'
+          : 'Urban riders and high-end e-bike enthusiasts',
+      positioning:
+        lang === 'es'
+          ? 'Movilidad eléctrica premium: ingeniería, diseño y producto en primer plano'
+          : 'Premium electric mobility: engineering, design and product first',
+      brandTone: 'minimal',
+      artDirection: 'spatialMinimal',
+      visualLanguage: 'photographyDominant',
+      heroFamilies: ['fullBleedCenter', 'splitMediaRight', 'asymmetricOverlap'],
+      photoStyle: 'high-end bicycles and e-bikes in motion or studio — never office stock or coding screens',
+      aboutHeadline:
+        lang === 'es' ? 'Ingeniería y diseño sobre dos ruedas' : 'Engineering and design on two wheels',
+      aboutBody:
+        lang === 'es'
+          ? 'Cada bicicleta nace de precisión, materiales nobles y una experiencia de movilidad que se siente futura.'
+          : 'Every bike is born from precision, noble materials and a mobility experience that feels future-ready.',
+      services: {
+        es: [
+          'Bicicletas eléctricas de alta gama',
+          'Tecnología de asistencia avanzada',
+          'Configurador interactivo',
+          'Experiencias inmersivas',
+          'Laboratorio de innovación',
+        ],
+        en: [
+          'High-end electric bikes',
+          'Advanced assist technology',
+          'Interactive configurator',
+          'Immersive experiences',
+          'Innovation lab',
+        ],
+      },
+      hero: {
+        es: ['El futuro de la movilidad', 'Bicicletas de alta gama. Explora, configura, rueda.'],
+        en: ['The future of mobility', 'High-end bikes. Explore, configure, ride.'],
+      },
+      cta: {
+        es: ['Descubre la experiencia', 'Configura tu bicicleta'],
+        en: ['Discover the experience', 'Configure your bike'],
+      },
+      arc: ['hero', 'product', 'about', 'gallery', 'experience', 'contact'],
     },
     fashion: {
       audience: 'Style-conscious shoppers',

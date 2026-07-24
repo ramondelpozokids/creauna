@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Configurador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-0: #030304;
+--bg-1: #08080b;
+--platinum: #e4e7ec;
+--electric: #4ea8ff;
+--electric-2: #7dd3ff;
+--text: #e8ebf0;
+--text-dim: #8a90a0;
+--text-faint: #50566a;
+--glass: rgba(255,255,255,0.03);
+--glass-border: rgba(255,255,255,0.08);
+--font-display: 'Space Grotesk', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+}
+
+{ box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-0); color: var(--text); overflow-x: hidden; }
+body {
+font-family: var(--font-display);
+font-weight: 300;
+cursor: none;
+-webkit-font-smoothing: antialiased;
+line-height: 1.5;
+}
+@media (max-width: 900px) { body { cursor: auto; } }
+::selection { background: var(--electric); color: #000; }
+.cursor-dot, .cursor-ring {
+position: fixed; top: 0; left: 0;
+pointer-events: none; z-index: 9999;
+transform: translate(-50%, -50%);
+mix-blend-mode: difference;
+}
+.cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+.cursor-ring {
+width: 38px; height: 38px;
+border: 1px solid rgba(255,255,255,0.5);
+border-radius: 50%;
+transition: transform .15s ease-out, width .3s, height .3s;
+}
+.cursor-ring.hover { width: 70px; height: 70px; border-color: var(--electric); }
+@media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } }
+nav.top {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+padding: 1.5rem 3rem;
+display: flex; justify-content: space-between; align-items: center;
+background: rgba(5,5,8,0.8);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--glass-border);
+}
+.logo { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.35em; color: var(--platinum); }
+.logo span { color: var(--electric); font-weight: 600; }
+.nav-links { display: flex; gap: 2.5rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+.nav-links a { color: var(--text-dim); transition: color .3s; }
+.nav-links a:hover { color: var(--electric-2); }
+@media (max-width: 900px) { nav.top { padding: 1rem 1.5rem; } .nav-links { display: none; } }
+.hero {
+height: 50vh;
+min-height: 400px;
+display: flex; align-items: center; justify-content: center;
+position: relative;
+overflow: hidden;
+}
+.hero-bg {
+position: absolute; inset: 0;
+background: radial-gradient(ellipse at center, rgba(78,168,255,0.05), transparent 70%);
+}
+.hero-content {
+position: relative; z-index: 2;
+text-align: center;
+}
+.hero-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.5em;
+color: var(--electric);
+text-transform: uppercase;
+margin-bottom: 2rem;
+}
+.hero-title {
+font-size: clamp(3rem, 8vw, 7rem);
+font-weight: 300;
+letter-spacing: -0.02em;
+color: var(--platinum);
+line-height: 0.95;
+}
+.hero-title em { color: var(--electric-2); font-style: italic; }
+.configurator {
+padding: 5rem 3rem;
+max-width: 1600px;
+margin: 0 auto;
+}
+@media (max-width: 900px) { .configurator { padding: 3rem 1.5rem; } }
+.config-layout {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 5rem;
+align-items: center;
+margin-top: 5rem;
+}
+@media (max-width: 1100px) { .config-layout { grid-template-columns: 1fr; } }
+.config-visual {
+aspect-ratio: 1;
+position: relative;
+border: 1px solid var(--glass-border);
+background: radial-gradient(circle at center, rgba(78,168,255,0.05), transparent 70%);
+overflow: hidden;
+}
+#config-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.config-controls { display: flex; flex-direction: column; gap: 2rem; }
+.config-group {
+border-top: 1px solid var(--glass-border);
+padding-top: 1.5rem;
+}
+.config-group-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.3em;
+color: var(--text-faint);
+text-transform: uppercase;
+margin-bottom: 1rem;
+}
+.config-options {
+display: flex; flex-wrap: wrap; gap: 0.5rem;
+}
+.config-opt {
+padding: 0.6rem 1rem;
+border: 1px solid var(--glass-border);
+background: transparent;
+color: var(--text-dim);
+font-size: 0.75rem;
+letter-spacing: 0.1em;
+transition: all .3s;
+cursor: none;
+}
+@media (max-width: 900px) { .config-opt { cursor: pointer; } }
+.config-opt:hover { border-color: var(--electric); color: var(--platinum); }
+.config-opt.active {
+border-color: var(--electric);
+background: rgba(78,168,255,0.1);
+color: var(--electric-2);
+}
+.config-colors {
+display: flex; gap: 0.8rem;
+}
+.config-color {
+width: 36px; height: 36px;
+border-radius: 50%;
+border: 1px solid var(--glass-border);
+cursor: none;
+transition: transform .3s, border-color .3s;
+position: relative;
+}
+@media (max-width: 900px) { .config-color { cursor: pointer; } }
+.config-color:hover { transform: scale(1.1); }
+.config-color.active { border-color: var(--electric); box-shadow: 0 0 20px rgba(78,168,255,0.4); }
+.config-color.active::after {
+content: ''; position: absolute; inset: -6px;
+border: 1px solid var(--electric); border-radius: 50%;
+}
+.config-summary {
+margin-top: 3rem;
+padding: 2rem;
+border: 1px solid var(--glass-border);
+background: var(--glass);
+}
+.config-summary h4 {
+font-size: 1rem;
+color: var(--platinum);
+margin-bottom: 1rem;
+}
+.config-summary-price {
+font-size: 2.5rem;
+color: var(--electric-2);
+font-weight: 300;
+margin: 1rem 0;
+}
+.btn {
+padding: 1rem 2rem;
+font-size: 0.75rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+border: 1px solid var(--glass-border);
+background: transparent;
+color: var(--platinum);
+transition: all .4s;
+cursor: none;
+width: 100%;
+}
+@media (max-width: 900px) { .btn { cursor: pointer; } }
+.btn-primary {
+background: linear-gradient(135deg, rgba(78,168,255,0.15), rgba(78,168,255,0.05));
+border-color: rgba(78,168,255,0.3);
+}
+.btn:hover {
+border-color: var(--electric);
+box-shadow: 0 0 30px rgba(78,168,255,0.2);
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav class="top">
+<div class="logo">VELOCITY<span>·</span>X</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="models.html">Modelos</a>
+<a href="technology.html">Tecnología</a>
+<a href="ai.html">IA</a>
+<a href="lab.html">Laboratorio</a>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="hero-content">
+<div class="hero-label">Atelier digital</div>
+<h1 class="hero-title">Construye tu<br><em>obsesión</em>.</h1>
+</div>
+</section>
+
+<section class="configurator">
+<div class="config-layout">
+<div class="config-visual">
+<canvas id="config-canvas"></canvas>
+</div>
+<div class="config-controls">
+<div class="config-group">
+<div class="config-group-label">Color · Chassis</div>
+<div class="config-colors" id="config-colors">
+<div class="config-color active" style="background:#0a0a0d" data-color="#0a0a0d"></div>
+<div class="config-color" style="background:#c0c4cc" data-color="#c0c4cc"></div>
+<div class="config-color" style="background:#4ea8ff" data-color="#4ea8ff"></div>
+<div class="config-color" style="background:#8b6f47" data-color="#8b6f47"></div>
+<div class="config-color" style="background:#2a3a2a" data-color="#2a3a2a"></div>
+<div class="config-color" style="background:#5a1a2a" data-color="#5a1a2a"></div>
+</div>
+</div>
+<div class="config-group">
+<div class="config-group-label">Motor</div>
+<div class="config-options">
+<button class="config-opt active">VX-750 Standard</button>
+<button class="config-opt">VX-900 Sport</button>
+<button class="config-opt">VX-1200 Hyper</button>
+</div>
+</div>
+<div class="config-group">
+<div class="config-group-label">Batería · Grafeno</div>
+<div class="config-options">
+<button class="config-opt">400 Wh · 180 km</button>
+<button class="config-opt active">600 Wh · 320 km</button>
+<button class="config-opt">900 Wh · 480 km</button>
+</div>
+</div>
+<div class="config-group">
+<div class="config-group-label">Suspensión</div>
+<div class="config-options">
+<button class="config-opt">Rígida carbono</button>
+<button class="config-opt active">IA Adaptativa 120mm</button>
+<button class="config-opt">IA Adaptativa 160mm</button>
+</div>
+</div>
+<div class="config-group">
+<div class="config-group-label">Neumáticos</div>
+<div class="config-options">
+<button class="config-opt">Slick 25mm</button>
+<button class="config-opt active">All-road 38mm</button>
+<button class="config-opt">MTB 2.4"</button>
+</div>
+</div>
+<div class="config-group">
+<div class="config-group-label">Iluminación</div>
+<div class="config-options">
+<button class="config-opt">LED integrado</button>
+<button class="config-opt active">Láser adaptativo</button>
+<button class="config-opt">Matrix holográfico</button>
+</div>
+</div>
+<div class="config-summary">
+<h4>Tu configuración</h4>
+<div class="config-summary-price">€12,450</div>
+<button class="btn btn-primary">Reservar ahora</button>
+</div>
+</div>
+</div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = window.innerWidth/2, my = window.innerHeight/2;
+let rx = mx, ry = my;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function cursorLoop(){
+rx += (mx - rx) * 0.18;
+ry += (my - ry) * 0.18;
+dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+document.querySelectorAll('a, button, .config-color, .config-opt').forEach(el=>{
+el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+});
+
+// Configurator 3D
+const canvas = document.getElementById('config-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+camera.position.set(0, 0.5, 5);
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+function resize(){
+const r = canvas.parentElement.getBoundingClientRect();
+renderer.setSize(r.width, r.height);
+camera.aspect = r.width/r.height;
+camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+
+const amb = new THREE.AmbientLight(0x606080, 0.5);
+scene.add(amb);
+const key = new THREE.DirectionalLight(0xffffff, 1);
+key.position.set(3, 4, 5);
+scene.add(key);
+const rim = new THREE.PointLight(0x4ea8ff, 1, 10);
+rim.position.set(-3, 1, 2);
+scene.add(rim);
+
+const matFrame = new THREE.MeshPhongMaterial({color:0x0a0a0d, specular:0x4ea8ff, shininess:100});
+const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x1a3a5f, shininess:150});
+
+const bike = new THREE.Group();
+function makeWheel(r){
+const g = new THREE.Group();
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.07, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.04, 0.015, 8, 60), matAccent));
+for(let i=0;i<12;i++){
+const s = new THREE.Mesh(new THREE.CylinderGeometry(0.006,0.006,r*2-0.1,4), matFrame);
+s.rotation.z = (i/12)*Math.PI;
+g.add(s);
+}
+return g;
+}
+const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); bike.add(wR);
+const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); bike.add(wF);
+
+function tube(a,b,r=0.04){
+const d = new THREE.Vector3().subVectors(b,a);
+const l = d.length();
+const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matFrame);
+m.position.copy(a).add(b).multiplyScalar(0.5);
+m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+return m;
+}
+const bb = new THREE.Vector3(0,-0.5,0);
+const seat = new THREE.Vector3(-0.3,0.4,0);
+const head = new THREE.Vector3(0.8,0.4,0);
+bike.add(tube(bb,seat,0.05));
+bike.add(tube(bb,head,0.05));
+bike.add(tube(seat,head,0.04));
+bike.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+bike.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+
+const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.6,12), matFrame);
+hbar.rotation.z = Math.PI/2;
+hbar.position.set(0.9,0.55,0);
+bike.add(hbar);
+
+scene.add(bike);
+
+document.querySelectorAll('.config-color').forEach(c=>{
+c.addEventListener('click', ()=>{
+document.querySelectorAll('.config-color').forEach(x=>x.classList.remove('active'));
+c.classList.add('active');
+const col = c.dataset.color;
+matFrame.color.set(col);
+});
+});
+
+document.querySelectorAll('.config-opt').forEach(o=>{
+o.addEventListener('click', ()=>{
+const siblings = o.parentElement.querySelectorAll('.config-opt');
+siblings.forEach(s=>s.classList.remove('active'));
+o.classList.add('active');
+});
+});
+
+let t=0;
+function animate(){
+t += 0.005;
+bike.rotation.y = t;
+wR.rotation.z = t*3;
+wF.rotation.z = t*3;
+renderer.render(scene, camera);
+requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>

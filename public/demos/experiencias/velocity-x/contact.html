@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Contacto</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg-0:#030304;--bg-1:#08080b;--platinum:#e4e7ec;--electric:#4ea8ff;--electric-2:#7dd3ff;--text:#e8ebf0;--text-dim:#8a90a0;--text-faint:#50566a;--glass:rgba(255,255,255,0.03);--glass-border:rgba(255,255,255,0.08);--font-display:'Space Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{background:var(--bg-0);color:var(--text);overflow-x:hidden}body{font-family:var(--font-display);font-weight:300;cursor:none;-webkit-font-smoothing:antialiased;line-height:1.5}@media(max-width:900px){body{cursor:auto}}
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%}.cursor-ring{width:38px;height:38px;border:1px solid rgba(255,255,255,0.5);border-radius:50%;transition:width .3s,height .3s}.cursor-ring.hover{width:70px;height:70px;border-color:var(--electric)}@media(max-width:900px){.cursor-dot,.cursor-ring{display:none}}
+nav.top{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}.logo{font-size:1.1rem;font-weight:500;letter-spacing:.35em;color:var(--platinum)}.logo span{color:var(--electric);font-weight:600}.nav-links{display:flex;gap:2.5rem;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase}.nav-links a{color:var(--text-dim);transition:color .3s}.nav-links a:hover{color:var(--electric-2)}@media(max-width:900px){nav.top{padding:1rem 1.5rem}.nav-links{display:none}}
+.hero{height:50vh;min-height:350px;display:flex;align-items:center;justify-content:center;text-align:center}.hero-title{font-size:clamp(3rem,8vw,7rem);font-weight:200;color:var(--platinum);line-height:.95}
+.contact-section{padding:5rem 3rem 10rem;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem}@media(max-width:900px){.contact-section{grid-template-columns:1fr;gap:3rem}}
+.contact-info h3{font-size:1.5rem;font-weight:300;color:var(--platinum);margin-bottom:2rem}
+.contact-block{margin-bottom:2.5rem}.contact-block .label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:.5rem}.contact-block .value{font-size:1rem;color:var(--text-dim);line-height:1.6}
+.contact-form{display:flex;flex-direction:column;gap:1.5rem}
+.form-group label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.3em;color:var(--text-faint);text-transform:uppercase;display:block;margin-bottom:.5rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:1rem;border:1px solid var(--glass-border);background:var(--glass);color:var(--platinum);font-family:var(--font-display);font-size:.95rem;font-weight:300;transition:border-color .3s;outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--electric)}.form-group textarea{min-height:150px;resize:vertical}
+.form-group select option{background:#0a0a0d;color:var(--platinum)}
+.btn{padding:1.2rem 3rem;font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;border:1px solid rgba(78,168,255,0.3);background:linear-gradient(135deg,rgba(78,168,255,0.15),rgba(78,168,255,0.05));color:var(--platinum);transition:all .4s;cursor:none;font-family:var(--font-display);width:100%}@media(max-width:900px){.btn{cursor:pointer}}.btn:hover{border-color:var(--electric);box-shadow:0 0 40px rgba(78,168,255,0.3)}
+</style>
+</head>
+<body>
+<div class="cursor-ring" id="cursor-ring"></div><div class="cursor-dot" id="cursor-dot"></div>
+<nav class="top"><div class="logo">VELOCITY<span>·</span>X</div><div class="nav-links"><a href="index.html">Inicio</a><a href="models.html">Modelos</a><a href="technology.html">Tecnología</a></div></nav>
+<section class="hero"><div><h1 class="hero-title">Contacto</h1></div></section>
+<section class="contact-section">
+<div class="contact-info">
+<h3>Hablemos del futuro</h3>
+<div class="contact-block"><div class="label">Sede Global</div><div class="value">VELOCITY X AG<br>Bahnhofstrasse 42, 8001<br>Zurich, Suiza</div></div>
+<div class="contact-block"><div class="label">Laboratorio de I+D</div><div class="value">Ubicación clasificada<br>Alpes Suizos<br>Coordenadas bajo NDA</div></div>
+<div class="contact-block"><div class="label">Oficina Asia-Pacífico</div><div class="value">VELOCITY X KK<br>Shibuya Scramble Square 39F<br>Tokyo 150-6139, Japón</div></div>
+<div class="contact-block"><div class="label">Email</div><div class="value">hello@velocityx.com<br>press@velocityx.com<br>engineering@velocityx.com</div></div>
+<div class="contact-block"><div class="label">Teléfono</div><div class="value">+41 44 000 0000<br>Lun-Vie, 09:00-18:00 CET</div></div>
+</div>
+<form class="contact-form" onsubmit="event.preventDefault();this.querySelector('.btn').textContent='ENVIADO ✓';this.querySelector('.btn').style.borderColor='var(--electric)'">
+<div class="form-group"><label>Nombre</label><input type="text" placeholder="Tu nombre completo" required></div>
+<div class="form-group"><label>Email</label><input type="email" placeholder="tu@email.com" required></div>
+<div class="form-group"><label>Asunto</label><select><option>Reserva de modelo</option><option>Prensa y medios</option><option>Colaboraciones</option><option>Soporte técnico</option><option>Otro</option></select></div>
+<div class="form-group"><label>Mensaje</label><textarea placeholder="Cuéntanos sobre el futuro que imaginas..."></textarea></div>
+<button type="submit" class="btn">Enviar mensaje</button>
+</form>
+</section>
+<script>
+const dot=document.getElementById('cursor-dot'),ring=document.getElementById('cursor-ring');let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});(function l(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(l)})();document.querySelectorAll('a,button,input,textarea,select').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});
+</script></body></html>

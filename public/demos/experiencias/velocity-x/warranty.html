@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Garantía</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg-0:#030304;--bg-1:#08080b;--platinum:#e4e7ec;--electric:#4ea8ff;--electric-2:#7dd3ff;--text:#e8ebf0;--text-dim:#8a90a0;--text-faint:#50566a;--glass:rgba(255,255,255,0.03);--glass-border:rgba(255,255,255,0.08);--font-display:'Space Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{background:var(--bg-0);color:var(--text);overflow-x:hidden}body{font-family:var(--font-display);font-weight:300;cursor:none;-webkit-font-smoothing:antialiased;line-height:1.5}@media(max-width:900px){body{cursor:auto}}
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%}.cursor-ring{width:38px;height:38px;border:1px solid rgba(255,255,255,0.5);border-radius:50%;transition:width .3s,height .3s}.cursor-ring.hover{width:70px;height:70px;border-color:var(--electric)}@media(max-width:900px){.cursor-dot,.cursor-ring{display:none}}
+nav.top{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}.logo{font-size:1.1rem;font-weight:500;letter-spacing:.35em;color:var(--platinum)}.logo span{color:var(--electric);font-weight:600}.nav-links{display:flex;gap:2.5rem;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase}.nav-links a{color:var(--text-dim);transition:color .3s}.nav-links a:hover{color:var(--electric-2)}@media(max-width:900px){nav.top{padding:1rem 1.5rem}.nav-links{display:none}}
+.hero{height:50vh;min-height:350px;display:flex;align-items:center;justify-content:center;text-align:center}.hero-title{font-size:clamp(3rem,8vw,7rem);font-weight:200;color:var(--platinum);line-height:.95}
+.warranty-section{padding:5rem 3rem 10rem;max-width:1000px;margin:0 auto}
+.warranty-intro{font-size:1.2rem;color:var(--text-dim);line-height:1.8;margin-bottom:5rem;text-align:center;max-width:700px;margin-left:auto;margin-right:auto}
+.warranty-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-bottom:5rem}
+.tier-card{padding:3rem;border:1px solid var(--glass-border);background:var(--glass);transition:all .5s;text-align:center}.tier-card:hover{border-color:rgba(78,168,255,0.3);transform:translateY(-10px)}.tier-card.featured{border-color:var(--electric);background:rgba(78,168,255,0.03)}
+.tier-name{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.4em;color:var(--electric);text-transform:uppercase;margin-bottom:1rem}
+.tier-years{font-size:4rem;font-weight:200;color:var(--platinum);margin-bottom:.5rem}
+.tier-label{font-size:.9rem;color:var(--text-dim);margin-bottom:2rem}
+.tier-features{list-style:none;text-align:left;display:flex;flex-direction:column;gap:.8rem}.tier-features li{font-size:.85rem;color:var(--text-dim);padding-left:1.5rem;position:relative}.tier-features li::before{content:'→';position:absolute;left:0;color:var(--electric);font-size:.8rem}
+.faq{margin-top:5rem}.faq h3{font-size:2rem;font-weight:300;color:var(--platinum);margin-bottom:3rem;text-align:center}
+.faq-item{border-bottom:1px solid var(--glass-border);padding:2rem 0}.faq-q{font-size:1.1rem;color:var(--platinum);margin-bottom:1rem;font-weight:400}.faq-a{font-size:.9rem;color:var(--text-dim);line-height:1.7}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 1s,transform 1s}.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="cursor-ring" id="cursor-ring"></div><div class="cursor-dot" id="cursor-dot"></div>
+<nav class="top"><div class="logo">VELOCITY<span>·</span>X</div><div class="nav-links"><a href="index.html">Inicio</a><a href="models.html">Modelos</a><a href="contact.html">Contacto</a></div></nav>
+<section class="hero"><div><h1 class="hero-title">Garantía</h1></div></section>
+<section class="warranty-section">
+<p class="warranty-intro reveal">Cada VELOCITY X es una promesa. Una promesa de ingeniería sin compromiso, materiales sin rival y durabilidad sin precedentes. Nuestra garantía refleja esa convicción.</p>
+<div class="warranty-tiers reveal">
+<div class="tier-card"><div class="tier-name">Standard</div><div class="tier-years">10</div><div class="tier-label">Años de cobertura</div><ul class="tier-features"><li>Cuadro y horquilla</li><li>Motor y batería</li><li>Electrónica integrada</li><li>Actualizaciones OTA de por vida</li></ul></div>
+<div class="tier-card featured"><div class="tier-name">Incluida</div><div class="tier-years">20</div><div class="tier-label">Años de cobertura</div><ul class="tier-features"><li>Todo lo de Standard</li><li>Suspensión IA</li><li>Sensores biométricos</li><li>Sustitución de batería gratuita</li><li>Ingeniero dedicado</li></ul></div>
+<div class="tier-card"><div class="tier-name">Lifetime</div><div class="tier-years">∞</div><div class="tier-label">Cobertura de por vida</div><ul class="tier-features"><li>Todo lo de 20 años</li><li>Reparación de carbono autorreparable</li><li>Actualización de hardware</li><li>Reemplazo total ante defecto</li><li>Acceso prioritario a nuevos modelos</li></ul></div>
+</div>
+<div class="faq reveal">
+<h3>Preguntas frecuentes</h3>
+<div class="faq-item"><div class="faq-q">¿La garantía es transferible?</div><div class="faq-a">Sí. La garantía sigue a la bicicleta, no al propietario. Si vendes tu VELOCITY X, el nuevo propietario hereda la cobertura restante.</div></div>
+<div class="faq-item"><div class="faq-q">¿Qué pasa si la IA detecta un problema?</div><div class="faq-a">VX-CORE agenda automáticamente una revisión con tu ingeniero dedicado. Si es un defecto cubierto, la reparación es gratuita y se realiza en tu domicilio.</div></div>
+<div class="faq-item"><div class="faq-q">¿Las actualizaciones OTA tienen coste?</div><div class="faq-a">Nunca. Todas las actualizaciones de software, IA y firmware son gratuitas de por vida para todos los propietarios de VELOCITY X.</div></div>
+</div>
+</section>
+<script>
+const dot=document.getElementById('cursor-dot'),ring=document.getElementById('cursor-ring');let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});(function l(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(l)})();document.querySelectorAll('a,.tier-card,.faq-item').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script></body></html>

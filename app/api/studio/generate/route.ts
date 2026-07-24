@@ -330,7 +330,8 @@ export async function POST(req: Request) {
       unlimited,
       snapshotId,
       diffSummary,
-      // Interno solo en logs/audit — no exponer stack al cliente
+      buildPhase: result.buildPhase,
+      sitePages: result.sitePages,
     });
   } catch (error) {
     console.error('api/studio/generate:', error);

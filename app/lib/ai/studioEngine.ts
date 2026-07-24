@@ -91,6 +91,10 @@ export interface StudioGenerateResult {
   quoteRedirect?: boolean;
   /** Reservado (compat). No empujar al cliente a wizard/deberes. */
   suggestDiscovery?: boolean;
+  /** Ciclo: preview index → refine → expand → final */
+  buildPhase?: import('./creaunaBuildPhases').CreaunaBuildPhase;
+  /** Páginas HTML satélite (contacto, legales…) tras expandir */
+  sitePages?: Record<string, string>;
 }
 
 function cloneSections(sections: PreviewSection[]): PreviewSection[] {
@@ -535,14 +539,19 @@ async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerate
           return {
             message:
               input.lang === 'es'
-                ? `${partsEs.join(' y ')}, sin tocar el resto.`
-                : `${partsEn.join(' and ')}, leaving the rest intact.`,
-            previewSections: patchSection(cloneSections(input.previewSections), full.id, patchedHtml),
+                ? `${partsEs.join(' y ')}, sin tocar el resto. ¿Algo más en la index? Cuando te guste, dime y construyo el resto de páginas.`
+                : `${partsEn.join(' and ')}, leaving the rest intact. Anything else on the index? When you’re happy, tell me and I’ll build the remaining pages.`,
+            previewSections: patchSection(
+              cloneSections(input.previewSections),
+              full.id,
+              (await import('./creaunaBuildPhases')).stampBuildPhase(patchedHtml, 'index_refine')
+            ),
             motorsUsed: ['code', 'ux'],
             source: 'rules',
             changedSectionIds: [full.id],
             pipelineStage: 'rules',
             providersUsed: ['surgical_delta'],
+            buildPhase: 'index_refine',
           };
         }
       }
@@ -561,18 +570,23 @@ async function applyAIChange(input: StudioGenerateInput): Promise<StudioGenerate
           message:
             input.lang === 'es'
               ? rewritten.repaired
-                ? 'Cambio aplicado y reparado sobre tu diseño.'
-                : 'Cambio aplicado sobre tu diseño, según tu pedido.'
+                ? 'He actualizado la index (con reparación). ¿Algo más? Cuando te guste, dime y genero el resto de páginas.'
+                : 'He actualizado la index según tu pedido. ¿Algo más? Cuando te guste, dime y genero el resto de páginas.'
               : rewritten.repaired
-                ? 'Change applied and repaired on your design.'
-                : 'Change applied on your design, per your request.',
-          previewSections: patchSection(cloneSections(input.previewSections), full.id, rewrittenHtml),
+                ? 'Updated the index (with repair). Anything else? When you’re happy, tell me and I’ll generate the remaining pages.'
+                : 'Updated the index per your request. Anything else? When you’re happy, tell me and I’ll generate the remaining pages.',
+          previewSections: patchSection(
+            cloneSections(input.previewSections),
+            full.id,
+            (await import('./creaunaBuildPhases')).stampBuildPhase(rewrittenHtml, 'index_refine')
+          ),
           motorsUsed: ['visual', 'code'],
           source: rewritten.falImages ? 'hybrid' : 'ai',
           changedSectionIds: [full.id],
           pipelineStage: 'prompt_first',
           falImages: rewritten.falImages,
-          providersUsed: [rewritten.provider],
+          providersUsed: rewritten.provider ? [String(rewritten.provider)] : ['code'],
+          buildPhase: 'index_refine',
         };
       }
 
@@ -754,6 +768,50 @@ export async function generateStudioChange(input: StudioGenerateInput): Promise<
             quoteRedirect: true,
           };
         }
+      }
+    }
+  }
+
+  // Expandir satélites: solo cuando el cliente lo pide tras estar contento con la index
+  if (input.action === 'change' && isFullPagePreview(input.previewSections)) {
+    const { clientWantsExpandPages, messageExpandFinal, stampBuildPhase } = await import(
+      './creaunaBuildPhases'
+    );
+    if (clientWantsExpandPages(input.prompt)) {
+      const full =
+        input.previewSections.find((s) => s.type === 'fullpage') ||
+        input.previewSections.find((s) => /<!DOCTYPE\s+html/i.test(s.html)) ||
+        input.previewSections[0];
+      if (full?.html && full.html.length > 4000) {
+        const { expandSitePagesWithQwen } = await import('./qwenSatellitePages');
+        const expanded = await expandSitePagesWithQwen({
+          indexHtml: full.html,
+          prompt: input.prompt,
+          lang: input.lang,
+          businessName: input.businessName,
+        });
+        let html = expanded.indexHtml;
+        // Huecos de imagen → pack / fal si está disponible
+        try {
+          const { ensureBriefImagesInHtml } = await import('./promptFirstQuality');
+          html = ensureBriefImagesInHtml(html, input.clientImageUrls || []);
+        } catch {
+          /* optional */
+        }
+        html = stampBuildPhase(html, expanded.phase);
+        const names = Object.keys(expanded.pages);
+        return {
+          message: messageExpandFinal(input.lang, names),
+          previewSections: patchSection(cloneSections(input.previewSections), full.id, html),
+          motorsUsed: ['code'],
+          source: expanded.ok ? 'ai' : 'hybrid',
+          changedSectionIds: [full.id],
+          pipelineStage: 'prompt_first',
+          providersUsed: [expanded.provider, 'qwen_satellites'],
+          buildPhase: expanded.phase,
+          sitePages: expanded.pages,
+          businessName: input.businessName,
+        };
       }
     }
   }

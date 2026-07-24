@@ -25,5 +25,13 @@ El cliente compra una web que haga crecer el negocio (calidad agencia), no “c�
 - Cambios del cliente: aplicarlos sin defender el diseño anterior
 - SEO + UX + conversión desde el primer HTML
 
+## Entrega a la primera (duro)
+
+- La versión que sale de CREAUNA **es** el producto final según el brief: lo más profesional que sepamos.
+- Orden: brief → crear → **revisar** (legibilidad del producto, hero/luz, sector, copy, imágenes) → corregir si falla → **solo entonces entregar**.
+- PROHIBIDO entregar un borrador “a mejorar” o “a rediseñar”. Rediseñar = solo cuando el cliente pide un cambio **después** de una entrega correcta.
+- PROHIBIDO frases/actitud de “lo voy a rediseñar / mejorar” como respuesta a un fallo de calidad: eso debió corregirse **antes** de salir.
+- Objetivo: que no parezca “como las demás”; las pruebas existen para que salga perfecta, no para justificar entregas flojas.
+
 Fuente runtime: `app/lib/ai/creaunaConstructorManifesto.ts`
 Doc: `docs/CREAUNA-CONSTRUCTOR-INTELIGENTE.md`

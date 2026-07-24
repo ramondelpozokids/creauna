@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VELOCITY X — Experiencia CREAUNA (original)</title>
+  <meta name="description" content="Obra interactiva original: no vendemos bicicletas, vendemos la sensación de viajar al futuro." />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="grain" aria-hidden="true"></div>
+
+  <header class="vx-nav" id="nav">
+    <a class="vx-mark" href="#hero" aria-label="VELOCITY X inicio">
+      <span class="vx-mark-dot"></span>
+      VELOCITY<span>X</span>
+    </a>
+    <nav class="vx-links" aria-label="Principal">
+      <a href="#atlas">Atlas</a>
+      <a href="#materia">Materia</a>
+      <a href="#nucleo">Núcleo</a>
+      <a href="#forja">Forja</a>
+      <a href="#orbita">Órbita</a>
+    </nav>
+    <a class="vx-cta" href="#forja">Reservar prototipo</a>
+  </header>
+
+  <main>
+    <!-- HERO: pantalla completa + canvas 3D -->
+    <section id="hero" class="vx-hero">
+      <canvas id="vx-canvas" aria-label="Bicicleta VELOCITY X en 3D"></canvas>
+      <div class="vx-hero-veil" aria-hidden="true"></div>
+      <div class="vx-hero-copy">
+        <p class="vx-kicker" data-split>SERIE ATLAS · PROTOTIPO VIVO</p>
+        <h1 class="vx-h1" data-split>Silencio a<br />ochenta.</h1>
+        <p class="vx-lede">
+          No vendemos bicicletas. Vendemos la sensación de viajar al futuro —
+          ingeniería aeroespacial, IA predictiva y materia que aún no tiene nombre comercial.
+        </p>
+        <div class="vx-hero-actions">
+          <a class="vx-btn" href="#cine">Entrar en la narrativa</a>
+          <a class="vx-btn vx-btn-ghost" href="#forja">Abrir la forja</a>
+        </div>
+      </div>
+      <aside class="vx-specs" aria-label="Cifras del prototipo">
+        <div><strong>1.8s</strong><span>0 → 60</span></div>
+        <div><strong>520km</strong><span>autonomía grafeno</span></div>
+        <div><strong>7.1kg</strong><span>masa en vacío</span></div>
+      </aside>
+      <p class="vx-scroll-hint">Desciende — la máquina se abre</p>
+    </section>
+
+    <!-- CINE SCROLL: historia por escenas -->
+    <section id="cine" class="vx-cine" data-scene-root>
+      <div class="vx-cine-sticky">
+        <div class="vx-cine-label" id="cine-label">01 · Oscuridad</div>
+        <p class="vx-cine-line" id="cine-line">Antes del movimiento, solo hay vacío conductor.</p>
+      </div>
+      <div class="vx-cine-track" aria-hidden="true">
+        <div data-beat="0"></div>
+        <div data-beat="1"></div>
+        <div data-beat="2"></div>
+        <div data-beat="3"></div>
+        <div data-beat="4"></div>
+        <div data-beat="5"></div>
+        <div data-beat="6"></div>
+        <div data-beat="7"></div>
+      </div>
+    </section>
+
+    <!-- ATLAS: modelos con personalidad -->
+    <section id="atlas" class="vx-section vx-atlas">
+      <header class="vx-sec-head">
+        <p class="vx-kicker">ATLAS DE MÁQUINAS</p>
+        <h2>Diez cuerpos.<br />Diez temperamentos.</h2>
+      </header>
+      <div class="vx-atlas-rail" id="atlas-rail" role="list"></div>
+    </section>
+
+    <!-- MATERIA: tecnologías como escenas -->
+    <section id="materia" class="vx-section vx-materia">
+      <header class="vx-sec-head">
+        <p class="vx-kicker">MATERIA VIVA</p>
+        <h2>Cada tecnología<br />es una película.</h2>
+      </header>
+      <div class="vx-tech-stack" id="tech-stack"></div>
+    </section>
+
+    <!-- NÚCLEO: IA -->
+    <section id="nucleo" class="vx-section vx-nucleo">
+      <div class="vx-nucleo-stage">
+        <canvas id="ai-canvas" aria-hidden="true"></canvas>
+        <div class="vx-nucleo-copy">
+          <p class="vx-kicker">NÚCLEO · IA INTEGRADA</p>
+          <h2>Aprende tu pedalada<br />antes de que la sientas.</h2>
+          <p class="vx-lede" id="ai-speak">
+            Analizo terreno, fatiga y flujo de potencia. Predigo fallos. Adapto torque milisegundo a milisegundo.
+          </p>
+          <div class="vx-ai-chips" id="ai-chips"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORJA: configurador 3D -->
+    <section id="forja" class="vx-section vx-forja">
+      <header class="vx-sec-head">
+        <p class="vx-kicker">LA FORJA</p>
+        <h2>Configura sin recargar.<br />Todo responde en vivo.</h2>
+      </header>
+      <div class="vx-forja-grid">
+        <aside class="vx-forja-panel" id="forja-panel"></aside>
+        <div class="vx-forja-stage">
+          <canvas id="cfg-canvas" aria-label="Configurador 3D VELOCITY X"></canvas>
+          <p class="vx-forja-hint">Arrastra para orbitar · scroll para acercar</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPARADOR -->
+    <section id="duelo" class="vx-section vx-duelo">
+      <header class="vx-sec-head">
+        <p class="vx-kicker">DUELO</p>
+        <h2>Dos máquinas.<br />Pieza a pieza.</h2>
+      </header>
+      <div class="vx-duelo-stage">
+        <button type="button" class="vx-duelo-pick" data-side="a" id="duel-a">ATLAS</button>
+        <div class="vx-duelo-vs">VS</div>
+        <button type="button" class="vx-duelo-pick" data-side="b" id="duel-b">AETHER</button>
+      </div>
+      <ul class="vx-duelo-parts" id="duel-parts"></ul>
+    </section>
+
+    <!-- ÓRBITA / laboratorio + footer estación -->
+    <section id="orbita" class="vx-section vx-orbita">
+      <header class="vx-sec-head">
+        <p class="vx-kicker">ÓRBITA · LABORATORIO</p>
+        <h2>Donde nace<br />lo que aún no existe.</h2>
+      </header>
+      <div class="vx-lab" id="lab-grid"></div>
+    </section>
+
+    <footer class="vx-station" id="station">
+      <canvas id="station-canvas" aria-hidden="true"></canvas>
+      <div class="vx-station-copy">
+        <p class="vx-kicker">ESTACIÓN VX</p>
+        <h2>Gravedad cero.<br />Pedal infinito.</h2>
+        <p class="vx-lede">Experiencia original CREAUNA — inventada desde el brief, sin clonar ninguna web existente.</p>
+        <a class="vx-btn" href="#hero">Volver al silencio</a>
+      </div>
+    </footer>
+  </main>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="./js/main.js?v=3"></script>
+</body>
+</html>

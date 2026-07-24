@@ -203,22 +203,6 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     kind: 'project',
   },
   {
-    slug: 'beachsafe',
-    nameEs: 'BeachSafe',
-    nameEn: 'BeachSafe',
-    descEs:
-      'Taquillas inteligentes de playa: reserva, experiencia y tecnología para entrar al mar con las manos vacías.',
-    descEn:
-      'Smart beach lockers: booking, experience and tech so you enter the sea empty-handed.',
-    demoPath: '/demos/clientes/beachsafe/index.html',
-    previewImage:
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&h=600&fit=crop&q=80',
-    categoryKey: 'sport',
-    categoryLabelEs: 'Playa & tech',
-    categoryLabelEn: 'Beach & tech',
-    kind: 'project',
-  },
-  {
     slug: 'chiringuito-los-leones',
     nameEs: 'Chiringuito Los Leones',
     nameEn: 'Chiringuito Los Leones',
@@ -232,6 +216,22 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryLabelEs: 'Chiringuito',
     categoryLabelEn: 'Beach bar',
     kind: 'project',
+  },
+  {
+    slug: 'velocity-x',
+    nameEs: 'VELOCITY X',
+    nameEn: 'VELOCITY X',
+    descEs:
+      'Demo futurista de movilidad e-bike: experiencia 3D, configurador, modelos y laboratorio. Sitio multipágina de alto impacto.',
+    descEn:
+      'Futuristic e-bike mobility demo: 3D experience, configurator, models and lab. High-impact multi-page site.',
+    demoPath: '/demos/experiencias/velocity-x/index.html',
+    previewImage:
+      'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=900&h=600&fit=crop&q=80',
+    categoryKey: 'creative',
+    categoryLabelEs: 'Futurista',
+    categoryLabelEn: 'Futuristic',
+    kind: 'template',
   },
 ];
 

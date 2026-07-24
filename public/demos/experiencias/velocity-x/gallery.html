@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VELOCITY X · Galería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-0: #030304;
+--bg-1: #08080b;
+--bg-2: #0d0d12;
+--platinum: #e4e7ec;
+--electric: #4ea8ff;
+--electric-2: #7dd3ff;
+--text: #e8ebf0;
+--text-dim: #8a90a0;
+--text-faint: #50566a;
+--glass: rgba(255,255,255,0.03);
+--glass-border: rgba(255,255,255,0.08);
+--font-display: 'Space Grotesk', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+}
+
+{ box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-0); color: var(--text); overflow-x: hidden; }
+body {
+font-family: var(--font-display);
+font-weight: 300;
+cursor: none;
+-webkit-font-smoothing: antialiased;
+line-height: 1.5;
+}
+@media (max-width: 900px) { body { cursor: auto; } }
+::selection { background: var(--electric); color: #000; }
+.cursor-dot, .cursor-ring {
+position: fixed; top: 0; left: 0;
+pointer-events: none; z-index: 9999;
+transform: translate(-50%, -50%);
+mix-blend-mode: difference;
+}
+.cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+.cursor-ring {
+width: 38px; height: 38px;
+border: 1px solid rgba(255,255,255,0.5);
+border-radius: 50%;
+transition: transform .15s ease-out, width .3s, height .3s;
+}
+.cursor-ring.hover { width: 70px; height: 70px; border-color: var(--electric); }
+@media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } }
+nav.top {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+padding: 1.5rem 3rem;
+display: flex; justify-content: space-between; align-items: center;
+background: rgba(5,5,8,0.8);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--glass-border);
+}
+.logo { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.35em; color: var(--platinum); }
+.logo span { color: var(--electric); font-weight: 600; }
+.nav-links { display: flex; gap: 2.5rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+.nav-links a { color: var(--text-dim); transition: color .3s; }
+.nav-links a:hover { color: var(--electric-2); }
+@media (max-width: 900px) { nav.top { padding: 1rem 1.5rem; } .nav-links { display: none; } }
+.hero {
+height: 60vh;
+min-height: 450px;
+display: flex; align-items: center; justify-content: center;
+position: relative;
+overflow: hidden;
+}
+.hero-bg {
+position: absolute; inset: 0;
+background: radial-gradient(ellipse at center, rgba(78,168,255,0.05), transparent 70%);
+}
+.hero-content {
+position: relative; z-index: 2;
+text-align: center;
+}
+.hero-label {
+font-family: var(--font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.5em;
+color: var(--electric);
+text-transform: uppercase;
+margin-bottom: 2rem;
+}
+.hero-title {
+font-size: clamp(3rem, 8vw, 7rem);
+font-weight: 300;
+letter-spacing: -0.02em;
+color: var(--platinum);
+line-height: 0.95;
+}
+.hero-title em { color: var(--electric-2); font-style: italic; }
+.gallery-section {
+padding: 5rem 3rem;
+max-width: 1600px;
+margin: 0 auto;
+}
+@media (max-width: 900px) { .gallery-section { padding: 3rem 1.5rem; } }
+.gal-stage {
+margin-top: 3rem;
+height: 80vh;
+min-height: 600px;
+position: relative;
+border: 1px solid var(--glass-border);
+background: radial-gradient(circle at center, rgba(78,168,255,0.03), transparent 70%);
+overflow: hidden;
+}
+#gal-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gal-controls {
+position: absolute; bottom: 2rem; left: 50%;
+transform: translateX(-50%);
+display: flex; gap: 1rem;
+z-index: 5;
+flex-wrap: wrap;
+justify-content: center;
+}
+.gal-btn {
+padding: 0.7rem 1.5rem;
+border: 1px solid var(--glass-border);
+background: rgba(0,0,0,0.5);
+backdrop-filter: blur(10px);
+color: var(--text-dim);
+font-size: 0.7rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+transition: all .3s;
+cursor: none;
+}
+@media (max-width: 900px) { .gal-btn { cursor: pointer; } }
+.gal-btn:hover { border-color: var(--electric); color: var(--platinum); }
+.gal-btn.active { border-color: var(--electric); color: var(--electric-2); background: rgba(78,168,255,0.1); }
+.gal-info {
+margin-top: 3rem;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 2rem;
+}
+.gal-info-card {
+padding: 2rem;
+border: 1px solid var(--glass-border);
+background: var(--glass);
+transition: all .4s;
+}
+.gal-info-card:hover {
+border-color: rgba(78,168,255,0.3);
+transform: translateY(-5px);
+}
+.gal-info-card h4 {
+font-size: 1rem;
+color: var(--platinum);
+margin-bottom: 0.5rem;
+}
+.gal-info-card p {
+font-size: 0.85rem;
+color: var(--text-dim);
+line-height: 1.6;
+}
+.reveal {
+opacity: 0;
+transform: translateY(40px);
+transition: opacity 1s, transform 1s;
+}
+.reveal.visible {
+opacity: 1;
+transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav class="top">
+<div class="logo">VELOCITY<span>·</span>X</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="models.html">Modelos</a>
+<a href="technology.html">Tecnología</a>
+<a href="configurator.html">Configurador</a>
+<a href="ai.html">IA</a>
+<a href="lab.html">Laboratorio</a>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="hero-content">
+<div class="hero-label">Museo interactivo</div>
+<h1 class="hero-title">Obsérvala desde<br><em>todos los ángulos</em>.</h1>
+</div>
+</section>
+
+<section class="gallery-section">
+<div class="gal-stage reveal">
+<canvas id="gal-canvas"></canvas>
+<div class="gal-controls">
+<button class="gal-btn active" data-mode="rotate">Rotar</button>
+<button class="gal-btn" data-mode="explode">Explotar</button>
+<button class="gal-btn" data-mode="wire">Wireframe</button>
+<button class="gal-btn" data-mode="xray">Rayos X</button>
+</div>
+</div>
+
+<div class="gal-info reveal">
+<div class="gal-info-card">
+<h4>Rotar</h4>
+<p>Explora la bicicleta en 360°. Observa cada detalle del diseño aerodinámico.</p>
+</div>
+<div class="gal-info-card">
+<h4>Explotar</h4>
+<p>Desmonta la bicicleta pieza por pieza. Descubre la ingeniería interior.</p>
+</div>
+<div class="gal-info-card">
+<h4>Wireframe</h4>
+<p>Visualiza la estructura geométrica. La matemática detrás de la perfección.</p>
+</div>
+<div class="gal-info-card">
+<h4>Rayos X</h4>
+<p>Penetra la superficie. Descubre los componentes internos y sistemas integrados.</p>
+</div>
+</div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = window.innerWidth/2, my = window.innerHeight/2;
+let rx = mx, ry = my;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function cursorLoop(){
+rx += (mx - rx) * 0.18;
+ry += (my - ry) * 0.18;
+dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+document.querySelectorAll('a, button, .gal-btn, .gal-info-card').forEach(el=>{
+el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+});
+
+const io = new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting) e.target.classList.add('visible');
+});
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Gallery 3D
+const canvas = document.getElementById('gal-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+camera.position.set(0, 0.5, 5);
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+function resize(){
+const r = canvas.parentElement.getBoundingClientRect();
+renderer.setSize(r.width, r.height);
+camera.aspect = r.width/r.height;
+camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+
+const amb = new THREE.AmbientLight(0x606080, 0.6);
+scene.add(amb);
+const key = new THREE.DirectionalLight(0xffffff, 1.2);
+key.position.set(5,5,5);
+scene.add(key);
+const rim = new THREE.PointLight(0x4ea8ff, 1.5, 10);
+rim.position.set(-3,1,2);
+scene.add(rim);
+
+const bike = new THREE.Group();
+const matFrame = new THREE.MeshPhongMaterial({color:0x1a1a1f, specular:0x4ea8ff, shininess:120, wireframe:false});
+const matAccent = new THREE.MeshPhongMaterial({color:0x4ea8ff, emissive:0x2a5a8f, shininess:150});
+
+function makeWheel(r){
+const g = new THREE.Group();
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.08, 16, 60), new THREE.MeshPhongMaterial({color:0x0a0a0d, shininess:80})));
+g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.05, 0.02, 8, 60), matAccent));
+for(let i=0;i<16;i++){
+const s = new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,r*2-0.1,4), matFrame);
+s.rotation.z = (i/16)*Math.PI;
+g.add(s);
+}
+return g;
+}
+const wR = makeWheel(0.7); wR.position.set(-1.1,-0.7,0); bike.add(wR);
+const wF = makeWheel(0.7); wF.position.set(1.1,-0.7,0); bike.add(wF);
+
+function tube(a,b,r=0.04){
+const d = new THREE.Vector3().subVectors(b,a);
+const l = d.length();
+const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,12), matFrame);
+m.position.copy(a).add(b).multiplyScalar(0.5);
+m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize());
+return m;
+}
+const bb = new THREE.Vector3(0,-0.5,0);
+const seat = new THREE.Vector3(-0.3,0.4,0);
+const head = new THREE.Vector3(0.8,0.4,0);
+bike.add(tube(bb,seat,0.05));
+bike.add(tube(bb,head,0.05));
+bike.add(tube(seat,head,0.04));
+bike.add(tube(bb,new THREE.Vector3(-1.1,-0.7,0),0.04));
+bike.add(tube(head,new THREE.Vector3(1.1,-0.7,0),0.04));
+
+const hbar = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.7,12), matFrame);
+hbar.rotation.z = Math.PI/2;
+hbar.position.set(0.95,0.55,0);
+bike.add(hbar);
+
+const seatM = new THREE.Mesh(new THREE.BoxGeometry(0.35,0.06,0.18), matFrame);
+seatM.position.set(-0.3,0.5,0);
+bike.add(seatM);
+
+scene.add(bike);
+
+const origPos = bike.children.map(c=>c.position.clone());
+const explDir = bike.children.map(()=>new THREE.Vector3((Math.random()-0.5)*2,(Math.random()-0.5)*1.5,(Math.random()-0.5)*1.5));
+
+let mode = 'rotate';
+document.querySelectorAll('.gal-btn').forEach(b=>{
+b.addEventListener('click', ()=>{
+document.querySelectorAll('.gal-btn').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+mode = b.dataset.mode;
+if(mode !== 'explode'){
+bike.children.forEach((c,i)=>{
+c.position.copy(origPos[i]);
+});
+}
+matFrame.wireframe = (mode === 'wire' || mode === 'xray');
+if(mode === 'xray'){
+matFrame.transparent = true;
+matFrame.opacity = 0.3;
+} else {
+matFrame.transparent = false;
+matFrame.opacity = 1;
+}
+});
+});
+
+let t=0;
+function animate(){
+t += 0.005;
+if(mode === 'rotate' || mode === 'wire' || mode === 'xray'){
+bike.rotation.y = t;
+}
+if(mode === 'explode'){
+bike.children.forEach((c,i)=>{
+c.position.x = origPos[i].x + explDir[i].x * (0.5 + 0.5*Math.sin(t*2));
+c.position.y = origPos[i].y + explDir[i].y * (0.5 + 0.5*Math.sin(t*2));
+c.position.z = origPos[i].z + explDir[i].z * (0.5 + 0.5*Math.sin(t*2));
+});
+bike.rotation.y = t*0.3;
+}
+renderer.render(scene, camera);
+requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
