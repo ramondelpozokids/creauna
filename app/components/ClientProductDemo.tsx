@@ -5,7 +5,17 @@ import Link from 'next/link';
 import { Play, RotateCcw, Sparkles, ArrowRight, Loader2, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 
-type ScenarioId = 'restArt' | 'kebab' | 'royalBang' | 'campon' | 'laPerla' | 'yana' | 'tarik' | 'elPaso';
+type ScenarioId =
+  | 'restArt'
+  | 'kebab'
+  | 'royalBang'
+  | 'campon'
+  | 'laPerla'
+  | 'yana'
+  | 'tarik'
+  | 'elPaso'
+  | 'beachSafe'
+  | 'losLeones';
 
 type ChatLine = { role: 'ai' | 'user'; text: string };
 type PreviewMode = 'none' | 'draft' | 'full';
@@ -89,6 +99,22 @@ const copy = {
         refine: 'Galería «Nuestros platos» con fotos reales, reseñas y mapa de ubicación.',
         ai2: 'Listo. Web completa con platos, menú, reseñas y mapa — estilo cálido de cafetería.',
       },
+      beachSafe: {
+        label: 'BeachSafe',
+        prompt:
+          'BeachSafe: taquillas inteligentes en la playa. Reservar taquilla, entrar al mar con las manos vacías. Estilo tech premium, océano y claridad.',
+        ai1: 'Perfecto. Primera versión con hero de playa, producto y CTA de reserva de taquilla.',
+        refine: 'Más claridad en cómo funciona, playas disponibles y bloque de tecnología.',
+        ai2: 'Listo. Web completa con experiencia, mapa de playas y propuesta BeachSafe.',
+      },
+      losLeones: {
+        label: 'Los Leones',
+        prompt:
+          'Chiringuito Los Leones en Torremolinos desde 1962: espetos, marisco, paellas y ambiente Costa del Sol. Tradición y mar.',
+        ai1: 'Genial. Primera versión con hero de chiringuito, carta mediterránea y espíritu desde 1962.',
+        refine: 'Galería de platos reales, vídeo de ambiente y datos de contacto más claros.',
+        ai2: 'Listo. Web completa con espetos, galería, menú y el carácter del chiringuito.',
+      },
     },
   },
   en: {
@@ -169,6 +195,22 @@ const copy = {
         refine: '«Our dishes» gallery with real photos, reviews and location map.',
         ai2: 'Done. Full site with dishes, menu, reviews and map — warm café style.',
       },
+      beachSafe: {
+        label: 'BeachSafe',
+        prompt:
+          'BeachSafe: smart beach lockers. Book a locker, enter the sea empty-handed. Premium tech, ocean and clarity.',
+        ai1: 'Perfect. First version with beach hero, product story and locker booking CTA.',
+        refine: 'Clearer how-it-works, available beaches and technology block.',
+        ai2: 'Done. Full site with experience, beach map and BeachSafe pitch.',
+      },
+      losLeones: {
+        label: 'Los Leones',
+        prompt:
+          'Chiringuito Los Leones in Torremolinos since 1962: sardine skewers, seafood, paellas and Costa del Sol vibe.',
+        ai1: 'Great. First version with beach-bar hero, Mediterranean menu and 1962 heritage.',
+        refine: 'Real dish gallery, ambient video and clearer contact details.',
+        ai2: 'Done. Full site with espetos, gallery, menu and chiringuito character.',
+      },
     },
   },
 } as const;
@@ -226,6 +268,20 @@ const scenarioConfig: Record<
     studioSlug: 'mokka',
     studioPrompt:
       'Cafetería El Paso Puente de Vallecas desayunos comidas menú del día',
+  },
+  beachSafe: {
+    demoPath: '/demos/clientes/beachsafe/index.html',
+    siteUrl: 'beachsafe.app',
+    studioSlug: 'lumen',
+    studioPrompt:
+      'BeachSafe taquillas inteligentes playa reservar taquilla manos vacías',
+  },
+  losLeones: {
+    demoPath: '/demos/clientes/chiringuito-los-leones/index.html',
+    siteUrl: 'chiringuitolosleones.es',
+    studioSlug: 'mokka',
+    studioPrompt:
+      'Chiringuito Los Leones Torremolinos espetos marisco desde 1962',
   },
 };
 

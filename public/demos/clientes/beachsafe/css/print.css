@@ -1,0 +1,126 @@
+/* ============================================
+   BEACHSAFE® VISION BOOK
+   Print Styles
+   ============================================ */
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    margin: 0;
+    padding: 20mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    overflow: hidden;
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+  }
+
+  /* Remove animations */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale,
+  .reveal-blur {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .parallax {
+    transform: none !important;
+  }
+
+  /* Remove interactive elements */
+  .nav-dots,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  /* Image handling */
+  img {
+    page-break-inside: avoid;
+    max-width: 100%;
+  }
+
+  .image-container {
+    page-break-inside: avoid;
+  }
+
+  /* Table handling */
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  /* Remove shadows for print */
+  .card,
+  .feature-item {
+    box-shadow: none !important;
+    border: 1px solid #e0e0e0;
+  }
+
+  /* Ensure text is readable */
+  body {
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .display-xl { font-size: 48pt; }
+  .display-lg { font-size: 36pt; }
+  .display-md { font-size: 28pt; }
+  .display-sm { font-size: 22pt; }
+
+  /* Remove backgrounds that waste ink */
+  .page-gray {
+    background: white !important;
+  }
+
+  /* Links */
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Headers and footers */
+  .page-header,
+  .page-footer {
+    position: fixed;
+    width: calc(210mm - 40mm);
+  }
+
+  .page-header {
+    top: 10mm;
+  }
+
+  .page-footer {
+    bottom: 10mm;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}

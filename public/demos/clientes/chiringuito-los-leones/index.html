@@ -1,0 +1,2393 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiringuito Los Leones - Desde 1962 | Lo mejor del mar en tu mesa</title>
+    <meta name="description" content="Chiringuito Los Leones - 60 años de tradición en Torremolinos. El mejor pescado y marisco de la Costa del Sol. Espetos de sardinas, paellas y cocina mediterránea.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="extras.css">
+    
+    <style>
+        :root {
+            --color-primary: #1e3a5f;
+            --color-secondary: #c9a86c;
+            --color-accent: #2e5c8a;
+            --color-sand: #f5f1e8;
+            --color-text: #2c3e50;
+            --color-light: #ffffff;
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Raleway', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(30, 58, 95, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0.7rem 1.75rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .nav-main {
+            display: contents;
+        }
+
+        .logo {
+            color: var(--color-light);
+            font-family: var(--font-title);
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            flex-shrink: 0;
+            grid-column: 1;
+            margin-left: -0.35rem;
+        }
+
+        .logo-mark {
+            display: block;
+            width: 72px;
+            height: 86px;
+            object-fit: contain;
+            object-position: center top;
+            mix-blend-mode: screen;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.05;
+        }
+
+        .logo-text .logo-line-1 {
+            font-size: 0.72rem;
+            font-weight: 600;
+            font-family: var(--font-body);
+            letter-spacing: 0.18em;
+        }
+
+        .logo-text .logo-line-2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--color-secondary);
+            color: var(--color-light);
+            padding: 0.25rem 0.45rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--color-secondary);
+            color: var(--color-primary);
+        }
+
+        .video-section {
+            position: relative;
+            height: 60vh;
+            overflow: hidden;
+            z-index: 1;
+            background: #0a1628;
+        }
+
+        .video-section .video-overlay {
+            background: rgba(0,0,0,0.25);
+        }
+
+        .gallery {
+            background: #fff;
+            padding: 5rem 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 16/10;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item img.pos-burger {
+            object-position: 95% 50%;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.04);
+        }
+
+        .social-float {
+            position: fixed;
+            right: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .social-float a {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            transition: transform 0.25s ease;
+        }
+
+        .social-float a:hover { transform: scale(1.08); }
+        .social-float a.facebook { background: #1877F2; }
+        .social-float a.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-float a.tripadvisor { background: #34E0A1; color: #000; }
+
+        .social-links a.facebook { background: #1877F2; border-color: #1877F2; color: #fff; }
+        .social-links a.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); border-color: transparent; color: #fff; }
+        .social-links a.tripadvisor { background: #34E0A1; border-color: #34E0A1; color: #000; }
+        .social-links a.whatsapp { background: #25D366; border-color: #25D366; color: #fff; }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.85rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            grid-column: 2;
+            justify-self: center;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 0.35rem;
+            margin-left: 0;
+            flex-shrink: 0;
+            grid-column: 3;
+            justify-self: end;
+        }
+
+        .mobile-menu {
+            display: none;
+            color: var(--color-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            grid-column: 3;
+            justify-self: end;
+        }
+
+        .nav-links a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            transition: color 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            padding: 0.2rem 0.1rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-secondary);
+        }
+
+        /* Hero Section with Video */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 0;
+            z-index: 0;
+            transform: none !important;
+            background: #0a1628;
+        }
+
+        .hero .video-background,
+        .video-section .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero .video-overlay,
+        .video-section .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: var(--color-light);
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-brand {
+            width: min(320px, 75vw);
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 4px 16px rgba(0,0,0,0.45));
+        }
+
+        .hero-title-block {
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-title-block .hero-chiringuito {
+            display: block;
+            font-family: var(--font-body);
+            font-size: clamp(0.85rem, 2vw, 1.05rem);
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            margin-bottom: 0.3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-title-block .hero-leones {
+            display: block;
+            font-family: var(--font-title);
+            font-size: clamp(2.4rem, 6vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero .year {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--color-secondary);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--color-light);
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+        }
+
+        section.hero {
+            padding: 0;
+        }
+
+        section.video-section {
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            text-align: center;
+            margin: 0 auto 1.25rem;
+            color: var(--color-primary);
+            position: relative;
+            display: block;
+            width: fit-content;
+            max-width: 100%;
+            transform: none;
+            left: auto;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-secondary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--color-text);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        /* About Section */
+        .about {
+            background: var(--color-sand);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            isolation: isolate;
+            overflow: hidden;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Menu Sections */
+        .menu-section {
+            background: var(--color-light);
+        }
+
+        .menu-category {
+            margin-bottom: 3rem;
+        }
+
+        .menu-category h3 {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--color-secondary);
+            display: inline-block;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-item {
+            background: var(--color-sand);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dotted var(--color-secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        .menu-item h4 {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            color: var(--color-primary);
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--color-secondary);
+            font-size: 1.2rem;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+
+        .menu-item p {
+            font-size: 0.9rem;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item .languages {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Cocktails Section */
+        .cocktails {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: var(--color-light);
+        }
+
+        .cocktails .section-title {
+            color: var(--color-light);
+        }
+
+        .cocktails .section-title::after {
+            background: var(--color-secondary);
+        }
+
+        .cocktails .section-subtitle {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .cocktail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .cocktail-category {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cocktail-category h3 {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-secondary);
+            text-align: center;
+        }
+
+        .cocktail-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cocktail-item:last-child {
+            border-bottom: none;
+        }
+
+        .cocktail-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.3rem;
+        }
+
+        .cocktail-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .cocktail-item .price {
+            color: var(--color-secondary);
+            font-weight: 700;
+        }
+
+        .cocktail-item p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Wine List */
+        .wines {
+            background: var(--color-sand);
+        }
+
+        .wine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .wine-category {
+            background: var(--color-light);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .wine-category h3 {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .wine-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .wine-item:last-child {
+            border-bottom: none;
+        }
+
+        .wine-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+
+        .wine-item h4 {
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .wine-item .price {
+            color: var(--color-secondary);
+            font-weight: 700;
+        }
+
+        .wine-item p {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .wine-item .tasting-notes {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--color-text);
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--color-primary);
+            color: var(--color-light);
+        }
+
+        .contact .section-title {
+            color: var(--color-light);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .contact-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .contact-card i {
+            font-size: 3rem;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card p {
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+            align-items: start;
+        }
+
+        .contact-details .info-item {
+            background: rgba(255,255,255,0.08);
+            border-left: 3px solid var(--color-secondary);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+        }
+
+        .contact-details .info-item h3 {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            margin-bottom: 0.35rem;
+            color: var(--color-secondary);
+        }
+
+        .contact-details .info-item a {
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .map-container {
+            margin-top: 1.25rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 280px;
+            border: 0;
+            display: block;
+        }
+
+        .contact-form-panel {
+            background: rgba(255,255,255,0.08);
+            padding: 1.75rem;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .contact-form-panel h3 {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+            color: var(--color-secondary);
+            text-align: center;
+        }
+
+        .contact-form-panel .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .contact-form-panel label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .contact-form-panel input,
+        .contact-form-panel textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-family: var(--font-body);
+        }
+
+        .contact-form-panel input:focus,
+        .contact-form-panel textarea:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+        }
+
+        .contact-form-panel .btn-submit {
+            background: var(--color-secondary);
+            color: var(--color-primary);
+            padding: 0.85rem 1.75rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .contact-form-panel .btn-submit:hover {
+            background: var(--color-accent);
+        }
+
+        @media (max-width: 900px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Social Media Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: var(--color-light);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--color-secondary);
+        }
+
+        .social-links a:hover {
+            background: var(--color-secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 0.85rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            border: none;
+        }
+        .footer-social a:hover { transform: translateY(-3px); }
+        .footer-social a.facebook { background: #1877F2; }
+        .footer-social a.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .footer-social a.tripadvisor { background: #34E0A1; color: #000; }
+        .footer-social a.whatsapp { background: #25D366; }
+        .footer-social .icon-ta,
+        .social-links .icon-ta { display: block; }
+        .social-links a.tripadvisor .icon-ta { width: 1.25em; height: 1.25em; }
+        footer.site-footer .footer-links a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            margin: 0 0.65rem;
+        }
+        footer.site-footer .footer-links a:hover { color: var(--color-accent); }
+        .social-float { display: none !important; }
+
+        .scroll-top {
+            position: fixed;
+            left: 1.25rem;
+            bottom: 1.25rem;
+            z-index: 950;
+            width: 46px;
+            height: 46px;
+            border: none;
+            border-radius: 50%;
+            background: var(--color-secondary);
+            color: var(--color-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease, background 0.2s ease;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--color-accent);
+        }
+
+        /* Footer */
+        footer {
+            background: #0f1f33;
+            color: var(--color-light);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        footer a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            margin: 0 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        footer a:hover {
+            color: var(--color-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cocktail-grid,
+            .wine-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .social-float {
+                display: none;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        /* Smooth scroll padding */
+        section[id] {
+            scroll-margin-top: 80px;
+        }
+
+        /* Loading animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader svg {
+            width: 100px;
+            height: 100px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 20 Q30 20 30 40 Q30 60 50 60 Q70 60 70 40" fill="none" stroke="#c9a86c" stroke-width="3">
+                <animate attributeName="d" dur="2s" repeatCount="indefinite"
+                    values="M50 20 Q30 20 30 40 Q30 60 50 60 Q70 60 70 40;
+                            M50 20 Q70 20 70 40 Q70 60 50 60 Q30 60 30 40;
+                            M50 20 Q30 20 30 40 Q30 60 50 60 Q70 60 70 40"/>
+            </path>
+            <path d="M20 50 L80 50" stroke="#c9a86c" stroke-width="2"/>
+            <path d="M25 45 L35 55 M35 45 L25 55" stroke="#c9a86c" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-main">
+                <a href="#inicio" class="logo">
+                    <img src="images/logo_sin.png" alt="" class="logo-mark">
+                    <span class="logo-text">
+                        <span class="logo-line-1">CHIRINGUITO</span>
+                        <span class="logo-line-2">LOS LEONES</span>
+                    </span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#inicio" data-i18n="nav_home">Inicio</a></li>
+                    <li><a href="#historia" data-i18n="nav_history">Historia</a></li>
+                    <li><a href="#sugerencias" data-i18n="nav_suggestions">Sugerencias</a></li>
+                    <li><a href="#menu" data-i18n="nav_menu">Menú</a></li>
+                    <li><a href="#vinos" data-i18n="nav_wines">Vinos</a></li>
+                    <li><a href="#cocteles" data-i18n="nav_cocktails">Cócteles</a></li>
+                    <li><a href="#reservas" data-i18n="nav_reserve">Reservas</a></li>
+                    <li><a href="#contacto" data-i18n="nav_contact">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="es">ES</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="de">DE</button>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+
+    <section class="hero" id="inicio">
+        <video class="video-background" autoplay muted loop playsinline>
+            <source src="video/espetos.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+        <div class="hero-content">
+            <img src="images/logo_sin.png" alt="Chiringuito Los Leones - 1962" class="hero-brand">
+            <p data-i18n="hero_subtitle">Lo mejor del mar en tu mesa</p>
+        </div>
+        <div class="scroll-indicator" onclick="document.getElementById('historia').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="historia">
+        <div class="container">
+            <h2 class="section-title" data-i18n="about_title">Tradición y Modernidad</h2>
+            <p class="section-subtitle" data-i18n="about_subtitle">60 años de cocina e historia</p>
+            <div class="about-content">
+                <p data-i18n="about_text">Cuatro generaciones criadas entre arena, sol y playa y el mejor pescado de la Costa del Sol. Un negocio que vivió los años de oro de Torremolinos y se convirtió en un referente histórico reconocido en la costa del sol por sus años de trayectoria repleta de recuerdos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-section" aria-label="Seascape">
+        <video class="video-background" autoplay muted loop playsinline>
+            <source src="video/seascape.mp4" type="video/mp4">
+
+    <!-- Daily Suggestions -->
+    <section class="menu-section" id="sugerencias">
+        <div class="container">
+            <h2 class="section-title" data-i18n="suggestions_title">Sugerencias del Día</h2>
+            <p class="section-subtitle" data-i18n="suggestions_subtitle">Productos frescos del mercado</p>
+            
+            <div class="menu-category">
+                <h3><i class="fas fa-fish"></i> <span data-i18n="c_pescado_fresco_del_dia">Pescado Fresco del Día</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_carabinero">Carabinero</h4>
+                            <span class="price">36€ / 200g</span>
+                        </div>
+                        <p class="languages">EN: Red Prawn | DE: Rote Garnele | FR: Crevette Rouge</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_salmonete">Salmonete</h4>
+                            <span class="price">60€ / kg</span>
+                        </div>
+                        <p class="languages">EN: Red Mullet | DE: Meerbarbe | FR: Rouget</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pargo">Pargo</h4>
+                            <span class="price">60€ / kg</span>
+                        </div>
+                        <p class="languages">EN: Snapper | DE: Schnapper | FR: Vivaneau</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_hurtado">Hurtado</h4>
+                            <span class="price">60€ / kg</span>
+                        </div>
+                        <p class="languages">EN: Gurnard | DE: Knurrhahn | FR: Grondin</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_dorada_salvaje">Dorada Salvaje</h4>
+                            <span class="price">75€ / kg</span>
+                        </div>
+                        <p class="languages">EN: Wild Sea Bream | DE: Wilde Dorade | FR: Daurade Sauvage</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_borriquete">Borriquete</h4>
+                            <span class="price">55€ / kg</span>
+                        </div>
+                        <p class="languages">EN: Threadfin Bream | DE: Fadenflosser | FR: Menu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Menu -->
+    <section class="menu-section" id="menu" style="background: var(--color-sand);">
+        <div class="container">
+            <h2 class="section-title" data-i18n="menu_title">Nuestra Carta</h2>
+            <p class="section-subtitle" data-i18n="menu_subtitle">Lo mejor de la gastronomía mediterránea</p>
+
+            <!-- Salads -->
+            <div class="menu-category">
+                <h3><i class="fas fa-leaf"></i> <span data-i18n="c_ensaladas">Ensaladas</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pipirrana_de_gambas_y_pulpo">Pipirrana de Gambas y Pulpo</h4>
+                            <span class="price">14,50€</span>
+                        </div>
+                        <p class="languages">EN: Seafood Salad (prawns and octopus)</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pipirrana_rucula_y_aguacate">Pipirrana + Rúcula y Aguacate</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                        <p class="languages">EN: With avocado and garden rocket</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_ensalada_mixta">Ensalada Mixta</h4>
+                            <span class="price">8,50€</span>
+                        </div>
+                        <p data-i18n="p_lechuga_tomate_cebolla_zanahoria_y_aceit">Lechuga, tomate, cebolla, zanahoria y aceitunas verdes</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_ensalada_de_atun">Ensalada de Atún</h4>
+                            <span class="price">10,50€</span>
+                        </div>
+                        <p data-i18n="p_lechuga_tomate_cebolla_zanahoria_atun_y_">Lechuga, tomate, cebolla, zanahoria, atún y aceitunas verdes</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_ensalada_los_leones">Ensalada Los Leones</h4>
+                            <span class="price">13,00€</span>
+                        </div>
+                        <p data-i18n="p_lechuga_zanahoria_cebolla_aguacate_atun_">Lechuga, zanahoria, cebolla, aguacate, atún, huevo, maíz, tomate y aceitunas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tomate_con_boquerones_en_vinagre">Tomate con Boquerones en Vinagre</h4>
+                            <span class="price">15,00€</span>
+                        </div>
+                        <p class="languages">EN: Tomato salad with anchovies in vinegar</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_ensalada_de_pimientos">Ensalada de Pimientos</h4>
+                            <span class="price">9,50€</span>
+                        </div>
+                        <p class="languages">EN: Grilled Peppers salad</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_ensalada_caprese">Ensalada Caprese</h4>
+                            <span class="price">12,00€</span>
+                        </div>
+                        <p data-i18n="p_tomate_mozzarella_y_albahaca">Tomate, mozzarella y albahaca</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tomate_aguacate_y_gambas">Tomate, Aguacate y Gambas</h4>
+                            <span class="price">19,00€</span>
+                        </div>
+                        <p class="languages">EN: Tomato, avocado and prawns</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_ensalada_tropical">Ensalada Tropical</h4>
+                            <span class="price">14,00€</span>
+                        </div>
+                        <p data-i18n="p_lechuga_tomate_maiz_aguacate_kiwi_fruta_">Lechuga, tomate, maíz, aguacate, kiwi, fruta de temporada y salsa rosa</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Starters -->
+            <div class="menu-category">
+                <h3><i class="fas fa-utensils"></i> <span data-i18n="c_entremeses">Entremeses</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_gazpacho_andaluz">Gazpacho Andaluz</h4>
+                            <span class="price">6,50€</span>
+                        </div>
+                        <p data-i18n="p_con_guarnicion">Con guarnición</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_porra_de_mango">Porra de Mango</h4>
+                            <span class="price">12,00€</span>
+                        </div>
+                        <p data-i18n="p_con_guarnicion_de_gambas_aguacate_y_fres">Con guarnición de gambas, aguacate y fresas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tartar_de_atun_con_aguacate">Tartar de Atún con Aguacate</h4>
+                            <span class="price">23,00€</span>
+                        </div>
+                        <p class="languages">EN: Tuna tartar with avocado</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_boquerones_en_vinagre">Boquerones en Vinagre</h4>
+                            <span class="price">14,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_anchoas_6_unidades">Anchoas (6 unidades)</h4>
+                            <span class="price">19,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_milhoja_del_mar">Milhoja del Mar</h4>
+                            <span class="price">19,50€</span>
+                        </div>
+                        <p data-i18n="p_boquerones_en_vinagre_sardinitas_anchoas">Boquerones en vinagre, sardinitas, anchoas, tomate triturado y aguacate</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_gambas_pil_pil">Gambas Pil-Pil</h4>
+                            <span class="price">14,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_langostinos_pil_pil">Langostinos Pil-Pil</h4>
+                            <span class="price">12,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_timbal_de_gambas_pil_pil">Timbal de Gambas Pil-Pil</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p data-i18n="p_con_patatas_y_mayonesa">Con patatas y mayonesa</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seafood -->
+            <div class="menu-category">
+                <h3><i class="fas fa-fish"></i> <span data-i18n="c_mariscos">Mariscos</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_conchas_finas_unidad">Conchas Finas (unidad)</h4>
+                            <span class="price">4,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_peregrina_unidad">Peregrina (unidad)</h4>
+                            <span class="price">8,00€</span>
+                        </div>
+                        <p class="languages">EN: Scallop</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_almejitas_salteadas">Almejitas Salteadas</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_coquinas">Coquinas</h4>
+                            <span class="price">19,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_gambas_a_la_plancha_200g">Gambas a la Plancha (200g)</h4>
+                            <span class="price">26,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_gambas_cocidas_200g">Gambas Cocidas (200g)</h4>
+                            <span class="price">19,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_zamburinas">Zamburiñas</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_mejillones_al_curry">Mejillones al Curry</h4>
+                            <span class="price">16,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_langostinos_al_curry_con_arroz_blanco">Langostinos al Curry con Arroz Blanco</h4>
+                            <span class="price">21,00€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fish -->
+            <div class="menu-category">
+                <h3><i class="fas fa-fish"></i> <span data-i18n="c_pescado">Pescado</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_espeto_de_sardinas">Espeto de Sardinas</h4>
+                            <span class="price">8,50€</span>
+                        </div>
+                        <p class="languages">EN: Sardines skewer grilled on fire</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_calamar_a_la_plancha">Calamar a la Plancha</h4>
+                            <span class="price">23,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_filete_de_pez_espada">Filete de Pez Espada</h4>
+                            <span class="price">21,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_lenguado_a_la_plancha_300g">Lenguado a la Plancha (300g)</h4>
+                            <span class="price">24,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pata_de_pulpo_al_espeto">Pata de Pulpo al Espeto</h4>
+                            <span class="price">23,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_rosada_a_la_plancha">Rosada a la Plancha</h4>
+                            <span class="price">19,80€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_lubina_plancha_o_espeto_500g">Lubina Plancha o Espeto (500g)</h4>
+                            <span class="price">24,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_dorada_plancha_o_espeto_500g">Dorada Plancha o Espeto (500g)</h4>
+                            <span class="price">24,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_salmon_a_la_plancha">Salmón a la Plancha</h4>
+                            <span class="price">19,00€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fried Fish -->
+            <div class="menu-category">
+                <h3><i class="fas fa-fire"></i> <span data-i18n="c_pescado_frito">Pescado Frito</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_boquerones">Boquerones</h4>
+                            <span class="price">13,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_gambas_fritas">Gambas Fritas</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_calamares">Calamares</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_calamaritos">Calamaritos</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_adobo">Adobo</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_rosada_ali_oli">Rosada Ali-Oli</h4>
+                            <span class="price">16,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_salmonetitos">Salmonetitos</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pulpo_frito_con_guacamole">Pulpo Frito con Guacamole</h4>
+                            <span class="price">23,00€</span>
+                        </div>
+                        <p data-i18n="p_con_mayonesa_de_piquillo">Con mayonesa de piquillo</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_fritura_variada">Fritura Variada</h4>
+                            <span class="price">34,00€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- To Order -->
+            <div class="menu-category">
+                <h3><i class="fas fa-clock"></i> <span data-i18n="c_por_encargo">Por Encargo</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_paella_de_marisco_y_pescado">Paella de Marisco y Pescado</h4>
+                            <span class="price">35,00€</span>
+                        </div>
+                        <p data-i18n="p_minimo_para_2_personas">Mínimo para 2 personas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_arroz_negro">Arroz Negro</h4>
+                            <span class="price">35,00€</span>
+                        </div>
+                        <p data-i18n="p_minimo_para_2_personas">Mínimo para 2 personas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_arroz_caldoso">Arroz Caldoso</h4>
+                            <span class="price">35,00€</span>
+                        </div>
+                        <p data-i18n="p_minimo_para_2_personas">Mínimo para 2 personas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_arroz_caldoso_con_carabineros">Arroz Caldoso con Carabineros</h4>
+                            <span class="price">56,00€</span>
+                        </div>
+                        <p data-i18n="p_minimo_para_2_personas">Mínimo para 2 personas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_gazpachuelo">Gazpachuelo</h4>
+                            <span class="price">35,00€</span>
+                        </div>
+                        <p data-i18n="p_sopa_tradicional_de_malaga_minimo_para_2">Sopa tradicional de Málaga. Mínimo para 2 personas</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pescado_al_horno">Pescado al Horno</h4>
+                            <span class="price">S/M</span>
+                        </div>
+                        <p data-i18n="p_segun_mercado">Según mercado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meat -->
+            <div class="menu-category">
+                <h3><i class="fas fa-drumstick-bite"></i> <span data-i18n="c_carnes">Carnes</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_filete_de_ternera">Filete de Ternera</h4>
+                            <span class="price">15,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_entrecot_a_la_plancha">Entrecot a la Plancha</h4>
+                            <span class="price">23,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_filete_de_pollo">Filete de Pollo</h4>
+                            <span class="price">13,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_escalope_de_ternera">Escalope de Ternera</h4>
+                            <span class="price">16,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_pollo_empanado">Pollo Empanado</h4>
+                            <span class="price">15,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_brocheta_de_ternera">Brocheta de Ternera</h4>
+                            <span class="price">25,00€</span>
+                        </div>
+                        <p data-i18n="p_con_cebolla_tomate_y_pimiento">Con cebolla, tomate y pimiento</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_brocheta_de_pollo">Brocheta de Pollo</h4>
+                            <span class="price">22,00€</span>
+                        </div>
+                        <p data-i18n="p_con_cebolla_tomate_y_pimiento">Con cebolla, tomate y pimiento</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_solomillo_de_cerdo_iberico">Solomillo de Cerdo Ibérico</h4>
+                            <span class="price">21,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_brocheta_de_solomillo_iberico">Brocheta de Solomillo Ibérico</h4>
+                            <span class="price">24,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_hamburguesa_de_ternera">Hamburguesa de Ternera</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_con_patatas">Con patatas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desserts -->
+            <div class="menu-category">
+                <h3><i class="fas fa-ice-cream"></i> <span data-i18n="c_postres">Postres</span></h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tarta_de_chocolate">Tarta de Chocolate</h4>
+                            <span class="price">6,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tarta_de_queso">Tarta de Queso</h4>
+                            <span class="price">6,00€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tarta_de_queso_con_chocolate_y_avellana">Tarta de Queso con Chocolate y Avellana</h4>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_tarta_de_queso_con_pistacho">Tarta de Queso con Pistacho</h4>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_arroz_con_leche">Arroz con Leche</h4>
+                            <span class="price">5,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_milhoja_de_manzana_con_helado">Milhoja de Manzana con Helado</h4>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <h4 data-i18n="d_fruta_de_temporada">Fruta de Temporada</h4>
+                            <span class="price">5,00€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wine List -->
+    <section class="wines" id="vinos">
+        <div class="container">
+            <h2 class="section-title" data-i18n="wines_title">Carta de Vinos</h2>
+            <p class="section-subtitle" data-i18n="wines_subtitle">Selección de los mejores caldos</p>
+            
+            <div class="wine-grid">
+                <!-- White Wines -->
+                <div class="wine-category">
+                    <h3><i class="fas fa-wine-glass-alt"></i> <span data-i18n="c_vinos_blancos">Vinos Blancos</span></h3>
+                    
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_vino_de_la_casa">Vino de la Casa</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p data-i18n="p_verdejo_o_chardonnay">Verdejo o Chardonnay</p>
+                        <p class="tasting-notes" data-i18n="p_vino_joven_ligero_con_matices_aromaticos">Vino joven ligero, con matices aromáticos y frescos</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_la_encina_del_ingles_blanco">La Encina del Inglés Blanco</h4>
+                            <span class="price">18,50€</span>
+                        </div>
+                        <p>Málaga, España - Moscatel, Doradilla, Pedro Ximénez</p>
+                        <p class="tasting-notes" data-i18n="n_albaricoque_fruta_de_hueso_madura_toques_tropicale">Albaricoque, fruta de hueso madura, toques tropicales. Salinidad marcada, equilibrado</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_la_ola_del_melillero">La Ola del Melillero</h4>
+                            <span class="price">24,00€</span>
+                        </div>
+                        <p>Málaga - 70% Pedro Ximénez, 30% Moscatel</p>
+                        <p class="tasting-notes" data-i18n="n_flor_blanca_fruta_blanca_citricos_mineral_con_buen">Flor blanca, fruta blanca, cítricos. Mineral, con buena acidez</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_hoya_de_los_lobos_chardonnay">Hoya de los Lobos Chardonnay</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p>Navarra, España</p>
+                        <p class="tasting-notes" data-i18n="n_frutas_tropicales_melocoton_manzana_verde_volumino">Frutas tropicales, melocotón, manzana verde. Voluminoso</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_castillo_de_aresan_sauvignon_blanc">Castillo de Aresan Sauvignon Blanc</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p>Castilla-La Mancha</p>
+                        <p class="tasting-notes" data-i18n="n_afrutado_expresivo_con_notas_de_pomelo_y_flor_blan">Afrutado, expresivo, con notas de pomelo y flor blanca</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_gorgorito_verdejo">Gorgorito Verdejo</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p>Rueda, España</p>
+                        <p class="tasting-notes" data-i18n="n_potente_con_notas_de_fruta_fresca_paladar_fresco_y">Potente, con notas de fruta fresca. Paladar fresco y equilibrado</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_jose_pariente_verdejo">José Pariente Verdejo</h4>
+                            <span class="price">24,50€</span>
+                        </div>
+                        <p>Rueda, España</p>
+                        <p class="tasting-notes" data-i18n="n_frutas_tropicales_fruta_de_la_pasion_citricos_untu">Frutas tropicales, fruta de la pasión, cítricos. Untuoso y elegante</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_paco_y_lola_albarino">Paco y Lola Albariño</h4>
+                            <span class="price">26,00€</span>
+                        </div>
+                        <p>Rías Baixas, España</p>
+                        <p class="tasting-notes" data-i18n="n_pina_maracuya_citricos_manzana_verde_fresco_y_equi">Piña, maracuyá, cítricos, manzana verde. Fresco y equilibrado</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_mar_de_frades_albarino">Mar de Frades Albariño</h4>
+                            <span class="price">29,00€</span>
+                        </div>
+                        <p>Rías Baixas, España</p>
+                        <p class="tasting-notes" data-i18n="n_notas_florales_jazmin_violetas_hinojo_mango_textur">Notas florales, jazmín, violetas, hinojo, mango. Textura sedosa</p>
+                    </div>
+                </div>
+
+                <!-- Rosé Wines -->
+                <div class="wine-category">
+                    <h3><i class="fas fa-wine-glass"></i> <span data-i18n="c_vinos_rosados">Vinos Rosados</span></h3>
+                    
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_vino_rosado_de_la_casa">Vino Rosado de la Casa</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p data-i18n="p_tempranillo_o_garnacha">Tempranillo o Garnacha</p>
+                        <p class="tasting-notes" data-i18n="p_notas_de_frutos_rojos_joven_y_con_caract">Notas de frutos rojos, joven y con carácter</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_gran_feudo_rosado_garnacha">Gran Feudo Rosado Garnacha</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p>Navarra, España</p>
+                        <p class="tasting-notes" data-i18n="n_fresa_y_frambuesa_con_toques_citricos_y_florales">Fresa y frambuesa, con toques cítricos y florales</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_chivite_las_fincas_rosado">Chivite Las Fincas Rosado</h4>
+                            <span class="price">21,00€</span>
+                        </div>
+                        <p>Navarra, España</p>
+                        <p class="tasting-notes" data-i18n="n_elegante_y_sutil_fresa_frambuesa_granada">Elegante y sutil, fresa, frambuesa, granada</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_protos_aire_rosado">Protos Aire Rosado</h4>
+                            <span class="price">18,00€</span>
+                        </div>
+                        <p>Cigales, España</p>
+                        <p class="tasting-notes" data-i18n="n_melocoton_citricos_y_frutos_rojos_fresco_y_sedoso">Melocotón, cítricos y frutos rojos. Fresco y sedoso</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_miraval_rose">Miraval Rosé</h4>
+                            <span class="price">38,00€</span>
+                        </div>
+                        <p>Francia</p>
+                        <p class="tasting-notes" data-i18n="n_frutas_rojas_frescas_citricos_flores_blancas_elega">Frutas rojas frescas, cítricos, flores blancas. Elegante</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_ch_teau_de_berne_romance_rose">Château de Berne Romance Rosé</h4>
+                            <span class="price">22,00€</span>
+                        </div>
+                        <p>Provenza, Francia</p>
+                        <p class="tasting-notes" data-i18n="n_fresa_cereza_y_sandia_fresco_y_ligero">Fresa, cereza y sandía. Fresco y ligero</p>
+                    </div>
+                </div>
+
+                <!-- Red Wines -->
+                <div class="wine-category">
+                    <h3><i class="fas fa-wine-bottle"></i> <span data-i18n="c_vinos_tintos">Vinos Tintos</span></h3>
+                    
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_vino_tinto_de_la_casa">Vino Tinto de la Casa</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p data-i18n="p_ribera_del_duero_o_rioja">Ribera del Duero o Rioja</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_la_encina_del_ingles_tinto">La Encina del Inglés Tinto</h4>
+                            <span class="price">21,00€</span>
+                        </div>
+                        <p>Málaga, España</p>
+                        <p class="tasting-notes" data-i18n="n_frutos_rojos_hierba_sotobosque_balsamicos">Frutos rojos, hierba, sotobosque, balsámicos</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_payoya_negra">Payoya Negra</h4>
+                            <span class="price">31,00€</span>
+                        </div>
+                        <p>Málaga, España</p>
+                        <p class="tasting-notes" data-i18n="n_fruta_negra_moras_arandanos_cremoso_y_fresco">Fruta negra, moras, arándanos. Cremoso y fresco</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_ramon_bilbao_crianza">Ramón Bilbao Crianza</h4>
+                            <span class="price">19,50€</span>
+                        </div>
+                        <p>Rioja, España</p>
+                        <p class="tasting-notes" data-i18n="n_fruta_roja_y_negra_regaliz_jengibre_elegante">Fruta roja y negra, regaliz, jengibre. Elegante</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_vina_salceda_reserva">Viña Salceda Reserva</h4>
+                            <span class="price">23,00€</span>
+                        </div>
+                        <p>Rioja, España</p>
+                        <p class="tasting-notes" data-i18n="n_cerezas_ciruelas_especias_intenso_y_complejo">Cerezas, ciruelas, especias. Intenso y complejo</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_emilio_moro">Emilio Moro</h4>
+                            <span class="price">32,00€</span>
+                        </div>
+                        <p>Ribera del Duero</p>
+                        <p class="tasting-notes" data-i18n="n_fruta_negra_madura_notas_de_barrica_carnoso">Fruta negra madura, notas de barrica. Carnoso</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_protos_crianza">Protos Crianza</h4>
+                            <span class="price">28,00€</span>
+                        </div>
+                        <p>Ribera del Duero</p>
+                        <p class="tasting-notes" data-i18n="n_frutos_maduros_especias_dulces_envolvente">Frutos maduros, especias dulces. Envolvente</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_pago_de_carraovejas">Pago de Carraovejas</h4>
+                            <span class="price">51,00€</span>
+                        </div>
+                        <p>Ribera del Duero</p>
+                        <p class="tasting-notes" data-i18n="n_fruta_roja_madura_notas_especiadas_estructurado">Fruta roja madura, notas especiadas. Estructurado</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_mauro_vs">Mauro VS</h4>
+                            <span class="price">82,00€</span>
+                        </div>
+                        <p>Castilla y León</p>
+                        <p class="tasting-notes" data-i18n="n_terrosa_especiada_madera_y_fruta_potente">Terrosa, especiada, madera y fruta. Potente</p>
+                    </div>
+                </div>
+
+                <!-- Sparkling & Fortified -->
+                <div class="wine-category">
+                    <h3><i class="fas fa-glass-cheers"></i> <span data-i18n="c_espumosos_y_generosos">Espumosos y Generosos</span></h3>
+                    
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_codorniu_benjamin">Codorníu Benjamín</h4>
+                            <span class="price">6,00€</span>
+                        </div>
+                        <p>Cava, España</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_juve_camps_reserva_de_la_familia">Juvé & Camps Reserva de la Familia</h4>
+                            <span class="price">29,00€</span>
+                        </div>
+                        <p>Cava, España</p>
+                        <p class="tasting-notes" data-i18n="n_manzana_fresca_flores_blancas_pan_tostado">Manzana fresca, flores blancas, pan tostado</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_borgo_imperiale_prosecco">Borgo Imperiale Prosecco</h4>
+                            <span class="price">20,00€</span>
+                        </div>
+                        <p>Veneto, Italia</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_veuve_clicquot_brut">Veuve Clicquot Brut</h4>
+                            <span class="price">80,00€</span>
+                        </div>
+                        <p>Champagne, Francia</p>
+                        <p class="tasting-notes" data-i18n="n_frutas_amarillas_vainilla_brioche">Frutas amarillas, vainilla, brioche</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_mo_t_chandon_brut_imperial">Moët & Chandon Brut Impérial</h4>
+                            <span class="price">75,00€</span>
+                        </div>
+                        <p>Champagne, Francia</p>
+                        <p class="tasting-notes" data-i18n="n_manzana_verde_citricos_flores_blancas">Manzana verde, cítricos, flores blancas</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_barbadillo_manzanilla_solear">Barbadillo Manzanilla Solear</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p>Sanlúcar de Barrameda</p>
+                        <p class="tasting-notes" data-i18n="n_levadura_frutos_secos_manzana_asada">Levadura, frutos secos, manzana asada</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_tio_pepe_fino">Tío Pepe Fino</h4>
+                            <span class="price">17,00€</span>
+                        </div>
+                        <p>Jerez, España</p>
+                        <p class="tasting-notes" data-i18n="n_aromas_punzantes_notas_almendradas">Aromas punzantes, notas almendradas</p>
+                    </div>
+
+                    <div class="wine-item">
+                        <div class="wine-item-header">
+                            <h4 data-i18n="d_pedro_ximenez_reserva">Pedro Ximénez Reserva</h4>
+                            <span class="price">4,00€</span>
+                        </div>
+                        <p>Málaga Virgen</p>
+                        <p class="tasting-notes" data-i18n="n_datiles_maderas_y_tostados_dulce_y_elegante">Dátiles, maderas y tostados. Dulce y elegante</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cocktails Section -->
+    <section class="cocktails" id="cocteles">
+        <div class="container">
+            <h2 class="section-title" data-i18n="cocktails_title">Carta de Cócteles</h2>
+            <p class="section-subtitle" data-i18n="cocktails_subtitle">Refrescantes combinados para disfrutar</p>
+            
+            <div class="cocktail-grid">
+                <!-- Aperitivos -->
+                <div class="cocktail-category">
+                    <h3><i class="fas fa-cocktail"></i> <span data-i18n="c_aperitivos">Aperitivos</span></h3>
+                    
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_hugo_spritz">Hugo Spritz</h4>
+                            <span class="price">8,00€</span>
+                        </div>
+                        <p data-i18n="p_st_germain_elderflower_prosecco_gaseosa_">St-Germain Elderflower, Prosecco, Gaseosa y Hierba Buena</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_aperol_spritz">Aperol Spritz</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_aperol_prosecco_y_gaseosa">Aperol, Prosecco y Gaseosa</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_aperol_sour">Aperol Sour</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_aperol_clara_de_huevo_vodka_naranja_y_zu">Aperol, Clara de huevo, Vodka Naranja y Zumo de limón</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_limoncello_spritz">Limoncello Spritz</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_limoncello_prosecco_y_gaseosa_acompanado">Limoncello, Prosecco y Gaseosa acompañado con romero</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_rose_peach_spritz">Rose Peach Spritz</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_vino_rosado_lillet_by_monin_melocoton_si">Vino Rosado LILLET, By Monin Melocotón, Sirupe de Melocotón y Gaseosa</p>
+                    </div>
+                </div>
+
+                <!-- Clásicos -->
+                <div class="cocktail-category">
+                    <h3><i class="fas fa-glass-martini-alt"></i> <span data-i18n="c_clasicos">Clásicos</span></h3>
+                    
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_mojito_clasico">Mojito Clásico</h4>
+                            <span class="price">8,50€</span>
+                        </div>
+                        <p data-i18n="p_ron_hierba_buena_gaseosa_limon_y_azucar">Ron, Hierba Buena, Gaseosa, Limón y Azúcar</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_chuche_spritz">Chuche Spritz</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_licor_de_sandia_by_monin_red_fruit_sirop">Licor de Sandía, By Monin Red Fruit, Sirope de Rosas, Prosecco y Gaseosa</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_mojito_malaga">Mojito Málaga</h4>
+                            <span class="price">9,00€</span>
+                        </div>
+                        <p data-i18n="p_mosura_hierba_buena_gaseosa_limon_fresa_">Mosura, Hierba Buena, Gaseosa, Limón, Fresa, Naranja y Azúcar</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_pina_colada">Piña Colada</h4>
+                            <span class="price">11,00€</span>
+                        </div>
+                        <p data-i18n="p_ron_blanco_pure_de_coco_pina_natural_y_z">Ron Blanco, Puré de Coco, Piña Natural y Zumo</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_porn_star_martini">Porn Star Martini</h4>
+                            <span class="price">11,00€</span>
+                        </div>
+                        <p data-i18n="p_vodka_licor_fruta_de_la_pasion_pure_de_f">Vodka, Licor fruta de la Pasión, Puré de fruta de la pasión y Lima</p>
+                    </div>
+
+                    <div class="cocktail-item">
+                        <div class="cocktail-item-header">
+                            <h4 data-i18n="d_rose_paloma">Rose Paloma</h4>
+                            <span class="price">10,00€</span>
+                        </div>
+                        <p data-i18n="p_tequila_reposado_cardial_de_romero_sirop">Tequila Reposado, Cardial de Romero, Sirope de Rosas, Lima y Soda de Pomelo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery" id="galeria">
+        <div class="container">
+            <h2 class="section-title" data-i18n="gallery_title">Galería</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="images/1.png" alt="Almejas"></div>
+                <div class="gallery-item"><img src="images/2.png" alt="Hamburguesa" class="pos-burger"></div>
+                <div class="gallery-item"><img src="images/3.png" alt="Boquerones"></div>
+                <div class="gallery-item"><img src="images/4.png" alt="Brochetas"></div>
+                <div class="gallery-item"><img src="images/6.png" alt="Salmorejo"></div>
+                <div class="gallery-item"><img src="images/7.png" alt="Jamón"></div>
+                <div class="gallery-item"><img src="images/8.png" alt="Pulpo"></div>
+                <div class="gallery-item"><img src="images/9.png" alt="Gambas al ajillo"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Reservation -->
+    <section class="reserve" id="reservas">
+        <div class="container">
+            <h2 class="section-title" data-i18n="reserve_title">Reserva de Mesa</h2>
+            <p class="section-subtitle" data-i18n="reserve_subtitle">Asegura tu mesa frente al mar</p>
+            <div class="reserve-grid">
+                <div class="reserve-info">
+                    <p data-i18n="reserve_intro">Reserva fácilmente tu mesa en Chiringuito Los Leones. Te confirmaremos la reserva lo antes posible.</p>
+                    <ul>
+                        <li data-i18n="reserve_li1">Horario de cocina: 12:00 – 23:30</li>
+                        <li data-i18n="reserve_li2">Grupos de más de 10 personas: llámanos al +34 952 37 43 13</li>
+                        <li data-i18n="reserve_li3">En temporada alta recomendamos reservar con antelación</li>
+                    </ul>
+                </div>
+                <form class="reserve-form" id="reserve-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reserve-name" data-i18n="reserve_name">Nombre *</label>
+                            <input type="text" id="reserve-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reserve-phone" data-i18n="reserve_phone">Teléfono *</label>
+                            <input type="tel" id="reserve-phone" name="phone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reserve-email" data-i18n="reserve_email">Email *</label>
+                        <input type="email" id="reserve-email" name="email" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reserve-date" data-i18n="reserve_date">Fecha *</label>
+                            <input type="date" id="reserve-date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reserve-time" data-i18n="reserve_time">Hora *</label>
+                            <select id="reserve-time" name="time" required>
+                                <option value="">--</option>
+                                <option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="16:00">16:00</option><option value="16:30">16:30</option><option value="17:00">17:00</option><option value="17:30">17:30</option><option value="18:00">18:00</option><option value="18:30">18:30</option><option value="19:00">19:00</option><option value="19:30">19:30</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option><option value="22:30">22:30</option><option value="23:00">23:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reserve-guests" data-i18n="reserve_guests">Personas *</label>
+                        <select id="reserve-guests" name="guests" required>
+                            <option value="">--</option>
+                            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="12+">12+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reserve-notes" data-i18n="reserve_notes">Notas / alergias</label>
+                        <textarea id="reserve-notes" name="notes" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit" data-i18n="reserve_submit">Solicitar reserva</button>
+                    <p class="reserve-note" data-i18n="reserve_note">Recibirás confirmación por teléfono o email. No es una reserva automática definitiva.</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contacto">
+        <div class="container">
+            <h2 class="section-title" data-i18n="contact_title">Contacto</h2>
+            <p class="section-subtitle" style="color: rgba(255,255,255,0.9)" data-i18n="contact_subtitle">Estamos aquí para ti</p>
+
+            <div class="contact-layout">
+                <div class="contact-details">
+                    <div class="info-item">
+                        <h3><i class="fas fa-map-marker-alt"></i> <span data-i18n="contact_address">Dirección</span></h3>
+                        <p>Paseo Marítimo de la Carihuela<br>c/ Nerja, s/n, 29620<br>Torremolinos (Málaga), España</p>
+                    </div>
+                    <div class="info-item">
+                        <h3><i class="fas fa-phone"></i> <span data-i18n="contact_phone">Teléfono</span></h3>
+                        <p><a href="tel:+34952374313">+34 952 37 43 13</a></p>
+                    </div>
+                    <div class="info-item">
+                        <h3><i class="fas fa-envelope"></i> <span data-i18n="contact_email">Email</span></h3>
+                        <p><a href="mailto:losleonesplaya@gmail.com">losleonesplaya@gmail.com</a></p>
+                    </div>
+                    <div class="info-item">
+                        <h3><i class="fas fa-clock"></i> <span data-i18n="contact_hours">Horario</span></h3>
+                        <p data-i18n="contact_hours_text">Abierto todos los días<br>De 10:00 a 00:00 horas</p>
+                    </div>
+                    <div class="map-container">
+                        <iframe
+                            title="Chiringuito Los Leones en Google Maps"
+                            src="https://maps.google.com/maps?q=Chiringuito%20Los%20Leones%20Torremolinos%20Carihuela&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <div class="contact-form-panel">
+                    <h3 data-i18n="contact_form_title">Envíanos un mensaje</h3>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="nombre" data-i18n="form_name">Nombre *</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" data-i18n="form_email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" data-i18n="form_phone">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="mensaje" data-i18n="form_message">Mensaje *</label>
+                            <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit" data-i18n="form_send">Enviar mensaje</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-social">
+            <a class="facebook" href="https://www.facebook.com/chiringuitolosleones" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a class="instagram" href="https://www.instagram.com/chiringuitolosleones/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a class="tripadvisor" href="https://www.tripadvisor.es/Restaurant_Review-g187440-d3915502-Reviews-Chiringuito_Los_Leones-Torremolinos_Costa_del_Sol_Province_of_Malaga_Andalucia.html" target="_blank" rel="noopener noreferrer" title="TripAdvisor" aria-label="TripAdvisor"><svg class="icon-ta" viewBox="0 0 24 24" width="1.15em" height="1.15em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.006 4.295c-2.67 0-5.338.784-7.645 2.353H0l1.963 2.135a5.997 5.997 0 0 0 4.041 10.67 5.975 5.975 0 0 0 3.858-1.4l.047-.04c.728.508 1.617.804 2.573.804.964 0 1.852-.296 2.58-.804l.047.04a5.975 5.975 0 0 0 3.858 1.4 5.997 5.997 0 0 0 4.041-10.67L24 6.648h-4.361c-2.307-1.569-4.974-2.353-7.633-2.353zm0 3.763c.964 0 1.852.295 2.58.803a5.95 5.95 0 0 0-.093 8.113 3.854 3.854 0 0 1-2.487.902c-.964 0-1.852-.31-2.573-.902a5.95 5.95 0 0 0-.093-8.113c.728-.508 1.616-.803 2.666-.803zm-7.118 1.4c.964 0 1.833.388 2.487 1.012a5.95 5.95 0 0 0 .093 8.113A3.854 3.854 0 0 1 4.888 17.57a3.854 3.854 0 0 1-3.858-3.858 3.854 3.854 0 0 1 3.858-3.858zm14.236 0a3.854 3.854 0 0 1 3.858 3.858 3.854 3.854 0 0 1-3.858 3.858 3.854 3.854 0 0 1-2.487-.902 5.95 5.95 0 0 0 .093-8.113 3.854 3.854 0 0 1 2.394-1.701z"/></svg></a>
+            <a class="whatsapp" href="https://wa.me/34952374313" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p data-i18n="footer_copy">&copy; 2024 Chiringuito Los Leones - Desde 1962. Todos los derechos reservados.</p>
+                <div class="footer-links">
+            <a href="aviso-legal.html" data-i18n="footer_legal">Aviso Legal</a>
+            <a href="privacidad.html" data-i18n="footer_privacy">Política de Privacidad</a>
+            <a href="cookies.html" data-i18n="footer_cookies">Cookies</a>
+            <a href="sitemap.html" data-i18n="footer_sitemap">Mapa del Sitio</a>
+        </div>
+    </footer>
+
+    
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-panel" id="chat-panel">
+            <div class="chat-header">
+                <strong id="chat-title">Asistente Los Leones</strong>
+                <button type="button" id="chat-close" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-suggestions" id="chat-suggestions"></div>
+            <form class="chat-input-row" id="chat-form">
+                <input type="text" id="chat-input" data-i18n-placeholder="chat_placeholder" placeholder="Escribe tu pregunta..." autocomplete="off">
+                <button type="submit" id="chat-send">Enviar</button>
+            </form>
+        </div>
+        <button type="button" class="chat-toggle" id="chat-toggle" aria-label="Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+    </div>
+
+    <button type="button" class="scroll-top" id="scroll-top" aria-label="Volver arriba" title="Volver arriba">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // Hide loader when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all menu items
+        document.querySelectorAll('.menu-item, .wine-item, .cocktail-item, .gallery-item').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(item);
+        });
+
+        // Mobile menu toggle (basic implementation)
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '100%';
+            navLinks.style.left = '0';
+            navLinks.style.right = '0';
+            navLinks.style.background = 'rgba(30, 58, 95, 0.98)';
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.padding = '2rem';
+        });
+
+        // Parallax desactivado: el hero no debe pisar la sección Tradición
+
+        // Scroll to top (bottom-left)
+        const scrollTopBtn = document.getElementById('scroll-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        console.log('Chiringuito Los Leones - Website loaded successfully');
+    </script>
+    <script src="menu-i18n.js"></script>
+    <script src="extras.js"></script>
+</body>
+</html>

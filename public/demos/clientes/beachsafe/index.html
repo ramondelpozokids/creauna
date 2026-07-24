@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BeachSafe — Entra al mar con las manos vacías</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  :root{
+    --bg:#fafaf7;
+    --bg-2:#f2f5f2;
+    --bg-soft:#eef3f1;
+    --sand:#f5efe6;
+    --cream:#fdfbf6;
+    --ink:#0a1f3d;
+    --ink-soft:#3a4a63;
+    --ink-mute:#6b7a90;
+    --ocean:#0077b6;
+    --ocean-deep:#023e6b;
+    --turq:#00b4d8;
+    --turq-soft:#90e0ef;
+    --sky:#caf0f8;
+    --coral:#ff8a65;
+    --sun:#ffd166;
+    --white:#ffffff;
+    --glass:rgba(255,255,255,.7);
+    --glass-border:rgba(10,31,61,.08);
+    --shadow-sm:0 2px 8px rgba(10,31,61,.04);
+    --shadow-md:0 10px 30px rgba(10,31,61,.06);
+    --shadow-lg:0 30px 60px rgba(10,31,61,.08);
+    --shadow-xl:0 40px 80px rgba(0,119,182,.12);
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-.02em}
+  .display{font-family:'Fraunces',serif;font-weight:300;letter-spacing:-.035em}
+  
+  /* Cursor */
+  .cursor{position:fixed;width:8px;height:8px;background:var(--ocean);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:multiply;transition:transform .2s var(--ease),width .3s var(--ease),height .3s var(--ease)}
+  .cursor-ring{position:fixed;width:40px;height:40px;border:1px solid rgba(0,119,182,.25);border-radius:50%;pointer-events:none;z-index:9998;transition:transform .15s var(--ease),width .3s var(--ease),height .3s var(--ease),border-color .3s var(--ease)}
+  .cursor.hover{width:0;height:0}
+  .cursor-ring.hover{width:70px;height:70px;border-color:var(--turq);background:rgba(0,180,216,.05)}
+  
+  /* Navegación */
+  nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:1000;padding:10px 12px 10px 24px;background:rgba(255,255,255,.75);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--glass-border);border-radius:100px;display:flex;align-items:center;gap:36px;font-size:14px;box-shadow:var(--shadow-md);transition:all .4s var(--ease)}
+  nav .logo{font-family:'Fraunces',serif;font-weight:500;font-size:18px;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;color:var(--ink)}
+  nav .logo svg{width:20px;height:20px;color:var(--ocean)}
+  nav ul{display:flex;gap:24px;list-style:none}
+  nav ul a{color:var(--ink-soft);transition:color .3s;font-weight:400}
+  nav ul a:hover{color:var(--ocean)}
+  nav .cta{padding:10px 20px;background:var(--ink);color:var(--white);border-radius:100px;font-weight:500;font-size:13px;transition:all .3s var(--ease)}
+  nav .cta:hover{background:var(--ocean);transform:scale(1.03)}
+  
+  /* HERO */
+  .hero{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;padding:120px 24px 80px;background:linear-gradient(180deg,#e8f4f8 0%,#f5efe6 60%,#fafaf7 100%)}
+  .hero-bg-img{position:absolute;top:0;right:-5%;width:60%;height:100%;background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=2000&q=80');background-size:cover;background-position:center;mask-image:linear-gradient(90deg,transparent 0%,black 30%,black 70%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,black 30%,black 70%,transparent 100%);opacity:.85}
+  .hero-grain{position:absolute;inset:0;opacity:.4;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:overlay;opacity:.08}
+  .hero-blob{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(100px);opacity:.4;pointer-events:none}
+  .hero-blob.b1{top:-100px;left:-100px;background:var(--turq-soft)}
+  .hero-blob.b2{bottom:-150px;right:20%;background:var(--sky)}
+  
+  .hero-content{position:relative;z-index:2;max-width:1400px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+  .hero-left{}
+  .hero-tag{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;background:var(--white);border:1px solid var(--glass-border);border-radius:100px;font-size:13px;color:var(--ink-soft);box-shadow:var(--shadow-sm);margin-bottom:28px}
+  .hero-tag .dot{width:6px;height:6px;background:var(--turq);border-radius:50%;box-shadow:0 0 10px var(--turq);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  
+  .hero-brand{font-family:'Fraunces',serif;font-size:clamp(80px,14vw,200px);line-height:.85;letter-spacing:-.05em;font-weight:300;color:var(--ink);margin-bottom:24px;position:relative}
+  .hero-brand .accent{font-style:italic;color:var(--ocean);font-weight:400}
+  .hero-brand .underline{position:absolute;bottom:-8px;left:5%;right:20%;height:3px;background:linear-gradient(90deg,var(--turq),transparent);border-radius:2px}
+  
+  .hero h1{font-family:'Fraunces',serif;font-size:clamp(32px,3.8vw,56px);line-height:1.05;letter-spacing:-.03em;font-weight:400;color:var(--ink);margin-bottom:24px;max-width:600px}
+  .hero h1 .italic{font-style:italic;color:var(--ocean)}
+  .hero p.lead{font-size:17px;color:var(--ink-soft);max-width:500px;line-height:1.65;font-weight:300;margin-bottom:40px}
+  .hero p.lead strong{color:var(--ink);font-weight:500}
+  .hero-buttons{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{padding:16px 28px;border-radius:100px;font-size:15px;font-weight:500;cursor:none;border:none;display:inline-flex;align-items:center;gap:10px;transition:all .4s var(--ease);position:relative;overflow:hidden}
+  .btn-primary{background:var(--ink);color:var(--white)}
+  .btn-primary:hover{background:var(--ocean);transform:translateY(-2px);box-shadow:var(--shadow-xl)}
+  .btn-secondary{background:var(--white);color:var(--ink);border:1px solid var(--glass-border);box-shadow:var(--shadow-sm)}
+  .btn-secondary:hover{border-color:var(--ocean);color:var(--ocean);transform:translateY(-2px)}
+  .btn svg{width:16px;height:16px;transition:transform .3s}
+  .btn:hover svg{transform:translateX(4px)}
+  
+  .hero-meta{display:flex;gap:32px;margin-top:48px;padding-top:32px;border-top:1px solid var(--glass-border)}
+  .hero-meta-item .num{font-family:'Fraunces',serif;font-size:32px;color:var(--ocean);font-weight:400;line-height:1}
+  .hero-meta-item .lbl{font-size:12px;color:var(--ink-mute);letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
+  
+  .hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);color:var(--ink-mute);font-size:11px;letter-spacing:.25em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+  .hero-scroll .line{width:1px;height:36px;background:linear-gradient(180deg,var(--ink-mute),transparent);animation:scrollLine 2s infinite}
+  @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+  
+  /* Sección objetos desapareciendo */
+  .vanish{position:relative;padding:140px 24px;overflow:hidden;background:linear-gradient(180deg,var(--bg) 0%,var(--sky) 50%,var(--bg) 100%)}
+  .vanish-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+  .vanish-text h2{font-family:'Fraunces',serif;font-size:clamp(36px,4.5vw,64px);line-height:1.05;letter-spacing:-.03em;font-weight:400;margin-bottom:24px;color:var(--ink)}
+  .vanish-text h2 .italic{font-style:italic;color:var(--ocean)}
+  .vanish-text p{font-size:18px;color:var(--ink-soft);line-height:1.7;max-width:480px;font-weight:300}
+  .vanish-stage{position:relative;height:500px;display:flex;align-items:center;justify-content:center}
+  .vanish-person{width:280px;height:440px;background-image:url('https://images.unsplash.com/photo-1530541930197-ff1629074b54?w=800&q=80');background-size:cover;background-position:center;border-radius:200px 200px 40px 40px;position:relative;box-shadow:var(--shadow-xl)}
+  .floating-item{position:absolute;font-size:48px;filter:drop-shadow(0 10px 30px rgba(0,119,182,.2));transition:all 1.2s var(--ease)}
+  .fi-1{top:10%;left:5%}
+  .fi-2{top:25%;right:8%}
+  .fi-3{top:50%;left:0%}
+  .fi-4{top:65%;right:5%}
+  .fi-5{top:80%;left:15%}
+  .vanish-stage.faded .floating-item{opacity:0;transform:scale(.3) translateY(-40px);filter:blur(10px)}
+  
+  /* Features */
+  .features{padding:140px 24px;position:relative;background:var(--bg)}
+  .section-head{text-align:center;max-width:800px;margin:0 auto 80px}
+  .section-label{display:inline-block;font-size:12px;color:var(--ocean);letter-spacing:.25em;text-transform:uppercase;margin-bottom:20px;font-weight:500;padding:6px 14px;background:rgba(0,180,216,.08);border-radius:100px}
+  .section-head h2{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,68px);line-height:1.05;letter-spacing:-.03em;font-weight:400;margin-bottom:20px;color:var(--ink)}
+  .section-head h2 .italic{font-style:italic;color:var(--ocean)}
+  .section-head p{font-size:18px;color:var(--ink-soft);line-height:1.6;font-weight:300}
+  .features-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature-card{padding:36px;background:var(--white);border:1px solid var(--glass-border);border-radius:28px;position:relative;overflow:hidden;transition:all .5s var(--ease);min-height:320px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm)}
+  .feature-card:hover{transform:translateY(-6px);border-color:rgba(0,180,216,.3);box-shadow:var(--shadow-lg)}
+  .feature-card.large{grid-column:span 2;min-height:340px}
+  .feature-icon{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(0,180,216,.12),rgba(0,119,182,.08));display:flex;align-items:center;justify-content:center;margin-bottom:28px;color:var(--ocean)}
+  .feature-icon svg{width:26px;height:26px}
+  .feature-card h3{font-family:'Fraunces',serif;font-size:24px;font-weight:500;letter-spacing:-.02em;margin-bottom:12px;color:var(--ink)}
+  .feature-card p{color:var(--ink-soft);line-height:1.6;font-size:15px;font-weight:300}
+  
+  /* Experiencia */
+  .experience{padding:140px 0;position:relative;background:linear-gradient(180deg,var(--bg) 0%,var(--sand) 50%,var(--bg) 100%);overflow:hidden}
+  .experience-head{padding:0 24px;max-width:1400px;margin:0 auto 60px;text-align:center}
+  .experience-head h2{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,68px);line-height:1.05;letter-spacing:-.03em;font-weight:400;margin-bottom:20px;color:var(--ink)}
+  .experience-head h2 .italic{font-style:italic;color:var(--ocean)}
+  .experience-head p{font-size:17px;color:var(--ink-soft);font-weight:300;max-width:500px;margin:0 auto}
+  
+  .experience-wrapper{position:relative;height:500px}
+  .experience-track{display:flex;gap:20px;padding:0 60px;position:absolute;top:0;left:0;height:100%;align-items:center;will-change:transform}
+  .exp-card{flex:0 0 300px;height:400px;padding:36px;background:var(--white);border:1px solid var(--glass-border);border-radius:28px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;transition:all .5s var(--ease);box-shadow:var(--shadow-md)}
+  .exp-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:rgba(0,180,216,.3)}
+  .exp-num{font-family:'Fraunces',serif;font-size:88px;color:transparent;-webkit-text-stroke:1px rgba(10,31,61,.15);line-height:1;font-style:italic;font-weight:300;transition:all .4s}
+  .exp-card:hover .exp-num{-webkit-text-stroke-color:var(--ocean);color:rgba(0,119,182,.08)}
+  .exp-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--sky),var(--turq-soft));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:8px}
+  .exp-card h3{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
+  .exp-card p{color:var(--ink-soft);font-size:14px;line-height:1.5;font-weight:300}
+  
+  /* Frase gigante */
+  .giant-quote{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--bg) 0%,var(--sky) 50%,var(--bg) 100%)}
+  .giant-quote::before{content:'';position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,216,.15) 0%,transparent 60%);border-radius:50%;filter:blur(80px);animation:float 10s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,-40px)}}
+  .giant-quote-inner{position:relative;z-index:2;text-align:center;max-width:1400px}
+  .giant-quote h2{font-family:'Fraunces',serif;font-size:clamp(44px,7.5vw,120px);line-height:1;letter-spacing:-.04em;font-weight:300;color:var(--ink)}
+  .giant-quote h2 .italic{font-style:italic;color:var(--ocean);font-weight:400;display:inline-block}
+  .giant-quote h2 .line{display:block;opacity:0;transform:translateY(60px)}
+  
+  /* Tecnología */
+  .tech{padding:140px 24px;position:relative;background:var(--bg)}
+  .tech-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+  .tech-visual{position:relative;height:600px;display:flex;align-items:center;justify-content:center}
+  .locker{width:280px;height:420px;background:linear-gradient(135deg,#e8eef2 0%,#c9d5de 100%);border-radius:24px;border:1px solid rgba(10,31,61,.08);position:relative;box-shadow:var(--shadow-xl)}
+  .locker-door{position:absolute;inset:20px;background:linear-gradient(135deg,#d4dee5,#b8c6d1);border-radius:16px;border:1px solid rgba(10,31,61,.06);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .locker-screen{width:100px;height:60px;background:#0a1f3d;border-radius:10px;border:1px solid rgba(0,180,216,.4);display:flex;align-items:center;justify-content:center;color:var(--turq);font-size:10px;letter-spacing:.2em;box-shadow:0 0 30px rgba(0,180,216,.4),inset 0 0 20px rgba(0,180,216,.2)}
+  .locker-handle{position:absolute;right:30px;top:50%;transform:translateY(-50%);width:6px;height:60px;background:linear-gradient(180deg,#8a9aa8,#5d6d7c);border-radius:3px}
+  .locker-glow{position:absolute;inset:-40px;background:radial-gradient(circle,rgba(0,180,216,.2) 0%,transparent 60%);filter:blur(40px);animation:lockerGlow 3s ease-in-out infinite}
+  @keyframes lockerGlow{0%,100%{opacity:.5}50%{opacity:1}}
+  .tech-callout{position:absolute;padding:10px 16px;background:var(--white);border:1px solid var(--glass-border);border-radius:100px;font-size:13px;display:flex;align-items:center;gap:10px;white-space:nowrap;box-shadow:var(--shadow-md);color:var(--ink)}
+  .tech-callout::before{content:'';width:6px;height:6px;background:var(--turq);border-radius:50%;box-shadow:0 0 10px var(--turq)}
+  .tc-1{top:15%;left:-10px}
+  .tc-2{top:40%;right:-30px}
+  .tc-3{bottom:30%;left:-20px}
+  .tc-4{bottom:10%;right:-10px}
+  .tc-5{top:70%;right:10px}
+  .tech-text h2{font-family:'Fraunces',serif;font-size:clamp(36px,4.5vw,64px);line-height:1.05;letter-spacing:-.03em;font-weight:400;margin-bottom:24px;color:var(--ink)}
+  .tech-text h2 .italic{font-style:italic;color:var(--ocean)}
+  .tech-text > p{font-size:18px;color:var(--ink-soft);line-height:1.7;margin-bottom:40px;font-weight:300}
+  .tech-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .tech-list li{display:flex;align-items:center;gap:16px;padding:18px 22px;background:var(--white);border:1px solid var(--glass-border);border-radius:16px;font-size:15px;color:var(--ink);transition:all .3s var(--ease);box-shadow:var(--shadow-sm)}
+  .tech-list li:hover{border-color:rgba(0,180,216,.3);transform:translateX(6px);box-shadow:var(--shadow-md)}
+  .tech-list li svg{width:20px;height:20px;color:var(--ocean);flex-shrink:0}
+  
+  /* Stats */
+  .stats{padding:100px 24px;background:var(--white);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border)}
+  .stats-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+  .stat{text-align:center;position:relative}
+  .stat:not(:last-child)::after{content:'';position:absolute;right:-20px;top:20%;bottom:20%;width:1px;background:var(--glass-border)}
+  .stat-num{font-family:'Fraunces',serif;font-size:clamp(48px,5.5vw,80px);line-height:1;letter-spacing:-.03em;color:var(--ink);margin-bottom:10px;font-weight:300}
+  .stat-num .accent{color:var(--ocean);font-style:italic}
+  .stat-label{font-size:12px;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+  
+  /* Comparativa */
+  .compare{padding:140px 24px;background:var(--bg)}
+  .compare-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .compare-col{padding:48px;border-radius:28px;position:relative}
+  .compare-bad{background:linear-gradient(180deg,#fff5f2,#fdfbf6);border:1px solid rgba(255,138,101,.2)}
+  .compare-good{background:linear-gradient(180deg,#f0fbfd,#fdfbf6);border:1px solid rgba(0,180,216,.25);box-shadow:var(--shadow-lg)}
+  .compare-col h3{font-family:'Fraunces',serif;font-size:26px;font-weight:500;letter-spacing:-.01em;margin-bottom:32px}
+  .compare-bad h3{color:#c75a3a}
+  .compare-good h3{color:var(--ocean)}
+  .compare-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+  .compare-list li{display:flex;align-items:center;gap:14px;font-size:16px;color:var(--ink-soft);padding:14px 0;border-bottom:1px solid var(--glass-border)}
+  .compare-list li:last-child{border-bottom:none}
+  .compare-list li .icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:600}
+  .compare-bad .icon{background:rgba(255,138,101,.12);color:#c75a3a}
+  .compare-good .icon{background:rgba(0,180,216,.15);color:var(--ocean)}
+  
+  /* Testimonios */
+  .testimonials{padding:140px 24px;background:linear-gradient(180deg,var(--bg),var(--sand))}
+  .testimonials-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .testimonial{padding:36px;background:var(--white);border:1px solid var(--glass-border);border-radius:24px;box-shadow:var(--shadow-sm);transition:all .4s var(--ease)}
+  .testimonial:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:rgba(0,180,216,.2)}
+  .testimonial-stars{color:var(--sun);margin-bottom:20px;letter-spacing:2px;font-size:16px}
+  .testimonial-text{font-family:'Fraunces',serif;font-size:19px;line-height:1.5;margin-bottom:28px;font-weight:400;color:var(--ink);letter-spacing:-.01em}
+  .testimonial-author{display:flex;align-items:center;gap:14px}
+  .testimonial-avatar{width:44px;height:44px;border-radius:50%;background-size:cover;background-position:center;border:1px solid var(--glass-border)}
+  .testimonial-name{font-size:14px;font-weight:500;color:var(--ink)}
+  .testimonial-role{font-size:12px;color:var(--ink-mute)}
+  
+  /* Mapa */
+  .map-section{padding:140px 24px;background:var(--bg)}
+  .map-container{max-width:1400px;margin:0 auto;position:relative;height:500px;border-radius:32px;overflow:hidden;border:1px solid var(--glass-border);background:linear-gradient(135deg,#e8f4f8,#f5efe6);box-shadow:var(--shadow-lg)}
+  .map-svg{width:100%;height:100%;opacity:.8}
+  .map-pin{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--ocean);box-shadow:0 0 0 0 rgba(0,119,182,.5);animation:pinPulse 2s infinite;border:2px solid var(--white)}
+  .map-pin::after{content:'';position:absolute;inset:-8px;border:1px solid var(--ocean);border-radius:50%;opacity:.3}
+  @keyframes pinPulse{0%{box-shadow:0 0 0 0 rgba(0,119,182,.5)}70%{box-shadow:0 0 0 20px rgba(0,119,182,0)}100%{box-shadow:0 0 0 0 rgba(0,119,182,0)}}
+  .map-label{position:absolute;padding:8px 14px;background:var(--white);border:1px solid var(--glass-border);border-radius:100px;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap;transform:translate(-50%,-180%);box-shadow:var(--shadow-sm)}
+  
+  /* App */
+  .app-section{padding:140px 24px;background:linear-gradient(180deg,var(--bg),var(--sky) 50%,var(--bg));overflow:hidden}
+  .app-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+  .app-text h2{font-family:'Fraunces',serif;font-size:clamp(36px,4.5vw,64px);line-height:1.05;letter-spacing:-.03em;font-weight:400;margin-bottom:24px;color:var(--ink)}
+  .app-text h2 .italic{font-style:italic;color:var(--ocean)}
+  .app-text > p{font-size:18px;color:var(--ink-soft);line-height:1.7;margin-bottom:40px;font-weight:300}
+  .app-features{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+  .app-feature{display:flex;align-items:center;gap:16px;font-size:15px;color:var(--ink)}
+  .app-feature-icon{width:44px;height:44px;border-radius:14px;background:var(--white);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--ocean);box-shadow:var(--shadow-sm)}
+  .phone-mock{position:relative;width:320px;height:640px;margin:0 auto;background:linear-gradient(180deg,#1a1a1a,#0a0a0a);border-radius:50px;padding:14px;border:1px solid rgba(10,31,61,.1);box-shadow:var(--shadow-xl)}
+  .phone-screen{width:100%;height:100%;background:linear-gradient(180deg,#f0fbfd,#e8f4f8);border-radius:38px;overflow:hidden;position:relative}
+  .phone-notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:100px;height:28px;background:#0a0a0a;border-radius:20px;z-index:3}
+  .phone-ui{padding:60px 24px 24px;height:100%;display:flex;flex-direction:column;gap:20px;color:var(--ink)}
+  .phone-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .phone-greeting{font-size:12px;color:var(--ink-mute)}
+  .phone-name{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.01em}
+  .phone-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--turq),var(--ocean))}
+  .phone-card{padding:20px;background:var(--white);border:1px solid var(--glass-border);border-radius:20px;box-shadow:var(--shadow-sm)}
+  .phone-card-label{font-size:10px;color:var(--ocean);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+  .phone-card-title{font-family:'Fraunces',serif;font-size:18px;font-weight:500;margin-bottom:4px;color:var(--ink)}
+  .phone-card-sub{font-size:12px;color:var(--ink-mute)}
+  .phone-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .phone-action{padding:16px;background:var(--white);border:1px solid var(--glass-border);border-radius:16px;text-align:center;font-size:12px;color:var(--ink-soft);font-weight:500}
+  .phone-action .icon{width:32px;height:32px;margin:0 auto 8px;border-radius:10px;background:linear-gradient(135deg,var(--sky),var(--turq-soft));display:flex;align-items:center;justify-content:center;color:var(--ocean)}
+  
+  /* CTA Final */
+  .final-cta{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;padding:120px 24px;overflow:hidden;background:linear-gradient(135deg,var(--ocean-deep) 0%,var(--ocean) 50%,var(--turq) 100%)}
+  .final-cta::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=2400&q=80');background-size:cover;background-position:center;opacity:.25;mix-blend-mode:overlay}
+  .final-cta-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 0%,rgba(2,62,107,.4) 100%)}
+  .final-cta-content{position:relative;z-index:2;text-align:center;max-width:1100px;color:var(--white)}
+  .final-cta h2{font-family:'Fraunces',serif;font-size:clamp(44px,7vw,110px);line-height:1;letter-spacing:-.035em;font-weight:300;margin-bottom:48px}
+  .final-cta h2 .italic{font-style:italic;color:var(--turq-soft);font-weight:400;display:block}
+  .final-cta .btn-primary{background:var(--white);color:var(--ink)}
+  .final-cta .btn-primary:hover{background:var(--turq-soft);color:var(--ocean-deep)}
+  
+  /* Footer */
+  footer{padding:80px 24px 40px;background:var(--ink);color:var(--white)}
+  .footer-inner{max-width:1400px;margin:0 auto}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+  .footer-brand p{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6;margin-top:16px;max-width:320px;font-weight:300}
+  .footer-col h4{font-size:12px;color:var(--white);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;font-weight:500}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .footer-col a{color:rgba(255,255,255,.6);font-size:14px;transition:color .3s;cursor:pointer}
+  .footer-col a:hover{color:var(--turq-soft)}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;color:rgba(255,255,255,.5);flex-wrap:wrap;gap:20px}
+  .footer-socials{display:flex;gap:12px}
+  .footer-socials a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;transition:all .3s;color:rgba(255,255,255,.7)}
+  .footer-socials a:hover{background:var(--turq);color:var(--ink);border-color:var(--turq)}
+  
+  /* Modal páginas */
+  .page-modal{position:fixed;inset:0;z-index:2000;background:rgba(10,31,61,.5);backdrop-filter:blur(10px);display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+  .page-modal.active{display:flex}
+  .page-modal-inner{background:var(--bg);max-width:800px;width:100%;border-radius:24px;padding:60px 50px;position:relative;box-shadow:var(--shadow-xl);margin:auto}
+  .page-modal-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--white);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;color:var(--ink)}
+  .page-modal-close:hover{background:var(--ink);color:var(--white)}
+  .page-modal h1{font-family:'Fraunces',serif;font-size:40px;font-weight:400;letter-spacing:-.02em;margin-bottom:12px;color:var(--ink)}
+  .page-modal .page-meta{font-size:13px;color:var(--ink-mute);margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--glass-border)}
+  .page-modal h2{font-family:'Fraunces',serif;font-size:22px;font-weight:500;margin:32px 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .page-modal h3{font-size:16px;font-weight:600;margin:20px 0 8px;color:var(--ink)}
+  .page-modal p{font-size:15px;line-height:1.7;color:var(--ink-soft);margin-bottom:14px;font-weight:300}
+  .page-modal ul{margin:12px 0 16px 20px;color:var(--ink-soft);font-size:15px;line-height:1.7;font-weight:300}
+  .page-modal ul li{margin-bottom:6px}
+  .page-modal .updated{font-size:13px;color:var(--ink-mute);font-style:italic}
+  
+  /* Responsive */
+  @media (max-width: 960px){
+    body{cursor:auto}
+    .cursor,.cursor-ring{display:none}
+    nav{padding:10px 14px 10px 18px;gap:12px}
+    nav ul{display:none}
+    .hero{padding:100px 20px 60px}
+    .hero-content{grid-template-columns:1fr;gap:40px}
+    .hero-bg-img{width:100%;right:0;opacity:.3}
+    .hero-meta{gap:20px;flex-wrap:wrap}
+    .vanish-inner,.tech-grid,.app-grid{grid-template-columns:1fr;gap:60px}
+    .features-grid{grid-template-columns:1fr}
+    .feature-card.large{grid-column:span 1}
+    .stats-grid{grid-template-columns:repeat(2,1fr);gap:40px 20px}
+    .stat:not(:last-child)::after{display:none}
+    .compare-grid,.testimonials-grid{grid-template-columns:1fr}
+    .footer-top{grid-template-columns:1fr 1fr;gap:40px}
+    .vanish-stage{height:400px}
+    .tech-visual{height:500px}
+    .page-modal-inner{padding:40px 28px}
+    .page-modal h1{font-size:30px}
+  }
+  @media (max-width: 560px){
+    .footer-top{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr 1fr}
+  }
+  
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+  .reveal.in{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0 4 3 6 0"/><path d="M2 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0 4 3 6 0" opacity=".5"/></svg>
+    BeachSafe
+  </div>
+  <ul>
+    <li><a href="#features">Producto</a></li>
+    <li><a href="#experience">Experiencia</a></li>
+    <li><a href="#tech">Tecnología</a></li>
+    <li><a href="#map">Playas</a></li>
+    <li><a href="#" data-page="about">Nosotros</a></li>
+  </ul>
+  <a href="#cta" class="cta">Reservar</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-bg-img"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-tag"><span class="dot"></span> Temporada 2025 · disponible en la costa</div>
+      <div class="hero-brand">
+        Beach<span class="accent">Safe</span>
+        <div class="underline"></div>
+      </div>
+      <h1>Entra al mar <span class="italic">con las manos vacías.</span></h1>
+      <p class="lead">Taquillas inteligentes de alta seguridad junto a la playa. <strong>Guarda tu móvil, tus llaves y tu tranquilidad</strong> antes de disfrutar del mar.</p>
+      <div class="hero-buttons">
+        <a href="#cta" class="btn btn-primary">Reservar una taquilla
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#experience" class="btn btn-secondary">Cómo funciona</a>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><div class="num">+50k</div><div class="lbl">Usuarios</div></div>
+        <div class="hero-meta-item"><div class="num">24/7</div><div class="lbl">Vigilancia</div></div>
+        <div class="hero-meta-item"><div class="num">99.9%</div><div class="lbl">Disponibilidad</div></div>
+      </div>
+    </div>
+    <div class="hero-right"></div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<!-- VANISH -->
+<section class="vanish">
+  <div class="vanish-inner">
+    <div class="vanish-text reveal">
+      <h2>Deja atrás todo <span class="italic">lo que pesa.</span></h2>
+      <p>Cada objeto que guardas en una BeachSafe es un pensamiento menos. Cada pensamiento menos es más mar, más sol, más libertad. Así de simple.</p>
+    </div>
+    <div class="vanish-stage" id="vanishStage">
+      <div class="vanish-person" style="background-image:url('https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+      <div class="floating-item fi-1">📱</div>
+      <div class="floating-item fi-2">🔑</div>
+      <div class="floating-item fi-3">😎</div>
+      <div class="floating-item fi-4">⌚</div>
+      <div class="floating-item fi-5">💍</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-head reveal">
+    <div class="section-label">¿Por qué BeachSafe?</div>
+    <h2>Diseñado para <span class="italic">tu tranquilidad.</span></h2>
+    <p>Cada detalle pensado para que lo único que hagas sea disfrutar.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card large reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/></svg>
+      </div>
+      <div>
+        <h3>Seguridad total</h3>
+        <p>Taquillas inteligentes construidas con acero inoxidable de grado marino. Diseñadas para proteger tus objetos de valor bajo cualquier condición.</p>
+      </div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/></svg>
+      </div>
+      <div>
+        <h3>Videovigilancia</h3>
+        <p>Cámaras 4K supervisando cada rincón, las 24 horas.</p>
+      </div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div>
+        <h3>Personal presente</h3>
+        <p>Siempre hay alguien disponible para ayudarte.</p>
+      </div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      </div>
+      <div>
+        <h3>Seguro incluido</h3>
+        <p>Porque la tranquilidad también puede garantizarse por escrito.</p>
+      </div>
+    </div>
+    <div class="feature-card large reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>
+      </div>
+      <div>
+        <h3>Apertura inteligente</h3>
+        <p>Pulsera RFID, reconocimiento facial y PIN de emergencia. Tú eliges cómo entrar. Siempre rápido, siempre seguro.</p>
+      </div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+      </div>
+      <div>
+        <h3>Diseño premium</h3>
+        <p>No parecen taquillas. Parecen cajas fuertes de lujo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCIA -->
+<section class="experience" id="experience">
+  <div class="experience-head reveal">
+    <div class="section-label">La experiencia</div>
+    <h2>Ocho pasos. <span class="italic">Cero preocupaciones.</span></h2>
+    <p>Así de fácil es olvidarse de todo lo demás.</p>
+  </div>
+  <div class="experience-wrapper">
+    <div class="experience-track" id="expTrack">
+      <div class="exp-card"><div><div class="exp-num">01</div><div class="exp-icon">📍</div><h3>Llegas a la playa</h3><p>Encuentra tu BeachSafe más cercana en la app.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">02</div><div class="exp-icon">👜</div><h3>Guardas tus cosas</h3><p>Abre la taquilla con un gesto. Todo dentro en segundos.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">03</div><div class="exp-icon">⌚</div><h3>Recibes tu pulsera</h3><p>Una pulsera inteligente que lo abre todo.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">04</div><div class="exp-icon">🌊</div><h3>Entras al mar</h3><p>Sin bolsillos. Sin miradas atrás. Solo tú.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">05</div><div class="exp-icon">☀️</div><h3>Disfrutas sin preocupaciones</h3><p>El verdadero lujo es olvidarse de todo.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">06</div><div class="exp-icon">🏖️</div><h3>Vuelves a la arena</h3><p>Tranquilo. Mojado. Feliz.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">07</div><div class="exp-icon">🔓</div><h3>Abres la taquilla</h3><p>Un toque. Tus cosas siguen ahí. Todas.</p></div></div>
+      <div class="exp-card"><div><div class="exp-num">08</div><div class="exp-icon">✨</div><h3>Continúas tu día</h3><p>Como si nada. Porque nada pasó.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FRASE GIGANTE -->
+<section class="giant-quote">
+  <div class="giant-quote-inner">
+    <h2>
+      <span class="line">La mejor sensación</span>
+      <span class="line">del verano <span class="italic">no es el agua.</span></span>
+      <span class="line"><span class="italic">Es olvidarte</span></span>
+      <span class="line">de todo lo demás.</span>
+    </h2>
+  </div>
+</section>
+
+<!-- TECNOLOGÍA -->
+<section class="tech" id="tech">
+  <div class="tech-grid">
+    <div class="tech-visual reveal">
+      <div class="locker-glow"></div>
+      <div class="locker">
+        <div class="locker-door">
+          <div class="locker-screen">READY</div>
+        </div>
+        <div class="locker-handle"></div>
+      </div>
+      <div class="tech-callout tc-1">Acero inoxidable 316L</div>
+      <div class="tech-callout tc-2">Pantalla táctil</div>
+      <div class="tech-callout tc-3">Lector RFID</div>
+      <div class="tech-callout tc-4">Resistente al salitre</div>
+      <div class="tech-callout tc-5">Cámara 4K</div>
+    </div>
+    <div class="tech-text reveal">
+      <div class="section-label">Tecnología</div>
+      <h2>Ingeniería <span class="italic">invisible.</span></h2>
+      <p>Detrás de cada BeachSafe hay meses de I+D, materiales de grado marino y un sistema inteligente que aprende de cada interacción.</p>
+      <ul class="tech-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Acero inoxidable de grado marino</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Electrónica sellada IP67</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Pulsera RFID de largo alcance</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Sistema inteligente con IA</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Videovigilancia 24/7</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num"><span class="accent">+</span><span class="counter" data-target="50000">0</span></div><div class="stat-label">Usuarios felices</div></div>
+    <div class="stat"><div class="stat-num"><span class="counter" data-target="99.9" data-decimal="1">0</span><span class="accent">%</span></div><div class="stat-label">Disponibilidad</div></div>
+    <div class="stat"><div class="stat-num">24<span class="accent">/7</span></div><div class="stat-label">Videovigilancia</div></div>
+    <div class="stat"><div class="stat-num"><span class="counter" data-target="100">0</span><span class="accent">%</span></div><div class="stat-label">Tranquilidad</div></div>
+  </div>
+</section>
+
+<!-- COMPARATIVA -->
+<section class="compare">
+  <div class="section-head reveal">
+    <div class="section-label">La diferencia</div>
+    <h2>Dos formas de <span class="italic">ir a la playa.</span></h2>
+  </div>
+  <div class="compare-grid">
+    <div class="compare-col compare-bad reveal">
+      <h3>Dejar las cosas en la toalla</h3>
+      <ul class="compare-list">
+        <li><span class="icon">✕</span>Estrés constante</li>
+        <li><span class="icon">✕</span>Riesgo real de robos</li>
+        <li><span class="icon">✕</span>Mirar la toalla cada 10 segundos</li>
+        <li><span class="icon">✕</span>No disfrutar de verdad</li>
+      </ul>
+    </div>
+    <div class="compare-col compare-good reveal">
+      <h3>Con BeachSafe</h3>
+      <ul class="compare-list">
+        <li><span class="icon">✓</span>Tranquilidad absoluta</li>
+        <li><span class="icon">✓</span>Seguridad certificada</li>
+        <li><span class="icon">✓</span>Tecnología invisible</li>
+        <li><span class="icon">✓</span>Libertad total</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonials">
+  <div class="section-head reveal">
+    <div class="section-label">Testimonios</div>
+    <h2>Lo que dicen <span class="italic">quienes ya lo vivieron.</span></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Por primera vez pude bañarme sin mirar la toalla cada diez segundos. Es otro nivel."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80')"></div>
+        <div><div class="testimonial-name">Laura M.</div><div class="testimonial-role">Barcelona</div></div>
+      </div>
+    </div>
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Vale cada euro. La pulsera es comodísima y el diseño de las taquillas es precioso."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80')"></div>
+        <div><div class="testimonial-name">Javier R.</div><div class="testimonial-role">Valencia</div></div>
+      </div>
+    </div>
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Esto debería existir en todas las playas del mundo. Me cambió el verano."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background-image:url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80')"></div>
+        <div><div class="testimonial-name">Marta S.</div><div class="testimonial-role">Málaga</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAPA -->
+<section class="map-section" id="map">
+  <div class="section-head reveal">
+    <div class="section-label">Disponibilidad</div>
+    <h2>Encuentra tu <span class="italic">playa.</span></h2>
+  </div>
+  <div class="map-container reveal">
+    <svg class="map-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(10,31,61,0.06)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+      <path d="M 100 200 Q 200 150 300 180 T 500 200 T 700 180" stroke="rgba(0,119,182,.3)" stroke-width="1.5" fill="none"/>
+      <path d="M 150 250 Q 250 220 350 240 T 550 260 T 750 240" stroke="rgba(0,180,216,.25)" stroke-width="1.5" fill="none"/>
+    </svg>
+    <div class="map-pin" style="top:40%;left:25%"></div>
+    <div class="map-label" style="top:40%;left:25%">Barcelona</div>
+    <div class="map-pin" style="top:55%;left:45%"></div>
+    <div class="map-label" style="top:55%;left:45%">Valencia</div>
+    <div class="map-pin" style="top:65%;left:30%"></div>
+    <div class="map-label" style="top:65%;left:30%">Málaga</div>
+    <div class="map-pin" style="top:35%;left:60%"></div>
+    <div class="map-label" style="top:35%;left:60%">Ibiza</div>
+    <div class="map-pin" style="top:70%;left:55%"></div>
+    <div class="map-label" style="top:70%;left:55%">Marbella</div>
+  </div>
+</section>
+
+<!-- APP -->
+<section class="app-section">
+  <div class="app-grid">
+    <div class="app-text reveal">
+      <div class="section-label">La app</div>
+      <h2>Todo en <span class="italic">tu muñeca.</span></h2>
+      <p>Reserva, abre, gestiona. Una interfaz tan elegante como el resto de la experiencia.</p>
+      <div class="app-features">
+        <div class="app-feature">
+          <div class="app-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          Reserva en 10 segundos
+        </div>
+        <div class="app-feature">
+          <div class="app-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          Abre con un toque
+        </div>
+        <div class="app-feature">
+          <div class="app-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg></div>
+          Gestiona desde cualquier lugar
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="phone-mock">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-ui">
+            <div class="phone-header">
+              <div>
+                <div class="phone-greeting">Buenos días</div>
+                <div class="phone-name">Laura 👋</div>
+              </div>
+              <div class="phone-avatar"></div>
+            </div>
+            <div class="phone-card">
+              <div class="phone-card-label">Reserva activa</div>
+              <div class="phone-card-title">Playa de la Barceloneta</div>
+              <div class="phone-card-sub">Taquilla #042 · hasta 19:00</div>
+            </div>
+            <div class="phone-actions">
+              <div class="phone-action"><div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>Abrir</div>
+              <div class="phone-action"><div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>Playas</div>
+              <div class="phone-action"><div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg></div>Historial</div>
+              <div class="phone-action"><div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6"/></svg></div>Ajustes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="final-cta" id="cta">
+  <div class="final-cta-overlay"></div>
+  <div class="final-cta-content reveal">
+    <h2>Tu única preocupación<br><span class="italic">debería ser elegir</span><br>cuándo entrar al agua.</h2>
+    <a href="#map" class="btn btn-primary">Encuentra una playa
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo" style="display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:500;font-size:20px;color:var(--white)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0 4 3 6 0"/><path d="M2 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0 4 3 6 0" opacity=".5"/></svg>
+          BeachSafe
+        </div>
+        <p>Entra al mar con las manos vacías. Diseñado en Barcelona, disponible en toda la costa.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Producto</h4>
+        <ul>
+          <li><a href="#features">Características</a></li>
+          <li><a href="#tech">Tecnología</a></li>
+          <li><a href="#map">Playas</a></li>
+          <li><a href="#" data-page="pricing">Precios</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#" data-page="about">Sobre nosotros</a></li>
+          <li><a href="#" data-page="press">Prensa</a></li>
+          <li><a href="#" data-page="careers">Carreras</a></li>
+          <li><a href="#" data-page="contact">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#" data-page="privacy">Privacidad</a></li>
+          <li><a href="#" data-page="terms">Términos</a></li>
+          <li><a href="#" data-page="cookies">Cookies</a></li>
+          <li><a href="#" data-page="insurance">Seguro</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2025 BeachSafe. Todos los derechos reservados.</div>
+      <div class="footer-socials">
+        <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.8a8.5 8.5 0 01-2.36.64 4.13 4.13 0 001.81-2.27 8.21 8.21 0 01-2.61 1 4.1 4.1 0 00-7 3.74 11.64 11.64 0 01-8.45-4.29 4.16 4.16 0 001.27 5.49A4.09 4.09 0 012.8 9.7v.05a4.1 4.1 0 003.3 4 4.06 4.06 0 01-1.85.07 4.1 4.1 0 003.83 2.85A8.22 8.22 0 012 18.35 11.57 11.57 0 008.29 20 11.59 11.59 0 0019.95 8.2v-.52A8.43 8.43 0 0022 5.8z"/></svg></a>
+        <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38 3.92 3.9 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32 6.16 6.16 0 000-12.32zM12 16a4 4 0 110-8 4 4 0 010 8zm6.4-11.85a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg></a>
+        <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005.8 20.1a6.34 6.34 0 0010.86-4.43V8.55a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.84-.02z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL PÁGINAS -->
+<div class="page-modal" id="pageModal">
+  <div class="page-modal-inner">
+    <div class="page-modal-close" onclick="closePage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </div>
+    <div id="pageContent"></div>
+  </div>
+</div>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+  
+  // Cursor
+  const cursor = document.querySelector('.cursor');
+  const ring = document.querySelector('.cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx-4}px,${my-4}px)`});
+  function animateRing(){rx+=(mx-rx-20)*.15;ry+=(my-ry-20)*.15;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(animateRing)}
+  animateRing();
+  document.querySelectorAll('a,button,.btn,.feature-card,.exp-card,.testimonial,.tech-list li').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover')});
+    el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover')});
+  });
+  
+  // Hero entrada
+  gsap.from('.hero-tag',{opacity:0,y:20,duration:1,delay:.2,ease:'power3.out'});
+  gsap.from('.hero-brand',{opacity:0,y:40,duration:1.2,delay:.4,ease:'power3.out'});
+  gsap.from('.hero h1',{opacity:0,y:30,duration:1,delay:.7,ease:'power3.out'});
+  gsap.from('.hero p.lead',{opacity:0,y:20,duration:1,delay:.9,ease:'power3.out'});
+  gsap.from('.hero-buttons',{opacity:0,y:20,duration:1,delay:1.1,ease:'power3.out'});
+  gsap.from('.hero-meta-item',{opacity:0,y:20,duration:.8,stagger:.1,delay:1.3,ease:'power3.out'});
+  
+  // Reveal
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  
+  // Vanish
+  ScrollTrigger.create({
+    trigger:'.vanish',start:'top 60%',end:'bottom 40%',
+    onEnter:()=>document.getElementById('vanishStage').classList.add('faded'),
+    onLeaveBack:()=>document.getElementById('vanishStage').classList.remove('faded')
+  });
+  
+  // Frase gigante
+  gsap.to('.giant-quote .line',{
+    opacity:1,y:0,duration:1.2,stagger:.15,ease:'power3.out',
+    scrollTrigger:{trigger:'.giant-quote',start:'top 70%'}
+  });
+  
+  // Experiencia horizontal - 8 pasos
+  const track = document.getElementById('expTrack');
+  if(track){
+    const getScroll = () => track.scrollWidth - window.innerWidth + 120;
+    gsap.to(track,{
+      x:() => -getScroll(),
+      ease:'none',
+      scrollTrigger:{
+        trigger:'.experience',
+        start:'top top',
+        end:()=>`+=${getScroll()}`,
+        scrub:1,
+        pin:true,
+        anticipatePin:1,
+        invalidateOnRefresh:true
+      }
+    });
+  }
+  
+  // Counters
+  const counters = document.querySelectorAll('.counter');
+  const countObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const el = e.target;
+        const target = parseFloat(el.dataset.target);
+        const dec = parseInt(el.dataset.decimal||0);
+        let current = 0;
+        const step = target/60;
+        const tick = ()=>{
+          current += step;
+          if(current >= target){el.textContent = dec? target.toFixed(dec) : Math.floor(target).toLocaleString('es-ES');return}
+          el.textContent = dec? current.toFixed(dec) : Math.floor(current).toLocaleString('es-ES');
+          requestAnimationFrame(tick);
+        };
+        tick();
+        countObs.unobserve(el);
+      }
+    });
+  },{threshold:.5});
+  counters.forEach(c=>countObs.observe(c));
+  
+  // Tech callouts
+  gsap.from('.tech-callout',{
+    opacity:0,scale:.5,duration:.8,stagger:.15,ease:'back.out(1.7)',
+    scrollTrigger:{trigger:'.tech-visual',start:'top 70%'}
+  });
+  
+  // Map
+  gsap.from('.map-pin',{
+    opacity:0,scale:0,duration:.6,stagger:.1,ease:'back.out(2)',
+    scrollTrigger:{trigger:'.map-container',start:'top 70%'}
+  });
+  gsap.from('.map-label',{
+    opacity:0,y:10,duration:.5,stagger:.1,delay:.3,
+    scrollTrigger:{trigger:'.map-container',start:'top 70%'}
+  });
+  
+  // ========== PÁGINAS ==========
+  const pages = {
+    about: {
+      title: 'Sobre BeachSafe',
+      meta: 'Conoce la historia detrás de la marca',
+      content: `
+        <h2>Nuestra historia</h2>
+        <p>BeachSafe nació en el verano de 2022 en una playa de Barcelona. Nuestros fundadores, hartos de pasar el día mirando la toalla mientras sus amigos se bañaban, decidieron que tenía que haber una forma mejor de disfrutar del mar.</p>
+        <p>Lo que empezó como una idea en una servilleta se ha convertido en la red de taquillas inteligentes más avanzada del Mediterráneo, presente en más de 30 playas y utilizada por más de 50.000 personas cada temporada.</p>
+        <h2>Nuestra misión</h2>
+        <p>Creemos que ir a la playa debería ser sinónimo de libertad. No de estrés, no de vigilancia constante, no de miedo. Por eso diseñamos un producto que elimina la única preocupación real que tienes cuando te das ese primer chapuzón.</p>
+        <h2>Nuestro equipo</h2>
+        <p>Somos un equipo de 42 personas entre Barcelona, Valencia y Málaga. Ingenieros, diseñadores, amantes del mar y obsesos de la experiencia de usuario. Trabajamos cada día para que tu verano sea un poco más fácil.</p>
+      `
+    },
+    contact: {
+      title: 'Contacto',
+      meta: 'Estamos aquí para ayudarte',
+      content: `
+        <h2>Habla con nosotros</h2>
+        <p>¿Tienes una pregunta? ¿Quieres colaborar? ¿Necesitas ayuda con tu reserva? Nuestro equipo responde en menos de 24 horas.</p>
+        <h3>Email general</h3>
+        <p>hola@beachsafe.com</p>
+        <h3>Soporte</h3>
+        <p>soporte@beachsafe.com · +34 900 123 456</p>
+        <h3>Prensa</h3>
+        <p>prensa@beachsafe.com</p>
+        <h3>Oficinas</h3>
+        <p>Passeig de Gràcia 88, 08008 Barcelona</p>
+        <p>Calle Colón 22, 46004 Valencia</p>
+      `
+    },
+    privacy: {
+      title: 'Política de Privacidad',
+      meta: 'Actualizado el 1 de enero de 2025',
+      content: `
+        <p class="updated">En BeachSafe tomamos muy en serio la protección de tus datos personales. Esta política explica qué información recopilamos, cómo la usamos y cuáles son tus derechos.</p>
+        <h2>1. Responsable del tratamiento</h2>
+        <p>BeachSafe Technologies S.L., con CIF B-12345678 y domicilio en Passeig de Gràcia 88, 08008 Barcelona, es la responsable del tratamiento de los datos personales facilitados a través de la web y la app.</p>
+        <h2>2. Datos que recopilamos</h2>
+        <ul>
+          <li>Datos de identificación: nombre, email, teléfono.</li>
+          <li>Datos de uso: reservas, historial, preferencias.</li>
+          <li>Datos biométricos (solo si activas el reconocimiento facial): huella o rostro, almacenados localmente en la taquilla y nunca en nuestros servidores.</li>
+          <li>Datos de pago: gestionados por nuestro proveedor certificado PCI-DSS.</li>
+        </ul>
+        <h2>3. Finalidad</h2>
+        <p>Utilizamos tus datos para gestionar tus reservas, ofrecerte soporte, mejorar el servicio y, con tu consentimiento, enviarte comunicaciones comerciales.</p>
+        <h2>4. Tus derechos</h2>
+        <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a privacidad@beachsafe.com.</p>
+      `
+    },
+    terms: {
+      title: 'Términos y Condiciones',
+      meta: 'Actualizado el 1 de enero de 2025',
+      content: `
+        <p class="updated">Al utilizar los servicios de BeachSafe aceptas los siguientes términos. Te recomendamos leerlos con atención.</p>
+        <h2>1. El servicio</h2>
+        <p>BeachSafe ofrece un servicio de alquiler de taquillas inteligentes ubicadas en playas seleccionadas. El usuario puede reservar una taquilla por horas o por días a través de la app o en los tótems físicos.</p>
+        <h2>2. Reservas y pagos</h2>
+        <p>Las reservas se confirman tras el pago completo. Las cancelaciones con más de 2 horas de antelación reciben un reembolso íntegro. Las cancelaciones posteriores no son reembolsables.</p>
+        <h2>3. Uso responsable</h2>
+        <p>El usuario se compromete a:</p>
+        <ul>
+          <li>No introducir objetos ilegales, peligrosos o perecederos.</li>
+          <li>Liberar la taquilla antes de la hora contratada.</li>
+          <li>No dañar la instalación.</li>
+        </ul>
+        <h2>4. Responsabilidad</h2>
+        <p>BeachSafe cuenta con un seguro que cubre los objetos depositados hasta 500€ por reserva, salvo negligencia demostrada del usuario.</p>
+      `
+    },
+    cookies: {
+      title: 'Política de Cookies',
+      meta: 'Actualizado el 1 de enero de 2025',
+      content: `
+        <p class="updated">Las cookies son pequeños archivos que se almacenan en tu dispositivo para mejorar tu experiencia. Aquí te explicamos cuáles usamos.</p>
+        <h2>1. Cookies esenciales</h2>
+        <p>Son necesarias para el funcionamiento de la web. Incluyen las de sesión, autenticación y seguridad. No se pueden desactivar.</p>
+        <h2>2. Cookies analíticas</h2>
+        <p>Nos ayudan a entender cómo usas la web para mejorarla. Utilizamos Google Analytics con anonimización de IP.</p>
+        <h2>3. Cookies de marketing</h2>
+        <p>Solo se activan con tu consentimiento. Nos permiten mostrarte anuncios relevantes en otras plataformas.</p>
+        <h2>4. Gestionar tus preferencias</h2>
+        <p>Puedes cambiar tus preferencias en cualquier momento desde el banner de cookies o escribiendo a privacidad@beachsafe.com.</p>
+      `
+    },
+    insurance: {
+      title: 'Seguro incluido',
+      meta: 'Tu tranquilidad, por escrito',
+      content: `
+        <p>Cada reserva de BeachSafe incluye automáticamente un seguro que cubre tus objetos depositados. Porque la tranquilidad debe ser real, no solo una promesa.</p>
+        <h2>Cobertura básica</h2>
+        <ul>
+          <li>Cobertura hasta 500€ por reserva.</li>
+          <li>Incluye robos, daños y pérdidas confirmadas.</li>
+          <li>Indemnización en menos de 72 horas tras la verificación.</li>
+        </ul>
+        <h2>Cobertura premium (opcional)</h2>
+        <p>Por 2€ adicionales puedes ampliar la cobertura hasta 1.500€ y incluir objetos de alto valor como cámaras, ordenadores o joyas.</p>
+        <h2>¿Cómo funciona en caso de incidente?</h2>
+        <p>Notifica el incidente desde la app en menos de 24 horas. Nuestro equipo verificará las cámaras y te contactará para gestionar la indemnización.</p>
+        <h2>Exclusiones</h2>
+        <p>No se cubren objetos prohibidos, negligencia demostrada del usuario o fuerza mayor.</p>
+      `
+    },
+    pricing: {
+      title: 'Precios',
+      meta: 'Simple, transparente, sin sorpresas',
+      content: `
+        <p>Creemos en los precios claros. Sin letra pequeña, sin cargos ocultos, sin sorpresas al final del día.</p>
+        <h2>Tarifas por hora</h2>
+        <ul>
+          <li>Taquilla pequeña (móvil + llaves): 2€/hora</li>
+          <li>Taquilla mediana (mochila): 4€/hora</li>
+          <li>Taquilla grande (varias mochilas): 6€/hora</li>
+        </ul>
+        <h2>Bonos del día</h2>
+        <ul>
+          <li>Día completo (hasta 12h): 12€ / 18€ / 24€</li>
+          <li>Abono semanal (7 días): 60€ / 90€ / 120€</li>
+        </ul>
+        <h2>BeachSafe Plus</h2>
+        <p>Por 49€ al año tienes acceso ilimitado a taquillas pequeñas, cobertura de seguro ampliada y prioridad de reserva. Ideal si vas a la playa cada semana.</p>
+      `
+    },
+    press: {
+      title: 'Sala de Prensa',
+      meta: 'Recursos, notas y contacto para medios',
+      content: `
+        <p>Somos una startup joven con una historia que contar. Si eres periodista o creador de contenido, nos encantará hablar contigo.</p>
+        <h2>Notas de prensa</h2>
+        <ul>
+          <li><strong>Junio 2025:</strong> BeachSafe alcanza las 50.000 reservas en su tercera temporada.</li>
+          <li><strong>Abril 2025:</strong> Ronda Seed de 3M€ liderada por Seaya Ventures.</li>
+          <li><strong>Mayo 2024:</strong> Lanzamiento en la costa de Málaga y Marbella.</li>
+        </ul>
+        <h2>Recursos para prensa</h2>
+        <p>Logo en alta resolución, fotografías de producto, vídeos corporativos y datos de la empresa disponibles en nuestra sala de recursos.</p>
+        <h2>Contacto de prensa</h2>
+        <p>prensa@beachsafe.com · +34 611 22 33 44</p>
+      `
+    },
+    careers: {
+      title: 'Trabaja con nosotros',
+      meta: 'Construye el futuro del verano',
+      content: `
+        <p>Estamos construyendo algo que no existía. Si quieres formar parte de un equipo pequeño, ambicioso y obsesionado con el detalle, este es tu sitio.</p>
+        <h2>Nuestros valores</h2>
+        <ul>
+          <li><strong>Obsesión por el usuario:</strong> cada decisión empieza y termina en la persona que va a usar el producto.</li>
+          <li><strong>Calidad sin atajos:</strong> preferimos ir más lento que entregar algo mediocre.</li>
+          <li><strong>Transparencia radical:</strong> compartimos información, decisiones y errores.</li>
+        </ul>
+        <h2>Posiciones abiertas</h2>
+        <ul>
+          <li>Senior Frontend Engineer (Barcelona, remoto parcial)</li>
+          <li>Product Designer (Barcelona)</li>
+          <li>Operations Manager — Costa de Levante</li>
+          <li>Customer Happiness Specialist (temporada verano)</li>
+        </ul>
+        <h2>Beneficios</h2>
+        <p>Salario competitivo, equity, horario flexible, 25 días de vacaciones, equipo de última generación y, por supuesto, acceso ilimitado a BeachSafe.</p>
+        <p>Envía tu CV a personas@beachsafe.com</p>
+      `
+    }
+  };
+  
+  function openPage(key){
+    const p = pages[key];
+    if(!p) return;
+    document.getElementById('pageContent').innerHTML = `
+      <h1>${p.title}</h1>
+      <div class="page-meta">${p.meta}</div>
+      ${p.content}
+    `;
+    document.getElementById('pageModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePage(){
+    document.getElementById('pageModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  
+  document.querySelectorAll('[data-page]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.preventDefault();
+      openPage(el.dataset.page);
+    });
+  });
+  
+  document.getElementById('pageModal').addEventListener('click',e=>{
+    if(e.target.id === 'pageModal') closePage();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key === 'Escape') closePage();
+  });
+</script>
+
+</body>
+</html>

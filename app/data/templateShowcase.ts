@@ -73,7 +73,7 @@ function mapPremiumCategory(
   return 'gastronomy';
 }
 
-/** 6 proyectos reales — sin duplicados ni subpáginas sueltas. */
+/** Proyectos reales — sin duplicados ni subpáginas sueltas. */
 const portfolioProjects: TemplateShowcaseItem[] = [
   {
     slug: 'rest-art-cafe',
@@ -200,6 +200,37 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryKey: 'gastronomy',
     categoryLabelEs: 'Cafetería',
     categoryLabelEn: 'Café',
+    kind: 'project',
+  },
+  {
+    slug: 'beachsafe',
+    nameEs: 'BeachSafe',
+    nameEn: 'BeachSafe',
+    descEs:
+      'Taquillas inteligentes de playa: reserva, experiencia y tecnología para entrar al mar con las manos vacías.',
+    descEn:
+      'Smart beach lockers: booking, experience and tech so you enter the sea empty-handed.',
+    demoPath: '/demos/clientes/beachsafe/index.html',
+    previewImage:
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&h=600&fit=crop&q=80',
+    categoryKey: 'sport',
+    categoryLabelEs: 'Playa & tech',
+    categoryLabelEn: 'Beach & tech',
+    kind: 'project',
+  },
+  {
+    slug: 'chiringuito-los-leones',
+    nameEs: 'Chiringuito Los Leones',
+    nameEn: 'Chiringuito Los Leones',
+    descEs:
+      'Chiringuito en Torremolinos desde 1962: espetos, marisco, paellas y ambiente de Costa del Sol.',
+    descEn:
+      'Beach bar in Torremolinos since 1962: sardine skewers, seafood, paellas and Costa del Sol vibe.',
+    demoPath: '/demos/clientes/chiringuito-los-leones/index.html',
+    previewImage: '/demos/clientes/chiringuito-los-leones/images/1.png',
+    categoryKey: 'gastronomy',
+    categoryLabelEs: 'Chiringuito',
+    categoryLabelEn: 'Beach bar',
     kind: 'project',
   },
 ];
