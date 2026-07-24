@@ -23,6 +23,7 @@ import type {
   VisualLanguage,
 } from './creativeBrief';
 import { makeUniquenessSeed } from './uniquenessSeed';
+import { isAestheticMedicinePrompt } from './designDna';
 
 export type CreativeDirectorSource = 'llm' | 'heuristic_fallback';
 
@@ -177,19 +178,32 @@ export function parseCreativeBriefJson(
 
   const seed = makeUniquenessSeed(`${businessName}:${sectorId}:${heroTitle}`, entropy);
 
+  let brandTone = oneOf(o.brandTone, BRAND_TONES, 'premium');
+  let artDirection = oneOf(o.artDirection, ART_DIRS, 'clinicalLight');
+  const aestheticSignal =
+    sectorId === 'clinic' &&
+    (isAestheticMedicinePrompt(prompt) ||
+      isAestheticMedicinePrompt([businessName, aboutHeadline, aboutBody, ...services].join(' ')));
+  if (aestheticSignal) {
+    brandTone = 'luxury';
+    artDirection = 'aspirationalLuxury';
+  }
+
   return {
     version: '1.0',
     sectorId,
     audience: str(o.audience, '', 160),
     positioning: str(o.positioning, aboutHeadline, 160),
-    brandTone: oneOf(o.brandTone, BRAND_TONES, 'premium'),
-    artDirection: oneOf(o.artDirection, ART_DIRS, 'clinicalLight'),
+    brandTone,
+    artDirection,
     visualLanguage: oneOf(o.visualLanguage, VIS_LANGS, 'airAndWhite'),
     heroFamily: oneOf(o.heroFamily, HERO_FAMS, 'editorialStack'),
-    density: oneOf(o.density, DENSITIES, 'balanced'),
+    density: oneOf(o.density, DENSITIES, aestheticSignal ? 'sparse' : 'balanced'),
     rhythm: oneOf(o.rhythm, RHYTHMS, 'editorialBreaks'),
-    typeScale: oneOf(o.typeScale, TYPE_SCALES, 'editorial'),
-    photoStyle,
+    typeScale: oneOf(o.typeScale, TYPE_SCALES, aestheticSignal ? 'billboard' : 'editorial'),
+    photoStyle: aestheticSignal
+      ? 'soft facial treatments, skincare texture, calm clinical beauty — never dental chairs or hotel suites'
+      : photoStyle,
     iconStyle: oneOf(o.iconStyle, ICON_STYLES, 'line'),
     storytellingArc,
     businessName,
@@ -214,7 +228,7 @@ export function parseCreativeBriefJson(
     uniquenessSeed: seed,
     rationale: str(
       o.rationale,
-      `LLM Creative Director: sector=${sectorId}, name=${businessName}`,
+      `LLM Creative Director: sector=${sectorId}, name=${businessName}${aestheticSignal ? ', aesthetic luxury' : ''}`,
       280
     ),
   };
@@ -229,6 +243,8 @@ ROL: Eres el Director Creativo de CREAUNA. NO generas HTML. Solo razonas el brie
 REGLA CRÍTICA — NEGOCIO vs INSPIRACIÓN:
 - El sectorId debe reflejar el NEGOCIO REAL del cliente, no metáforas ni referencias de moodboard.
 - Si el brief dice clínica / medicina estética / dental y menciona «como un hotel» o «inspiración hotel 5★», el sector es clinic, NUNCA hotel.
+- Si el negocio es medicina estética / med-spa / tratamientos faciales (hialurónico, neuromoduladores, etc.): sectorId=clinic, brandTone=luxury, artDirection=aspirationalLuxury. NUNCA copies de hotel ni CTAs de estancia.
+- Si el negocio es clínica dental / salud general sin estética: brandTone=premium, artDirection=clinicalLight.
 - Si el negocio es hotel boutique, sectorId = hotel.
 - Extrae el nombre EXACTO del negocio (p.ej. «Aura Clinic»), no el título del documento ni el sector genérico.
 

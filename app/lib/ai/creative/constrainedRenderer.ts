@@ -517,24 +517,82 @@ function galleryHtml(brief: CreativeBrief, sel: CompositionSelection, gallery: s
 }
 
 function whyHtml(brief: CreativeBrief, sel: CompositionSelection): string {
-  const items =
-    brief.lang === 'es'
+  const es = brief.lang === 'es';
+  const bySector: Record<string, [string, string][]> = {
+    clinic: es
       ? [
-          ['Criterio', 'Decisiones con intención, no plantillas.'],
+          ['Precisión', 'Protocolos claros y tecnología al servicio de resultados naturales.'],
+          ['Calma', 'Un entorno pensado para confiar desde la primera visita.'],
+          ['Seguimiento', 'Acompañamiento real, no solo el momento del tratamiento.'],
+        ]
+      : [
+          ['Precision', 'Clear protocols and technology for natural results.'],
+          ['Calm', 'A space designed for trust from the first visit.'],
+          ['Follow-up', 'Real accompaniment, not only the treatment moment.'],
+        ],
+    restaurant: es
+      ? [
+          ['Producto', 'Temporada, fuego y oficio en cada plato.'],
+          ['Mesa', 'Hospitalidad que invita a quedarse.'],
+          ['Ritmo', 'Cocina viva, servicio atento, sin prisa falsa.'],
+        ]
+      : [
+          ['Produce', 'Season, fire and craft on every plate.'],
+          ['Table', 'Hospitality that invites you to linger.'],
+          ['Pace', 'Living kitchen, attentive service, no false rush.'],
+        ],
+    hotel: es
+      ? [
+          ['Llegada', 'La primera impresión se siente en el umbral.'],
+          ['Estancia', 'Detalle silencioso: luz, textura, descanso.'],
+          ['Cuidado', 'Un equipo que anticipa sin invadir.'],
+        ]
+      : [
+          ['Arrival', 'The first impression begins at the threshold.'],
+          ['Stay', 'Quiet detail: light, texture, rest.'],
+          ['Care', 'A team that anticipates without invading.'],
+        ],
+    legal: es
+      ? [
+          ['Criterio', 'Decisiones complejas con claridad y discreción.'],
+          ['Sobriedad', 'Sin ruido: argumentos sólidos, trato serio.'],
+          ['Confianza', 'Acompañamos con rigor, no con promesas vacías.'],
+        ]
+      : [
+          ['Judgment', 'Complex decisions with clarity and discretion.'],
+          ['Sobriety', 'No noise: solid arguments, serious manner.'],
+          ['Trust', 'We accompany with rigor, not empty promises.'],
+        ],
+    architecture: es
+      ? [
+          ['Espacio', 'Proyectos que se habitan, no solo se fotografían.'],
+          ['Material', 'Luz, proporción y tacto como lenguaje.'],
+          ['Proceso', 'Diálogo continuo desde el brief hasta la obra.'],
+        ]
+      : [
+          ['Space', 'Projects to inhabit, not only to photograph.'],
+          ['Material', 'Light, proportion and touch as language.'],
+          ['Process', 'Ongoing dialogue from brief to build.'],
+        ],
+  };
+  const items =
+    bySector[brief.sectorId] ||
+    (es
+      ? [
+          ['Criterio', 'Decisiones con intención, a medida de tu negocio.'],
           ['Detalle', 'Cada sección tiene un solo trabajo.'],
           ['Presencia', 'Una identidad que se reconoce al instante.'],
         ]
       : [
-          ['Judgment', 'Intentional decisions, not templates.'],
+          ['Judgment', 'Intentional decisions, tailored to your business.'],
           ['Detail', 'Each section has one job.'],
           ['Presence', 'An identity recognized instantly.'],
-        ];
+        ]);
+  const title = es ? 'La diferencia está en el detalle' : 'The difference is in the detail';
   return `<section id="por-que" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-dark);color:#fff;">
   <div style="max-width:1120px;margin:0 auto;">
-    <p class="cua-kicker" style="color:var(--cua-accent);">${brief.lang === 'es' ? 'Por qué' : 'Why'}</p>
-    <h2 style="font-family:var(--cua-font-h);font-size:clamp(1.9rem,3.5vw,2.8rem);margin:.4rem 0 2.5rem;max-width:16ch;">${
-      brief.lang === 'es' ? 'La diferencia está en el detalle' : 'The difference is in the detail'
-    }</h2>
+    <p class="cua-kicker" style="color:var(--cua-accent);">${es ? 'Por qué' : 'Why'}</p>
+    <h2 style="font-family:var(--cua-font-h);font-size:clamp(1.9rem,3.5vw,2.8rem);margin:.4rem 0 2.5rem;max-width:16ch;">${title}</h2>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
       ${items
         .map(
@@ -551,36 +609,77 @@ function whyHtml(brief: CreativeBrief, sel: CompositionSelection): string {
 }
 
 function testimonialsHtml(brief: CreativeBrief, sel: CompositionSelection): string {
-  const isClinic = brief.sectorId === 'clinic';
+  const es = brief.lang === 'es';
+  const svc = brief.services[0] || (es ? 'el cuidado' : 'the care');
+  const quotesBy: Record<string, [string, string][]> = {
+    clinic: es
+      ? [
+          [`Resultado natural y trato impecable con ${svc.toLowerCase()}.`, 'Paciente'],
+          ['Se nota el criterio médico en cada detalle.', 'Reseña Google'],
+          ['Ambiente sereno. Volveré sin dudarlo.', 'Paciente'],
+        ]
+      : [
+          [`Natural result and impeccable care with ${svc.toLowerCase()}.`, 'Patient'],
+          ['Medical judgment shows in every detail.', 'Google review'],
+          ['Serene atmosphere. I will return.', 'Patient'],
+        ],
+    restaurant: es
+      ? [
+          ['La pasta y el servicio merecen reserva fija.', 'Comensal'],
+          ['Ambiente cálido, cocina con oficio.', 'Reseña Google'],
+          ['Volveremos por el vino y la mesa.', 'Comensal'],
+        ]
+      : [
+          ['Pasta and service deserve a standing reservation.', 'Guest'],
+          ['Warm room, cooking with craft.', 'Google review'],
+          ['We will return for the wine and the table.', 'Guest'],
+        ],
+    hotel: es
+      ? [
+          ['Llegada impecable y descanso real.', 'Huésped'],
+          ['Detalle silencioso: luz, ropa de cama, calma.', 'Reseña'],
+          ['Una estancia que se recuerda.', 'Huésped'],
+        ]
+      : [
+          ['Impeccable arrival and real rest.', 'Guest'],
+          ['Quiet detail: light, linens, calm.', 'Review'],
+          ['A stay you remember.', 'Guest'],
+        ],
+    legal: es
+      ? [
+          ['Claridad y discreción en un asunto complejo.', 'Cliente'],
+          ['Criterio sólido, sin teatro.', 'Empresario'],
+          ['Respuesta seria cuando más hacía falta.', 'Cliente'],
+        ]
+      : [
+          ['Clarity and discretion on a complex matter.', 'Client'],
+          ['Solid judgment, no theatre.', 'Founder'],
+          ['Serious response when it mattered most.', 'Client'],
+        ],
+  };
   const quotes =
-    brief.lang === 'es'
+    quotesBy[brief.sectorId] ||
+    (es
       ? [
           ['Excelente atención y resultado impecable.', 'Cliente verificado'],
           ['Se nota el criterio profesional en cada detalle.', 'Reseña Google'],
-          [
-            'Volveremos. Ambiente y calidad de primer nivel.',
-            isClinic ? 'Paciente' : 'Huésped',
-          ],
+          ['Volveremos. Ambiente y calidad de primer nivel.', 'Cliente'],
         ]
       : [
           ['Excellent care and impeccable result.', 'Verified client'],
           ['Professional judgment in every detail.', 'Google review'],
-          [
-            'We will return. Top-tier atmosphere and quality.',
-            isClinic ? 'Patient' : 'Guest',
-          ],
-        ];
+          ['We will return. Top-tier atmosphere and quality.', 'Client'],
+        ]);
   return `<section id="opiniones" class="cua-section" data-cua-comp="${sel.testimonialId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-surface);">
   <div style="max-width:1000px;margin:0 auto;">
-    <p class="cua-kicker">${brief.lang === 'es' ? 'Opiniones' : 'Testimonials'}</p>
-    <h2 class="cua-h2" style="margin-bottom:2rem;">${brief.lang === 'es' ? 'Lo que dejan dicho' : 'What people leave behind'}</h2>
-    <div style="display:grid;gap:1.75rem;">
+    ${sectionHead(es ? 'Opiniones' : 'Testimonials', es ? 'Lo que dejan dicho' : 'What people leave behind')}
+    <div style="display:grid;gap:1.75rem;margin-top:2rem;">
       ${quotes
         .map(
           ([q, a], i) =>
             `<blockquote class="reveal" style="animation-delay:${i * 60}ms;margin:0;padding:0 0 1.5rem;border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 10%,transparent);">
-              <p style="font-family:var(--cua-font-h);font-size:clamp(1.25rem,2.4vw,1.75rem);color:var(--cua-dark);line-height:1.35;margin:0;">“${q}”</p>
-              <footer style="margin-top:.9rem;color:var(--cua-muted);font-size:.88rem;">— ${a}</footer>
+              <p style="font-family:var(--cua-font-h);font-size:clamp(1.25rem,2.4vw,1.75rem);color:var(--cua-dark);line-height:1.35;margin:0;">“${esc(q)}”</p>
+              <footer style="margin-top:.9rem;color:var(--cua-muted);font-size:.88rem;">— ${esc(a)}</footer>
             </blockquote>`
         )
         .join('')}
@@ -590,21 +689,70 @@ function testimonialsHtml(brief: CreativeBrief, sel: CompositionSelection): stri
 }
 
 function faqHtml(brief: CreativeBrief, sel: CompositionSelection): string {
+  const es = brief.lang === 'es';
+  const where = brief.address || (es ? 'Consulta la sección de contacto.' : 'See the contact section.');
+  const bySector: Record<string, [string, string][]> = {
+    clinic: es
+      ? [
+          ['¿Cómo pido cita?', 'Usa el formulario o el botón de consulta del hero. Te confirmamos horario.'],
+          ['¿Dónde estáis?', where],
+          ['¿La primera visita qué incluye?', 'Valoración y plan de tratamiento, sin compromiso de compra.'],
+        ]
+      : [
+          ['How do I book?', 'Use the form or the consultation button in the hero. We confirm a slot.'],
+          ['Where are you?', where],
+          ['What does the first visit include?', 'Assessment and a treatment plan, with no purchase pressure.'],
+        ],
+    restaurant: es
+      ? [
+          ['¿Cómo reservo mesa?', 'Formulario o CTA de reserva. Indica día, hora y comensales.'],
+          ['¿Dónde estáis?', where],
+          ['¿Hay carta de vinos?', 'Sí — pregunta en sala o consulta la sección de servicios/carta.'],
+        ]
+      : [
+          ['How do I book a table?', 'Form or reserve CTA. Share day, time and party size.'],
+          ['Where are you?', where],
+          ['Is there a wine list?', 'Yes — ask in the room or see the menu section.'],
+        ],
+    hotel: es
+      ? [
+          ['¿Cómo reservo estancia?', 'Formulario de contacto o CTA de reserva con fechas.'],
+          ['¿Dónde estáis?', where],
+          ['¿Horario de check-in?', brief.hours || 'Te lo confirmamos al reservar.'],
+        ]
+      : [
+          ['How do I book a stay?', 'Contact form or book CTA with your dates.'],
+          ['Where are you?', where],
+          ['Check-in time?', brief.hours || 'We confirm when you book.'],
+        ],
+    legal: es
+      ? [
+          ['¿Cómo solicito consulta?', 'Formulario confidencial. Respondemos con agenda disponible.'],
+          ['¿Dónde estáis?', where],
+          ['¿Primera consulta?', 'Escuchamos el asunto y te proponemos alcance y siguientes pasos.'],
+        ]
+      : [
+          ['How do I request a consult?', 'Confidential form. We reply with available times.'],
+          ['Where are you?', where],
+          ['First consult?', 'We hear the matter and propose scope and next steps.'],
+        ],
+  };
   const faqs =
-    brief.lang === 'es'
+    bySector[brief.sectorId] ||
+    (es
       ? [
           ['¿Cómo reservo?', 'Usa el formulario de contacto o el botón principal del hero.'],
-          ['¿Dónde estáis?', brief.address || 'Consulta la sección de contacto.'],
+          ['¿Dónde estáis?', where],
           ['¿Qué incluye?', 'Te lo detallamos en la primera conversación, sin letra pequeña.'],
         ]
       : [
           ['How do I book?', 'Use the contact form or the primary hero button.'],
-          ['Where are you?', brief.address || 'See the contact section.'],
+          ['Where are you?', where],
           ['What is included?', 'We clarify scope in the first conversation.'],
-        ];
+        ]);
   return `<section id="faq" class="cua-section" data-cua-comp="${sel.faqId}" style="padding:clamp(4rem,7vw,6rem) 6vw;background:var(--cua-light);">
   <div style="max-width:720px;margin:0 auto;">
-    <h2 class="cua-h2">FAQ</h2>
+    ${sectionHead('FAQ', es ? 'Preguntas frecuentes' : 'Frequently asked')}
     ${faqs
       .map(
         ([q, a]) =>
@@ -618,23 +766,36 @@ function faqHtml(brief: CreativeBrief, sel: CompositionSelection): string {
 </section>`;
 }
 
-function contactHtml(brief: CreativeBrief, sel: CompositionSelection): string {
+function contactHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection): string {
+  const es = brief.lang === 'es';
+  const craft = isCraftChrome(dna);
+  const titles: Record<string, string> = {
+    clinic: es ? 'Pide tu consulta' : 'Request your consult',
+    restaurant: es ? 'Reserva tu mesa' : 'Reserve your table',
+    hotel: es ? 'Reserva tu estancia' : 'Book your stay',
+    legal: es ? 'Consulta confidencial' : 'Confidential consult',
+  };
+  const title = titles[brief.sectorId] || (es ? 'Hablemos' : 'Let’s talk');
+  const wa =
+    brief.wantsWhatsApp
+      ? `<a href="https://wa.me/" class="cua-btn-ghost${craft ? ' cua-btn-craft' : ''}" style="margin-top:.85rem;display:inline-block;">WhatsApp</a>`
+      : '';
   return `<section id="contacto" class="cua-section" data-cua-comp="${sel.formId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-surface);">
   <div style="max-width:960px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(2rem,5vw,3.5rem);align-items:start;">
     <div class="reveal">
-      <p class="cua-kicker">${brief.lang === 'es' ? 'Contacto' : 'Contact'}</p>
-      <h2 class="cua-h2">${brief.lang === 'es' ? 'Hablemos' : 'Let’s talk'}</h2>
-      <p class="cua-lede">${esc(
+      ${sectionHead(es ? 'Contacto' : 'Contact', title)}
+      <p class="cua-lede" style="margin-top:1rem;">${esc(
         brief.address ||
-          (brief.lang === 'es' ? 'Escríbenos y te respondemos pronto.' : 'Write to us and we will reply soon.')
+          (es ? 'Escríbenos y te respondemos pronto.' : 'Write to us and we will reply soon.')
       )}</p>
       ${brief.hours ? `<p style="color:var(--cua-muted);margin-top:.75rem;">${esc(brief.hours)}</p>` : ''}
+      ${wa}
     </div>
     <form class="reveal" style="display:grid;gap:.85rem;" onsubmit="return false;">
-      <label class="cua-field">${brief.lang === 'es' ? 'Nombre' : 'Name'}<input required name="name" /></label>
+      <label class="cua-field">${es ? 'Nombre' : 'Name'}<input required name="name" /></label>
       <label class="cua-field">Email<input required type="email" name="email" /></label>
-      <label class="cua-field">${brief.lang === 'es' ? 'Mensaje' : 'Message'}<textarea name="msg" rows="4"></textarea></label>
-      <button type="submit" class="cua-btn-primary" data-cua-comp="${sel.ctaId}">${esc(brief.primaryCta)}</button>
+      <label class="cua-field">${es ? 'Mensaje' : 'Message'}<textarea name="msg" rows="4"></textarea></label>
+      <button type="submit" class="cua-btn-primary${craft ? ' cua-btn-craft' : ''}" data-cua-comp="${sel.ctaId}">${esc(brief.primaryCta)}</button>
     </form>
   </div>
 </section>`;
@@ -714,7 +875,7 @@ function sectionFor(
   if (k.includes('testimonial') || k.includes('opinion') || k.includes('review') || k.includes('insight'))
     return testimonialsHtml(brief, sel);
   if (k.includes('faq')) return faqHtml(brief, sel);
-  if (k.includes('contact') || k.includes('reserva') || k.includes('booking')) return contactHtml(brief, sel);
+  if (k.includes('contact') || k.includes('reserva') || k.includes('booking')) return contactHtml(brief, dna, sel);
   return '';
 }
 
@@ -764,7 +925,7 @@ export function renderConstrainedHtml(input: RenderInput): string {
     else bodySections.push(gal);
     seen.add('galeria');
   }
-  if (!seen.has('contacto')) bodySections.push(contactHtml(brief, sel));
+  if (!seen.has('contacto')) bodySections.push(contactHtml(brief, dna, sel));
   // Contacto siempre al final
   const contactAt = bodySections.findIndex((s) => /id="contacto"/.test(s));
   if (contactAt >= 0 && contactAt !== bodySections.length - 1) {

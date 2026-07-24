@@ -16,6 +16,7 @@ import {
   runLlmCreativeDirector,
   type CreativeDirectorResult,
 } from './llmCreativeDirector';
+import { isAestheticMedicinePrompt } from './designDna';
 
 function detectSector(prompt: string): CreativeSectorId {
   const p = prompt.toLowerCase();
@@ -57,7 +58,7 @@ function extractName(prompt: string, lang: 'es' | 'en'): string {
   return defaults[detectSector(prompt)][lang];
 }
 
-function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
+function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en', aestheticClinic = false) {
   const table: Record<
     CreativeSectorId,
     {
@@ -383,6 +384,48 @@ function sectorDefaults(sector: CreativeSectorId, lang: 'es' | 'en') {
   return table[sector];
 }
 
+function applyAestheticClinicDefaults(
+  d: ReturnType<typeof sectorDefaults>,
+  lang: 'es' | 'en'
+): ReturnType<typeof sectorDefaults> {
+  return {
+    ...d,
+    brandTone: 'luxury',
+    artDirection: 'aspirationalLuxury',
+    visualLanguage: 'airAndWhite',
+    photoStyle: 'soft facial treatments, skincare texture, calm clinical beauty — never dental chairs or hotel suites',
+    positioning:
+      lang === 'es'
+        ? 'Medicina estética de autor: precisión, calma y hospitalidad discreta'
+        : 'Author aesthetic medicine: precision, calm and discreet hospitality',
+    aboutHeadline:
+      lang === 'es' ? 'Belleza con criterio médico' : 'Beauty with medical judgment',
+    aboutBody:
+      lang === 'es'
+        ? 'Protocolos avanzados en un entorno sereno. Resultados naturales, sin ruido de clínica convencional.'
+        : 'Advanced protocols in a serene setting. Natural results, without conventional clinic noise.',
+    services: {
+      es: ['Ácido hialurónico', 'Neuromoduladores', 'Skinboosters', 'Peelings médicos', 'Láser dermatológico'],
+      en: ['Hyaluronic acid', 'Neuromodulators', 'Skinboosters', 'Medical peels', 'Dermatologic laser'],
+    },
+    hero: {
+      es: [
+        'Medicina estética con precisión y presencia',
+        'Tratamientos de autor en un entorno pensado para confiar.',
+      ],
+      en: [
+        'Aesthetic medicine with precision and presence',
+        'Author treatments in a space built for trust.',
+      ],
+    },
+    cta: {
+      es: ['Reservar primera consulta', 'Ver tratamientos'],
+      en: ['Book first consultation', 'View treatments'],
+    },
+    heroFamilies: ['fullBleedCenter', 'splitMediaRight', 'editorialStack'],
+  };
+}
+
 function wantsWa(prompt: string): boolean {
   if (/sin\s+whatsapp|without\s+whatsapp|no\s+whatsapp/i.test(prompt)) return false;
   return /whatsapp|wa\.me|reserva(r)?\s+por\s+whatsapp/i.test(prompt);
@@ -405,7 +448,9 @@ export function runCreativeDirector(
   opts?: { entropy?: string }
 ): CreativeBrief {
   const sectorId = detectSector(prompt);
-  const d = sectorDefaults(sectorId, lang);
+  const aesthetic = sectorId === 'clinic' && isAestheticMedicinePrompt(prompt);
+  let d = sectorDefaults(sectorId, lang, aesthetic);
+  if (aesthetic) d = applyAestheticClinicDefaults(d, lang);
   const seed = makeUniquenessSeed(prompt, opts?.entropy);
   const rng = seededRandom(seed);
   const heroFamily = pickSeeded(rng, d.heroFamilies);

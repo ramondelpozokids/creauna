@@ -1,26 +1,15 @@
-# Studio — comparación visual Aura vs demos (24 jul)
+# Studio — 24 jul (local, sin push)
 
-## Gaps cerrados en renderer (sin clonar demos)
+## Hecho (pendiente de push si lo pides)
 
-1. Nav sticky/scroll + underline + menú móvil
-2. Hero bleed: viñeta radial, centrado, stagger, ken layer
-3. Cabeceras de sección con reglas (kicker triad)
-4. About: `<img>` + marco accent + proof rows
-5. Galería: captions hover + object-position
-6. Footer 3 columnas
-7. Orden narrativo: servicios → nosotros → galería → contacto
-8. Motion: IntersectionObserver `is-inview`
+1. Clamp estética → luxury + `aestheticClinic` (DNA + LLM parse + heuristic)
+2. Why / testimonials / FAQ / contact **por sector** (adiós copy meta CREAUNA)
+3. Contact craft + títulos (consulta / mesa / estancia)
 
-## Benchmark gates
+## Smoke Aura
 
-Siguen en verde (sesión previa): media 95.3 / min 95.1.
+OK · pack facial · CTA consulta · contacto «Pide tu consulta»
 
-## Aura smoke post-techo
+## No push automático
 
-- Score ~94.8 (honesto)
-- CTAs consulta OK, sector clinic
-- HTML en `tmp/smoke-aura/aura.html`
-
-## Siguiente
-
-Revisar a ojo en Studio live tras deploy; más atmósfera fotográfica si hace falta.
+Commits locales; push solo bajo pedido explícito.

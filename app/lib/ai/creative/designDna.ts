@@ -394,10 +394,12 @@ const DNA_BY_SECTOR: Record<CreativeSectorId, DnaBase> = {
 
 export function resolveDesignDna(brief: CreativeBrief): DesignDna {
   const base = DNA_BY_SECTOR[brief.sectorId] || DNA_BY_SECTOR.default;
-  // Medicina estética premium: marfil / dorado sutil / salvia — no teal dental
+  // Medicina estética: por tone LLM O por señales del brief (no depender solo del LLM)
   const luxuryAesthetic =
     brief.sectorId === 'clinic' &&
-    (brief.artDirection === 'aspirationalLuxury' || brief.brandTone === 'luxury');
+    (brief.artDirection === 'aspirationalLuxury' ||
+      brief.brandTone === 'luxury' ||
+      isAestheticMedicineBrief(brief));
   const palette = luxuryAesthetic
     ? {
         accent: '#B8A078',
@@ -452,6 +454,33 @@ export function resolveDesignDna(brief: CreativeBrief): DesignDna {
       scale: typeScale,
     },
   };
+}
+
+/** Señales de medicina estética / med-spa (vs clínica dental genérica). */
+export function isAestheticMedicineBrief(
+  brief: Pick<CreativeBrief, 'businessName' | 'positioning' | 'services' | 'aboutHeadline' | 'aboutBody' | 'heroTitle' | 'heroSubtitle' | 'primaryCta'>
+): boolean {
+  const blob = [
+    brief.businessName,
+    brief.positioning,
+    brief.aboutHeadline,
+    brief.aboutBody,
+    brief.heroTitle,
+    brief.heroSubtitle,
+    brief.primaryCta,
+    ...(brief.services || []),
+  ]
+    .join(' ')
+    .toLowerCase();
+  return /est[eé]tic|aesthetic|med[\s-]?spa|hialuron|neuromod|skinbooster|botox|peeling|l[aá]ser\s+dermat|bioestimul|rejuvenec|medicina\s+est/i.test(
+    blob
+  );
+}
+
+export function isAestheticMedicinePrompt(prompt: string): boolean {
+  return /est[eé]tic|aesthetic|med[\s-]?spa|hialuron|neuromod|skinbooster|botox|peeling|l[aá]ser\s+dermat|bioestimul|rejuvenec|medicina\s+est/i.test(
+    prompt
+  );
 }
 
 export function listDesignDnaSectors(): CreativeSectorId[] {
