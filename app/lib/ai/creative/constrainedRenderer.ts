@@ -129,7 +129,20 @@ function secondaryHref(brief: CreativeBrief, sel: CompositionSelection): string 
   const order = sel.sectionOrder.join(' ');
   if (/menu|carta|service|practice|product|room|treatment/i.test(order)) return '#servicios';
   if (/galer|gallery|project|lookbook/i.test(order)) return '#galeria';
-  return '#nosotros';
+  return '#servicios';
+}
+
+function sectionHead(kicker: string, title: string, lede?: string): string {
+  return `<header class="cua-section-head reveal">
+    <p class="cua-kicker cua-kicker-ruled"><span>${esc(kicker)}</span></p>
+    <h2 class="cua-h2">${title}</h2>
+    ${lede ? `<p class="cua-lede" style="margin-top:.85rem;max-width:42ch;">${lede}</p>` : ''}
+  </header>`;
+}
+
+function bandFor(index: number, dark = false): string {
+  if (dark) return 'var(--cua-dark)';
+  return index % 2 === 0 ? 'var(--cua-surface)' : 'var(--cua-light)';
 }
 
 function ctaRow(brief: CreativeBrief, sel: CompositionSelection, onDark = false, craft = false): string {
@@ -233,14 +246,18 @@ function heroHtml(
   // Overlay DNA: soberCorporate mantiene wash claro + texto oscuro; resto inmersivo
   const onDark = dna.mood !== 'soberCorporate';
   const lightText = onDark ? '#fff' : 'var(--cua-dark)';
-  const bleedAlign = left ? 'flex-start' : bit % 2 === 0 ? 'center' : 'flex-end';
-  const bleedText = left || bleedAlign === 'flex-start' ? 'left' : bleedAlign === 'flex-end' ? 'right' : 'center';
-  return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.bleed};display:flex;align-items:flex-end;justify-content:${bleedAlign};text-align:${bleedText};background:${bleedOverlay(dna)},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:${hv.bleedPad};position:relative;">
-    <div class="reveal" style="max-width:${left || bleedText !== 'center' ? '640px' : '780px'};${bleedText === 'center' ? 'margin:0 auto;' : ''}">
-      <p class="cua-brand" style="color:inherit;opacity:.95;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;">${name}</p>
-      <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:1rem 0;line-height:1.02;letter-spacing:-.025em;">${title}</h1>
-      <p style="font-size:1.08rem;opacity:.92;max-width:40ch;${bleedText === 'center' ? 'margin-left:auto;margin-right:auto;' : ''}line-height:1.55;">${sub}</p>
-      <div style="${bleedText === 'center' ? 'display:flex;justify-content:center;' : bleedText === 'right' ? 'display:flex;justify-content:flex-end;' : ''}">${ctaRow(brief, sel, onDark, craft)}</div>
+  const bleedAlign = left ? 'flex-start' : 'center';
+  const bleedText = left ? 'left' : 'center';
+  const vignette = onDark
+    ? 'radial-gradient(ellipse at center,transparent 0%,rgba(0,0,0,.45) 100%)'
+    : 'radial-gradient(ellipse at center,transparent 20%,color-mix(in srgb,var(--cua-light) 35%,transparent) 100%)';
+  return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.bleed};display:flex;align-items:center;justify-content:${bleedAlign};text-align:${bleedText};background:${bleedOverlay(dna)},${vignette},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:${hv.bleedPad};position:relative;overflow:hidden;">
+    <div class="cua-hero-ken" aria-hidden="true" style="position:absolute;inset:-4%;background:url('${heroImg}') center/cover;opacity:.22;mix-blend-mode:luminosity;animation:cua-ken 18s ease-out alternate infinite;pointer-events:none;"></div>
+    <div style="max-width:${left ? '640px' : '780px'};${bleedText === 'center' ? 'margin:0 auto;' : ''}position:relative;z-index:2;">
+      <p class="cua-brand reveal" style="color:inherit;opacity:.98;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.82rem,1.4vw,1rem);animation-delay:.05s;">${name}</p>
+      <h1 class="reveal" style="font-family:var(--cua-font-h);font-size:${size};margin:1.1rem 0;line-height:1.02;letter-spacing:-.025em;animation-delay:.18s;">${title}</h1>
+      <p class="reveal" style="font-size:1.08rem;opacity:.92;max-width:40ch;${bleedText === 'center' ? 'margin-left:auto;margin-right:auto;' : ''}line-height:1.55;animation-delay:.3s;">${sub}</p>
+      <div class="reveal" style="animation-delay:.42s;${bleedText === 'center' ? 'display:flex;justify-content:center;' : ''}">${ctaRow(brief, sel, onDark, craft)}</div>
     </div>
     <span data-cua-hero-bg style="display:none;"></span>
   </section>`;
@@ -258,7 +275,6 @@ function navHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection
     ['#galeria', brief.lang === 'es' ? 'Galería' : 'Gallery'],
     ['#contacto', brief.lang === 'es' ? 'Contacto' : 'Contact'],
   ];
-  // Variantes reales por componente (library → HTML distinto, no solo metadata)
   const links =
     navKind === 'nav-minimal-link'
       ? allLinks.filter(([h]) => h === '#inicio' || h === '#servicios' || h === '#contacto')
@@ -267,15 +283,9 @@ function navHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection
         : allLinks;
   const forceDark = navKind === 'nav-sticky-dark';
   const onDarkBleed = forceDark || (overBleed && dna.mood !== 'soberCorporate');
-  const stickyAlways = forceDark || navKind === 'nav-corporate-utility' || !overBleed;
-  const navStyle = forceDark
-    ? 'position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--cua-dark) 92%,transparent);border-bottom:1px solid color-mix(in srgb,#fff 12%,transparent);backdrop-filter:blur(12px);'
-    : stickyAlways && !overBleed
-      ? 'position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:color-mix(in srgb,var(--cua-surface) 88%,transparent);border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 8%,transparent);'
-      : 'position:absolute;top:0;left:0;right:0;z-index:60;background:transparent;border:none;';
+  const useCraftType = craft || navKind === 'nav-minimal-link' || navKind === 'nav-sticky-dark';
   const linkColor = onDarkBleed ? 'rgba(255,255,255,.9)' : 'var(--cua-muted)';
   const brandColor = onDarkBleed ? '#fff' : 'var(--cua-dark)';
-  const useCraftType = craft || navKind === 'nav-minimal-link' || navKind === 'nav-sticky-dark';
   const linkStyle = useCraftType
     ? `color:${linkColor};text-decoration:none;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;`
     : `color:${linkColor};text-decoration:none;font-size:.88rem;letter-spacing:.02em;`;
@@ -293,10 +303,20 @@ function navHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection
         ? brief.primaryCta || 'Reservar'
         : brief.primaryCta || 'Book'
       : brief.primaryCta;
-  return `<header class="cua-nav" data-cua-nav="${esc(navKind)}" data-cua-comp="${sel.navId}" style="${navStyle}">
-  <div style="max-width:1200px;margin:0 auto;padding:1.15rem 6vw;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
-    <a href="#inicio" style="${brandStyle}">${name}</a>
-    <nav aria-label="Main" style="display:flex;gap:${navKind === 'nav-minimal-link' ? '2rem' : '1.5rem'};flex-wrap:wrap;align-items:center;">
+  const navClass = [
+    'cua-nav',
+    overBleed && !forceDark ? 'cua-nav-over-bleed' : '',
+    forceDark ? 'cua-nav-dark' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+  return `<header class="${navClass}" data-cua-nav="${esc(navKind)}" data-cua-comp="${sel.navId}">
+  <div class="cua-nav-inner">
+    <a href="#inicio" class="cua-nav-brand" style="${brandStyle}">${name}</a>
+    <button type="button" class="cua-nav-toggle" aria-label="Menu" aria-expanded="false" onclick="toggleCuaNav(this)">
+      <span></span><span></span>
+    </button>
+    <nav class="cua-nav-links" aria-label="Main">
       ${links.map(([h, l]) => `<a class="cua-nav-link" href="${h}" style="${linkStyle}">${l}</a>`).join('')}
       ${
         showCta
@@ -308,7 +328,12 @@ function navHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection
 </header>`;
 }
 
-function servicesHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection): string {
+function servicesHtml(
+  brief: CreativeBrief,
+  dna: DesignDna,
+  sel: CompositionSelection,
+  band = 'var(--cua-surface)'
+): string {
   const editorial =
     /legal|architecture|clinic|corporate/.test(brief.sectorId) ||
     dna.density === 'sparse' ||
@@ -346,10 +371,9 @@ function servicesHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSele
     </div>`
       )
       .join('\n');
-    return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-light);">
+    return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:${band};">
   <div style="max-width:780px;margin:0 auto;">
-    <p class="cua-kicker">${label}</p>
-    <h2 class="cua-h2">${heading}</h2>
+    ${sectionHead(label, heading)}
     <div style="margin-top:2rem;">${rows}</div>
   </div>
 </section>`;
@@ -365,10 +389,9 @@ function servicesHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSele
     </a>`
       )
       .join('\n');
-    return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-surface);">
+    return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:${band};">
   <div style="max-width:920px;margin:0 auto;">
-    <p class="cua-kicker">${label}</p>
-    <h2 class="cua-h2">${heading}</h2>
+    ${sectionHead(label, heading)}
     <div style="margin-top:2.25rem;border-top:1px solid color-mix(in srgb,var(--cua-dark) 12%,transparent);">${rows}</div>
   </div>
 </section>`;
@@ -397,27 +420,41 @@ function servicesHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSele
     brief.density === 'dense'
       ? 'repeat(3,minmax(0,1fr))'
       : 'repeat(auto-fit,minmax(240px,1fr))';
-  return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-light);">
+  return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:${band};">
   <div style="max-width:1120px;margin:0 auto;">
-    <p class="cua-kicker">${label}</p>
-    <h2 class="cua-h2" style="max-width:16ch;">${heading}</h2>
+    ${sectionHead(label, heading)}
     <div style="display:grid;grid-template-columns:${cols};gap:1.5rem;margin-top:2.5rem;">${cards}</div>
   </div>
 </section>`;
 }
 
-function aboutHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection, aboutImg: string): string {
+function aboutHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection, aboutImg: string, band = 'var(--cua-surface)'): string {
   const flip = seedBit(brief.uniquenessSeed, 0) % 2 === 0;
   const overlap = dna.rhythm === 'editorialBreaks' || dna.heroFamily === 'asymmetricOverlap';
-  const img = `<div class="reveal" style="min-height:${overlap ? '520px' : '460px'};background:url('${aboutImg}') center/cover;border-radius:var(--cua-radius);${
-    overlap ? 'transform:translateY(1.5rem);box-shadow:0 28px 60px color-mix(in srgb,var(--cua-dark) 16%,transparent);' : ''
-  }"></div>`;
-  const copy = `<div class="reveal" style="padding:${overlap ? '2rem 0 0' : '1rem 0'};">
-    <p class="cua-kicker">${brief.lang === 'es' ? 'Nosotros' : 'About'}</p>
-    <h2 class="cua-h2" style="max-width:14ch;">${esc(brief.aboutHeadline || brief.positioning)}</h2>
-    <p class="cua-lede" style="max-width:40ch;margin-top:1rem;">${esc(brief.aboutBody || brief.positioning)}</p>
+  const proofs = brief.services.slice(0, 3);
+  const proofRows = proofs
+    .map(
+      (s, i) => `<div class="cua-proof-row reveal" style="animation-delay:${0.08 + i * 0.06}s">
+      <span class="cua-line-icon" aria-hidden="true"></span>
+      <span>${esc(s)}</span>
+    </div>`
+    )
+    .join('');
+  const img = `<div class="cua-about-media reveal" style="position:relative;min-height:${overlap ? '520px' : '460px'};">
+    <div class="cua-about-frame" aria-hidden="true"></div>
+    <img src="${aboutImg}" alt="${esc(brief.businessName)}" loading="lazy" style="position:relative;z-index:1;width:100%;height:100%;min-height:${overlap ? '520px' : '460px'};object-fit:cover;border-radius:var(--cua-radius);${
+      overlap ? 'transform:translateY(1.25rem);box-shadow:0 28px 60px color-mix(in srgb,var(--cua-dark) 16%,transparent);' : ''
+    }" />
   </div>`;
-  return `<section id="nosotros" class="cua-section" data-cua-comp="${sel.aboutId}" style="padding:clamp(4.5rem,9vw,8rem) 6vw;background:var(--cua-surface);">
+  const copy = `<div class="reveal" style="padding:${overlap ? '2rem 0 0' : '1rem 0'};">
+    ${sectionHead(
+      brief.lang === 'es' ? 'Nosotros' : 'About',
+      esc(brief.aboutHeadline || brief.positioning)
+    )}
+    <p class="cua-lede" style="max-width:40ch;margin-top:1rem;">${esc(brief.aboutBody || brief.positioning)}</p>
+    <div style="margin-top:1.75rem;display:grid;gap:.85rem;">${proofRows}</div>
+  </div>`;
+  return `<section id="nosotros" class="cua-section" data-cua-comp="${sel.aboutId}" style="padding:clamp(4.5rem,9vw,8rem) 6vw;background:${band};">
   <div style="max-width:1120px;margin:0 auto;display:grid;grid-template-columns:${
     overlap ? '0.95fr 1.05fr' : '1fr 1fr'
   };gap:clamp(2rem,5vw,4rem);align-items:center;">
@@ -426,9 +463,12 @@ function aboutHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelecti
 </section>`;
 }
 
-function galleryHtml(brief: CreativeBrief, sel: CompositionSelection, gallery: string[]): string {
+function galleryHtml(brief: CreativeBrief, sel: CompositionSelection, gallery: string[], band = 'var(--cua-light)'): string {
   const imgs = gallery.slice(0, 6);
-  // Bento: first large, then varied cells — not a flat 3×2 card grid
+  const captions =
+    brief.lang === 'es'
+      ? ['Ambiente', 'Detalle', 'Proceso', 'Espacio', 'Cuidado', 'Presencia']
+      : ['Atmosphere', 'Detail', 'Process', 'Space', 'Care', 'Presence'];
   const cells = imgs
     .map((src, i) => {
       const span =
@@ -436,19 +476,21 @@ function galleryHtml(brief: CreativeBrief, sel: CompositionSelection, gallery: s
           ? 'grid-column:span 2;grid-row:span 2;min-height:420px;'
           : i === 3
             ? 'grid-column:span 2;min-height:220px;'
-            : 'min-height:220px;';
-      return `<figure class="reveal" style="${span}margin:0;overflow:hidden;border-radius:var(--cua-radius);">
-        <img src="${src}" alt="${esc(brief.businessName)} ${i + 1}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform 1.1s ease;" />
+            : 'min-height:220px;aspect-ratio:1;';
+      const pos = ['center', 'top', 'bottom', 'left', 'right', 'center'][i % 6];
+      return `<figure class="cua-gal-item reveal" style="${span}margin:0;overflow:hidden;border-radius:var(--cua-radius);position:relative;">
+        <img src="${src}" alt="${esc(brief.businessName)} — ${captions[i]}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:${pos};transition:transform 1.1s ease;" />
+        <figcaption class="cua-gal-cap">${captions[i]}</figcaption>
       </figure>`;
     })
     .join('\n');
-  return `<section id="galeria" class="cua-section cua-gallery" data-cua-comp="${sel.galleryId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-light);">
+  return `<section id="galeria" class="cua-section cua-gallery" data-cua-comp="${sel.galleryId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:${band};">
   <div style="max-width:1180px;margin:0 auto;">
-    <p class="cua-kicker">${brief.lang === 'es' ? 'Galería' : 'Gallery'}</p>
-    <h2 class="cua-h2" style="margin-bottom:1.75rem;">${
+    ${sectionHead(
+      brief.lang === 'es' ? 'Galería' : 'Gallery',
       brief.lang === 'es' ? 'Una mirada al ambiente' : 'A look at the atmosphere'
-    }</h2>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;grid-auto-flow:dense;">${cells}</div>
+    )}
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;grid-auto-flow:dense;margin-top:1.75rem;">${cells}</div>
   </div>
 </section>`;
 }
@@ -579,17 +621,31 @@ function contactHtml(brief: CreativeBrief, sel: CompositionSelection): string {
 
 function footerHtml(brief: CreativeBrief, sel: CompositionSelection): string {
   const name = esc(brief.businessName);
-  return `<footer class="cua-footer" data-cua-comp="${sel.footerId}" style="padding:3.25rem 6vw;background:var(--cua-dark);color:rgba(255,255,255,.82);">
-  <div style="max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1.75rem;align-items:end;">
+  const es = brief.lang === 'es';
+  return `<footer class="cua-footer" data-cua-comp="${sel.footerId}">
+  <div class="cua-footer-grid">
     <div>
-      <strong style="font-family:var(--cua-font-h);color:#fff;font-size:1.45rem;letter-spacing:-.01em;">${name}</strong>
-      <p style="margin:.65rem 0 0;max-width:34ch;opacity:.72;line-height:1.55;">${esc(brief.positioning)}</p>
+      <strong class="cua-footer-brand">${name}</strong>
+      <p class="cua-footer-blurb">${esc(brief.positioning)}</p>
     </div>
-    <div style="display:flex;gap:1.15rem;flex-wrap:wrap;align-items:center;">
-      <button type="button" class="cua-legal-btn" onclick="openModal('aviso')">${brief.lang === 'es' ? 'Aviso legal' : 'Legal'}</button>
-      <button type="button" class="cua-legal-btn" onclick="openModal('privacidad')">${brief.lang === 'es' ? 'Privacidad' : 'Privacy'}</button>
-      <button type="button" class="cua-legal-btn" onclick="openModal('cookies')">Cookies</button>
+    <div>
+      <p class="cua-footer-label">${es ? 'Explorar' : 'Explore'}</p>
+      <a href="#servicios">${es ? 'Servicios' : 'Services'}</a>
+      <a href="#galeria">${es ? 'Galería' : 'Gallery'}</a>
+      <a href="#nosotros">${es ? 'Nosotros' : 'About'}</a>
+      <a href="#contacto">${es ? 'Contacto' : 'Contact'}</a>
     </div>
+    <div>
+      <p class="cua-footer-label">${es ? 'Contacto' : 'Contact'}</p>
+      ${brief.address ? `<p>${esc(brief.address)}</p>` : ''}
+      ${brief.hours ? `<p>${esc(brief.hours)}</p>` : `<p>${es ? 'Respuesta en 24–48h' : 'Reply within 24–48h'}</p>`}
+      <a href="#contacto">${esc(brief.primaryCta)}</a>
+    </div>
+  </div>
+  <div class="cua-footer-legal">
+    <button type="button" class="cua-legal-btn" onclick="openModal('aviso')">${es ? 'Aviso legal' : 'Legal'}</button>
+    <button type="button" class="cua-legal-btn" onclick="openModal('privacidad')">${es ? 'Privacidad' : 'Privacy'}</button>
+    <button type="button" class="cua-legal-btn" onclick="openModal('cookies')">Cookies</button>
   </div>
 </footer>`;
 }
@@ -599,9 +655,11 @@ function sectionFor(
   brief: CreativeBrief,
   dna: DesignDna,
   sel: CompositionSelection,
-  imgs: { hero: string; gallery: string[]; about: string }
+  imgs: { hero: string; gallery: string[]; about: string },
+  bandIndex: number
 ): string {
   const k = key.toLowerCase();
+  const band = bandFor(bandIndex);
   if (k === 'hero' || k === 'inicio') return '';
   if (
     k.includes('service') ||
@@ -611,7 +669,7 @@ function sectionFor(
     k.includes('room') ||
     k.includes('treatment')
   )
-    return servicesHtml(brief, dna, sel);
+    return servicesHtml(brief, dna, sel, band);
   if (
     k.includes('about') ||
     k.includes('nosotros') ||
@@ -621,9 +679,9 @@ function sectionFor(
     k.includes('position') ||
     k.includes('atmosphere')
   )
-    return aboutHtml(brief, dna, sel, imgs.about);
+    return aboutHtml(brief, dna, sel, imgs.about, band);
   if (k.includes('galer') || k.includes('gallery') || k.includes('lookbook') || k.includes('project'))
-    return galleryHtml(brief, sel, imgs.gallery);
+    return galleryHtml(brief, sel, imgs.gallery, band);
   if (
     k.includes('why') ||
     k.includes('por') ||
@@ -659,18 +717,39 @@ export function renderConstrainedHtml(input: RenderInput): string {
 
   const bodySections: string[] = [];
   const seen = new Set<string>();
+  let bandIndex = 0;
   for (const key of sel.sectionOrder) {
-    const html = sectionFor(key, brief, dna, sel, imgs);
+    const html = sectionFor(key, brief, dna, sel, imgs, bandIndex);
     if (!html) continue;
     const id = html.match(/id="([^"]+)"/)?.[1] || key;
     if (seen.has(id)) continue;
     seen.add(id);
     bodySections.push(html);
+    bandIndex += 1;
   }
-  if (!seen.has('servicios')) bodySections.unshift(servicesHtml(brief, dna, sel));
-  if (!seen.has('nosotros')) bodySections.splice(1, 0, aboutHtml(brief, dna, sel, imgs.about));
-  if (!seen.has('galeria')) bodySections.push(galleryHtml(brief, sel, imgs.gallery));
+  // Narrativa de confianza: servicios → nosotros → galería → (resto) → contacto al final
+  if (!seen.has('servicios')) {
+    bodySections.unshift(servicesHtml(brief, dna, sel, bandFor(0)));
+    seen.add('servicios');
+  }
+  if (!seen.has('nosotros')) {
+    bodySections.splice(Math.min(1, bodySections.length), 0, aboutHtml(brief, dna, sel, imgs.about, bandFor(1)));
+    seen.add('nosotros');
+  }
+  if (!seen.has('galeria')) {
+    const contactIdx = bodySections.findIndex((s) => /id="contacto"/.test(s));
+    const gal = galleryHtml(brief, sel, imgs.gallery, bandFor(2));
+    if (contactIdx >= 0) bodySections.splice(contactIdx, 0, gal);
+    else bodySections.push(gal);
+    seen.add('galeria');
+  }
   if (!seen.has('contacto')) bodySections.push(contactHtml(brief, sel));
+  // Contacto siempre al final
+  const contactAt = bodySections.findIndex((s) => /id="contacto"/.test(s));
+  if (contactAt >= 0 && contactAt !== bodySections.length - 1) {
+    const [c] = bodySections.splice(contactAt, 1);
+    bodySections.push(c);
+  }
 
   const title = `${esc(brief.businessName)} | ${esc(brief.positioning).slice(0, 60)}`;
   const desc = esc(brief.heroSubtitle);
@@ -689,7 +768,7 @@ export function renderConstrainedHtml(input: RenderInput): string {
 <style>
 :root{${cssVars};--cua-font-h:'${dna.typography.heading}',Georgia,serif;--cua-font-b:'${dna.typography.body}',system-ui,sans-serif;--cua-radius:${radiusCss(dna.radius)};}
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;scroll-padding-top:5.5rem;}
 body{margin:0;font-family:var(--cua-font-b);background:var(--cua-light);color:var(--cua-dark);line-height:1.5;-webkit-font-smoothing:antialiased;}
 img{max-width:100%;display:block;}
 .cua-brand{font-family:var(--cua-font-h);font-size:clamp(1.15rem,2.2vw,1.55rem);font-weight:600;letter-spacing:-.01em;margin:0;color:var(--cua-dark);}
@@ -704,10 +783,39 @@ img{max-width:100%;display:block;}
 .cua-btn-ghost:hover{transform:translateY(-2px);border-color:var(--cua-accent);}
 .cua-btn-on-dark{display:inline-block;background:transparent;color:#fff;text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);border:1.5px solid rgba(255,255,255,.65);font-weight:600;transition:transform .28s ease,background .25s ease;}
 .cua-btn-on-dark:hover{transform:translateY(-2px);background:rgba(255,255,255,.08);}
-.cua-nav-link{position:relative;}
+.cua-nav-link{position:relative;padding:.2rem 0;}
+.cua-nav-link::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1.5px;background:var(--cua-accent);transition:width .28s ease;}
 .cua-nav-link:hover{color:var(--cua-accent) !important;}
+.cua-nav-link:hover::after{width:100%;}
+.cua-nav{position:sticky;top:0;z-index:60;transition:background .3s ease,border-color .3s ease,backdrop-filter .3s ease;}
+.cua-nav-over-bleed{position:fixed;left:0;right:0;background:transparent;border-bottom:1px solid transparent;}
+.cua-nav-over-bleed.is-scrolled,.cua-nav:not(.cua-nav-over-bleed){background:color-mix(in srgb,var(--cua-surface) 92%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 8%,transparent);}
+.cua-nav-dark,.cua-nav-dark.is-scrolled{background:color-mix(in srgb,var(--cua-dark) 94%,transparent);border-bottom:1px solid color-mix(in srgb,#fff 12%,transparent);}
+.cua-nav-over-bleed.is-scrolled .cua-nav-brand,.cua-nav-over-bleed.is-scrolled .cua-nav-link{color:var(--cua-dark) !important;}
+.cua-nav-over-bleed.is-scrolled .cua-nav-toggle span{background:var(--cua-dark);}
+.cua-nav-inner{max-width:1200px;margin:0 auto;padding:1.15rem 6vw;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.cua-nav-links{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;}
+.cua-nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:.35rem;flex-direction:column;gap:5px;}
+.cua-nav-toggle span{display:block;width:22px;height:2px;background:currentColor;transition:transform .25s ease;}
 .cua-hero{position:relative;overflow:hidden;}
 .cua-accent-rule{display:block;width:48px;height:2px;background:var(--cua-accent);margin-top:2rem;}
+.cua-kicker-ruled{display:flex;align-items:center;gap:.75rem;}
+.cua-kicker-ruled::before,.cua-kicker-ruled::after{content:'';width:28px;height:1px;background:var(--cua-accent);opacity:.7;}
+.cua-section-head{margin-bottom:.25rem;}
+.cua-about-frame{position:absolute;top:1.1rem;left:1.1rem;right:-1rem;bottom:-1rem;border:1.5px solid var(--cua-accent);border-radius:var(--cua-radius);opacity:.55;z-index:0;pointer-events:none;}
+.cua-proof-row{display:flex;align-items:center;gap:.85rem;color:var(--cua-dark);font-size:.95rem;}
+.cua-gal-item{isolation:isolate;}
+.cua-gal-cap{position:absolute;inset:auto 0 0;padding:1.1rem 1rem;background:linear-gradient(transparent,color-mix(in srgb,var(--cua-dark) 72%,transparent));color:#fff;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease;z-index:2;}
+.cua-gal-item:hover .cua-gal-cap{opacity:1;transform:none;}
+.cua-gal-item:hover img{transform:scale(1.05);}
+.cua-footer{padding:3.5rem 6vw 1.75rem;background:var(--cua-dark);color:rgba(255,255,255,.82);}
+.cua-footer-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem;}
+.cua-footer-brand{font-family:var(--cua-font-h);color:#fff;font-size:1.45rem;letter-spacing:-.01em;display:block;}
+.cua-footer-blurb{margin:.65rem 0 0;max-width:34ch;opacity:.72;line-height:1.55;}
+.cua-footer-label{letter-spacing:.14em;text-transform:uppercase;font-size:.68rem;color:var(--cua-accent);margin:0 0 .85rem;}
+.cua-footer-grid a{display:block;color:rgba(255,255,255,.82);text-decoration:none;margin:.35rem 0;font-size:.92rem;}
+.cua-footer-grid a:hover{color:#fff;}
+.cua-footer-legal{max-width:1120px;margin:2.25rem auto 0;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:1.15rem;flex-wrap:wrap;}
 .reveal:nth-child(2){animation-delay:.12s;}
 .reveal:nth-child(3){animation-delay:.22s;}
 .reveal:nth-child(4){animation-delay:.32s;}
@@ -717,25 +825,29 @@ img{max-width:100%;display:block;}
 .cua-service-title{font-family:var(--cua-font-h);font-size:1.35rem;color:var(--cua-dark);}
 .cua-service-arrow{color:var(--cua-accent);opacity:.7;}
 .cua-feature{padding:1.6rem 0 1.35rem;border-top:1px solid color-mix(in srgb,var(--cua-dark) 10%,transparent);}
-.cua-line-icon{display:inline-block;width:2rem;height:2px;background:var(--cua-accent);}
+.cua-line-icon{display:inline-block;width:2rem;height:2px;background:var(--cua-accent);flex-shrink:0;}
 .cua-field{display:grid;gap:.4rem;color:var(--cua-muted);font-size:.82rem;}
 .cua-field input,.cua-field textarea{padding:.85rem 1rem;border:1px solid color-mix(in srgb,var(--cua-dark) 14%,transparent);border-radius:var(--cua-radius);background:var(--cua-light);font:inherit;color:var(--cua-dark);}
 .cua-legal-btn{background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;font:inherit;opacity:.85;}
-.cua-gallery figure img:hover{transform:scale(1.04);}
 ${
   motion
     ? `@keyframes cua-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes cua-ken{from{transform:scale(1)}to{transform:scale(1.06)}}
-.reveal{animation:cua-rise .85s cubic-bezier(.22,1,.36,1) both;}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);}
+.reveal.is-inview,.cua-hero .reveal{opacity:1;transform:none;animation:cua-rise .85s cubic-bezier(.22,1,.36,1) both;}
 .cua-kenburns{animation:cua-ken 14s ease-out alternate infinite;}`
     : `.reveal{opacity:1;}`
 }
 @media (max-width:900px){
-  .cua-hero-split,.cua-hero-type,.cua-hero-editorial > div > div,.cua-hero-overlap > div,#nosotros > div,#contacto > div,.cua-gallery > div > div,#por-que > div > div:last-child{grid-template-columns:1fr !important;}
+  .cua-hero-split,.cua-hero-type,.cua-hero-editorial > div > div,.cua-hero-overlap > div,#nosotros > div,#contacto > div,.cua-gallery > div > div,#por-que > div > div:last-child,.cua-footer-grid{grid-template-columns:1fr !important;}
   .cua-hero-type > div:last-child{min-height:42vh !important;}
-  .cua-nav nav a:not(.cua-btn-primary){display:none;}
+  .cua-nav-toggle{display:flex;color:inherit;}
+  .cua-nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:1rem 6vw 1.25rem;background:color-mix(in srgb,var(--cua-surface) 96%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 10%,transparent);}
+  .cua-nav.is-open .cua-nav-links{display:flex;}
+  .cua-nav-links a{padding:.75rem 0;border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 8%,transparent);}
   .cua-gallery > div > div{grid-template-columns:1fr 1fr !important;}
   .cua-gallery figure[style*="span 2"]{grid-column:span 2 !important;grid-row:span 1 !important;min-height:240px !important;}
+  .cua-about-frame{display:none;}
 }
 </style>
 <meta name="creauna-dna" content="${esc(dna.id)}" />
@@ -762,6 +874,33 @@ function openModal(kind){
   m.style.display='flex';
 }
 function closeModal(){var m=document.getElementById('cua-legal-modal');if(m)m.style.display='none';}
+function toggleCuaNav(btn){
+  var nav=btn&&btn.closest('.cua-nav');
+  if(!nav)return;
+  var open=nav.classList.toggle('is-open');
+  btn.setAttribute('aria-expanded',open?'true':'false');
+}
+(function(){
+  var nav=document.querySelector('.cua-nav');
+  function onScroll(){
+    if(!nav)return;
+    if(window.scrollY>24)nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  }
+  onScroll();
+  window.addEventListener('scroll',onScroll,{passive:true});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('is-inview');});
+    },{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+  }else{
+    document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-inview');});
+  }
+  document.querySelectorAll('.cua-nav-links a').forEach(function(a){
+    a.addEventListener('click',function(){if(nav)nav.classList.remove('is-open');});
+  });
+})();
 </script>
 </body>
 </html>`;
