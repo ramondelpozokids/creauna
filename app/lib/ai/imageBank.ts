@@ -281,36 +281,37 @@ export const IMAGE_BANK = {
     ],
   },
   /**
-   * Medicina estética / med-spa premium — piel, calma, tratamiento facial.
-   * Nunca sillón dental ni suites de hotel. IDs verificados HTTP 200.
+   * Medicina estética / med-spa premium — facial, piel, calma clínica.
+   * Nunca sillón dental, suites de hotel ni masaje “wellness hotel”.
+   * IDs verificados HTTP 200.
    */
   aestheticClinic: {
     hero: u('1570172619644-dfd03ed5d881', 1600, 900),
-    about: u('1544161515-4ab6ce6db874', 900, 1100),
+    about: u('1556228453-efd6c1ff04f6', 900, 1100),
     heroes: [
       u('1570172619644-dfd03ed5d881', 1600, 900),
-      u('1600334129128-685c5582fd35', 1600, 900),
-      u('1560066984-138dadb4c035', 1600, 900),
+      u('1556228720-195a672e8a03', 1600, 900),
       u('1522337360788-8b13dee7a37e', 1600, 900),
+      u('1560066984-138dadb4c035', 1600, 900),
     ],
     gallery: [
       u('1570172619644-dfd03ed5d881', 900, 600),
-      u('1600334129128-685c5582fd35', 900, 600),
-      u('1544161515-4ab6ce6db874', 900, 600),
       u('1556228453-efd6c1ff04f6', 900, 600),
       u('1556228720-195a672e8a03', 900, 600),
       u('1556228578-8c89e6adf883', 900, 600),
       u('1522335789203-aabd1fc54bc9', 900, 600),
       u('1522338140262-f46f5913618a', 900, 600),
+      u('1522337360788-8b13dee7a37e', 900, 600),
       u('1560066984-138dadb4c035', 900, 600),
       p(3993449, 900, 600),
       p(3992876, 900, 600),
       p(3992858, 900, 600),
+      p(3992219, 900, 600),
     ],
     services: [
       u('1570172619644-dfd03ed5d881', 600, 400),
-      u('1600334129128-685c5582fd35', 600, 400),
       u('1556228453-efd6c1ff04f6', 600, 400),
+      u('1556228720-195a672e8a03', 600, 400),
       p(3993449, 600, 400),
     ],
   },
