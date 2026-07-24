@@ -65,14 +65,27 @@ function heroScale(brief: CreativeBrief): {
   }
 }
 
-function packUrls(key: string): { hero: string; gallery: string[]; about: string } {
+function packUrls(
+  key: string,
+  seed = '0'
+): { hero: string; gallery: string[]; about: string } {
   const bank =
     (IMAGE_BANK as Record<string, Record<string, unknown>>)[key] ||
     (IMAGE_BANK.default as unknown as Record<string, unknown>);
-  const hero = typeof bank.hero === 'string' ? bank.hero : IMAGE_BANK.default.hero;
-  const gallery = Array.isArray(bank.gallery)
-    ? (bank.gallery as string[]).slice(0, 9)
+  const bit = seedBit(seed, 3);
+  const heroes = Array.isArray(bank.heroes) ? (bank.heroes as string[]) : [];
+  const hero =
+    heroes.length > 0
+      ? heroes[bit % heroes.length]
+      : typeof bank.hero === 'string'
+        ? bank.hero
+        : IMAGE_BANK.default.hero;
+  const rawGallery = Array.isArray(bank.gallery)
+    ? (bank.gallery as string[])
     : ([...IMAGE_BANK.default.gallery] as string[]);
+  // Rotación por seed: atmósfera distinta entre clientes del mismo sector
+  const rot = bit % Math.max(1, rawGallery.length);
+  const gallery = [...rawGallery.slice(rot), ...rawGallery.slice(0, rot)].slice(0, 9);
   const about = typeof bank.about === 'string' ? (bank.about as string) : gallery[0] || hero;
   return { hero, gallery, about };
 }
@@ -89,16 +102,23 @@ function seedBit(seed: string, i: number): number {
 }
 
 function h1Size(dna: DesignDna): string {
-  if (dna.typography.scale === 'billboard') return 'clamp(2.9rem, 8vw, 5.4rem)';
+  if (dna.typography.scale === 'billboard') return 'clamp(3.1rem, 8.5vw, 5.75rem)';
   if (dna.typography.scale === 'intimate') return 'clamp(2.05rem, 4.2vw, 3.1rem)';
+  if (dna.mood === 'aspirationalLuxury') return 'clamp(2.65rem, 6.4vw, 4.75rem)';
   return 'clamp(2.35rem, 5.8vw, 4.2rem)';
+}
+
+function ledeSize(dna: DesignDna): string {
+  if (dna.typography.scale === 'billboard') return '1.12rem';
+  if (dna.typography.scale === 'intimate') return '0.98rem';
+  return '1.05rem';
 }
 
 /** Overlay desde DNA (mood/paleta), no wash clínico fijo por sector. */
 function bleedOverlay(dna: DesignDna): string {
   const mood = dna.mood;
   if (mood === 'aspirationalLuxury' || mood === 'clinicalLight') {
-    return 'linear-gradient(105deg,color-mix(in srgb,var(--cua-dark) 55%,transparent) 0%,color-mix(in srgb,var(--cua-dark) 28%,transparent) 45%,color-mix(in srgb,var(--cua-dark) 62%,transparent) 100%)';
+    return 'linear-gradient(105deg,color-mix(in srgb,var(--cua-dark) 42%,transparent) 0%,color-mix(in srgb,var(--cua-dark) 18%,transparent) 48%,color-mix(in srgb,var(--cua-dark) 55%,transparent) 100%)';
   }
   if (mood === 'soberCorporate') {
     return 'linear-gradient(90deg,color-mix(in srgb,var(--cua-light) 92%,transparent) 0%,color-mix(in srgb,var(--cua-light) 55%,transparent) 42%,color-mix(in srgb,var(--cua-dark) 45%,transparent) 100%)';
@@ -165,6 +185,7 @@ function heroHtml(
   const name = esc(brief.businessName);
   const family = dna.heroFamily;
   const size = h1Size(dna);
+  const lede = ledeSize(dna);
   const sector = brief.sectorId;
   const bit = seedBit(brief.uniquenessSeed, 2);
   const wide = bit % 2 === 0 ? '1.15fr 0.85fr' : '0.9fr 1.1fr';
@@ -178,7 +199,7 @@ function heroHtml(
     const copy = `<div class="cua-hero-copy reveal" style="padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,4.5rem);display:flex;flex-direction:column;justify-content:center;background:var(--cua-light);position:relative;">
       <p class="cua-brand">${name}</p>
       <h1 style="font-family:var(--cua-font-h);font-size:${size};line-height:1.02;margin:.35rem 0 1.1rem;color:var(--cua-dark);max-width:12ch;letter-spacing:-.02em;">${title}</h1>
-      <p class="cua-lede" style="max-width:34ch;">${sub}</p>
+      <p class="cua-lede" style="max-width:34ch;font-size:${lede};">${sub}</p>
       ${ctaRow(brief, sel, false, craft)}
       <span class="cua-accent-rule" aria-hidden="true"></span>
     </div>`;
@@ -249,14 +270,14 @@ function heroHtml(
   const bleedAlign = left ? 'flex-start' : 'center';
   const bleedText = left ? 'left' : 'center';
   const vignette = onDark
-    ? 'radial-gradient(ellipse at center,transparent 0%,rgba(0,0,0,.45) 100%)'
+    ? 'radial-gradient(ellipse at center,transparent 10%,rgba(0,0,0,.32) 100%)'
     : 'radial-gradient(ellipse at center,transparent 20%,color-mix(in srgb,var(--cua-light) 35%,transparent) 100%)';
   return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.bleed};display:flex;align-items:center;justify-content:${bleedAlign};text-align:${bleedText};background:${bleedOverlay(dna)},${vignette},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:${hv.bleedPad};position:relative;overflow:hidden;">
-    <div class="cua-hero-ken" aria-hidden="true" style="position:absolute;inset:-4%;background:url('${heroImg}') center/cover;opacity:.22;mix-blend-mode:luminosity;animation:cua-ken 18s ease-out alternate infinite;pointer-events:none;"></div>
+    <div class="cua-hero-ken" aria-hidden="true" style="position:absolute;inset:-4%;background:url('${heroImg}') center/cover;opacity:.18;mix-blend-mode:soft-light;animation:cua-ken 18s ease-out alternate infinite;pointer-events:none;"></div>
     <div style="max-width:${left ? '640px' : '780px'};${bleedText === 'center' ? 'margin:0 auto;' : ''}position:relative;z-index:2;">
       <p class="cua-brand reveal" style="color:inherit;opacity:.98;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.82rem,1.4vw,1rem);animation-delay:.05s;">${name}</p>
       <h1 class="reveal" style="font-family:var(--cua-font-h);font-size:${size};margin:1.1rem 0;line-height:1.02;letter-spacing:-.025em;animation-delay:.18s;">${title}</h1>
-      <p class="reveal" style="font-size:1.08rem;opacity:.92;max-width:40ch;${bleedText === 'center' ? 'margin-left:auto;margin-right:auto;' : ''}line-height:1.55;animation-delay:.3s;">${sub}</p>
+      <p class="reveal" style="font-size:${lede};opacity:.92;max-width:40ch;${bleedText === 'center' ? 'margin-left:auto;margin-right:auto;' : ''}line-height:1.55;animation-delay:.3s;">${sub}</p>
       <div class="reveal" style="animation-delay:.42s;${bleedText === 'center' ? 'display:flex;justify-content:center;' : ''}">${ctaRow(brief, sel, onDark, craft)}</div>
     </div>
     <span data-cua-hero-bg style="display:none;"></span>
@@ -707,7 +728,7 @@ export interface RenderInput {
 export function renderConstrainedHtml(input: RenderInput): string {
   const { brief, dna, selection: sel } = input;
   const packKey = dna.imagePackKey as ImageBankCategory;
-  const imgs = packUrls(packKey);
+  const imgs = packUrls(packKey, brief.uniquenessSeed);
   if (input.clientImageUrls?.[0]) imgs.hero = input.clientImageUrls[0];
   if (input.clientImageUrls?.[1]) imgs.about = input.clientImageUrls[1];
 
@@ -772,9 +793,10 @@ html{scroll-behavior:smooth;scroll-padding-top:5.5rem;}
 body{margin:0;font-family:var(--cua-font-b);background:var(--cua-light);color:var(--cua-dark);line-height:1.5;-webkit-font-smoothing:antialiased;}
 img{max-width:100%;display:block;}
 .cua-brand{font-family:var(--cua-font-h);font-size:clamp(1.15rem,2.2vw,1.55rem);font-weight:600;letter-spacing:-.01em;margin:0;color:var(--cua-dark);}
+.cua-hero .cua-brand{font-weight:500;letter-spacing:.14em;}
 .cua-kicker{letter-spacing:.18em;text-transform:uppercase;font-size:.68rem;color:var(--cua-accent);margin:0 0 .55rem;font-weight:600;}
-.cua-h2{font-family:var(--cua-font-h);font-size:clamp(1.85rem,3.4vw,2.75rem);color:var(--cua-dark);margin:0;line-height:1.08;letter-spacing:-.02em;}
-.cua-lede{font-size:1.05rem;color:var(--cua-muted);line-height:1.65;margin:0;}
+.cua-h2{font-family:var(--cua-font-h);font-size:clamp(1.85rem,3.4vw,2.75rem);color:var(--cua-dark);margin:0;line-height:1.08;letter-spacing:-.02em;font-weight:500;}
+.cua-lede{font-size:1.05rem;color:var(--cua-muted);line-height:1.65;margin:0;font-weight:300;}
 .cua-cta-row{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem;}
 .cua-btn-primary{display:inline-block;background:var(--cua-accent);color:#fff;text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);font-weight:600;border:none;cursor:pointer;font-family:var(--cua-font-b);transition:transform .28s ease,box-shadow .28s ease,filter .25s ease;}
 .cua-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.04);box-shadow:0 12px 28px color-mix(in srgb,var(--cua-accent) 35%,transparent);}

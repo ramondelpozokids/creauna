@@ -262,10 +262,10 @@ export const IMAGE_BANK = {
       sq(291762, 800),
     ],
   },
-  /** Clínica dental / salud / medicina estética premium (luz, calma — sin suites de hotel) */
+  /** Clínica dental / salud general (sillón, luz clínica — no spa lujo) */
   clinic: {
     hero: u('1629909613654-28e377c37b09', 1600, 900),
-    about: u('1570172619644-dfd03ed5d881', 900, 1100),
+    about: u('1576091160399-112ba8d25d1d', 900, 1100),
     gallery: [
       u('1519494026892-80bbd2d6fd0d', 900, 600),
       u('1576091160399-112ba8d25d1d', 900, 600),
@@ -275,9 +275,43 @@ export const IMAGE_BANK = {
       u('1606811841689-23dfddce3e95', 900, 600),
     ],
     services: [
-      u('1570172619644-dfd03ed5d881', 600, 400),
-      u('1515377905050-e98f8f9c17f5', 600, 400),
+      u('1576091160399-112ba8d25d1d', 600, 400),
+      u('1559839734-2b71ea197ec2', 600, 400),
       u('1606811841689-23dfddce3e95', 600, 400),
+    ],
+  },
+  /**
+   * Medicina estética / med-spa premium — piel, calma, tratamiento facial.
+   * Nunca sillón dental ni suites de hotel. IDs verificados HTTP 200.
+   */
+  aestheticClinic: {
+    hero: u('1570172619644-dfd03ed5d881', 1600, 900),
+    about: u('1544161515-4ab6ce6db874', 900, 1100),
+    heroes: [
+      u('1570172619644-dfd03ed5d881', 1600, 900),
+      u('1600334129128-685c5582fd35', 1600, 900),
+      u('1560066984-138dadb4c035', 1600, 900),
+      u('1522337360788-8b13dee7a37e', 1600, 900),
+    ],
+    gallery: [
+      u('1570172619644-dfd03ed5d881', 900, 600),
+      u('1600334129128-685c5582fd35', 900, 600),
+      u('1544161515-4ab6ce6db874', 900, 600),
+      u('1556228453-efd6c1ff04f6', 900, 600),
+      u('1556228720-195a672e8a03', 900, 600),
+      u('1556228578-8c89e6adf883', 900, 600),
+      u('1522335789203-aabd1fc54bc9', 900, 600),
+      u('1522338140262-f46f5913618a', 900, 600),
+      u('1560066984-138dadb4c035', 900, 600),
+      p(3993449, 900, 600),
+      p(3992876, 900, 600),
+      p(3992858, 900, 600),
+    ],
+    services: [
+      u('1570172619644-dfd03ed5d881', 600, 400),
+      u('1600334129128-685c5582fd35', 600, 400),
+      u('1556228453-efd6c1ff04f6', 600, 400),
+      p(3993449, 600, 400),
     ],
   },
   /** Abogados / legal */

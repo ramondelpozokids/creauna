@@ -418,6 +418,19 @@ export function resolveDesignDna(brief: CreativeBrief): DesignDna {
   const designStyle = luxuryAesthetic
     ? 'Luxury aesthetic medicine: ivory air, subtle gold, soft sage, editorial serif, never hotel suites.'
     : base.designStyle;
+  const luxuryType = {
+    heading: 'Cormorant Garamond',
+    body: 'Outfit',
+    button: 'Outfit',
+    googleFontsUrl:
+      'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap',
+  };
+  const typeScale =
+    luxuryAesthetic && (brief.density === 'sparse' || brief.typeScale === 'editorial')
+      ? ('billboard' as const)
+      : luxuryAesthetic && brief.typeScale === 'intimate'
+        ? ('intimate' as const)
+        : brief.typeScale;
   return {
     ...base,
     id: `dna-${brief.sectorId}-${brief.uniquenessSeed.slice(0, 8)}`,
@@ -427,6 +440,7 @@ export function resolveDesignDna(brief: CreativeBrief): DesignDna {
     radius: luxuryAesthetic || brief.brandTone === 'luxury' || brief.brandTone === 'editorial'
       ? 'craft'
       : base.radius,
+    imagePackKey: luxuryAesthetic ? 'aestheticClinic' : base.imagePackKey,
     heroFamily: brief.heroFamily,
     density: brief.density,
     rhythm: brief.rhythm,
@@ -434,8 +448,8 @@ export function resolveDesignDna(brief: CreativeBrief): DesignDna {
     storytellingArc: brief.storytellingArc,
     iconStyle: brief.iconStyle,
     typography: {
-      ...base.typography,
-      scale: brief.typeScale,
+      ...(luxuryAesthetic ? luxuryType : base.typography),
+      scale: typeScale,
     },
   };
 }
