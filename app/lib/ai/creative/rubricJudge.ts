@@ -1,6 +1,6 @@
 /**
- * Rubric Judge — híbrido: checks automáticos + señales de DNA/layout.
- * LLM judge opcional (no requerido para gate local).
+ * Rubric Judge — híbrido: checks automáticos + señales de craft/inmersión.
+ * Sin inflar notas: 95 debe acercarse al ojo humano (techo demos).
  */
 
 import {
@@ -32,10 +32,48 @@ function has(html: string, re: RegExp): boolean {
   return re.test(html);
 }
 
+/** Señales de techo visual vs chrome SaaS-soft (demos: Leones, Tarik, El Paso). */
+function craftSignals(html: string, dna: DesignDna): {
+  immersiveHero: boolean;
+  craftChrome: boolean;
+  saasSoft: boolean;
+  dnaOverlay: boolean;
+  brandFirst: boolean;
+} {
+  const immersiveHero =
+    /min-height:\s*min\((8[8-9]|9[0-9]|1\d{2})vh/i.test(html) ||
+    /min-height:\s*(8[8-9]|9[0-9])vh/i.test(html);
+  const craftChrome =
+    has(html, /cua-btn-craft/) ||
+    has(html, /--cua-radius:\s*3px|--cua-radius:\s*0\b/) ||
+    has(html, /letter-spacing:\s*\.1[0-2]em;text-transform:uppercase/);
+  const saasSoft =
+    has(html, /border-radius:\s*14px|border-radius:\s*999px/) ||
+    (has(html, /rounded-full|pill/i) && !craftChrome);
+  const dnaOverlay = has(html, /color-mix\(in srgb,var\(--cua-dark\)/);
+  const brandFirst =
+    has(html, /class="cua-brand"/) && has(html, /<h1\b/i) && has(html, /cua-cta-row|cua-btn-primary/);
+  // Expect craft when DNA asks for it
+  const expectsCraft =
+    dna.radius === 'craft' ||
+    dna.radius === 'sharp' ||
+    dna.mood === 'aspirationalLuxury' ||
+    dna.mood === 'darkCraft' ||
+    dna.mood === 'gastronomicEmotion';
+  return {
+    immersiveHero,
+    craftChrome: expectsCraft ? craftChrome : craftChrome || !saasSoft,
+    saasSoft: expectsCraft ? saasSoft || !craftChrome : saasSoft,
+    dnaOverlay,
+    brandFirst,
+  };
+}
+
 function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<Record<RubricDimension, string>> } {
   const { html, prompt, brief, dna, selection } = ctx;
   const notes: Partial<Record<RubricDimension, string>> = {};
   const scores = emptyScores(5);
+  const craft = craftSignals(html, dna);
 
   // briefComprehension
   let briefScore = 6;
@@ -54,21 +92,34 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
   if (dna.forbiddenVisuals.some((f) => html.toLowerCase().includes(f.split(' ')[0]))) sector -= 1;
   scores.sectorIdentity = clamp10(sector);
 
-  // artDirection
-  let art = 5;
-  if (has(html, /--cua-accent:/)) art += 2;
-  if (dna.typography.googleFontsUrl && html.includes(dna.typography.heading.split(' ')[0])) art += 2;
+  // artDirection — craft vs SaaS-soft
+  let art = 4.5;
+  if (has(html, /--cua-accent:/)) art += 1.5;
+  if (dna.typography.googleFontsUrl && html.includes(dna.typography.heading.split(' ')[0])) art += 1.5;
   if (!/Playfair Display.*Inter|fonts\.googleapis.*Playfair.*Inter/i.test(html) || brief.sectorId === 'legal')
-    art += 1;
+    art += 0.5;
+  if (craft.craftChrome) art += 1.5;
+  if (craft.dnaOverlay) art += 0.5;
+  if (craft.saasSoft) art -= 1.8;
+  if (/min\(6[0-9]vh|min\(7[0-6]vh/i.test(html)) art -= 1.2;
   scores.artDirection = clamp10(art);
+  notes.artDirection = craft.saasSoft
+    ? 'SaaS-soft chrome penalized'
+    : craft.craftChrome
+      ? 'Craft chrome + DNA overlay'
+      : 'Palette + type';
 
-  // composition
-  let comp = 5;
-  if (selection.layout.id && has(html, /creauna-layout/)) comp += 2;
+  // composition — immersion + asymmetry
+  let comp = 4.5;
+  if (selection.layout.id && has(html, /creauna-layout/)) comp += 1.5;
   if (has(html, /data-cua-hero="/)) comp += 1;
-  if (selection.layout.asymmetry || /split|editorial|asymmetric/i.test(dna.heroFamily)) comp += 1.5;
-  if (!/Hero\s*Cards\s*Testimonials\s*Pricing\s*FAQ/i.test(html)) comp += 0.5;
+  if (selection.layout.asymmetry || /split|editorial|asymmetric|bleed/i.test(dna.heroFamily)) comp += 1.2;
+  if (craft.immersiveHero) comp += 1.5;
+  else if (html.length > 500) comp -= 1.5;
+  if (craft.brandFirst) comp += 0.5;
+  if (!/Hero\s*Cards\s*Testimonials\s*Pricing\s*FAQ/i.test(html)) comp += 0.3;
   scores.composition = clamp10(comp);
+  notes.composition = craft.immersiveHero ? 'Immersive hero + layout contract' : 'Hero under-immersive vs demos';
 
   // originality
   let orig = 6;
@@ -81,7 +132,6 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
     if (!sameLayout) orig += 1;
     else orig -= 2;
   }
-  // Distinct from legacy shell markers
   if (!has(html, /min-h-\[70vh\].*max-h-\[820px\]/)) orig += 0.5;
   scores.originality = clamp10(orig);
 
@@ -100,9 +150,11 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
   scores.color = clamp10(has(html, /--cua-accent:/) && has(html, /--cua-dark:/) ? 9 : 5);
 
   // visualConsistency
-  scores.visualConsistency = clamp10(
-    has(html, /--cua-radius:/) && has(html, /\.cua-btn-primary/) ? 9 : 6
-  );
+  let vis = 5.5;
+  if (has(html, /--cua-radius:/) && has(html, /\.cua-btn-primary/)) vis += 2;
+  if (craft.craftChrome) vis += 1.5;
+  if (craft.saasSoft) vis -= 1.5;
+  scores.visualConsistency = clamp10(vis);
 
   // responsive
   scores.responsive = clamp10(has(html, /@media \(max-width:900px\)/) ? 9 : 4);
@@ -137,21 +189,19 @@ function autoScores(ctx: JudgeContext): { scores: RubricScores; notes: Partial<R
 
   // ux
   let ux = 6;
-  if (has(html, /position:sticky/i)) ux += 1;
+  if (has(html, /position:sticky|position:absolute;top:0/i)) ux += 1;
   if (has(html, /openModal/)) ux += 1;
   if (!has(html, /Aviso legal[\s\S]{200,}Política de privacidad[\s\S]{500,}/i)) ux += 1;
+  if (craft.brandFirst) ux += 0.5;
   scores.ux = clamp10(ux);
 
-  // Soft boost when creative pipeline markers present (agency path)
+  // Soft marker boost (pequeño): no sustituye craft
   if (has(html, /data-cua-creative="1"/) && has(html, /creauna-dna/)) {
-    for (const dim of Object.keys(scores) as RubricDimension[]) {
-      scores[dim] = clamp10(scores[dim] + 0.65);
-    }
+    scores.sectorIdentity = clamp10(scores.sectorIdentity + 0.35);
+    scores.originality = clamp10(scores.originality + 0.35);
   }
   if (has(html, /data-cua-composition="v2"/)) {
-    scores.composition = clamp10(scores.composition + 0.8);
-    scores.artDirection = clamp10(scores.artDirection + 0.5);
-    scores.hierarchy = clamp10(scores.hierarchy + 0.3);
+    scores.composition = clamp10(scores.composition + 0.4);
   }
 
   // Prompt keyword presence
@@ -167,23 +217,10 @@ export function judgeHtml(ctx: JudgeContext): RubricResult {
   return buildRubricResult(scores, notes);
 }
 
-/** Calibración: asegura suelo alto para outputs del constrained renderer bien formados. */
-export function judgeWithFloor(ctx: JudgeContext, floor = 90): RubricResult {
-  const result = judgeHtml(ctx);
-  if (result.total >= floor) return result;
-  // Si el HTML es creativo completo pero el auto-score quedó corto, recalibrar dimensiones flojas
-  if (!/data-cua-creative="1"/.test(ctx.html)) return result;
-  const scores = { ...result.scores };
-  const dims = Object.keys(scores) as RubricDimension[];
-  let guard = 0;
-  const target = Math.max(floor, 93);
-  while (buildRubricResult(scores).total < target && guard < 50) {
-    const weakest = dims.reduce((a, b) => (scores[a] <= scores[b] ? a : b));
-    scores[weakest] = clamp10(scores[weakest] + 0.5);
-    guard++;
-  }
-  return buildRubricResult(scores, {
-    ...result.notes,
-    originality: (result.notes.originality || '') + ' [calibrated creative path]',
-  });
+/**
+ * Gate de producto: puntuación honesta (sin inflar a 93).
+ * El pipeline usa `floor` para decidir revisión; el juez no inventa puntos.
+ */
+export function judgeWithFloor(ctx: JudgeContext, _floor = 90): RubricResult {
+  return judgeHtml(ctx);
 }

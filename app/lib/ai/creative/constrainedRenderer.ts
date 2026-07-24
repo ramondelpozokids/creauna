@@ -27,39 +27,40 @@ function heroScale(brief: CreativeBrief): {
   bleed: string;
   bleedPad: string;
 } {
+  // Techo visual: heroes más inmersivos (demos ~100vh), sin caps de parche por cliente
   switch (brief.density) {
     case 'sparse':
       return {
-        section: 'min(68vh,620px)',
-        media: 'min(68vh,620px)',
-        typeMedia: 'min(48vh,440px)',
-        editorialImg: 'min(38vh,380px)',
-        overlap: 'min(60vh,520px)',
-        overlapMedia: 'min(44vh,400px)',
-        bleed: 'min(70vh,640px)',
-        bleedPad: '5rem 6vw 3.5rem',
+        section: 'min(88vh,900px)',
+        media: 'min(88vh,900px)',
+        typeMedia: 'min(58vh,560px)',
+        editorialImg: 'min(48vh,520px)',
+        overlap: 'min(78vh,780px)',
+        overlapMedia: 'min(56vh,560px)',
+        bleed: 'min(92vh,960px)',
+        bleedPad: '6.5rem 6vw 4.5rem',
       };
     case 'dense':
       return {
-        section: 'min(82vh,780px)',
-        media: 'min(82vh,780px)',
-        typeMedia: 'min(58vh,540px)',
-        editorialImg: 'min(48vh,500px)',
-        overlap: 'min(74vh,680px)',
-        overlapMedia: 'min(54vh,500px)',
-        bleed: 'min(84vh,800px)',
-        bleedPad: '6rem 6vw 4.5rem',
+        section: 'min(90vh,940px)',
+        media: 'min(90vh,940px)',
+        typeMedia: 'min(62vh,600px)',
+        editorialImg: 'min(52vh,560px)',
+        overlap: 'min(84vh,860px)',
+        overlapMedia: 'min(60vh,600px)',
+        bleed: 'min(96vh,1020px)',
+        bleedPad: '7rem 6vw 5rem',
       };
     default:
       return {
-        section: 'min(76vh,700px)',
-        media: 'min(76vh,700px)',
-        typeMedia: 'min(52vh,480px)',
-        editorialImg: 'min(42vh,420px)',
-        overlap: 'min(68vh,600px)',
-        overlapMedia: 'min(48vh,440px)',
-        bleed: 'min(78vh,720px)',
-        bleedPad: '5.5rem 6vw 4rem',
+        section: 'min(90vh,920px)',
+        media: 'min(90vh,920px)',
+        typeMedia: 'min(60vh,580px)',
+        editorialImg: 'min(50vh,540px)',
+        overlap: 'min(82vh,820px)',
+        overlapMedia: 'min(58vh,580px)',
+        bleed: 'min(94vh,980px)',
+        bleedPad: '6.75rem 6vw 4.75rem',
       };
   }
 }
@@ -79,7 +80,8 @@ function packUrls(key: string): { hero: string; gallery: string[]; about: string
 function radiusCss(r: DesignDna['radius']): string {
   if (r === 'sharp') return '0';
   if (r === 'pill') return '999px';
-  return '14px';
+  if (r === 'craft') return '3px';
+  return '10px';
 }
 
 function seedBit(seed: string, i: number): number {
@@ -92,15 +94,35 @@ function h1Size(dna: DesignDna): string {
   return 'clamp(2.35rem, 5.8vw, 4.2rem)';
 }
 
-function bleedOverlay(sector: string): string {
-  if (sector === 'clinic') return 'linear-gradient(105deg,rgba(247,251,252,.92) 0%,rgba(247,251,252,.55) 42%,rgba(26,43,60,.35) 100%)';
-  if (sector === 'hotel') return 'linear-gradient(180deg,rgba(26,24,20,.25) 0%,rgba(26,24,20,.55) 55%,rgba(26,24,20,.72) 100%)';
-  if (sector === 'legal') return 'linear-gradient(90deg,rgba(244,242,238,.94) 0%,rgba(244,242,238,.7) 48%,rgba(18,20,26,.4) 100%)';
-  if (sector === 'architecture') return 'linear-gradient(180deg,rgba(255,255,255,.15) 0%,rgba(13,13,13,.55) 100%)';
-  if (sector === 'restaurant' || sector === 'cafe')
-    return 'linear-gradient(180deg,rgba(28,20,16,.2) 0%,rgba(28,20,16,.62) 100%)';
-  if (sector === 'barber') return 'linear-gradient(180deg,rgba(15,15,15,.35) 0%,rgba(15,15,15,.78) 100%)';
+/** Overlay desde DNA (mood/paleta), no wash clínico fijo por sector. */
+function bleedOverlay(dna: DesignDna): string {
+  const mood = dna.mood;
+  if (mood === 'aspirationalLuxury' || mood === 'clinicalLight') {
+    return 'linear-gradient(105deg,color-mix(in srgb,var(--cua-dark) 55%,transparent) 0%,color-mix(in srgb,var(--cua-dark) 28%,transparent) 45%,color-mix(in srgb,var(--cua-dark) 62%,transparent) 100%)';
+  }
+  if (mood === 'soberCorporate') {
+    return 'linear-gradient(90deg,color-mix(in srgb,var(--cua-light) 92%,transparent) 0%,color-mix(in srgb,var(--cua-light) 55%,transparent) 42%,color-mix(in srgb,var(--cua-dark) 45%,transparent) 100%)';
+  }
+  if (mood === 'spatialMinimal') {
+    return 'linear-gradient(180deg,rgba(255,255,255,.12) 0%,color-mix(in srgb,var(--cua-dark) 55%,transparent) 100%)';
+  }
+  if (mood === 'gastronomicEmotion' || mood === 'warmNeighborhood' || mood === 'earthyArtisan') {
+    return 'linear-gradient(180deg,color-mix(in srgb,var(--cua-dark) 22%,transparent) 0%,color-mix(in srgb,var(--cua-dark) 68%,transparent) 100%)';
+  }
+  if (mood === 'darkCraft') {
+    return 'linear-gradient(180deg,color-mix(in srgb,var(--cua-dark) 40%,transparent) 0%,color-mix(in srgb,var(--cua-dark) 82%,transparent) 100%)';
+  }
   return 'linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.58) 100%)';
+}
+
+function isCraftChrome(dna: DesignDna): boolean {
+  return (
+    dna.radius === 'craft' ||
+    dna.radius === 'sharp' ||
+    dna.mood === 'aspirationalLuxury' ||
+    dna.mood === 'darkCraft' ||
+    dna.mood === 'gastronomicEmotion'
+  );
 }
 
 function secondaryHref(brief: CreativeBrief, sel: CompositionSelection): string {
@@ -110,11 +132,12 @@ function secondaryHref(brief: CreativeBrief, sel: CompositionSelection): string 
   return '#nosotros';
 }
 
-function ctaRow(brief: CreativeBrief, sel: CompositionSelection, onDark = false): string {
+function ctaRow(brief: CreativeBrief, sel: CompositionSelection, onDark = false, craft = false): string {
   const ghost = onDark ? 'cua-btn-on-dark' : 'cua-btn-ghost';
+  const craftCls = craft ? ' cua-btn-craft' : '';
   return `<div class="cua-cta-row">
-    <a href="#contacto" class="cua-btn-primary">${esc(brief.primaryCta)}</a>
-    <a href="${secondaryHref(brief, sel)}" class="${ghost}">${esc(brief.secondaryCta)}</a>
+    <a href="#contacto" class="cua-btn-primary${craftCls}">${esc(brief.primaryCta)}</a>
+    <a href="${secondaryHref(brief, sel)}" class="${ghost}${craftCls}">${esc(brief.secondaryCta)}</a>
   </div>`;
 }
 
@@ -133,16 +156,17 @@ function heroHtml(
   const bit = seedBit(brief.uniquenessSeed, 2);
   const wide = bit % 2 === 0 ? '1.15fr 0.85fr' : '0.9fr 1.1fr';
   const hv = heroScale(brief);
+  const craft = isCraftChrome(dna);
 
   if (family === 'splitMediaRight' || family === 'splitMediaLeft') {
     const mediaFirst = family === 'splitMediaLeft';
     const cols = mediaFirst ? `minmax(0,1.05fr) minmax(0,0.95fr)` : wide;
-    const media = `<div class="cua-hero-media reveal" style="min-height:${hv.media};background:url('${heroImg}') center/cover no-repeat;" role="img" aria-label="${name}" data-cua-hero-bg></div>`;
+    const media = `<div class="cua-hero-media reveal" style="min-height:${hv.media};background:linear-gradient(180deg,transparent 40%,color-mix(in srgb,var(--cua-dark) 35%,transparent) 100%),url('${heroImg}') center/cover no-repeat;" role="img" aria-label="${name}" data-cua-hero-bg></div>`;
     const copy = `<div class="cua-hero-copy reveal" style="padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,4.5rem);display:flex;flex-direction:column;justify-content:center;background:var(--cua-light);position:relative;">
       <p class="cua-brand">${name}</p>
       <h1 style="font-family:var(--cua-font-h);font-size:${size};line-height:1.02;margin:.35rem 0 1.1rem;color:var(--cua-dark);max-width:12ch;letter-spacing:-.02em;">${title}</h1>
       <p class="cua-lede" style="max-width:34ch;">${sub}</p>
-      ${ctaRow(brief, sel)}
+      ${ctaRow(brief, sel, false, craft)}
       <span class="cua-accent-rule" aria-hidden="true"></span>
     </div>`;
     return `<section id="inicio" class="cua-hero cua-hero-split" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="display:grid;grid-template-columns:${cols};min-height:${hv.section};">
@@ -156,7 +180,7 @@ function heroHtml(
         <p class="cua-brand">${name}</p>
         <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:.6rem 0 1rem;color:var(--cua-dark);max-width:15ch;letter-spacing:-.03em;">${title}</h1>
         <p class="cua-lede" style="max-width:38ch;">${sub}</p>
-        ${ctaRow(brief, sel)}
+        ${ctaRow(brief, sel, false, craft)}
       </div>
       <div class="reveal" style="position:relative;min-height:${hv.typeMedia};">
         <div style="position:absolute;inset:8% 8% 12% 0;background:url('${heroImg}') center/cover;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);" data-cua-hero-bg role="img" aria-label="${name}"></div>
@@ -172,7 +196,7 @@ function heroHtml(
           <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:0;color:var(--cua-dark);line-height:1.02;letter-spacing:-.03em;max-width:14ch;">${title}</h1>
           <div>
             <p class="cua-lede">${sub}</p>
-            ${ctaRow(brief, sel)}
+            ${ctaRow(brief, sel, false, craft)}
           </div>
         </div>
         <div style="margin-top:clamp(1.75rem,3.5vw,2.75rem);height:${hv.editorialImg};overflow:hidden;border-radius:var(--cua-radius);">
@@ -189,7 +213,7 @@ function heroHtml(
           <p class="cua-brand">${name}</p>
           <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:.5rem 0 1rem;color:var(--cua-dark);max-width:11ch;letter-spacing:-.03em;">${title}</h1>
           <p class="cua-lede" style="max-width:32ch;">${sub}</p>
-          ${ctaRow(brief, sel)}
+          ${ctaRow(brief, sel, false, craft)}
         </div>
         <div class="reveal" style="position:relative;min-height:${hv.overlapMedia};">
           <img src="${heroImg}" alt="${name}" data-cua-hero-bg style="position:absolute;inset:0;width:108%;height:100%;object-fit:cover;border-radius:var(--cua-radius);transform:translateX(-6%) rotate(${bit % 2 ? -1.2 : 1.2}deg);box-shadow:0 40px 80px color-mix(in srgb,var(--cua-dark) 22%,transparent);" />
@@ -201,14 +225,15 @@ function heroHtml(
 
   // fullBleedCenter / fullBleedLeft — brand + one headline + one line + CTAs only
   const left = family === 'fullBleedLeft';
-  const lightText = sector === 'clinic' || sector === 'legal' ? 'var(--cua-dark)' : '#fff';
-  const onDark = !(sector === 'clinic' || sector === 'legal');
-  return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.bleed};display:flex;align-items:center;justify-content:${left ? 'flex-start' : 'center'};text-align:${left ? 'left' : 'center'};background:${bleedOverlay(sector)},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:${hv.bleedPad};position:relative;">
+  // Overlay DNA: soberCorporate mantiene wash claro + texto oscuro; resto inmersivo
+  const onDark = dna.mood !== 'soberCorporate';
+  const lightText = onDark ? '#fff' : 'var(--cua-dark)';
+  return `<section id="inicio" class="cua-hero cua-hero-bleed" data-cua-hero="${family}" data-cua-comp="${sel.heroId}" style="min-height:${hv.bleed};display:flex;align-items:center;justify-content:${left ? 'flex-start' : 'center'};text-align:${left ? 'left' : 'center'};background:${bleedOverlay(dna)},url('${heroImg}') center/cover no-repeat;color:${lightText};padding:${hv.bleedPad};position:relative;">
     <div class="reveal" style="max-width:${left ? '640px' : '780px'};${left ? '' : 'margin:0 auto;'}">
       <p class="cua-brand" style="color:inherit;opacity:.95;">${name}</p>
       <h1 style="font-family:var(--cua-font-h);font-size:${size};margin:1rem 0;line-height:1.02;letter-spacing:-.02em;">${title}</h1>
       <p style="font-size:1.08rem;opacity:.92;max-width:40ch;${left ? '' : 'margin-left:auto;margin-right:auto;'}line-height:1.55;">${sub}</p>
-      <div style="${left ? '' : 'display:flex;justify-content:center;'}">${ctaRow(brief, sel, onDark)}</div>
+      <div style="${left ? '' : 'display:flex;justify-content:center;'}">${ctaRow(brief, sel, onDark, craft)}</div>
     </div>
     <span data-cua-hero-bg style="display:none;"></span>
   </section>`;
@@ -217,38 +242,111 @@ function heroHtml(
 function navHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection): string {
   const name = esc(brief.businessName);
   const overBleed = /fullBleed|bleed/i.test(dna.heroFamily);
-  const links = [
+  const craft = isCraftChrome(dna);
+  const navKind = sel.navId;
+  const allLinks: [string, string][] = [
     ['#inicio', brief.lang === 'es' ? 'Inicio' : 'Home'],
     ['#nosotros', brief.lang === 'es' ? 'Nosotros' : 'About'],
     ['#servicios', brief.lang === 'es' ? 'Servicios' : 'Services'],
     ['#galeria', brief.lang === 'es' ? 'Galería' : 'Gallery'],
     ['#contacto', brief.lang === 'es' ? 'Contacto' : 'Contact'],
   ];
-  const navStyle = overBleed
-    ? 'position:absolute;top:0;left:0;right:0;z-index:60;background:transparent;border:none;'
-    : 'position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--cua-surface) 90%,transparent);border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 8%,transparent);';
-  const linkColor = overBleed && !/clinic|legal/.test(brief.sectorId) ? 'rgba(255,255,255,.88)' : 'var(--cua-muted)';
-  const brandColor = overBleed && !/clinic|legal/.test(brief.sectorId) ? '#fff' : 'var(--cua-dark)';
-  return `<header class="cua-nav" data-cua-comp="${sel.navId}" style="${navStyle}">
-  <div style="max-width:1200px;margin:0 auto;padding:1.05rem 6vw;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
-    <a href="#inicio" style="font-family:var(--cua-font-h);font-size:1.35rem;color:${brandColor};text-decoration:none;font-weight:600;letter-spacing:-.01em;">${name}</a>
-    <nav aria-label="Main" style="display:flex;gap:1.35rem;flex-wrap:wrap;align-items:center;">
-      ${links.map(([h, l]) => `<a href="${h}" style="color:${linkColor};text-decoration:none;font-size:.88rem;letter-spacing:.02em;">${l}</a>`).join('')}
-      <a href="#contacto" class="cua-btn-primary" style="padding:.55rem 1.05rem;font-size:.82rem;">${esc(brief.primaryCta)}</a>
+  // Variantes reales por componente (library → HTML distinto, no solo metadata)
+  const links =
+    navKind === 'nav-minimal-link'
+      ? allLinks.filter(([h]) => h === '#inicio' || h === '#servicios' || h === '#contacto')
+      : navKind === 'nav-hospitality-book'
+        ? allLinks.filter(([h]) => h !== '#nosotros')
+        : allLinks;
+  const forceDark = navKind === 'nav-sticky-dark';
+  const onDarkBleed = forceDark || (overBleed && dna.mood !== 'soberCorporate');
+  const stickyAlways = forceDark || navKind === 'nav-corporate-utility' || !overBleed;
+  const navStyle = forceDark
+    ? 'position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--cua-dark) 92%,transparent);border-bottom:1px solid color-mix(in srgb,#fff 12%,transparent);backdrop-filter:blur(12px);'
+    : stickyAlways && !overBleed
+      ? 'position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:color-mix(in srgb,var(--cua-surface) 88%,transparent);border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 8%,transparent);'
+      : 'position:absolute;top:0;left:0;right:0;z-index:60;background:transparent;border:none;';
+  const linkColor = onDarkBleed ? 'rgba(255,255,255,.9)' : 'var(--cua-muted)';
+  const brandColor = onDarkBleed ? '#fff' : 'var(--cua-dark)';
+  const useCraftType = craft || navKind === 'nav-minimal-link' || navKind === 'nav-sticky-dark';
+  const linkStyle = useCraftType
+    ? `color:${linkColor};text-decoration:none;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;`
+    : `color:${linkColor};text-decoration:none;font-size:.88rem;letter-spacing:.02em;`;
+  const brandStyle = useCraftType
+    ? `font-family:var(--cua-font-h);font-size:1.55rem;color:${brandColor};text-decoration:none;font-weight:600;letter-spacing:-.02em;`
+    : `font-family:var(--cua-font-h);font-size:1.35rem;color:${brandColor};text-decoration:none;font-weight:600;letter-spacing:-.01em;`;
+  const ctaPad = useCraftType
+    ? 'padding:.7rem 1.35rem;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;'
+    : 'padding:.55rem 1.05rem;font-size:.82rem;';
+  const ctaClass = `cua-btn-primary${useCraftType ? ' cua-btn-craft' : ''}`;
+  const showCta = navKind !== 'nav-minimal-link';
+  const hospitalityCta =
+    navKind === 'nav-hospitality-book'
+      ? brief.lang === 'es'
+        ? brief.primaryCta || 'Reservar'
+        : brief.primaryCta || 'Book'
+      : brief.primaryCta;
+  return `<header class="cua-nav" data-cua-nav="${esc(navKind)}" data-cua-comp="${sel.navId}" style="${navStyle}">
+  <div style="max-width:1200px;margin:0 auto;padding:1.15rem 6vw;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+    <a href="#inicio" style="${brandStyle}">${name}</a>
+    <nav aria-label="Main" style="display:flex;gap:${navKind === 'nav-minimal-link' ? '2rem' : '1.5rem'};flex-wrap:wrap;align-items:center;">
+      ${links.map(([h, l]) => `<a class="cua-nav-link" href="${h}" style="${linkStyle}">${l}</a>`).join('')}
+      ${
+        showCta
+          ? `<a href="#contacto" class="${ctaClass}" style="${ctaPad}">${esc(hospitalityCta)}</a>`
+          : `<a href="#contacto" class="cua-nav-link" style="${linkStyle};font-weight:600;">${esc(brief.primaryCta)}</a>`
+      }
     </nav>
   </div>
 </header>`;
 }
 
 function servicesHtml(brief: CreativeBrief, dna: DesignDna, sel: CompositionSelection): string {
-  const editorial = /legal|architecture|clinic|corporate/.test(brief.sectorId) || dna.density === 'sparse';
-  const label = brief.lang === 'es' ? 'Servicios' : 'Services';
+  const editorial =
+    /legal|architecture|clinic|corporate/.test(brief.sectorId) ||
+    dna.density === 'sparse' ||
+    sel.featuresId === 'features-numbered-process' ||
+    sel.featuresId === 'features-alternating-rows' ||
+    sel.cardId === 'card-project-tile';
+  const menuLed =
+    sel.cardId === 'card-menu-item' ||
+    brief.sectorId === 'restaurant' ||
+    brief.sectorId === 'cafe' ||
+    brief.sectorId === 'bakery';
+  const label = brief.lang === 'es' ? (menuLed ? 'Carta' : 'Servicios') : menuLed ? 'Menu' : 'Services';
   const heading =
     brief.lang === 'es'
-      ? brief.sectorId === 'restaurant'
+      ? menuLed
         ? 'Sabores y momentos'
         : 'Lo que hacemos con criterio'
-      : 'What we do with judgment';
+      : menuLed
+        ? 'Flavors and moments'
+        : 'What we do with judgment';
+
+  if (menuLed && !editorial) {
+    const rows = brief.services
+      .map(
+        (s, i) => `<div class="cua-menu-row reveal" data-cua-comp="${sel.cardId}" style="display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:baseline;padding:1.1rem 0;border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 12%,transparent);animation-delay:${i * 55}ms">
+      <div>
+        <h3 style="font-family:var(--cua-font-h);margin:0;font-size:1.15rem;color:var(--cua-dark);">${esc(s)}</h3>
+        <p style="margin:.35rem 0 0;color:var(--cua-muted);font-size:.9rem;max-width:42ch;">${
+          brief.lang === 'es' ? 'Preparación de temporada, con producto local.' : 'Seasonal preparation with local produce.'
+        }</p>
+      </div>
+      <span style="font-family:var(--cua-font-h);color:var(--cua-accent);letter-spacing:.04em;white-space:nowrap;">${
+        brief.lang === 'es' ? 'Consultar' : 'Ask'
+      }</span>
+    </div>`
+      )
+      .join('\n');
+    return `<section id="servicios" class="cua-section" data-cua-comp="${sel.featuresId}" style="padding:clamp(4.5rem,8vw,7rem) 6vw;background:var(--cua-light);">
+  <div style="max-width:780px;margin:0 auto;">
+    <p class="cua-kicker">${label}</p>
+    <h2 class="cua-h2">${heading}</h2>
+    <div style="margin-top:2rem;">${rows}</div>
+  </div>
+</section>`;
+  }
 
   if (editorial) {
     const rows = brief.services
@@ -592,12 +690,20 @@ img{max-width:100%;display:block;}
 .cua-h2{font-family:var(--cua-font-h);font-size:clamp(1.85rem,3.4vw,2.75rem);color:var(--cua-dark);margin:0;line-height:1.08;letter-spacing:-.02em;}
 .cua-lede{font-size:1.05rem;color:var(--cua-muted);line-height:1.65;margin:0;}
 .cua-cta-row{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem;}
-.cua-btn-primary{display:inline-block;background:var(--cua-accent);color:#fff;text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);font-weight:600;border:none;cursor:pointer;font-family:var(--cua-font-b);transition:transform .25s ease,filter .25s ease;}
-.cua-btn-primary:hover{transform:translateY(-1px);filter:brightness(1.05);}
-.cua-btn-ghost{display:inline-block;background:transparent;color:var(--cua-dark);text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);border:1px solid color-mix(in srgb,var(--cua-dark) 18%,transparent);font-weight:600;}
-.cua-btn-on-dark{display:inline-block;background:transparent;color:#fff;text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);border:1px solid rgba(255,255,255,.55);font-weight:600;}
+.cua-btn-primary{display:inline-block;background:var(--cua-accent);color:#fff;text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);font-weight:600;border:none;cursor:pointer;font-family:var(--cua-font-b);transition:transform .28s ease,box-shadow .28s ease,filter .25s ease;}
+.cua-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.04);box-shadow:0 12px 28px color-mix(in srgb,var(--cua-accent) 35%,transparent);}
+.cua-btn-craft{border-radius:3px !important;letter-spacing:.08em;text-transform:uppercase;font-size:.82rem;padding:1rem 1.75rem;font-weight:600;}
+.cua-btn-ghost{display:inline-block;background:transparent;color:var(--cua-dark);text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);border:1.5px solid color-mix(in srgb,var(--cua-dark) 22%,transparent);font-weight:600;transition:transform .28s ease,border-color .25s ease;}
+.cua-btn-ghost:hover{transform:translateY(-2px);border-color:var(--cua-accent);}
+.cua-btn-on-dark{display:inline-block;background:transparent;color:#fff;text-decoration:none;padding:.9rem 1.4rem;border-radius:var(--cua-radius);border:1.5px solid rgba(255,255,255,.65);font-weight:600;transition:transform .28s ease,background .25s ease;}
+.cua-btn-on-dark:hover{transform:translateY(-2px);background:rgba(255,255,255,.08);}
+.cua-nav-link{position:relative;}
+.cua-nav-link:hover{color:var(--cua-accent) !important;}
 .cua-hero{position:relative;overflow:hidden;}
 .cua-accent-rule{display:block;width:48px;height:2px;background:var(--cua-accent);margin-top:2rem;}
+.reveal:nth-child(2){animation-delay:.12s;}
+.reveal:nth-child(3){animation-delay:.22s;}
+.reveal:nth-child(4){animation-delay:.32s;}
 .cua-service-row{display:grid;grid-template-columns:auto 1fr auto;gap:1.25rem;align-items:center;padding:1.15rem 0;border-bottom:1px solid color-mix(in srgb,var(--cua-dark) 12%,transparent);text-decoration:none;color:inherit;transition:padding-left .25s ease;}
 .cua-service-row:hover{padding-left:.35rem;}
 .cua-idx{font-size:.75rem;letter-spacing:.12em;color:var(--cua-accent);font-weight:600;}

@@ -31,7 +31,7 @@ export interface DesignDna {
   typography: DesignDnaTypography;
   imagePackKey: ImageBankCategory;
   iconStyle: CreativeBrief['iconStyle'];
-  radius: 'sharp' | 'soft' | 'pill';
+  radius: 'sharp' | 'soft' | 'pill' | 'craft';
   motionLevel: 'none' | 'subtle' | 'present';
   forbiddenVisuals: string[];
   designStyle: string;
@@ -75,10 +75,10 @@ const DNA_BY_SECTOR: Record<CreativeSectorId, DnaBase> = {
     },
     imagePackKey: 'clinic',
     iconStyle: 'line',
-    radius: 'soft',
+    radius: 'craft',
     motionLevel: 'subtle',
-    forbiddenVisuals: ['fashion runway', 'neon cyber', 'dark gothic'],
-    designStyle: 'Clean clinical premium: air, trust, soft teal accent, generous whitespace.',
+    forbiddenVisuals: ['fashion runway', 'neon cyber', 'dark gothic', 'SaaS soft UI'],
+    designStyle: 'Clinical luxury: quiet chrome, immersive photography, craft radius, trust without SaaS soft.',
   },
   restaurant: {
     sectorId: 'restaurant',
@@ -106,7 +106,7 @@ const DNA_BY_SECTOR: Record<CreativeSectorId, DnaBase> = {
     },
     imagePackKey: 'italian',
     iconStyle: 'emoji',
-    radius: 'soft',
+    radius: 'craft',
     motionLevel: 'present',
     forbiddenVisuals: ['corporate blue', 'SaaS cards', 'stock handshake'],
     designStyle: 'Photo-led Italian dining: warmth, plated food, emotional typography.',
@@ -168,7 +168,7 @@ const DNA_BY_SECTOR: Record<CreativeSectorId, DnaBase> = {
     },
     imagePackKey: 'hotel',
     iconStyle: 'line',
-    radius: 'soft',
+    radius: 'craft',
     motionLevel: 'subtle',
     forbiddenVisuals: ['budget motel look', 'clipart', 'harsh neon'],
     designStyle: 'Boutique hotel: aspirational photography, gold whisper, calm luxury.',
@@ -424,6 +424,9 @@ export function resolveDesignDna(brief: CreativeBrief): DesignDna {
     palette,
     designStyle,
     mood: luxuryAesthetic ? 'aspirationalLuxury' : base.mood,
+    radius: luxuryAesthetic || brief.brandTone === 'luxury' || brief.brandTone === 'editorial'
+      ? 'craft'
+      : base.radius,
     heroFamily: brief.heroFamily,
     density: brief.density,
     rhythm: brief.rhythm,
