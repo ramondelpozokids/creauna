@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-label="Barca de espetos con olas">
+  <!-- Waves -->
+  <g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round">
+    <path d="M40 200c55-18 110 18 165 0s110-18 165 0 110 18 165 0 110-18 165 0 110 18 165 0 110-18 165 0"/>
+    <path d="M40 230c55-18 110 18 165 0s110-18 165 0 110 18 165 0 110-18 165 0 110 18 165 0 110-18 165 0"/>
+    <path d="M40 260c55-18 110 18 165 0s110-18 165 0 110 18 165 0 110-18 165 0 110 18 165 0 110-18 165 0"/>
+  </g>
+
+  <!-- CLEAR fishing boat / barca de espetos (side profile, prow left) -->
+  <g fill="#fff">
+    <!-- Hull body -->
+    <path d="
+      M720 248
+      C735 210 770 175 820 155
+      C870 135 930 128 990 135
+      C1045 142 1090 160 1125 190
+      C1145 208 1155 228 1158 248
+      L1150 268
+      C1120 278 1070 285 1010 288
+      C940 292 870 288 810 278
+      C760 270 735 260 720 248
+      Z"/>
+    <!-- Raised prow tip (jabega-like) -->
+    <path d="
+      M820 155
+      C800 130 775 105 745 88
+      C735 82 725 90 728 102
+      C740 130 755 145 770 158
+      Z"/>
+    <!-- Gunwale line suggestion -->
+    <path d="M780 168 C840 148 950 142 1085 175" fill="none" stroke="#2c7c88" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
+    <!-- Keel / bottom curve accent -->
+    <path d="M760 255 C850 275 1000 280 1140 255" fill="none" stroke="#2c7c88" stroke-width="3" stroke-linecap="round" opacity="0.25"/>
+  </g>
+
+  <!-- Espeto poles + sardines inside the boat -->
+  <g fill="#fff">
+    <!-- poles -->
+    <rect x="880" y="48" width="6" height="175" rx="2"/>
+    <rect x="940" y="62" width="6" height="160" rx="2"/>
+    <rect x="1000" y="55" width="6" height="168" rx="2"/>
+
+    <!-- sardines on first pole -->
+    <ellipse cx="883" cy="78" rx="34" ry="8"/>
+    <path d="M849 78 L838 72 L838 84 Z"/>
+    <ellipse cx="883" cy="108" rx="36" ry="8"/>
+    <path d="M847 108 L835 101 L835 115 Z"/>
+    <ellipse cx="883" cy="138" rx="34" ry="8"/>
+    <path d="M849 138 L838 132 L838 144 Z"/>
+    <ellipse cx="883" cy="168" rx="32" ry="7.5"/>
+    <path d="M851 168 L841 162 L841 174 Z"/>
+
+    <!-- sardines on second pole -->
+    <ellipse cx="943" cy="90" rx="34" ry="8"/>
+    <path d="M909 90 L898 84 L898 96 Z"/>
+    <ellipse cx="943" cy="120" rx="36" ry="8"/>
+    <path d="M907 120 L895 113 L895 127 Z"/>
+    <ellipse cx="943" cy="150" rx="34" ry="8"/>
+    <path d="M909 150 L898 144 L898 156 Z"/>
+
+    <!-- sardines on third pole -->
+    <ellipse cx="1003" cy="85" rx="34" ry="8"/>
+    <path d="M969 85 L958 79 L958 91 Z"/>
+    <ellipse cx="1003" cy="115" rx="36" ry="8"/>
+    <path d="M967 115 L955 108 L955 122 Z"/>
+    <ellipse cx="1003" cy="145" rx="34" ry="8"/>
+    <path d="M969 145 L958 139 L958 151 Z"/>
+    <ellipse cx="1003" cy="175" rx="32" ry="7.5"/>
+    <path d="M971 175 L961 169 L961 181 Z"/>
+  </g>
+</svg>
