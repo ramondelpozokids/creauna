@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  // Hide loader when page loads
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const loader = document.getElementById('loader');
-      if (loader) loader.classList.add('hidden');
-    }, 800);
-  });
+  // Hide loader quickly (avoid blocking first paint perception)
+  const hideLoader = () => {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+  };
+  if (document.readyState === 'complete') hideLoader();
+  else window.addEventListener('load', () => setTimeout(hideLoader, 120));
 
   // Navbar scroll effect
   const navbar = document.getElementById('navbar');
@@ -103,15 +103,32 @@
     });
   }
 
-  // Pause hero video when off-screen
+  // Hero video: skip heavy MP4 on mobile / slow links; load on desktop when in view
   const video = document.querySelector('.hero .video-background');
   const heroSection = document.querySelector('.hero');
   if (video && heroSection) {
+    const src = video.getAttribute('data-src');
+    const canPlayVideo =
+      src &&
+      window.matchMedia('(min-width: 769px)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+      !(navigator.connection && (navigator.connection.saveData || /2g/i.test(navigator.connection.effectiveType || '')));
+
+    function ensureSource() {
+      if (!canPlayVideo || video.querySelector('source')) return;
+      const source = document.createElement('source');
+      source.src = src;
+      source.type = 'video/mp4';
+      video.appendChild(source);
+      video.load();
+    }
+
     const videoObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video.play().catch(() => {});
+            ensureSource();
+            if (canPlayVideo) video.play().catch(() => {});
           } else {
             video.pause();
           }
@@ -219,7 +236,7 @@
 
     const waves = new Audio('video/ocean-waves.mp3');
     waves.loop = true;
-    waves.preload = 'auto';
+    waves.preload = 'none';
     waves.volume = 0;
 
     const music = new Audio('video/tokyorifft-algarve-highwaycap-dx27antibes-555160.mp3');
