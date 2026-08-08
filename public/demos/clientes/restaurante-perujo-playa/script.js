@@ -208,99 +208,189 @@
     }
   })();
 
-  // Ambient music (manual toggle — no autoplay)
-  (function initAmbientSea() {
-    const buttons = Array.from(document.querySelectorAll('[data-ambient-toggle]'));
-    if (!buttons.length) return;
+  // Waves (default on) + optional ambient music
+  (function initAmbientAudio() {
+    const waveButtons = Array.from(document.querySelectorAll('[data-waves-toggle]'));
+    const musicButtons = Array.from(document.querySelectorAll('[data-ambient-toggle]'));
+    if (!waveButtons.length && !musicButtons.length) return;
 
-    const audio = new Audio('video/tokyorifft-algarve-highwaycap-dx27antibes-555160.mp3');
-    audio.loop = true;
-    audio.preload = 'none';
-    audio.volume = 0;
+    const waves = new Audio('video/ocean-waves.mp3');
+    waves.loop = true;
+    waves.preload = 'auto';
+    waves.volume = 0;
 
-    let on = false;
-    let fading = null;
-    const targetVol = 0.32;
+    const music = new Audio('video/tokyorifft-algarve-highwaycap-dx27antibes-555160.mp3');
+    music.loop = true;
+    music.preload = 'none';
+    music.volume = 0;
 
-    function labels() {
+    let wavesWanted = true;
+    let wavesOn = false;
+    let musicOn = false;
+    let unlockArmed = false;
+    const wavesVol = 0.28;
+    const musicVol = 0.32;
+
+    function tKey(key, fallback) {
       const t = window.PP && typeof window.PP.t === 'function' ? window.PP.t : null;
-      return {
-        on: t ? t('ambient_on') : 'Activar ambiente',
-        off: t ? t('ambient_off') : 'Desactivar ambiente',
-        title: t ? t('ambient_title') : 'Música ambiente'
-      };
+      return t ? t(key) : fallback;
     }
 
-    function syncUI() {
-      const L = labels();
-      buttons.forEach((btn) => {
-        btn.classList.toggle('is-on', on);
-        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-        btn.setAttribute('aria-label', on ? L.off : L.on);
-        btn.title = L.title;
-        const icon = btn.querySelector('i');
-        if (icon) {
-          icon.className = on ? 'fas fa-volume-up' : 'fas fa-volume-mute';
-        }
-        const text = btn.querySelector('[data-ambient-label]');
-        if (text) text.textContent = on ? L.off : L.on;
-      });
-    }
-
-    function fadeTo(vol, ms) {
-      if (fading) cancelAnimationFrame(fading);
+    function fade(audio, fadingRef, vol, ms, onDone) {
+      if (fadingRef.id) cancelAnimationFrame(fadingRef.id);
       const start = audio.volume;
       const t0 = performance.now();
       const step = (now) => {
         const p = Math.min(1, (now - t0) / ms);
         audio.volume = start + (vol - start) * p;
-        if (p < 1) fading = requestAnimationFrame(step);
-        else fading = null;
+        if (p < 1) fadingRef.id = requestAnimationFrame(step);
+        else {
+          fadingRef.id = null;
+          if (onDone) onDone();
+        }
       };
-      fading = requestAnimationFrame(step);
+      fadingRef.id = requestAnimationFrame(step);
     }
 
-    async function turnOn() {
+    const wavesFadeRef = { id: null };
+    const musicFadeRef = { id: null };
+
+    function syncWavesUI() {
+      const onLabel = tKey('waves_on', 'Activar olas');
+      const offLabel = tKey('waves_off', 'Silenciar olas');
+      const title = tKey('waves_title', 'Sonido del mar');
+      waveButtons.forEach((btn) => {
+        btn.classList.toggle('is-on', wavesWanted);
+        btn.setAttribute('aria-pressed', wavesWanted ? 'true' : 'false');
+        btn.setAttribute('aria-label', wavesWanted ? offLabel : onLabel);
+        btn.title = title;
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = wavesWanted ? 'fas fa-water' : 'fas fa-volume-mute';
+        const text = btn.querySelector('[data-waves-label]');
+        if (text) text.textContent = wavesWanted ? offLabel : onLabel;
+      });
+    }
+
+    function syncMusicUI() {
+      const onLabel = tKey('ambient_on', 'Activar ambiente');
+      const offLabel = tKey('ambient_off', 'Desactivar ambiente');
+      const title = tKey('ambient_title', 'Música ambiente');
+      musicButtons.forEach((btn) => {
+        btn.classList.toggle('is-on', musicOn);
+        btn.setAttribute('aria-pressed', musicOn ? 'true' : 'false');
+        btn.setAttribute('aria-label', musicOn ? offLabel : onLabel);
+        btn.title = title;
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = 'fas fa-music';
+        const text = btn.querySelector('[data-ambient-label]');
+        if (text) text.textContent = musicOn ? offLabel : onLabel;
+      });
+    }
+
+    function syncUI() {
+      syncWavesUI();
+      syncMusicUI();
+    }
+
+    function pauseWavesSoft() {
+      fade(waves, wavesFadeRef, 0, 400, () => {
+        if (!wavesWanted || musicOn) {
+          waves.pause();
+          wavesOn = false;
+        }
+      });
+    }
+
+    async function startWaves() {
+      if (!wavesWanted || musicOn) return;
       try {
-        audio.volume = 0;
-        if (audio.paused) await audio.play();
-        on = true;
-        fadeTo(targetVol, 900);
-        syncUI();
+        waves.volume = 0;
+        if (waves.paused) await waves.play();
+        wavesOn = true;
+        fade(waves, wavesFadeRef, wavesVol, 900);
+        syncWavesUI();
       } catch {
-        on = false;
-        syncUI();
+        wavesOn = false;
+        armUnlock();
+        syncWavesUI();
       }
     }
 
-    function turnOff() {
-      on = false;
-      syncUI();
-      fadeTo(0, 500);
-      setTimeout(() => {
-        if (!on) {
-          audio.pause();
-          audio.currentTime = 0;
-        }
-      }, 560);
+    function armUnlock() {
+      if (unlockArmed || !wavesWanted) return;
+      unlockArmed = true;
+      const unlock = () => {
+        if (!unlockArmed) return;
+        unlockArmed = false;
+        document.removeEventListener('pointerdown', unlock);
+        document.removeEventListener('keydown', unlock);
+        if (wavesWanted && !musicOn) startWaves();
+      };
+      document.addEventListener('pointerdown', unlock, { passive: true });
+      document.addEventListener('keydown', unlock);
     }
 
-    buttons.forEach((btn) => {
+    function stopMusic() {
+      musicOn = false;
+      syncMusicUI();
+      fade(music, musicFadeRef, 0, 450, () => {
+        if (!musicOn) {
+          music.pause();
+          music.currentTime = 0;
+        }
+      });
+      if (wavesWanted) startWaves();
+    }
+
+    async function startMusic() {
+      try {
+        if (wavesOn || !waves.paused) pauseWavesSoft();
+        music.volume = 0;
+        if (music.paused) await music.play();
+        musicOn = true;
+        fade(music, musicFadeRef, musicVol, 900);
+        syncMusicUI();
+      } catch {
+        musicOn = false;
+        syncMusicUI();
+      }
+    }
+
+    waveButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        if (on) turnOff();
-        else turnOn();
+        wavesWanted = !wavesWanted;
+        if (!wavesWanted) {
+          unlockArmed = false;
+          pauseWavesSoft();
+          syncWavesUI();
+        } else if (!musicOn) {
+          startWaves();
+        } else {
+          syncWavesUI();
+        }
+      });
+    });
+
+    musicButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (musicOn) stopMusic();
+        else startMusic();
       });
     });
 
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && on) {
-        audio.pause();
-      } else if (!document.hidden && on) {
-        audio.play().catch(() => {});
+      if (document.hidden) {
+        if (musicOn) music.pause();
+        else if (wavesOn) waves.pause();
+      } else if (musicOn) {
+        music.play().catch(() => {});
+      } else if (wavesWanted && !musicOn) {
+        startWaves();
       }
     });
 
     window.PPAmbient = { syncUI };
     syncUI();
+    startWaves();
   })();
 })();
