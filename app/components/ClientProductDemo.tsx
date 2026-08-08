@@ -15,7 +15,8 @@ type ScenarioId =
   | 'tarik'
   | 'elPaso'
   | 'beachSafe'
-  | 'losLeones';
+  | 'losLeones'
+  | 'perujoPlaya';
 
 type ChatLine = { role: 'ai' | 'user'; text: string };
 type PreviewMode = 'none' | 'draft' | 'full';
@@ -115,6 +116,14 @@ const copy = {
         refine: 'Galería de platos reales, vídeo de ambiente y datos de contacto más claros.',
         ai2: 'Listo. Web completa con espetos, galería, menú y el carácter del chiringuito.',
       },
+      perujoPlaya: {
+        label: 'Perujo Playa',
+        prompt:
+          'Restaurante Perujo Playa en La Carihuela (Torremolinos): cocina marinera malagueña, pescado fresco, marisco, arroces y terraza frente al mar.',
+        ai1: 'Perfecto. Primera versión con hero frente al Mediterráneo, carta marinera y reserva por teléfono.',
+        refine: 'Galería de platos reales, vídeo de olas, menú multilingüe y asistente de chat.',
+        ai2: 'Listo. Web completa con terraza, carta, galería y el carácter de La Carihuela.',
+      },
     },
   },
   en: {
@@ -211,6 +220,14 @@ const copy = {
         refine: 'Real dish gallery, ambient video and clearer contact details.',
         ai2: 'Done. Full site with espetos, gallery, menu and chiringuito character.',
       },
+      perujoPlaya: {
+        label: 'Perujo Playa',
+        prompt:
+          'Perujo Playa restaurant in La Carihuela (Torremolinos): Malaga coastal cooking, fresh fish, seafood, rice dishes and a terrace by the sea.',
+        ai1: 'Perfect. First version with Mediterranean hero, seafood menu and phone booking.',
+        refine: 'Real dish gallery, wave video, multilingual menu and chat assistant.',
+        ai2: 'Done. Full site with terrace, menu, gallery and La Carihuela character.',
+      },
     },
   },
 } as const;
@@ -282,6 +299,13 @@ const scenarioConfig: Record<
     studioSlug: 'mokka',
     studioPrompt:
       'Chiringuito Los Leones Torremolinos espetos marisco desde 1962',
+  },
+  perujoPlaya: {
+    demoPath: '/demos/clientes/restaurante-perujo-playa/index.html',
+    siteUrl: 'perujoplaya.com',
+    studioSlug: 'mokka',
+    studioPrompt:
+      'Restaurante Perujo Playa La Carihuela Torremolinos pescado marisco terraza mar',
   },
 };
 

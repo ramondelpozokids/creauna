@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datos de Privacidad · Restaurante Perujo Playa</title>
+<meta name="description" content="Centro de privacidad de Restaurante Perujo Playa. Resumen claro de tus derechos sobre tus datos personales.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f766e'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='%23e8c468' font-family='Georgia' font-size='16' font-style='italic'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--white-warm:#FAF8F5;--cream:#F2ECE0;--sand:#14b8a6;--gold-soft:#e8c468;--mediterranean:#0f766e;--mediterranean-deep:#115e59;--charcoal:#2A2A2A;--muted:#6B6B6B;--line:rgba(15,118,110,.14)}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',sans-serif;background:var(--white-warm);color:var(--charcoal);line-height:1.7;font-weight:300}
+::selection{background:var(--mediterranean);color:var(--white-warm)}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--mediterranean-deep);line-height:1.2}
+a{color:var(--mediterranean);text-decoration:none;transition:color .3s}
+a:hover{color:var(--gold-soft)}
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,248,245,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:1.1rem 4vw;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.25em;color:var(--mediterranean-deep);text-transform:uppercase}
+.nav-logo span{font-style:italic;color:var(--sand);margin-left:.3em}
+.nav-back{font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;padding:.7rem 1.3rem;border:1px solid var(--mediterranean-deep);color:var(--mediterranean-deep);transition:all .3s}
+.nav-back:hover{background:var(--mediterranean-deep);color:var(--white-warm)}
+.hero{padding:6rem 4vw 3rem;text-align:center;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--cream) 0%,var(--white-warm) 100%)}
+.hero-label{font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:1.2rem;display:inline-flex;align-items:center;gap:1rem}
+.hero-label::before,.hero-label::after{content:'';width:28px;height:1px;background:var(--gold-soft)}
+h1{font-size:clamp(2.2rem,5vw,3.8rem);font-style:italic;font-weight:300}
+.hero-sub{margin-top:1rem;color:var(--muted);font-size:1.05rem;max-width:600px;margin-left:auto;margin-right:auto}
+main{max-width:1200px;margin:0 auto;padding:5rem 4vw 6rem}
+
+.summary{background:var(--cream);padding:3rem;margin-bottom:4rem;border-left:3px solid var(--gold-soft)}
+.summary h2{font-size:1.5rem;font-style:italic;margin-bottom:1rem;color:var(--mediterranean-deep)}
+.summary p{font-size:1rem;line-height:1.8;color:var(--charcoal)}
+
+.rights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+.right-card{background:var(--white-warm);border:1px solid var(--line);padding:2rem;transition:all .4s;position:relative;overflow:hidden}
+.right-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:var(--gold-soft);transition:height .4s}
+.right-card:hover::before{height:100%}
+.right-card:hover{border-color:var(--gold-soft);transform:translateY(-3px);box-shadow:0 20px 40px rgba(30,58,95,.08)}
+.right-icon{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-soft);line-height:1;margin-bottom:1rem;font-style:italic}
+.right-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--mediterranean-deep);margin-bottom:.8rem;font-style:italic}
+.right-desc{font-size:.95rem;color:var(--muted);line-height:1.7}
+
+.cta-section{background:var(--mediterranean-deep);color:var(--white-warm);padding:4rem;margin-top:4rem;text-align:center}
+.cta-section h2{color:var(--white-warm);font-size:2rem;font-style:italic;margin-bottom:1rem}
+.cta-section p{color:rgba(250,248,245,.8);margin-bottom:2rem;max-width:560px;margin-left:auto;margin-right:auto}
+.cta-btn{display:inline-block;padding:1.1rem 2.4rem;background:var(--sand);color:var(--mediterranean-deep);font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;transition:all .3s}
+.cta-btn:hover{background:var(--white-warm);color:var(--mediterranean-deep)}
+
+.section-title{font-size:2rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--line);font-style:italic}
+.info-block{margin-bottom:3rem}
+.info-block h3{font-size:1.3rem;margin-bottom:1rem;color:var(--mediterranean)}
+.info-block p{font-size:1rem;line-height:1.85}
+.info-block ul{padding-left:1.3rem;margin-top:.8rem}
+.info-block ul li{margin-bottom:.5rem;line-height:1.7}
+
+blockquote{border-left:2px solid var(--gold-soft);padding:.5rem 0 .5rem 1.5rem;margin:1.5rem 0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--mediterranean-deep)}
+
+footer{background:var(--mediterranean-deep);color:rgba(250,248,245,.7);padding:3rem 4vw;text-align:center;font-size:.85rem}
+footer a{color:var(--sand)}
+.foot-links{margin-top:1rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase}
+</style>
+</head>
+<body class="pp-protect">
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">PERUJO<span>PLAYA</span></a>
+  <a href="index.html" class="nav-back">← Volver</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-label">Centro de privacidad</div>
+  <h1>Datos de Privacidad</h1>
+  <p class="hero-sub">Tu privacidad nos importa. Aquí encontrarás, de forma clara, todo lo que necesitas saber sobre tus datos.</p>
+</header>
+
+<main>
+
+<div class="summary">
+  <h2>En pocas palabras</h2>
+  <p>En Restaurante Perujo Playa tratamos tus datos únicamente para <strong>gestionar tus reservas</strong> y <strong>mejorar tu experiencia</strong>. Nunca los vendemos, nunca los usamos sin tu consentimiento y siempre puedes ejercer tus derechos sobre ellos. Esta página te explica de forma directa qué hacemos con tu información y cómo puedes controlarla.</p>
+</div>
+
+<section>
+  <h2 class="section-title">Tus derechos, uno por uno</h2>
+  <p style="margin-bottom:2rem;color:var(--muted)">La normativa de protección de datos (RGPD y LOPDGDD) te otorga los siguientes derechos sobre tus datos personales. Puedes ejercerlos en cualquier momento escribiéndonos a <a href="mailto:[email]">[email de contacto]</a> adjuntando una copia de tu DNI.</p>
+
+  <div class="rights-grid">
+    <div class="right-card">
+      <div class="right-icon">a</div>
+      <h3 class="right-title">Acceso</h3>
+      <p class="right-desc">Tienes derecho a saber si tratamos tus datos y, en su caso, a obtener una copia de ellos.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">r</div>
+      <h3 class="right-title">Rectificación</h3>
+      <p class="right-desc">Si tus datos son inexactos o incompletos, puedes solicitar su modificación.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">s</div>
+      <h3 class="right-title">Supresión</h3>
+      <p class="right-desc">También conocido como "derecho al olvido": puedes pedir que eliminemos tus datos cuando ya no sean necesarios.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">o</div>
+      <h3 class="right-title">Oposición</h3>
+      <p class="right-desc">Puedes oponerte a que tratemos tus datos en determinadas circunstancias, por ejemplo para marketing.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">l</div>
+      <h3 class="right-title">Limitación</h3>
+      <p class="right-desc">Puedes solicitar que conservemos tus datos únicamente para el ejercicio o defensa de reclamaciones.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">p</div>
+      <h3 class="right-title">Portabilidad</h3>
+      <p class="right-desc">Puedes recibir tus datos en un formato estructurado para transferirlos a otro responsable.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">c</div>
+      <h3 class="right-title">Retirar consentimiento</h3>
+      <p class="right-desc">Si nos diste tu consentimiento para un tratamiento concreto, puedes retirarlo en cualquier momento.</p>
+    </div>
+    <div class="right-card">
+      <div class="right-icon">d</div>
+      <h3 class="right-title">Decisiones automatizadas</h3>
+      <p class="right-desc">Tienes derecho a no ser objeto de decisiones basadas únicamente en el tratamiento automatizado de tus datos. <em>Nota: no realizamos este tipo de decisiones.</em></p>
+    </div>
+  </div>
+</section>
+
+<section class="info-block">
+  <h2 class="section-title">Qué datos tratamos y por qué</h2>
+  <div class="info-block">
+    <h3>Reservas y formularios</h3>
+    <p>Recopilamos únicamente los datos que tú nos facilitas voluntariamente: nombre, teléfono, email, número de personas y preferencias. Los usamos exclusivamente para gestionar tu reserva y comunicarnos contigo. No los cedemos a terceros salvo obligación legal.</p>
+  </div>
+  <div class="info-block">
+    <h3>Navegación y cookies</h3>
+    <p>Recogemos información estadística agregada (páginas visitadas, duración, dispositivo) mediante cookies analíticas para mejorar el sitio. Puedes aceptar o rechazar las cookies no esenciales en cualquier momento.</p>
+  </div>
+  <div class="info-block">
+    <h3>Comunicaciones comerciales</h3>
+    <p>Solo te enviaremos información promocional si nos has dado tu consentimiento expreso. Puedes darte de baja en cualquier momento con un solo clic o escribiéndonos.</p>
+  </div>
+</section>
+
+<section class="info-block">
+  <h2 class="section-title">Cuánto tiempo conservamos tus datos</h2>
+  <p>Conservamos los datos el tiempo estrictamente necesario para la finalidad para la que fueron recogidos, o para cumplir con obligaciones legales (fiscales, contables, sanitarias). Una vez transcurridos dichos plazos, se eliminan o anonimizan de forma segura.</p>
+</section>
+
+<section class="info-block">
+  <h2 class="section-title">A quién podemos comunicarlos</h2>
+  <ul>
+    <li>Administraciones públicas, cuando la ley lo exija.</li>
+    <li>Entidades financieras o pasarelas de pago (solo si hay transacción).</li>
+    <li>Proveedores tecnológicos (hosting, email, analítica), siempre con contrato de encargado de tratamiento y garantías suficientes.</li>
+  </ul>
+  <blockquote>No vendemos tus datos. Nunca.</blockquote>
+</section>
+
+<section class="info-block">
+  <h2 class="section-title">Cómo ejercer tus derechos</h2>
+  <p>Puedes hacerlo enviándonos un email a <a href="mailto:[email]">[email de contacto]</a> con:</p>
+  <ul>
+    <li>Tu nombre completo y datos de contacto.</li>
+    <li>Copia de tu DNI o documento identificativo.</li>
+    <li>Indicación clara del derecho que deseas ejercer.</li>
+    <li>Cualquier documentación relevante para tu solicitud.</li>
+  </ul>
+  <p>Te responderemos en un plazo máximo de <strong>un mes</strong>, prorrogable a dos en casos complejos (te informaremos).</p>
+  <blockquote>Si no quedas satisfecho con nuestra respuesta, tienes derecho a presentar una reclamación ante la <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos (AEPD)</a>.</blockquote>
+</section>
+
+<div class="cta-section">
+  <h2>¿Tienes dudas sobre tu privacidad?</h2>
+  <p>Estamos a tu disposición para resolver cualquier consulta sobre el tratamiento de tus datos personales.</p>
+  <a href="mailto:[email]" class="cta-btn">Escríbenos</a>
+</div>
+
+<p style="margin-top:4rem;font-size:.85rem;color:var(--muted);text-align:center;letter-spacing:.05em"><em>Última actualización: agosto de 2026</em></p>
+
+</main>
+
+<footer>
+  <p>© Restaurante Perujo Playa · Paseo Marítimo de la Carihuela, frente al Hotel Pez Espada, 29620 Torremolinos, Málaga</p>
+  <div class="foot-links">
+    <a href="aviso-legal.html">Aviso legal</a>
+    <a href="politica-privacidad.html">Privacidad</a>
+    <a href="politica-cookies.html">Cookies</a>
+    <a href="mapa-del-sitio.html">Mapa del sitio</a>
+    <a href="index.html">Inicio</a>
+  </div>
+</footer>
+
+  <script src="protect.js" defer></script>
+</body>
+</html>

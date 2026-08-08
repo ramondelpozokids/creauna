@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://www.perujoplaya.com/</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.perujoplaya.com/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.perujoplaya.com/"/>
+    <image:image>
+      <image:loc>https://www.perujoplaya.com/images/exterior.png</image:loc>
+      <image:title>Terraza Perujo Playa La Carihuela</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.perujoplaya.com/images/paella.png</image:loc>
+      <image:title>Paella de marisco Perujo Playa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.perujoplaya.com/images/espeto.png</image:loc>
+      <image:title>Espeto Perujo Playa Torremolinos</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.perujoplaya.com/mapa-del-sitio.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.perujoplaya.com/aviso-legal.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.perujoplaya.com/politica-privacidad.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.perujoplaya.com/politica-cookies.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.perujoplaya.com/datos-privacidad.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

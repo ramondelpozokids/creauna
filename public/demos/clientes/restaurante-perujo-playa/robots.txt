@@ -1,0 +1,9 @@
+# Restaurante Perujo Playa — https://www.perujoplaya.com/
+User-agent: *
+Allow: /
+
+# Páginas legales indexables a baja prioridad; el sitemap las lista
+Disallow:
+
+Sitemap: https://www.perujoplaya.com/sitemap.xml
+Host: https://www.perujoplaya.com

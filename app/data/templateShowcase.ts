@@ -156,6 +156,21 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryLabelEn: 'Beach bar',
     kind: 'project',
   },
+  {
+    slug: 'restaurante-perujo-playa',
+    nameEs: 'Restaurante Perujo Playa',
+    nameEn: 'Perujo Playa Restaurant',
+    descEs:
+      'Cocina marinera en La Carihuela (Torremolinos): pescado fresco, marisco, arroces y terraza frente al Mediterráneo.',
+    descEn:
+      'Coastal cooking in La Carihuela (Torremolinos): fresh fish, seafood, rice dishes and a terrace by the Mediterranean.',
+    demoPath: '/demos/clientes/restaurante-perujo-playa/index.html',
+    previewImage: '/demos/clientes/restaurante-perujo-playa/images/exterior.png',
+    categoryKey: 'gastronomy',
+    categoryLabelEs: 'Restaurante de playa',
+    categoryLabelEn: 'Seaside restaurant',
+    kind: 'project',
+  },
   // —— Otros servicios ——
   {
     slug: 'peluqueria-caballero-tarik',
