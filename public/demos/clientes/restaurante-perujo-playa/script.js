@@ -208,26 +208,26 @@
     }
   })();
 
-  // Ambient sea audio (manual toggle — no autoplay)
+  // Ambient music (manual toggle — no autoplay)
   (function initAmbientSea() {
     const buttons = Array.from(document.querySelectorAll('[data-ambient-toggle]'));
     if (!buttons.length) return;
 
-    const audio = new Audio('video/ocean-waves.mp3');
+    const audio = new Audio('video/tokyorifft-algarve-highwaycap-dx27antibes-555160.mp3');
     audio.loop = true;
     audio.preload = 'none';
     audio.volume = 0;
 
     let on = false;
     let fading = null;
-    const targetVol = 0.28;
+    const targetVol = 0.32;
 
     function labels() {
       const t = window.PP && typeof window.PP.t === 'function' ? window.PP.t : null;
       return {
-        on: t ? t('ambient_on') : 'Activar sonido del mar',
-        off: t ? t('ambient_off') : 'Silenciar el mar',
-        title: t ? t('ambient_title') : 'Olas del Mediterráneo'
+        on: t ? t('ambient_on') : 'Activar ambiente',
+        off: t ? t('ambient_off') : 'Desactivar ambiente',
+        title: t ? t('ambient_title') : 'Música ambiente'
       };
     }
 
@@ -242,6 +242,8 @@
         if (icon) {
           icon.className = on ? 'fas fa-volume-up' : 'fas fa-volume-mute';
         }
+        const text = btn.querySelector('[data-ambient-label]');
+        if (text) text.textContent = on ? L.off : L.on;
       });
     }
 
