@@ -140,7 +140,10 @@
       const alt = el.dataset.galleryAlt || el.querySelector('img')?.alt || '';
       img.src = src;
       img.alt = alt;
-      if (caption) caption.textContent = alt;
+      if (caption) {
+        caption.textContent = '';
+        caption.hidden = true;
+      }
       if (counter) counter.textContent = `${index + 1} / ${items.length}`;
       const prev = items[(index - 1 + items.length) % items.length];
       const next = items[(index + 1) % items.length];

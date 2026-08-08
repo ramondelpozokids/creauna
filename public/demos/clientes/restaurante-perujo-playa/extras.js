@@ -512,6 +512,12 @@
     document.querySelectorAll('.languages').forEach((el) => {
       el.style.display = lang === 'es' ? '' : 'none';
     });
+    document.querySelectorAll('[data-lang-es-only]').forEach((el) => {
+      const show = lang === 'es';
+      el.hidden = !show;
+      el.style.display = show ? '' : 'none';
+      el.setAttribute('aria-hidden', show ? 'false' : 'true');
+    });
     if (window.PPAmbient && typeof window.PPAmbient.syncUI === 'function') {
       window.PPAmbient.syncUI();
     }
