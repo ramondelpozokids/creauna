@@ -4,7 +4,7 @@
 import { el, insertAfter, insertBefore } from '../utils.js';
 import { applyPremiumI18n } from '../i18n.js';
 
-const BANNER = 'images/banner-los-leones.png?v=2';
+const BANNER = 'images/banner_azul.png?v=1';
 
 function buildBanner() {
   const wrap = el('div', {

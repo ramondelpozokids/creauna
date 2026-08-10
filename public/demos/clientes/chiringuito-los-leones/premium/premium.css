@@ -1063,7 +1063,7 @@ body.ll-carta-open {
 /* Brand banner — full composite: name + waves + boat + espetos */
 .ll-brand-banner {
   width: 100%;
-  background: #2c7c88;
+  background: var(--color-primary, #1e3a5f);
   color: #fff;
   padding: 0;
   box-sizing: border-box;
