@@ -325,7 +325,7 @@ const scenarioConfig: Record<
       'Restaurante Perujo Playa La Carihuela Torremolinos pescado marisco terraza mar',
   },
   antonioBeach: {
-    demoPath: '/demos/clientes/chiringuito-antonio/es/',
+    demoPath: '/demos/clientes/chiringuito-antonio/es/index.html',
     siteUrl: 'thenewantoniobeach.com',
     studioSlug: 'mokka',
     studioPrompt:

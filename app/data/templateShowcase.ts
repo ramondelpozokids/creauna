@@ -179,7 +179,7 @@ const portfolioProjects: TemplateShowcaseItem[] = [
       'Beach club y restaurante frente al mar en La Carihuela (Torremolinos): producto mediterráneo, hamacas y Costa del Sol.',
     descEn:
       'Beach club and seaside restaurant in La Carihuela (Torremolinos): Mediterranean produce, sunbeds and Costa del Sol vibe.',
-    demoPath: '/demos/clientes/chiringuito-antonio/es/',
+    demoPath: '/demos/clientes/chiringuito-antonio/es/index.html',
     previewImage: '/demos/clientes/chiringuito-antonio/images/hero.webp',
     categoryKey: 'gastronomy',
     categoryLabelEs: 'Beach club',
