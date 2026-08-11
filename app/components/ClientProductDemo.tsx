@@ -16,7 +16,8 @@ type ScenarioId =
   | 'elPaso'
   | 'beachSafe'
   | 'losLeones'
-  | 'perujoPlaya';
+  | 'perujoPlaya'
+  | 'antonioBeach';
 
 type ChatLine = { role: 'ai' | 'user'; text: string };
 type PreviewMode = 'none' | 'draft' | 'full';
@@ -124,6 +125,14 @@ const copy = {
         refine: 'Galería de platos reales, vídeo de olas, menú multilingüe y asistente de chat.',
         ai2: 'Listo. Web completa con terraza, carta, galería y el carácter de La Carihuela.',
       },
+      antonioBeach: {
+        label: 'Antonio Beach',
+        prompt:
+          'the new antonio beach en La Carihuela (Torremolinos): beach club y restaurante frente al mar, producto mediterráneo, hamacas y ambiente Costa del Sol.',
+        ai1: 'Genial. Primera versión con hero a pie de playa, gastronomía mediterránea y reservas.',
+        refine: 'Galería de platos reales, experiencia en hamacas, menú multilingüe y asistente de chat.',
+        ai2: 'Listo. Web completa con mar, carta, galería y el carácter de the new antonio beach.',
+      },
     },
   },
   en: {
@@ -228,6 +237,14 @@ const copy = {
         refine: 'Real dish gallery, wave video, multilingual menu and chat assistant.',
         ai2: 'Done. Full site with terrace, menu, gallery and La Carihuela character.',
       },
+      antonioBeach: {
+        label: 'Antonio Beach',
+        prompt:
+          'the new antonio beach in La Carihuela (Torremolinos): beach club and seaside restaurant, Mediterranean produce, sunbeds and Costa del Sol vibe.',
+        ai1: 'Great. First version with beachfront hero, Mediterranean food and booking.',
+        refine: 'Real dish gallery, sunbed experience, multilingual menu and chat assistant.',
+        ai2: 'Done. Full site with sea views, menu, gallery and the new antonio beach character.',
+      },
     },
   },
 } as const;
@@ -306,6 +323,13 @@ const scenarioConfig: Record<
     studioSlug: 'mokka',
     studioPrompt:
       'Restaurante Perujo Playa La Carihuela Torremolinos pescado marisco terraza mar',
+  },
+  antonioBeach: {
+    demoPath: '/demos/clientes/chiringuito-antonio/es/',
+    siteUrl: 'thenewantoniobeach.com',
+    studioSlug: 'mokka',
+    studioPrompt:
+      'the new antonio beach La Carihuela Torremolinos beach club restaurante frente al mar',
   },
 };
 

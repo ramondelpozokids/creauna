@@ -171,6 +171,21 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryLabelEn: 'Seaside restaurant',
     kind: 'project',
   },
+  {
+    slug: 'chiringuito-antonio',
+    nameEs: 'the new antonio beach',
+    nameEn: 'the new antonio beach',
+    descEs:
+      'Beach club y restaurante frente al mar en La Carihuela (Torremolinos): producto mediterráneo, hamacas y Costa del Sol.',
+    descEn:
+      'Beach club and seaside restaurant in La Carihuela (Torremolinos): Mediterranean produce, sunbeds and Costa del Sol vibe.',
+    demoPath: '/demos/clientes/chiringuito-antonio/es/',
+    previewImage: '/demos/clientes/chiringuito-antonio/images/hero.webp',
+    categoryKey: 'gastronomy',
+    categoryLabelEs: 'Beach club',
+    categoryLabelEn: 'Beach club',
+    kind: 'project',
+  },
   // —— Otros servicios ——
   {
     slug: 'peluqueria-caballero-tarik',

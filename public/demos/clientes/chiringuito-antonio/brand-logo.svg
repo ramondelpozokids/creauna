@@ -1,0 +1,39 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Chiringuito Antonio y Ana">
+  <circle cx="100" cy="100" r="96" fill="#E6FAF8"/>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#0D9488" stroke-width="8"/>
+  <path d="M48 62c6-8 12-8 18 0M42 70c5-6 10-6 15 0" fill="none" stroke="#0D9488" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M148 58c6-7 11-7 16 0" fill="none" stroke="#0D9488" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M108 138c1-28 2-48 1-68" fill="none" stroke="#0D9488" stroke-width="5" stroke-linecap="round"/>
+  <path d="M109 72c-18-10-28-8-34-2M109 72c-14-16-12-28-6-34M109 72c8-18 22-24 32-22M109 72c18-8 30-4 34 4M109 78c-22-4-32 4-36 12M109 78c16-14 30-10 36-4" fill="none" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+  <path d="M128 140c8-22 16-40 22-54" fill="none" stroke="#0D9488" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M150 88c-12-12-22-10-28-4M150 88c-4-16 4-26 12-30M150 88c12-14 24-12 30-6M150 92c14-6 22 0 24 8" fill="none" stroke="#0D9488" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M36 148c18-8 36-8 54 0s36 8 54 0 28-6 40 2" fill="none" stroke="#0D9488" stroke-width="3" stroke-linecap="round"/>
+  <path d="M44 156c14-6 28-6 42 0s30 6 44 0" fill="none" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <g transform="translate(58 118)">
+    <circle cx="0" cy="0" r="28" fill="none" stroke="#0D9488" stroke-width="5"/>
+    <circle cx="0" cy="0" r="10" fill="none" stroke="#0D9488" stroke-width="4"/>
+    <circle cx="0" cy="0" r="4" fill="#0D9488"/>
+    <line x1="10" y1="0" x2="26" y2="0" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="7.07" y1="7.07" x2="18.38" y2="18.38" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="0" y1="10" x2="0" y2="26" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="-7.07" y1="7.07" x2="-18.38" y2="18.38" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="-10" y1="0" x2="-26" y2="0" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="-7.07" y1="-7.07" x2="-18.38" y2="-18.38" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="0" y1="-10" x2="0" y2="-26" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <line x1="7.07" y1="-7.07" x2="18.38" y2="-18.38" stroke="#0D9488" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="28" cy="0" r="3.2" fill="#0D9488"/>
+    <circle cx="19.8" cy="19.8" r="3.2" fill="#0D9488"/>
+    <circle cx="0" cy="28" r="3.2" fill="#0D9488"/>
+    <circle cx="-19.8" cy="19.8" r="3.2" fill="#0D9488"/>
+    <circle cx="-28" cy="0" r="3.2" fill="#0D9488"/>
+    <circle cx="-19.8" cy="-19.8" r="3.2" fill="#0D9488"/>
+    <circle cx="0" cy="-28" r="3.2" fill="#0D9488"/>
+    <circle cx="19.8" cy="-19.8" r="3.2" fill="#0D9488"/>
+  </g>
+  <g transform="translate(138 148)">
+    <ellipse cx="0" cy="8" rx="26" ry="5" fill="#0D9488"/>
+    <path d="M-16 6c0-14 8-22 16-22s16 8 16 22" fill="#0D9488"/>
+    <path d="M-10 2h20" stroke="#E6FAF8" stroke-width="2"/>
+    <path d="M0 -6v10M0 4c-5 0-8-3-8-3M0 4c5 0 8-3 8-3M-3 -6h6" fill="none" stroke="#E6FAF8" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>
