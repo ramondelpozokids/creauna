@@ -17,7 +17,8 @@ type ScenarioId =
   | 'beachSafe'
   | 'losLeones'
   | 'perujoPlaya'
-  | 'antonioBeach';
+  | 'antonioBeach'
+  | 'servyad';
 
 type ChatLine = { role: 'ai' | 'user'; text: string };
 type PreviewMode = 'none' | 'draft' | 'full';
@@ -133,6 +134,14 @@ const copy = {
         refine: 'Galería de platos reales, experiencia en hamacas, menú multilingüe y asistente de chat.',
         ai2: 'Listo. Web completa con mar, carta, galería y el carácter de the new antonio beach.',
       },
+      servyad: {
+        label: 'Servyad',
+        prompt:
+          'Servyad en Torremolinos: alquiler vacacional de apartamentos, fichas con calendario, precios por temporada e idiomas. Estilo profesional de agencia local.',
+        ai1: 'Perfecto. Primera versión con listado de apartamentos, fotos reales y navegación en varios idiomas.',
+        refine: 'Calendario de ocupación en cada ficha, consulta por WhatsApp y asistente con precios reales.',
+        ai2: 'Listo. Web completa con vacacional, calendario, contacto y el carácter de servyad.com.',
+      },
     },
   },
   en: {
@@ -245,6 +254,14 @@ const copy = {
         refine: 'Real dish gallery, sunbed experience, multilingual menu and chat assistant.',
         ai2: 'Done. Full site with sea views, menu, gallery and the new antonio beach character.',
       },
+      servyad: {
+        label: 'Servyad',
+        prompt:
+          'Servyad in Torremolinos: holiday apartment rentals, listing pages with calendars, seasonal prices and multiple languages. Local agency look.',
+        ai1: 'Perfect. First version with apartment listings, real photos and multilingual navigation.',
+        refine: 'Occupancy calendar on each listing, WhatsApp enquiry and an assistant with real prices.',
+        ai2: 'Done. Full site with holiday rentals, calendar, contact and the servyad.com character.',
+      },
     },
   },
 } as const;
@@ -330,6 +347,13 @@ const scenarioConfig: Record<
     studioSlug: 'mokka',
     studioPrompt:
       'the new antonio beach La Carihuela Torremolinos beach club restaurante frente al mar',
+  },
+  servyad: {
+    demoPath: 'https://servyad.vercel.app',
+    siteUrl: 'servyad.com',
+    studioSlug: 'lumen',
+    studioPrompt:
+      'Servyad Torremolinos apartamentos vacacionales alquiler temporada calendario',
   },
 };
 

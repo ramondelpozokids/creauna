@@ -186,6 +186,21 @@ const portfolioProjects: TemplateShowcaseItem[] = [
     categoryLabelEn: 'Beach club',
     kind: 'project',
   },
+  {
+    slug: 'servyad',
+    nameEs: 'Servyad',
+    nameEn: 'Servyad',
+    descEs:
+      'Alquiler vacacional en Torremolinos: apartamentos, calendario de ocupación, precios por temporada e idiomas.',
+    descEn:
+      'Holiday rentals in Torremolinos: apartments, occupancy calendar, seasonal prices and multiple languages.',
+    demoPath: 'https://servyad.vercel.app',
+    previewImage: 'https://servyad.vercel.app/images/home/playa-sol.jpg',
+    categoryKey: 'hospitality',
+    categoryLabelEs: 'Apartamentos vacacionales',
+    categoryLabelEn: 'Holiday apartments',
+    kind: 'project',
+  },
   // —— Otros servicios ——
   {
     slug: 'peluqueria-caballero-tarik',
